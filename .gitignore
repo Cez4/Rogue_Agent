@@ -22,3 +22,6 @@ Cliente/nexus/.gamedev_ai/vector_db.json
 
 # Local editor binaries (keep out of repo)
 Cliente/godot/*.exe
+
+# Local plugin storage (do not version)
+Pluguins/
