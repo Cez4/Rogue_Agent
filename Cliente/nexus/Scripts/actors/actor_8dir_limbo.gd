@@ -6,6 +6,7 @@ extends CharacterBody2D
 @export var idle_prefix: String = "Idle"
 @export var walk_prefix: String = "Walk"
 @export var attack_prefix: String = "Attack"
+@export var attack_action: StringName = &"attack"
 @export var attack_duration_sec: float = 0.35
 @export var look_interest_radius: float = 120.0
 @export var look_interest_min_distance: float = 28.0
@@ -78,11 +79,18 @@ func _physics_process(delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not player_controlled:
 		return
-	controller.call("handle_unhandled_input", event)
 	if event.is_echo():
 		return
-	if InputMap.has_action(&"attack") and event.is_action_pressed(&"attack"):
+	if _is_attack_event(event):
 		request_attack()
+		return
+	controller.call("handle_unhandled_input", event)
+
+
+func _is_attack_event(event: InputEvent) -> bool:
+	if InputMap.has_action(attack_action) and event.is_action_pressed(attack_action):
+		return true
+	return false
 
 
 func _setup_hsm() -> void:
@@ -107,6 +115,10 @@ func request_attack() -> void:
 	hsm.dispatch(&"attack!")
 
 
+func clear_attack_pending() -> void:
+	_attack_pending = false
+
+
 func play_idle_animation() -> void:
 	_play_directional_animation(idle_prefix, velocity)
 
@@ -120,7 +132,43 @@ func update_walk_animation() -> void:
 
 
 func play_attack_animation() -> void:
-	_play_directional_animation(attack_prefix, velocity)
+	var played := _play_directional_animation(attack_prefix, velocity)
+	if not played:
+		return
+	var animation_name := StringName("%s_%s" % [attack_prefix, _last_direction_suffix])
+	if animated_sprite != null and animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation(animation_name):
+		animated_sprite.sprite_frames.set_animation_loop(animation_name, false)
+
+
+func wait_for_attack_animation_end(max_wait_sec: float = 1.2) -> void:
+	if animated_sprite == null or animated_sprite.sprite_frames == null:
+		return
+	var animation_name := StringName("%s_%s" % [attack_prefix, _last_direction_suffix])
+	if not animated_sprite.sprite_frames.has_animation(animation_name):
+		return
+	if animated_sprite.animation != animation_name:
+		return
+
+	var estimated_len := _estimate_animation_length_sec(animation_name)
+	var timeout_sec := maxf(0.1, maxf(max_wait_sec, estimated_len + 0.06))
+	var deadline_sec: float = Time.get_ticks_msec() * 0.001 + timeout_sec
+	while Time.get_ticks_msec() * 0.001 < deadline_sec:
+		# AnimatedSprite2D stops playing when non-loop animation reaches the end.
+		if animated_sprite.animation != animation_name:
+			return
+		if not animated_sprite.is_playing():
+			return
+		await get_tree().process_frame
+
+
+func _estimate_animation_length_sec(animation_name: StringName) -> float:
+	if animated_sprite == null or animated_sprite.sprite_frames == null:
+		return 0.0
+	var frame_count: int = animated_sprite.sprite_frames.get_frame_count(animation_name)
+	var fps: float = animated_sprite.sprite_frames.get_animation_speed(animation_name)
+	if frame_count <= 0 or fps <= 0.0:
+		return 0.0
+	return float(frame_count) / fps
 
 
 func should_start_wander(delta: float) -> bool:

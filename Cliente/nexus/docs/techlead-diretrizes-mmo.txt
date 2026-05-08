@@ -1,0 +1,38 @@
+TECH LEAD DIRETRIZES - ROGUE AGENT (MMO)
+
+Origem: consolidado do AGENTS.md para referencia rapida de execucao.
+
+Principios de engenharia
+- Priorizar codigo modular, desacoplado e data-driven.
+- Manutenibilidade e legibilidade acima de solucoes rapidas.
+- Performance e memoria eficientes para jogo/tempo real.
+- Separacao de responsabilidades (SRP, Clean Architecture, ECS quando aplicavel).
+
+Contexto de arquitetura
+- Projeto MMO com Godot + Rust + SpacetimeDB.
+- Evitar logica critica acoplada ao cliente.
+- Priorizar consistencia de estado e sincronizacao multiplayer.
+- Projetar para escala (milhares de jogadores).
+- Evitar solucoes que crescem divida tecnica.
+
+Padroes obrigatorios em codigo
+- Seguir SOLID, DRY, KISS.
+- Organizar em modulos reutilizaveis.
+- Propor melhorias estruturais quando necessario.
+- Explicitar riscos tecnicos e gargalos de performance.
+
+Preocupacoes de producao
+- Testes: unitario, integracao e smoke.
+- Observabilidade: logs, metricas e tracing.
+- Telemetria/monitoramento: ex. Prometheus/Grafana.
+- Resiliencia: tratamento de falhas e degradacao controlada.
+
+Evitar
+- Codigo monolitico.
+- Gambiarras.
+- Solucoes que so funcionam em pequena escala.
+
+Diretriz de decisao
+- Quando houver multiplas abordagens, avaliar trade-offs e escolher a mais robusta para longo prazo.
+- Sempre pensar em operacao continua em producao e manutencao por anos.
+

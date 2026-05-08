@@ -8,12 +8,12 @@ var _cooldown_until_sec: float = 0.0
 
 func _enter() -> void:
 	if agent == null:
-		get_root().dispatch(EVENT_FINISHED)
+		_finish_attack()
 		return
 
 	var now_sec: float = Time.get_ticks_msec() * 0.001
 	if now_sec < _cooldown_until_sec:
-		get_root().dispatch(EVENT_FINISHED)
+		_finish_attack()
 		return
 
 	if agent.has_method("play_attack_animation"):
@@ -33,8 +33,10 @@ func _enter() -> void:
 		hitbox.set_hitbox_enabled(false)
 
 	await get_tree().create_timer(_recover()).timeout
+	if agent.has_method("wait_for_attack_animation_end"):
+		await agent.wait_for_attack_animation_end(_windup() + _active() + _recover())
 	_cooldown_until_sec = Time.get_ticks_msec() * 0.001 + _cooldown()
-	get_root().dispatch(EVENT_FINISHED)
+	_finish_attack()
 
 
 func _apply_action_to_hitbox(hitbox: Node) -> void:
@@ -60,3 +62,9 @@ func _recover() -> float:
 
 func _cooldown() -> float:
 	return 0.24 if action_data == null else maxf(0.0, float(action_data.get("cooldown_sec")))
+
+
+func _finish_attack() -> void:
+	if agent != null and agent.has_method("clear_attack_pending"):
+		agent.clear_attack_pending()
+	get_root().dispatch(EVENT_FINISHED)
