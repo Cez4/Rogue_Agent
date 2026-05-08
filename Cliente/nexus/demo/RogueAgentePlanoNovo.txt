@@ -1,0 +1,1626 @@
+````markdown
+# Documento Técnico Base — Rogue Agent V1  
+## Mapa de Stack, Sistemas e Lógicas antes dos Contratos
+
+> Este documento consolida a direção técnica atual do Rogue Agent para repassar ao Tech Lead antes da criação dos contratos técnicos formais.
+
+Base recuperada das consolidações anteriores do GDD e da divisão GOAP/LimboAI, mas atualizada para as decisões atuais: **sem GECS, sem GECS Network, sem Orchestrator, sem mobile, sem GD-Sync**. :contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1}
+
+---
+
+# 1. Estado canônico atual
+
+```txt
+Rogue Agent V1:
+  PC 2D
+  coop obrigatório
+  Godot puro organizado
+  LimboAI já em uso
+  NavigationAgent2D / NavigationRegion2D já testados
+  Player, NPC e animal já criados/testados
+  foco em vertical slice
+````
+
+O jogo é um:
+
+```txt
+agent sim
++ dungeon crawler por salas
++ RPG cooperativo
++ hideout vivo
++ smart objects
++ auto-battle
++ desktop companion
+```
+
+---
+
+# 2. Stack técnica atual
+
+## 2.1 Core
+
+```txt
+Godot:
+  engine principal
+
+Godot puro organizado:
+  scenes
+  nodes
+  resources
+  scripts pequenos
+  signals
+  groups
+  managers/adapters quando necessário
+
+Godot Navigation:
+  NavigationRegion2D
+  NavigationAgent2D
+  click-to-move
+  movimentação até objetos
+
+Godot Multiplayer nativo:
+  coop V1
+  host/client
+  ENet/RPC/MultiplayerSpawner/MultiplayerSynchronizer quando fizer sentido
+
+NetworkAdapter:
+  camada futura obrigatória para não espalhar rede pelo jogo
+
+LimboAI:
+  máquina de estados / behavior logic
+  player, NPCs, animais, inimigos, bosses, minions, companions
+```
+
+## 2.2 Gameplay plugins
+
+```txt
+Inventory Manager:
+  inventário, slots, stacks, containers
+
+Quest Manager:
+  quests, estados, progresso, debug
+
+Spawner-Godot-Plugin:
+  spawn areas, waves, chance por inimigo, limite ativo
+
+BlastBullets2D:
+  projéteis, magias, flechas, homing, orbitais, boss patterns
+
+Drag-and-drop:
+  slots físicos/diegéticos do jogo
+
+GOAP:
+  planejamento cotidiano do agent
+
+GEQO:
+  spike para percepção espacial
+```
+
+## 2.3 Visual / feedback / ferramentas
+
+```txt
+AnimatedSprite2D:
+  animação base
+
+AnimationPlayer:
+  feedback visual curto
+
+Phantom Camera:
+  câmera 2D
+
+AnimSheet:
+  pipeline de spritesheets
+
+SoftBody2D:
+  tempero visual pontual
+
+GUT:
+  testes
+
+Addon Save:
+  candidato para save definitivo
+```
+
+---
+
+# 3. Removidos / pausados
+
+```txt
+Orchestrator:
+  removido
+
+GECS:
+  removido/pausado
+
+GECS Network:
+  removido
+
+GD-Sync:
+  removido por lock-in/custo
+
+Colyseus + Postgres + Redis:
+  upgrade futuro, não V1
+
+Mobile/Android:
+  removido do V1
+
+Core2/M5Stack:
+  removido da versão principal
+
+Logic Bricks:
+  removido
+
+Cuberact Rope:
+  removido
+
+FightEngine:
+  plugin fora, conceito absorvido
+
+SignalStateMachine:
+  plugin fora, conceito absorvido
+
+Save Made Easy:
+  referência, mas defasado
+
+Aseprite Wizard:
+  removido, artes já existem
+```
+
+---
+
+# 4. Modelo de coop
+
+## 4.1 Coop é pilar do produto
+
+O jogo não é solo-first.
+O V1 precisa nascer com coop como objetivo técnico.
+
+```txt
+V1:
+  2 players
+
+Depois:
+  até 4 players
+```
+
+## 4.2 Autoridade
+
+```txt
+Host:
+  decide comportamento oficial
+  roda LimboAI
+  roda GOAP quando aplicável
+  decide combate
+  decide task
+  decide drops
+  decide spawn
+  sincroniza estado
+
+Clients:
+  enviam intenção
+  recebem estado/eventos
+  mostram animação/feedback
+```
+
+Clientes não devem enviar:
+
+```txt
+matei inimigo
+ganhei item
+completei quest
+setei HP
+terminei task
+```
+
+Clientes enviam:
+
+```txt
+quero mover
+quero interagir
+quero atacar
+quero usar skill
+quero arrastar item
+quero aceitar quest
+```
+
+---
+
+# 5. Entidades principais
+
+Mesmo sem GECS, o jogo continua tendo entidades. Elas serão cenas/nodes organizados.
+
+```txt
+Player Agent:
+  personagem principal do jogador
+  LimboAI
+  Action Queue
+  inventário
+  stats
+  needs
+  ordens do jogador
+
+NPC:
+  social/sistêmico
+  LimboAI
+  diálogo
+  comércio
+  reação a eventos
+  uso de smart objects
+
+Animal:
+  criatura viva
+  LimboAI
+  andar, fugir, atacar, dormir, reagir
+
+Enemy:
+  inimigo de dungeon
+  LimboAI
+  combate
+  perseguição
+  skills
+
+Boss:
+  inimigo especial
+  LimboAI
+  fases
+  minions
+  skills
+  BlastBullets2D
+
+Minion:
+  unidade invocada
+  protege boss
+  ataca player
+  usa comportamento simples
+
+Companion:
+  aliado futuro
+  acompanha player
+  reage ao ambiente
+  pode ajudar em combate
+```
+
+---
+
+# 6. LimboAI
+
+## 6.1 Papel
+
+LimboAI é o sistema atual para comportamento controlado.
+
+Uso:
+
+```txt
+player states
+NPC states
+animal behavior
+enemy behavior
+boss phases
+minions
+companions
+```
+
+## 6.2 Estados base
+
+```txt
+Player/Agent:
+  Idle
+  Moving
+  MovingToObject
+  Interacting
+  ExecutingTask
+  Waiting
+  Combat
+  Dead
+
+NPC:
+  Idle
+  Wander
+  Talk
+  UseObject
+  ReactToEvent
+
+Animal:
+  Idle
+  Wander
+  Flee
+  Attack
+  Sleep
+
+Enemy:
+  Patrol
+  Chase
+  Attack
+  UseSkill
+  Flee
+  Dead
+
+Boss:
+  Phase1
+  Phase2
+  SummonMinions
+  CastSkill
+  Enrage
+  Dead
+```
+
+## 6.3 Blackboard
+
+O blackboard do LimboAI deve carregar contexto de decisão.
+
+```txt
+target_entity
+target_position
+current_room
+current_task
+current_object
+hp_percent
+danger_level
+boss_phase
+minions_alive
+skill_ready
+last_event
+```
+
+---
+
+# 7. GOAP
+
+## 7.1 Papel
+
+GOAP entra para planejamento cotidiano do agent.
+
+Não substitui LimboAI.
+GOAP define plano; LimboAI executa estados e transições.
+
+Uso:
+
+```txt
+fome
+sono
+leitura
+cozinhar
+craft
+guardar item
+pegar item
+usar fogueira
+usar mesa
+usar baú
+preparar dungeon
+rotina de hideout
+sobrevivência
+```
+
+Exemplo:
+
+```txt
+Objetivo:
+  não ficar com fome
+
+Plano:
+  procurar comida pronta
+  se não tiver, pegar carne
+  achar fogueira livre
+  cozinhar carne
+  esperar ficar pronta
+  comer
+```
+
+---
+
+# 8. Utility scoring simples
+
+Mesmo com GOAP, o jogo pode usar scoring simples para prioridades.
+
+```txt
+score_comer:
+  fome alta
+  + comida disponível
+  + segurança da room
+
+score_dormir:
+  energia baixa
+  + noite
+  + ferimento
+  - perigo
+
+score_ler:
+  livro marcado
+  + energia boa
+  + interesse em skill
+  - fome alta
+```
+
+Uso:
+
+```txt
+decidir prioridade
+desempatar ações
+escolher próxima task
+avaliar rotina
+```
+
+---
+
+# 9. Action Queue estilo The Sims
+
+## 9.1 Papel
+
+Core do jogo.
+
+```txt
+Action Queue:
+  fila curta de ações
+  executa ordens do player
+  aceita ações autônomas
+  permite espera
+  permite cancelamento
+  permite replanejamento
+```
+
+## 9.2 Tamanho
+
+```txt
+mínimo:
+  1 ação atual
+
+recomendado:
+  3 ações
+
+máximo inicial:
+  5 ações
+```
+
+## 9.3 Prioridade
+
+```txt
+Critical
+PlayerOrder
+Survival
+Routine
+Flavor
+```
+
+## 9.4 Exemplo
+
+```txt
+1. andar até baú
+2. pegar carne
+3. andar até fogueira
+4. reservar fogueira
+5. cozinhar
+6. esperar pronto
+7. coletar comida
+8. comer
+```
+
+---
+
+# 10. Task System
+
+Cada ação executável vira uma task.
+
+## 10.1 Estados
+
+```txt
+Queued
+Reserved
+Moving
+Running
+Waiting
+Completed
+Failed
+Cancelled
+Expired
+Claimed
+```
+
+## 10.2 Dados mínimos
+
+```txt
+task_id
+task_type
+owner_entity
+target_object
+target_slot
+input_items
+output_items
+duration
+progress
+started_at
+ends_at
+state
+result
+```
+
+## 10.3 Exemplos
+
+```txt
+CookTask:
+  input: raw_meat
+  object: campfire
+  duration: 10s
+  output: cooked_meat
+
+ReadTask:
+  input: book
+  object: table
+  duration: based_on_stats
+  output: knowledge_flag
+
+CraftTask:
+  input: materials
+  object: workbench
+  duration: recipe_time
+  output: crafted_item
+```
+
+---
+
+# 11. Smart Objects
+
+## 11.1 Papel
+
+Objetos que oferecem ações e participam da simulação.
+
+```txt
+fogueira
+mesa
+baú
+estante
+bancada
+forja
+cozinha
+saco de dormir
+porta
+armadilha
+altar
+poço
+fogão
+```
+
+## 11.2 Dados mínimos
+
+```txt
+object_id
+object_type
+room_id
+available_actions
+slots
+reservations
+state
+progress
+owner
+cooldowns
+accepted_inputs
+outputs
+events_emitted
+```
+
+## 11.3 Exemplo: fogueira
+
+```txt
+ações:
+  cook
+  sit_near
+  warm_up
+
+slots:
+  cook: 1
+  sit_near: 2
+
+eventos:
+  fire_started
+  food_ready
+  fire_going_out
+```
+
+---
+
+# 12. Reservation / Slots / Locks
+
+Sistema obrigatório para evitar bagunça de múltiplos agentes/NPCs.
+
+## 12.1 Exemplos
+
+```txt
+fogueira:
+  cook: 1
+  sit_near: 2
+
+mesa:
+  read: 1
+  eat: 1
+
+saco de dormir:
+  sleep: 1
+
+baú:
+  organize: 1
+
+bancada:
+  craft: 1
+```
+
+## 12.2 Fluxo
+
+```txt
+agent quer usar objeto
+↓
+verifica objeto
+↓
+verifica ação
+↓
+verifica slot
+↓
+reserva slot
+↓
+anda até objeto
+↓
+executa task
+↓
+libera slot
+```
+
+Se ocupado:
+
+```txt
+esperar
+procurar outro objeto
+fazer outra task
+conversar
+replanejar
+```
+
+---
+
+# 13. Room Event Bus
+
+Sistema de eventos da sala.
+
+## 13.1 Papel
+
+```txt
+objetos emitem eventos
+agents escutam
+NPCs reagem
+quests atualizam
+UI mostra feedback
+LimboAI muda estado
+```
+
+## 13.2 Eventos base
+
+```txt
+food_ready
+book_finished
+item_dropped
+enemy_spawned
+wave_completed
+object_reserved
+object_released
+trap_triggered
+door_opened
+npc_arrived
+agent_hungry
+agent_tired
+combat_started
+combat_ended
+rare_item_found
+craft_success
+craft_failed
+```
+
+## 13.3 Exemplo
+
+```txt
+fogueira termina carne
+↓
+Room Event: food_ready
+↓
+agent recebe sinal
+↓
+LimboAI muda estado
+↓
+agent vai coletar
+↓
+Quest Manager atualiza objetivo
+```
+
+---
+
+# 14. Rooms
+
+O jogo é baseado em rooms.
+
+```txt
+Hideout Room
+Hub Room
+Forest Room
+Cave Room
+Dungeon Entrance
+Boss Room
+Crafting Room
+Market Room
+Guild Hall
+```
+
+Cada room contém:
+
+```txt
+players
+agents
+NPCs
+animals
+enemies
+smart objects
+items
+spawn areas
+room events
+triggers
+navigation region
+```
+
+---
+
+# 15. Hub / Cidade
+
+Função:
+
+```txt
+NPCs
+mural da Guilda
+lojas simples
+entrada para dungeons
+formar party
+interações sociais leves
+fogueira pública
+bancadas públicas
+```
+
+Escopo V1:
+
+```txt
+hub pequeno
+1 ou 2 NPCs
+mural simples da Guilda
+entrada para dungeon
+```
+
+---
+
+# 16. Hideout / Acampamento
+
+Função:
+
+```txt
+descansar
+cozinhar
+ler livros
+treinar
+organizar inventário
+guardar itens
+usar smart objects
+preparar dungeon
+craftar
+interagir com NPCs/companions
+```
+
+V1:
+
+```txt
+fogueira
+saco de dormir
+baú
+mesa
+estante/livro
+```
+
+---
+
+# 17. Dungeons por salas
+
+## 17.1 Estrutura
+
+```txt
+Dungeon curta:
+  3 a 5 salas
+
+Dungeon média:
+  6 a 10 salas
+
+Dungeon especial futura:
+  10+ salas com ramificação
+```
+
+## 17.2 Tipos
+
+```txt
+entrada
+exploração
+combate
+elite
+boss
+descanso
+NPC
+puzzle
+armadilha
+loot
+evento narrativo
+saída
+```
+
+## 17.3 Exemplo V1
+
+```txt
+Sala 1:
+  entrada
+
+Sala 2:
+  combate com lobo
+
+Sala 3:
+  baú / saída
+```
+
+---
+
+# 18. Inventory Manager
+
+## 18.1 Papel
+
+```txt
+mochila
+baú
+estante
+stash
+loot
+inventário de NPC/comerciante
+materiais stackáveis
+containers
+transferências
+```
+
+## 18.2 Regra
+
+Inventory Manager cuida de:
+
+```txt
+slots
+stacks
+mover item
+trocar item
+organizar container
+detectar inventário cheio
+```
+
+Game Systems cuidam de:
+
+```txt
+efeito do item
+skill aprendida
+livro lido
+quest completa
+dano
+recompensa
+drop oficial
+```
+
+---
+
+# 19. Livros e Conhecimento
+
+## 19.1 Livro físico
+
+```txt
+item físico
+não stacka
+ocupa slot
+pode vender
+pode trocar
+pode guardar
+pode ir para estante
+pode dropar repetido
+```
+
+## 19.2 Livro lido
+
+```txt
+vira conhecimento
+item é consumido/deletado
+não aprende de novo
+```
+
+## 19.3 Livro repetido
+
+```txt
+não dá conhecimento novamente
+vira item comercializável
+pode vender/trocar/guardar
+```
+
+## 19.4 Leitura
+
+```txt
+não é automática
+jogador marca para ler
+agent planeja
+agent reserva mesa
+ReadingTask roda
+livro é consumido
+knowledge é registrado
+```
+
+Velocidade depende de:
+
+```txt
+inteligência
+skill de leitura
+passivas
+energia
+humor
+fome
+objeto usado
+```
+
+---
+
+# 20. Containers
+
+Exemplos:
+
+```txt
+mochila
+baú
+estante
+bolsa de ingredientes
+mesa
+storage do hideout
+```
+
+Cada container define:
+
+```txt
+capacidade
+tags permitidas
+tipo de item permitido
+stack permitido
+dono
+acesso
+```
+
+Se item não cabe:
+
+```txt
+não entra
+agent procura outro container
+se não houver, mantém no inventário
+se inventário cheio, gera evento/problema
+```
+
+---
+
+# 21. Itens
+
+Todo item é data-driven.
+
+```txt
+item_id
+base_id
+name
+category
+tags
+rarity
+stackable
+max_stack
+value
+tradable
+bound
+```
+
+Não stackam:
+
+```txt
+livros
+armas
+armaduras
+equipamentos
+relíquias
+itens únicos
+quest items importantes
+```
+
+Stackam:
+
+```txt
+moedas
+pedras
+materiais
+minérios
+ervas
+ingredientes
+consumíveis comuns
+```
+
+---
+
+# 22. Skills
+
+Skills são data-driven.
+
+Tipos:
+
+```txt
+skills ativas
+skills passivas
+skills de combate
+skills de leitura
+skills de craft
+skills de culinária
+skills de alquimia
+skills sociais
+```
+
+Skills podem usar:
+
+```txt
+BlastBullets2D
+cooldowns
+AnimationPlayer
+LimboAI states
+status effects
+```
+
+---
+
+# 23. Combate
+
+## 23.1 Modelo
+
+```txt
+auto-battle
+skills
+cooldowns
+posturas
+intervenção do jogador
+comportamento por LimboAI
+```
+
+## 23.2 Antes da luta
+
+Jogador define:
+
+```txt
+equipamentos
+skills ativas
+skills passivas
+postura
+itens da bag
+prioridade de cura
+limite de risco
+regra de fuga
+```
+
+## 23.3 Durante a luta
+
+Agent/inimigo decide:
+
+```txt
+ataque básico
+usar skill
+usar poção
+defender
+buffar
+fugir
+recuar
+mudar comportamento
+```
+
+## 23.4 Posturas
+
+```txt
+ofensiva
+defensiva
+longa distância
+conservadora
+arriscada
+```
+
+---
+
+# 24. BlastBullets2D
+
+Aprovado para V1.
+
+Uso:
+
+```txt
+flechas
+magias
+homing
+orbes orbitais
+escudos orbitais
+ataques circulares
+boss patterns
+skills tipo PoE
+chuva de projéteis
+projéteis em Path2D
+```
+
+## 24.1 Limitação aceita
+
+```txt
+não suporta Y-sort perfeito
+só usa RectangleShape2D
+bullets são Area2D
+```
+
+## 24.2 Solução
+
+```txt
+Projectile Proximity Impact
+```
+
+Fluxo:
+
+```txt
+projétil chega perto de árvore/parede/baú
+↓
+ativa impacto antes de atravessar
+↓
+toca animação
+↓
+projétil some
+```
+
+---
+
+# 25. Spawner-Godot-Plugin
+
+Aprovado para V1.
+
+Uso:
+
+```txt
+spawn areas
+waves
+limite de inimigos ativos
+chance por inimigo
+tempo entre waves
+enemy_spawned
+wave_completed
+```
+
+Integração:
+
+```txt
+Spawner instancia cena do inimigo
+↓
+inimigo já vem configurado
+↓
+SpawnBridge registra no jogo
+↓
+LimboAI assume comportamento
+↓
+Quest Manager escuta progresso
+```
+
+---
+
+# 26. Quest Manager
+
+Uso:
+
+```txt
+Guilda dos Aventureiros
+quests de dungeon
+quests de leitura
+quests de craft
+quests de NPC
+quests de hideout
+objetivos encadeados
+progresso
+debug
+```
+
+Quest Manager não deve dar itens direto nem alterar combate.
+Ele escuta eventos e acompanha progresso.
+
+---
+
+# 27. Guilda dos Aventureiros
+
+Interface diegética de quests.
+
+Serve para:
+
+```txt
+quests
+dungeons
+mapas
+recompensas
+eventos futuros
+```
+
+UX:
+
+```txt
+A Guilda enviou novas missões.
+O Correio trouxe rumores.
+Um mapa estranho chegou.
+Novas expedições estão disponíveis.
+```
+
+V1:
+
+```txt
+mural simples da Guilda
+1 quest simples
+1 dungeon curta
+```
+
+---
+
+# 28. Drag-and-drop
+
+Uso:
+
+```txt
+arrastar carne para fogueira
+arrastar livro para estante
+arrastar item para baú
+arrastar material para bancada
+arrastar skill para slot
+arrastar equipamento para slot
+arrastar ingrediente para estação
+```
+
+Regra:
+
+```txt
+Drag-and-drop:
+  interação visual
+
+Inventory Manager:
+  valida/move item
+
+Game System:
+  cria task/efeito
+```
+
+---
+
+# 29. Animação
+
+Padrão oficial:
+
+```txt
+AnimatedSprite2D:
+  animação base
+
+AnimationPlayer:
+  feedback visual curto
+```
+
+## 29.1 AnimatedSprite2D
+
+```txt
+idle
+walk
+attack
+cast
+cook
+read
+sleep
+hurt
+death
+```
+
+## 29.2 AnimationPlayer
+
+```txt
+damage_flash
+heal_flash
+stun
+level_up
+critical_hit
+shake
+poison_tick
+squash/stretch
+```
+
+---
+
+# 30. Visual tools
+
+```txt
+Phantom Camera:
+  câmera suave
+  foco
+  transições
+  modo companion
+  modo aventura
+
+AnimSheet:
+  spritesheets para AnimatedSprite2D/AnimationPlayer
+
+SoftBody2D:
+  tempero visual para slimes, plantas, objetos moles
+```
+
+SoftBody2D não é sistema central de dano.
+
+---
+
+# 31. Save
+
+Status:
+
+```txt
+Addon Save:
+  candidato forte
+
+Save próprio mínimo:
+  possível no primeiro vertical slice
+
+Save Made Easy:
+  referência defasada
+```
+
+Ainda não fechar save definitivo antes do vertical slice.
+
+Dados esperados:
+
+```txt
+agent
+stats
+inventário
+containers
+livros lidos
+skills
+hideout
+smart objects
+tasks em andamento
+quests
+dungeon progress
+configurações
+```
+
+---
+
+# 32. Adventure Packs futuros
+
+Conteúdo externo deve ser um Adventure Pack completo.
+
+Contém:
+
+```txt
+manifest
+rooms
+encounters
+entities
+npcs
+objects
+items
+drops
+skills
+dialogues
+rumors
+rewards
+end_conditions
+boss
+traps
+metadata
+```
+
+No V1 pode ser interno/manual.
+
+---
+
+# 33. Content Lifecycle futuro
+
+```txt
+Created
+Generated
+Validated
+Packaged
+Published
+Assigned
+Activated
+Completed
+Archived
+```
+
+V1 simplificado:
+
+```txt
+Created
+Validated
+Loaded
+Played
+```
+
+---
+
+# 34. GraphGram + Bracery futuro
+
+Não entram no MVP.
+
+```txt
+GraphGram:
+  estrutura de dungeons
+  rooms
+  quest stages
+  conversation graph
+  branches
+  consequences
+
+Bracery:
+  nomes
+  descrições
+  rumores
+  falas
+  diários
+  humor
+  flavor text
+```
+
+LLM fora do MVP.
+
+---
+
+# 35. Métricas técnicas
+
+Medir desde cedo:
+
+```txt
+FPS
+tempo de load de room
+tempo de troca de room
+tempo de pathfinding
+tempo de task
+número de entidades por room
+número de eventos por room
+tamanho de save
+latência coop
+falhas de reserva
+ações canceladas
+tasks falhadas
+uso de memória
+tempo de spawn
+tempo de combate
+```
+
+---
+
+# 36. Debug tools necessários
+
+```txt
+Action Queue Debug
+Task Debug
+Room Event Log
+LimboAI State Debug
+Inventory Debug
+Quest Debug
+Spawn Debug
+Network Debug
+Save Debug
+```
+
+---
+
+# 37. Vertical slice roadmap
+
+## VS1 — Movimento + entidades
+
+```txt
+1 room
+player
+NPC
+animal
+NavigationAgent2D
+LimboAI states
+AnimatedSprite2D idle/walk
+```
+
+Objetivo:
+
+```txt
+clicar no chão
+player anda
+states mudam
+NPC/animal existem com comportamento simples
+```
+
+## VS2 — Smart Object + Task Queue
+
+```txt
+fogueira
+carne
+Action Queue
+Reservation Slot
+CookingTask
+Room Event food_ready
+```
+
+## VS3 — Inventário + Drag-and-drop
+
+```txt
+Inventory Manager
+Drag-and-drop
+baú
+fogueira
+item carne
+```
+
+## VS4 — Quest + Spawn + Combate
+
+```txt
+Quest Manager
+Spawner
+inimigo
+LimboAI enemy
+BlastBullets2D skill simples
+```
+
+## VS5 — Coop
+
+```txt
+Godot Multiplayer
+host/client
+NetworkAdapter inicial
+sync de movimento
+sync de task
+sync de inimigo
+```
+
+---
+
+# 38. Contratos técnicos a criar depois
+
+```txt
+Agent Contract
+Movement Contract
+LimboAI Blackboard Contract
+GOAP Goal/Action Contract
+Action Queue Contract
+Task Contract
+SmartObject Contract
+Slot/Reservation Contract
+Room Contract
+Room Event Contract
+Inventory Bridge Contract
+Item Contract
+Book/Knowledge Contract
+Container Contract
+Skill Contract
+Combat Contract
+Projectile Contract
+Spawner Bridge Contract
+Quest Bridge Contract
+Drag-and-drop Contract
+NetworkAdapter Contract
+Save Contract
+Dungeon Room Contract
+Adventure Pack Contract
+```
+
+---
+
+# 39. Regra final
+
+```txt
+Vertical slice sempre.
+Não integrar tudo de uma vez.
+Não deixar plugin dominar arquitetura.
+Godot puro organizado.
+LimboAI como inteligência atual.
+GOAP para planejamento cotidiano.
+Action Queue como coração estilo The Sims.
+Room Events para mundo vivo.
+Smart Objects para interação sistêmica.
+Coop obrigatório.
+```
+
+```
+```

@@ -1,0 +1,135 @@
+﻿# ROGUE AGENT - PLANO EXECUTAVEL MVP (ESCOPO ENXUTO)
+
+Este arquivo traduz o brainstorm tecnico para execucao pratica do projeto atual.
+Nao substitui a visao de longo prazo. Organiza o que fazer agora.
+
+Base atual confirmada:
+- Godot + LimboAI funcionando no projeto.
+- Player com movimento por clique e animacao 8 direcoes.
+- Villager e Wildcat ativos com estados e navegacao.
+- Sistema de look/wander/emote ja funcional no villager.
+
+Regra central:
+- Escopo agora e MENOR: fechar vertical slice jogavel e estavel.
+- Arquitetura futura (tasks, smart objects, slots, rooms, sinais) fica prevista, mas entra em fatias.
+
+====================================================================
+
+## 1) DECISAO DE ESCOPO (TRAVADA)
+
+MVP atual (agora):
+1. Player funcional:
+   - idle/walk/attack 8 direcoes
+   - click-to-move estavel
+2. NPCs vivos basicos:
+   - villager: idle/wander/look + emotes
+   - wildcat: idle/wander
+3. Base de combate simples:
+   - estado de ataque e transicao limpa
+4. Cena mundo estavel:
+   - navegacao valida
+   - sem travamentos de colisao entre agentes
+
+Fora do MVP imediato (nao implementar agora):
+- GOAP completo
+- Sistema total de rotina diaria
+- Boss framework completo com muitas fases
+- Refactor grande para ECS framework
+
+====================================================================
+
+## 2) ARQUITETURA ALVO (SEM OVER-ENGINEERING)
+
+Manter padrao atual:
+- Actor base reutilizavel (actor_8dir_limbo.gd)
+- Componentes por nos/scripts (Controller, Motor, BT/HSM)
+- LimboAI como core de comportamento
+
+Adicionar aos poucos (quando necessario):
+- HealthComponent
+- CombatComponent
+- EntityRegistry simples
+- InputRouter (quando iniciar coop local com 2 players)
+
+Observacao:
+- Nao migrar para ECS plugin completo agora.
+- Evolucao incremental preserva estabilidade e velocidade.
+
+====================================================================
+
+## 3) BACKLOG EXECUTAVEL (CURTO PRAZO)
+
+### Etapa A - Fechar baseline de gameplay
+- [ ] Validar animacoes 8 direcoes para player/npcs
+- [ ] Revisar ranges de look/wander para naturalidade
+- [ ] Garantir que emotes nao spamam
+
+Definition of Done:
+- Nao ha erro no console em 5 minutos de teste.
+- NPCs se comportam de forma previsivel e sem jitter excessivo.
+
+### Etapa B - Combate MVP
+- [ ] Finalizar fluxo de attack state no player
+- [ ] Definir hit window simples (mesmo que sem dano final)
+- [ ] Padronizar transicoes idle <-> walk <-> attack
+
+Definition of Done:
+- Ataque interrompe/retoma locomocao sem quebrar estado.
+- Animacao de ataque sempre fecha e volta para idle/walk.
+
+### Etapa C - Preparar coop sem quebrar singleplayer
+- [ ] Criar contrato de intencao de input (MoveRequest/AttackRequest)
+- [ ] Isolar comandos de gameplay para futura autoridade host
+- [ ] Evitar logica critica em UI/input direto
+
+Definition of Done:
+- Codigo de gameplay aceita comandos por interface/metodo unico.
+- Possivel plugar multiplayer depois sem reescrever tudo.
+
+### Etapa D - Infra minima de entidades
+- [ ] EntityRegistry simples (id, tipo, node)
+- [ ] Eventos minimos (spawn/despawn/state_changed)
+- [ ] Convencao de grupos (player, npc, enemy)
+
+Definition of Done:
+- Spawn/despawn observavel por evento.
+- Busca de entidades sem varrer cena inteira toda hora.
+
+====================================================================
+
+## 4) ROADMAP CURTO (DEPOIS DO MVP)
+
+1. Smart Objects com slots/reserva:
+   - cadeira, bancada, baus, fogueira.
+2. Task file por NPC:
+   - fila simples de tarefas (vagar, usar objeto, esperar).
+3. Rooms + sinais:
+   - eventos de sala (entrou player, combate ativo, objeto ocupado).
+4. Combate expandido:
+   - inimigo hostil + 1 mini-boss em 2 fases.
+
+====================================================================
+
+## 5) RISCOS E CONTROLES
+
+Riscos:
+- Escopo crescer cedo demais.
+- Refactor grande antes de fechar loop jogavel.
+- Misturar coop local e rede sem contrato claro.
+
+Controles:
+- Entregar sempre por fatias testaveis.
+- Cada etapa com Definition of Done.
+- Medir performance antes de otimizar pesado.
+
+====================================================================
+
+## 6) RESUMO EXECUTIVO
+
+Sim, a visao grande esta correta (rooms, signals, tasks, smart objects, slots).
+Mas agora a estrategia certa e:
+1. consolidar MVP estavel,
+2. manter LimboAI como cerebro,
+3. evoluir modularmente sem migracoes arriscadas.
+
+Essa abordagem reduz risco tecnico e acelera entrega real.

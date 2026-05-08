@@ -1,0 +1,2263 @@
+````markdown
+# Paper Técnico de Contratos — Rogue Agent V1
+
+Documento técnico para orientar o Tech Lead antes da implementação dos sistemas principais.
+
+Base atual considerada: Rogue Agent V1 em **Godot puro organizado**, **PC 2D**, **coop obrigatório**, **LimboAI já em uso**, **Godot Navigation já testado**, **sem Orchestrator**, **sem GECS**, **sem GECS Network**, **sem GD-Sync**, **sem mobile no V1**. A lógica de Action Queue, Rooms, Smart Objects, Reservation/Slots, Room Events, Task Lifecycle, livros, containers, skills, combate, Adventure Packs e vertical slices foi recuperada das consolidações anteriores do projeto. :contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1}
+
+---
+
+# 0. Regras globais de arquitetura
+
+## 0.1 Princípio principal
+
+```txt
+Godot puro organizado.
+Plugins ajudam.
+Sistemas próprios coordenam.
+Nenhum plugin vira dono do jogo inteiro.
+````
+
+## 0.2 Stack atual
+
+```txt
+Engine:
+  Godot 2D PC
+
+IA / comportamento:
+  LimboAI
+
+Movimento:
+  NavigationAgent2D
+  NavigationRegion2D
+
+Coop:
+  Godot Multiplayer nativo
+  NetworkAdapter futuro
+
+Rotina / simulação:
+  Action Queue
+  Task System
+  Smart Objects
+  Room Event Bus
+  Reservation / Slots
+
+Planejamento:
+  GOAP para rotina cotidiana
+  Utility scoring simples para prioridades
+
+Gameplay plugins:
+  Inventory Manager
+  Quest Manager
+  Spawner-Godot-Plugin
+  Drag-and-drop
+  BlastBullets2D
+
+Visual:
+  AnimatedSprite2D
+  AnimationPlayer
+  Phantom Camera
+  AnimSheet
+  SoftBody2D pontual
+
+Save:
+  Addon Save candidato
+  SaveManager mínimo se necessário no vertical slice
+
+Testes:
+  GUT
+```
+
+## 0.3 Removidos / fora da stack atual
+
+```txt
+Orchestrator:
+  removido
+
+GECS:
+  removido/pausado
+
+GECS Network:
+  removido
+
+GD-Sync:
+  removido
+
+Colyseus/Postgres/Redis:
+  upgrade futuro, não V1
+
+Mobile:
+  removido do V1
+
+Logic Bricks:
+  removido
+
+Cuberact Rope:
+  removido
+
+FightEngine:
+  plugin fora, conceito absorvido
+
+Save Made Easy:
+  referência, mas defasado
+```
+
+## 0.4 Regra de autoridade no coop
+
+```txt
+Host:
+  decide o estado oficial
+
+Clients:
+  enviam intenções
+  mostram animações/feedback
+```
+
+Cliente nunca decide:
+
+```txt
+item ganho
+inimigo morto
+quest completa
+task terminada
+dano aplicado
+drop gerado
+HP oficial
+```
+
+Cliente pode pedir:
+
+```txt
+mover
+interagir
+atacar
+usar skill
+arrastar item
+aceitar quest
+entrar em dungeon
+```
+
+---
+
+# 1. Entity Contract
+
+## Objetivo
+
+Definir todos os tipos de entidades vivas ou interativas do jogo.
+
+## Tipos de entidade
+
+```txt
+PlayerAgent
+NPC
+Animal
+Enemy
+Boss
+Minion
+Companion
+SmartObject
+ItemWorldEntity
+Projectile
+SpawnArea
+RoomTrigger
+```
+
+## Dados mínimos
+
+```txt
+entity_id
+entity_type
+display_name
+room_id
+global_position
+state
+owner_player_id opcional
+is_networked
+is_saveable
+tags
+```
+
+## Regras
+
+```txt
+Toda entidade precisa ter ID único.
+Toda entidade deve pertencer a uma room.
+Toda entidade que entra no coop precisa ter identificação replicável.
+Toda entidade persistente precisa ser serializável.
+```
+
+## Eventos emitidos
+
+```txt
+entity_spawned
+entity_removed
+entity_moved
+entity_state_changed
+entity_interacted
+entity_died
+```
+
+## Testes mínimos
+
+```txt
+criar entidade
+remover entidade
+mover entidade
+trocar estado
+salvar/carregar se persistente
+replicar se multiplayer
+```
+
+---
+
+# 2. Agent Contract
+
+## Objetivo
+
+Definir o personagem principal vivo do jogador.
+
+## Dados mínimos
+
+```txt
+agent_id
+owner_player_id
+name
+current_room_id
+position
+current_state
+current_task_id
+action_queue_id
+inventory_id
+equipment_id
+stats_id
+needs_id
+knowledge_id
+limbo_blackboard_id
+is_busy
+is_available
+```
+
+## Estados base
+
+```txt
+Idle
+Moving
+MovingToObject
+Interacting
+ExecutingTask
+Waiting
+Combat
+Recovering
+Sleeping
+Dead
+Unavailable
+```
+
+## Responsabilidades
+
+```txt
+receber ordens do jogador
+executar Action Queue
+usar Smart Objects
+reagir a Room Events
+entrar em combate
+usar inventário
+usar skills
+aprender conhecimento
+participar do coop
+```
+
+## Validações
+
+```txt
+não pode executar duas tasks principais ao mesmo tempo
+não pode usar objeto sem reserva se a ação exigir slot
+não pode consumir item inexistente
+não pode aprender livro já conhecido
+não pode entrar em dungeon se estado bloquear
+```
+
+## Multiplayer
+
+```txt
+Host:
+  decide estado oficial do agent
+
+Client:
+  envia intenção de ordem
+  exibe estado/animação
+```
+
+## Save
+
+Salvar:
+
+```txt
+posição
+room atual
+stats
+needs
+inventário
+equipamento
+conhecimento
+fila de ações se necessário
+task atual se persistente
+```
+
+---
+
+# 3. NPC / Animal / Enemy / Boss Contract
+
+## Objetivo
+
+Definir entidades não controladas diretamente pelo jogador.
+
+## NPC
+
+```txt
+npc_id
+role
+personality
+relationship
+shop_table_id
+dialogue_id
+schedule_id
+current_room
+limbo_blackboard
+available_interactions
+```
+
+NPC pode:
+
+```txt
+conversar
+comprar/vender
+usar smart objects
+reagir a eventos
+dar quest
+comentar ações
+```
+
+## Animal
+
+```txt
+animal_id
+species
+temperament
+fear_level
+hunger
+territory
+limbo_blackboard
+```
+
+Animal pode:
+
+```txt
+andar
+fugir
+atacar
+dormir
+reagir a player/NPC
+```
+
+## Enemy
+
+```txt
+enemy_id
+enemy_type
+level
+stats
+skills
+loot_table
+limbo_blackboard
+spawn_source_id
+```
+
+Enemy pode:
+
+```txt
+patrulhar
+perseguir
+atacar
+usar skill
+fugir
+morrer
+dropar loot
+```
+
+## Boss
+
+```txt
+boss_id
+phase
+phase_thresholds
+minion_rules
+skill_patterns
+loot_table
+limbo_blackboard
+```
+
+Boss pode:
+
+```txt
+trocar fase
+invocar minions
+usar BlastBullets2D
+entrar em enrage
+emitir eventos de boss
+```
+
+## Eventos
+
+```txt
+npc_reacted
+animal_fled
+enemy_aggro
+enemy_died
+boss_phase_changed
+boss_summoned_minions
+boss_defeated
+```
+
+---
+
+# 4. LimboAI Blackboard Contract
+
+## Objetivo
+
+Padronizar o contexto usado pelo LimboAI em agents, NPCs, animais, enemies e bosses.
+
+## Campos comuns
+
+```txt
+entity_id
+entity_type
+current_room_id
+current_state
+target_entity
+target_position
+current_task
+current_object
+danger_level
+last_event
+last_interactor
+is_busy
+is_in_combat
+```
+
+## Campos para combate
+
+```txt
+hp_percent
+target_player
+distance_to_target
+skill_ready
+last_attack
+combat_stance
+should_flee
+threat_level
+```
+
+## Campos para boss
+
+```txt
+boss_phase
+minions_alive
+phase_changed
+enrage_active
+next_skill_id
+arena_state
+```
+
+## Campos para NPC
+
+```txt
+relationship_to_player
+available_dialogue
+current_schedule_step
+wants_to_use_object
+```
+
+## Regras
+
+```txt
+Blackboard não é banco de dados.
+Blackboard é contexto temporário de decisão.
+Estado persistente fica nos sistemas oficiais.
+```
+
+## Multiplayer
+
+```txt
+Host roda LimboAI.
+Clients não rodam decisão oficial.
+Clients recebem estado final/animação/evento.
+```
+
+---
+
+# 5. Movement Contract
+
+## Objetivo
+
+Padronizar movimento com Godot Navigation.
+
+## Stack usada
+
+```txt
+NavigationRegion2D
+NavigationAgent2D
+CharacterBody2D
+AnimatedSprite2D
+LimboAI state
+```
+
+## Dados mínimos
+
+```txt
+entity_id
+current_position
+target_position
+movement_speed
+is_moving
+movement_state
+navigation_agent_ref
+```
+
+## Fluxo click-to-move
+
+```txt
+player clica no destino
+↓
+client/host cria move intent
+↓
+host valida se destino é navegável
+↓
+NavigationAgent2D.target_position recebe destino
+↓
+estado muda para Moving
+↓
+entity segue get_next_path_position()
+↓
+ao chegar, estado muda para Idle ou Interacting
+```
+
+## Para interação com objeto
+
+```txt
+clicar objeto
+↓
+pegar interaction_point do objeto
+↓
+mover até interaction_point
+↓
+ao chegar, iniciar interação/task
+```
+
+## Eventos
+
+```txt
+move_requested
+move_started
+move_finished
+move_cancelled
+move_blocked
+```
+
+## Testes
+
+```txt
+clicar chão e andar
+clicar área inválida e bloquear
+clicar objeto e mover até ponto de interação
+parar ao chegar
+mudar animação walk/idle
+```
+
+---
+
+# 6. Player Order Contract
+
+## Objetivo
+
+Definir ordens que o jogador dá ao agent.
+
+## Tipos de ordem
+
+```txt
+move_to
+interact_object
+read_book
+cook_item
+equip_item
+use_skill
+enter_dungeon
+rest
+organize_inventory
+craft_item
+sell_item
+store_item
+```
+
+## Resposta da ordem
+
+```txt
+Accepted
+Deferred
+Impossible
+AlreadyDone
+NeedsResource
+Blocked
+InvalidTarget
+NoSlotAvailable
+```
+
+## Regras
+
+```txt
+ordens do player entram na Action Queue
+ordens críticas podem interromper rotina
+sobrevivência pode sobrepor ordem normal
+ordem impossível deve explicar motivo
+```
+
+## Eventos
+
+```txt
+player_order_received
+player_order_accepted
+player_order_rejected
+player_order_completed
+player_order_cancelled
+```
+
+---
+
+# 7. Needs / Stats Contract
+
+## Objetivo
+
+Definir necessidades e atributos do agent.
+
+## Needs
+
+```txt
+hunger
+energy
+health
+mood
+safety
+focus
+```
+
+## Stats
+
+```txt
+strength
+agility
+intelligence
+endurance
+perception
+willpower
+```
+
+## Derivados
+
+```txt
+read_speed
+craft_speed
+cook_speed
+combat_power
+dodge_chance
+carry_capacity
+```
+
+## Regras
+
+```txt
+needs influenciam Utility scoring
+stats influenciam tasks e combate
+skills podem modificar stats derivados
+```
+
+## Eventos
+
+```txt
+need_changed
+agent_hungry
+agent_tired
+agent_wounded
+stat_changed
+```
+
+---
+
+# 8. Utility Scoring Contract
+
+## Objetivo
+
+Definir sistema simples de prioridade para rotina.
+
+## Exemplo de scores
+
+```txt
+score_eat =
+  hunger * weight
+  + food_available
+  - danger
+
+score_sleep =
+  low_energy
+  + safe_room
+  - active_combat
+
+score_read =
+  player_marked_book
+  + focus
+  - hunger
+  - danger
+```
+
+## Uso
+
+```txt
+priorizar próxima ação
+desempatar GOAP
+decidir espera/replanejamento
+```
+
+## Regras
+
+```txt
+Critical > PlayerOrder > Survival > Routine > Flavor
+```
+
+---
+
+# 9. GOAP Goal / Action Contract
+
+## Objetivo
+
+Planejamento cotidiano do agent.
+
+## Goal
+
+```txt
+goal_id
+goal_type
+priority
+desired_state
+valid_when
+abort_when
+```
+
+## Action
+
+```txt
+action_id
+preconditions
+effects
+cost
+required_object_tags
+required_items
+duration
+can_interrupt
+```
+
+## Exemplos
+
+```txt
+Goal:
+  NotHungry
+
+Actions:
+  FindFood
+  TakeRawMeat
+  ReserveCampfire
+  CookMeat
+  EatFood
+```
+
+```txt
+Goal:
+  LearnAlchemy
+
+Actions:
+  FindBook
+  ReserveTable
+  ReadBook
+  GainKnowledge
+```
+
+## Regras
+
+```txt
+GOAP monta plano.
+Action Queue executa plano.
+LimboAI controla estados de execução.
+Smart Objects validam ações físicas.
+```
+
+---
+
+# 10. Action Queue Contract
+
+## Objetivo
+
+Fila estilo The Sims.
+
+## Dados mínimos
+
+```txt
+queue_id
+owner_entity
+current_action
+actions[]
+max_size
+priority_rules
+is_locked
+```
+
+## Action item
+
+```txt
+action_id
+action_type
+target_entity
+target_position
+target_object
+required_slot
+required_items
+priority
+status
+```
+
+## Estados
+
+```txt
+Queued
+Executing
+Waiting
+Blocked
+Completed
+Cancelled
+Failed
+```
+
+## Tamanho inicial
+
+```txt
+mínimo: 1
+recomendado: 3
+máximo V1: 5
+```
+
+## Regras
+
+```txt
+uma action principal por vez
+ações podem ser canceladas
+ações podem esperar slot
+ações podem gerar subtasks
+ações podem ser replanejadas por GOAP
+```
+
+## Eventos
+
+```txt
+action_added
+action_started
+action_completed
+action_failed
+action_cancelled
+queue_cleared
+```
+
+---
+
+# 11. Task Contract
+
+## Objetivo
+
+Representar uma execução concreta de ação.
+
+## Dados
+
+```txt
+task_id
+task_type
+owner_entity
+target_object
+target_slot
+input_items
+output_items
+duration
+progress
+started_at
+ends_at
+state
+result
+```
+
+## Estados
+
+```txt
+Queued
+Reserved
+Moving
+Running
+Waiting
+Completed
+Failed
+Cancelled
+Expired
+Claimed
+```
+
+## Regras
+
+```txt
+task pode exigir reserva
+task pode consumir item
+task pode produzir output
+task pode emitir Room Event
+task pode ser persistente ou temporária
+```
+
+## Exemplo: CookingTask
+
+```txt
+input:
+  raw_meat
+
+object:
+  campfire
+
+duration:
+  10s
+
+output:
+  cooked_meat
+
+event:
+  food_ready
+```
+
+## Exemplo: ReadingTask
+
+```txt
+input:
+  book_item
+
+object:
+  table
+
+duration:
+  based_on_read_speed
+
+output:
+  knowledge_flag
+
+event:
+  book_finished
+```
+
+---
+
+# 12. SmartObject Contract
+
+## Objetivo
+
+Objeto sistêmico que oferece ações.
+
+## Dados
+
+```txt
+object_id
+object_type
+room_id
+state
+available_actions
+slots
+accepted_inputs
+outputs
+reservations
+cooldowns
+progress
+owner
+events_emitted
+```
+
+## Exemplos
+
+```txt
+campfire
+table
+chest
+bookshelf
+workbench
+bedroll
+forge
+alchemy_station
+door
+trap
+altar
+```
+
+## Regras
+
+```txt
+Smart Object declara ações possíveis
+Smart Object valida inputs aceitos
+Smart Object controla slots
+Smart Object emite eventos
+Smart Object pode produzir tasks
+```
+
+## Eventos
+
+```txt
+object_available
+object_reserved
+object_released
+object_task_started
+object_task_completed
+object_state_changed
+```
+
+---
+
+# 13. Slot / Reservation Contract
+
+## Objetivo
+
+Evitar múltiplos agentes usando o mesmo ponto de interação.
+
+## Slot
+
+```txt
+slot_id
+slot_type
+owner_object
+capacity
+current_users
+allowed_actions
+interaction_point
+```
+
+## Reservation
+
+```txt
+reservation_id
+slot_id
+object_id
+reserved_by
+task_id
+created_at
+expires_at
+state
+```
+
+## Estados
+
+```txt
+Active
+Released
+Expired
+Cancelled
+```
+
+## Fluxo
+
+```txt
+verifica slot
+↓
+reserva
+↓
+move até interaction_point
+↓
+executa task
+↓
+libera slot
+```
+
+## Se ocupado
+
+```txt
+esperar
+buscar outro objeto
+fazer outra action
+cancelar
+replanejar
+```
+
+---
+
+# 14. Room Contract
+
+## Objetivo
+
+Unidade principal de espaço/simulação.
+
+## Dados
+
+```txt
+room_id
+room_type
+scene_path
+navigation_region
+entities
+smart_objects
+items
+spawn_areas
+events
+connections
+state
+```
+
+## Tipos
+
+```txt
+Hideout
+Hub
+DungeonRoom
+BossRoom
+Market
+GuildHall
+CraftingRoom
+```
+
+## Regras
+
+```txt
+room possui seu próprio event bus
+room contém entidades ativas
+room gerencia smart objects locais
+room controla entrada/saída
+room pode ser instanciada no coop
+```
+
+## Eventos
+
+```txt
+room_loaded
+room_unloaded
+entity_entered_room
+entity_left_room
+room_event_emitted
+```
+
+---
+
+# 15. Room Event Contract
+
+## Objetivo
+
+Comunicação sistêmica dentro da sala.
+
+## Dados
+
+```txt
+event_id
+event_type
+room_id
+source_entity
+target_entity opcional
+payload
+created_at
+visibility
+ttl
+```
+
+## Eventos base
+
+```txt
+food_ready
+book_finished
+item_dropped
+enemy_spawned
+wave_completed
+object_reserved
+object_released
+trap_triggered
+door_opened
+npc_arrived
+agent_hungry
+agent_tired
+combat_started
+combat_ended
+rare_item_found
+craft_success
+craft_failed
+```
+
+## Consumidores
+
+```txt
+LimboAI
+GOAP
+Quest Manager
+UI
+Audio/visual feedback
+NPC reactions
+```
+
+## Regras
+
+```txt
+evento não deve alterar estado sozinho
+evento avisa sistemas interessados
+sistema responsável decide reação
+```
+
+---
+
+# 16. Inventory Bridge Contract
+
+## Objetivo
+
+Integrar Inventory Manager com os sistemas do jogo.
+
+## Inventory Manager cuida
+
+```txt
+slots
+stacks
+transferências
+containers
+organização
+restrições simples
+```
+
+## Game Systems cuidam
+
+```txt
+efeito do item
+livro lido
+skill aprendida
+quest completa
+drop oficial
+recompensa
+dano
+```
+
+## Eventos
+
+```txt
+item_added
+item_removed
+item_moved
+item_stack_changed
+container_full
+item_rejected
+```
+
+## Bridge deve fazer
+
+```txt
+traduzir evento do plugin para Room/Game Event
+validar tags de container
+avisar Quest Manager
+avisar Action Queue
+avisar Save System
+```
+
+---
+
+# 17. Item Contract
+
+## Dados
+
+```txt
+item_id
+base_id
+name
+category
+tags
+rarity
+stackable
+max_stack
+value
+tradable
+bound
+description
+icon
+world_scene
+```
+
+## Categorias
+
+```txt
+food
+raw_food
+book
+weapon
+armor
+material
+currency
+quest_item
+consumable
+skill_gem
+relic
+```
+
+## Regras
+
+```txt
+livros não stackam
+armas não stackam
+equipamentos não stackam
+moedas stackam
+materiais stackam
+quest items importantes podem ser bound
+```
+
+---
+
+# 18. Container Contract
+
+## Dados
+
+```txt
+container_id
+owner_entity
+container_type
+capacity
+allowed_tags
+blocked_tags
+items
+is_public
+is_persistent
+```
+
+## Exemplos
+
+```txt
+backpack
+chest
+bookshelf
+ingredient_bag
+stash
+merchant_inventory
+```
+
+## Regras
+
+```txt
+estante aceita livros
+mochila aceita itens gerais
+bolsa de ingredientes aceita food/material/herb
+baú aceita geral
+```
+
+## Eventos
+
+```txt
+container_opened
+container_closed
+item_stored
+item_taken
+container_full
+```
+
+---
+
+# 19. Book / Knowledge Contract
+
+## Livro físico
+
+```txt
+item_id
+base_id
+title
+knowledge_id
+read_time
+category: book
+stackable: false
+tradable: true
+```
+
+## Conhecimento
+
+```txt
+knowledge_id
+agent_id
+source_book_id
+unlocked_recipe
+unlocked_skill
+knowledge_flags
+read_at
+```
+
+## Regras
+
+```txt
+livro lido é consumido
+conhecimento fica no agent
+livro repetido vira item comercializável
+agent não lê automaticamente
+jogador marca livro para leitura
+```
+
+## Eventos
+
+```txt
+book_marked_to_read
+reading_started
+reading_progressed
+book_finished
+knowledge_unlocked
+duplicate_book_found
+```
+
+---
+
+# 20. Equipment / Build Contract
+
+## Dados
+
+```txt
+equipment_id
+owner_entity
+weapon_slot
+armor_slot
+accessory_slots
+active_skills
+passive_skills
+combat_stance
+consumable_rules
+```
+
+## Regras
+
+```txt
+equipamento altera stats
+skills equipadas definem combate
+postura define prioridade comportamental
+consumíveis seguem regras de uso
+```
+
+## Posturas
+
+```txt
+ofensiva
+defensiva
+longa_distancia
+conservadora
+arriscada
+```
+
+---
+
+# 21. Skill Contract
+
+## Dados
+
+```txt
+skill_id
+name
+skill_type
+cooldown
+cost
+range
+targeting_type
+tags
+projectile_profile_id
+animation_id
+effects
+requirements
+```
+
+## Tipos
+
+```txt
+active
+passive
+combat
+reading
+craft
+cooking
+alchemy
+social
+```
+
+## Regras
+
+```txt
+skill ativa pode usar BlastBullets2D
+skill passiva modifica stats/scores
+skill precisa respeitar cooldown
+skill pode ser usada por LimboAI
+```
+
+## Eventos
+
+```txt
+skill_equipped
+skill_unequipped
+skill_cast_started
+skill_cast_resolved
+skill_cooldown_started
+```
+
+---
+
+# 22. Combat Contract
+
+## Dados
+
+```txt
+combat_id
+participants
+state
+turn_mode opcional
+auto_battle_enabled
+combat_log
+reward_table
+```
+
+## Participante
+
+```txt
+entity_id
+team
+hp
+stats
+equipment
+active_skills
+passive_skills
+stance
+cooldowns
+status_effects
+```
+
+## Fluxo
+
+```txt
+combat_started
+↓
+LimboAI decide ações
+↓
+skill/basic attack executado
+↓
+dano/status resolvido
+↓
+morte/drop/quest update
+↓
+combat_ended
+```
+
+## Regras
+
+```txt
+host decide combate oficial
+clients exibem feedback
+BlastBullets2D pode representar skill
+AnimationPlayer dá feedback
+```
+
+---
+
+# 23. Projectile / BlastBullets Contract
+
+## Papel
+
+Controlar visual e comportamento de projéteis/skills.
+
+## Dados
+
+```txt
+projectile_id
+owner_entity
+skill_id
+origin
+target
+speed
+pattern
+damage_profile
+visual_profile
+collision_profile
+lifetime
+```
+
+## Padrões
+
+```txt
+straight
+homing
+orbital
+path2d
+spiral
+circle_burst
+rain
+boss_pattern
+```
+
+## Regras
+
+```txt
+BlastBullets2D move/mostra projétil
+Combat System decide dano oficial
+Host decide impacto oficial no coop
+```
+
+## Projectile Proximity Impact
+
+```txt
+se projétil chega perto de blocker:
+  dispara impacto
+  toca efeito
+  remove projétil
+```
+
+Blockers:
+
+```txt
+árvore
+parede
+baú
+pedra
+coluna
+porta
+```
+
+---
+
+# 24. Drag-and-drop Contract
+
+## Papel
+
+Interação física/diegética com slots do mundo.
+
+## Draggable
+
+```txt
+draggable_id
+item_id
+drag_type
+source_container
+payload
+```
+
+## DropZone
+
+```txt
+dropzone_id
+accepted_types
+target_object
+target_slot
+on_drop_action
+```
+
+## Uso
+
+```txt
+carne → fogueira
+livro → estante
+material → bancada
+skill → slot de skill
+arma → slot de equipamento
+```
+
+## Regras
+
+```txt
+drag visual não move item oficialmente sozinho
+Inventory Bridge valida/move
+Game System cria task/efeito
+```
+
+---
+
+# 25. Spawner Bridge Contract
+
+## Papel
+
+Integrar Spawner-Godot-Plugin ao jogo.
+
+## Dados
+
+```txt
+spawn_area_id
+room_id
+enemy_pool
+max_active
+spawn_interval
+wave_id
+spawn_mode
+```
+
+## Modos
+
+```txt
+once
+wave
+infinite
+event_triggered
+boss_phase
+```
+
+## Bridge faz
+
+```txt
+recebe enemy_spawned
+registra entidade
+configura LimboAI
+atribui room_id
+atribui spawn_source
+avisa Quest Manager
+avisa NetworkAdapter no coop
+```
+
+---
+
+# 26. Quest Bridge Contract
+
+## Papel
+
+Integrar Quest Manager com eventos do jogo.
+
+## Quest dados
+
+```txt
+quest_id
+state
+objectives
+metadata
+rewards
+requirements
+```
+
+## Estados
+
+```txt
+available
+accepted
+active
+completed
+failed
+cancelled
+claimed
+```
+
+## Objetivos
+
+```txt
+cook_item
+read_book
+kill_enemy
+enter_room
+open_chest
+complete_dungeon
+talk_to_npc
+craft_item
+```
+
+## Bridge escuta
+
+```txt
+food_ready
+book_finished
+enemy_died
+room_entered
+item_collected
+craft_success
+boss_defeated
+```
+
+## Regras
+
+```txt
+Quest Manager acompanha progresso
+Rewards são aplicadas por Reward System
+Quest não deve alterar inventário direto sem bridge
+```
+
+---
+
+# 27. Guild Contract
+
+## Papel
+
+Interface diegética de quests e dungeons.
+
+## Dados
+
+```txt
+guild_board_id
+available_quests
+available_dungeons
+rumors
+reward_preview
+```
+
+## UX
+
+```txt
+A Guilda enviou novas missões.
+O Correio trouxe rumores.
+Um mapa estranho chegou.
+Novas expedições estão disponíveis.
+```
+
+## V1
+
+```txt
+mural simples
+1 quest simples
+1 dungeon curta
+```
+
+---
+
+# 28. Hub Contract
+
+## Papel
+
+Área social pequena.
+
+## Contém
+
+```txt
+players
+NPCs
+shops
+guild_board
+public_smart_objects
+dungeon_entrance
+party_area
+```
+
+## V1
+
+```txt
+hub pequeno
+1-2 NPCs
+mural da Guilda
+entrada da dungeon
+```
+
+---
+
+# 29. Hideout Contract
+
+## Papel
+
+Base pessoal do agent.
+
+## Contém
+
+```txt
+campfire
+bedroll
+chest
+table
+bookshelf
+workbench futuro
+```
+
+## Funções
+
+```txt
+descansar
+cozinhar
+ler
+guardar item
+organizar
+preparar dungeon
+craftar
+```
+
+---
+
+# 30. Dungeon Room Contract
+
+## Dados
+
+```txt
+dungeon_id
+room_index
+room_type
+encounters
+spawn_areas
+smart_objects
+loot
+exit_rules
+completion_state
+```
+
+## Tipos
+
+```txt
+entrada
+exploração
+combate
+elite
+boss
+descanso
+NPC
+puzzle
+armadilha
+loot
+saída
+```
+
+## Fluxo
+
+```txt
+enter_room
+↓
+spawn/encontro
+↓
+resolver evento
+↓
+coletar loot
+↓
+liberar saída
+```
+
+---
+
+# 31. Party / Coop Session Contract
+
+## Dados
+
+```txt
+session_id
+host_player_id
+players
+max_players
+current_room
+party_state
+connection_state
+```
+
+## V1
+
+```txt
+2 players
+host/client
+```
+
+## Depois
+
+```txt
+até 4 players
+```
+
+## Regras
+
+```txt
+host é autoridade
+clients enviam intents
+estado crítico sincronizado
+```
+
+---
+
+# 32. NetworkAdapter Contract
+
+## Objetivo
+
+Evitar rede espalhada no projeto.
+
+## Métodos esperados
+
+```txt
+host_session()
+join_session()
+leave_session()
+send_intent(intent)
+broadcast_event(event)
+sync_entity_state(entity_id, state)
+spawn_network_entity(scene, data)
+despawn_network_entity(entity_id)
+```
+
+## Intent
+
+```txt
+intent_id
+player_id
+intent_type
+payload
+timestamp
+```
+
+## Regras
+
+```txt
+Game Systems falam com NetworkAdapter
+Nunca chamar RPC espalhado em todo node
+```
+
+---
+
+# 33. Animation / Feedback Contract
+
+## Base
+
+```txt
+AnimatedSprite2D:
+  animação principal
+
+AnimationPlayer:
+  feedback curto
+```
+
+## Estados base
+
+```txt
+idle
+walk
+attack
+cast
+cook
+read
+sleep
+hurt
+death
+```
+
+## Feedbacks
+
+```txt
+damage_flash
+heal_flash
+stun
+level_up
+critical_hit
+shake
+poison_tick
+squash/stretch
+```
+
+## Regras
+
+```txt
+AnimationPlayer não deve quebrar animação base
+feedback deve ser curto
+boss pode usar AnimationPlayer mais complexo
+```
+
+---
+
+# 34. Save Contract
+
+## Status
+
+Addon Save é candidato, mas decisão final vem depois do vertical slice.
+
+## Dados a salvar
+
+```txt
+agent
+stats
+needs
+inventário
+containers
+livros lidos
+skills
+equipamentos
+hideout
+smart objects
+tasks persistentes
+quests
+dungeon progress
+configurações
+```
+
+## Regras
+
+```txt
+save não deve depender de cena exata quebrável
+usar IDs estáveis
+suportar versionamento
+suportar migração futura
+```
+
+## Eventos
+
+```txt
+save_requested
+save_completed
+load_requested
+load_completed
+save_failed
+```
+
+---
+
+# 35. Adventure Pack Contract
+
+## Futuro
+
+Conteúdo jogável externo/manual/procedural.
+
+## Contém
+
+```txt
+manifest
+rooms
+encounters
+entities
+npcs
+objects
+items
+drops
+skills
+dialogues
+rumors
+rewards
+end_conditions
+boss
+traps
+metadata
+```
+
+## Regras
+
+```txt
+pack deve ser validado
+pack deve declarar dependências
+pack não deve quebrar save
+pack precisa versão
+```
+
+---
+
+# 36. Debug / Metrics Contract
+
+## Debug necessário
+
+```txt
+Action Queue Debug
+Task Debug
+Room Event Log
+LimboAI State Debug
+Inventory Debug
+Quest Debug
+Spawn Debug
+Network Debug
+Save Debug
+```
+
+## Métricas
+
+```txt
+FPS
+tempo de load
+tempo de pathfinding
+tempo de task
+ações canceladas
+falhas de reserva
+eventos por room
+entidades por room
+latência coop
+uso de memória
+tamanho de save
+tempo de spawn
+tempo de combate
+```
+
+---
+
+# 37. Vertical Slice Acceptance Contract
+
+## VS1 — Movimento + entidades
+
+Deve provar:
+
+```txt
+player anda com NavigationAgent2D
+LimboAI muda estado idle/walk
+NPC existe
+animal existe
+room existe
+```
+
+## VS2 — Smart Object + Action Queue
+
+Deve provar:
+
+```txt
+ordem entra na fila
+agent reserva slot
+agent anda até objeto
+task roda
+evento é emitido
+```
+
+## VS3 — Inventário + Drag-and-drop
+
+Deve provar:
+
+```txt
+item move entre containers
+dropzone aceita/rejeita
+fogueira recebe carne
+task começa
+```
+
+## VS4 — Quest + Spawn + Combate
+
+Deve provar:
+
+```txt
+quest ativa
+spawn cria inimigo
+enemy usa LimboAI
+skill/projétil funciona
+morte atualiza quest
+```
+
+## VS5 — Coop
+
+Deve provar:
+
+```txt
+host/client conectam
+movimento sincroniza
+task sincroniza
+inimigo sincroniza
+evento sincroniza
+```
+
+---
+
+# 38. Ordem recomendada
+
+```txt
+1. Movement + LimboAI state
+2. Action Queue mínima
+3. Smart Object: fogueira
+4. Reservation slot
+5. Task System
+6. Room Event Bus
+7. Inventory Manager bridge
+8. Drag-and-drop bridge
+9. Quest Manager bridge
+10. Spawner bridge
+11. BlastBullets skill simples
+12. Multiplayer host/client
+13. Save mínimo
+```
+
+---
+
+# 39. Regra final de implementação
+
+```txt
+Vertical slice sempre.
+Um sistema por vez.
+Toda integração passa por bridge/adapter.
+Host decide no coop.
+Plugins reduzem trabalho, mas não mandam na arquitetura.
+LimboAI é a inteligência atual.
+GOAP é planejamento cotidiano.
+Action Queue é o coração estilo The Sims.
+Smart Objects e Room Events fazem o mundo parecer vivo.
+```
+
+```
+```
