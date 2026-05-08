@@ -4,8 +4,8 @@ class_name InteractionResolver
 const INTENT_MOVE := &"move"
 const INTENT_ATTACK := &"attack"
 const INTENT_INSPECT := &"inspect"
-const INTENT_CONTEXT_MENU := &"context_menu"
 const INTENT_CHASE_ATTACK := &"chase_attack"
+const INTENT_NONE := &"none"
 
 
 func resolve_primary(actor: Node2D, click_position: Vector2) -> Dictionary:
@@ -25,10 +25,10 @@ func resolve_primary(actor: Node2D, click_position: Vector2) -> Dictionary:
 func resolve_secondary(actor: Node2D, click_position: Vector2) -> Dictionary:
 	var target := _pick_interactable(actor, click_position)
 	if target == null:
-		return {"intent": INTENT_MOVE, "target": null, "position": click_position}
+		return {"intent": INTENT_NONE, "target": null, "position": click_position}
 	if target.is_in_group(&"hostile"):
 		return {"intent": INTENT_CHASE_ATTACK, "target": target, "position": click_position}
-	return {"intent": INTENT_CONTEXT_MENU, "target": target, "position": click_position}
+	return {"intent": INTENT_NONE, "target": target, "position": click_position}
 
 
 func _pick_interactable(actor: Node2D, click_position: Vector2) -> Node:

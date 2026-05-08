@@ -129,6 +129,8 @@ func set_combat_target(target: Node2D) -> void:
 		_combat_target = null
 		return
 	_combat_target = target
+	clear_interaction_target()
+	face_toward(target.global_position)
 
 
 func clear_combat_target() -> void:
@@ -195,6 +197,7 @@ func _update_chase_attack() -> void:
 	if dist <= get_attack_range():
 		if motor != null and motor.has_method("stop"):
 			motor.call("stop")
+		face_toward(_combat_target.global_position)
 		request_attack()
 		return
 
@@ -219,6 +222,13 @@ func _is_target_alive(target: Node2D) -> bool:
 	if health != null and health.has_method("is_alive"):
 		return bool(health.call("is_alive"))
 	return true
+
+
+func face_toward(target_position: Vector2) -> void:
+	var dir: Vector2 = target_position - global_position
+	if dir.length_squared() < 0.0001:
+		return
+	_play_directional_animation(idle_prefix, dir)
 
 
 func play_idle_animation() -> void:

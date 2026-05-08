@@ -10,7 +10,7 @@ Branch: `feat/interaction-intent-fase2`
 ## Ajustes de comportamento
 1. Cancelamento de chase combat
 - Clique no chao (`move`) cancela intents ativos (`cancel_all_intents`) e inicia walk normal.
-- Clique em alvo social (`inspect`/`context_menu`) cancela chase combat antes da acao social.
+- Clique em alvo social (`inspect`) cancela chase combat antes da acao social.
 - Troca de alvo hostil atualiza `combat_target`.
 
 2. Chase + attack com saida segura
@@ -26,12 +26,9 @@ Branch: `feat/interaction-intent-fase2`
   - para e limpa intent ao entrar no range.
 - Resolve o problema de "grudar empurrando NPC amigo".
 
-4. Menu contextual
-- `PopupMenu` mantido somente no player local.
-- Opcoes atuais:
-  - `Inspect`
-  - `Talk` (para NPC/friendly)
-  - `Attack` / `Chase + Attack` (para hostile)
+4. Clique secundario sem menu (escopo atual)
+- Clique secundario em `hostile`: `chase_attack`.
+- Clique secundario em chao ou alvos nao-hostis: `none` (nao move e cancela intents).
 
 ## Base de itens/equipamentos
 Scripts novos:
@@ -63,5 +60,5 @@ Integracao:
 
 ## Proximos passos recomendados
 1. Conectar evento de `Health.death` para animacao de morte + remocao/disable do collider.
-2. Adicionar comando explicito "Stop" no contexto (opcional UX).
+2. Adicionar comando explicito "Stop" como acao dedicada de input (opcional UX).
 3. Migrar intents para command bus replicavel em multiplayer (cliente envia intencao, host valida e simula).
