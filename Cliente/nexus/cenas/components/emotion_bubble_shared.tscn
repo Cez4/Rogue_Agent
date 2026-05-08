@@ -1,0 +1,115 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" uid="uid://b46nvc0ukccid" path="res://Assets/emotions/spriteExc.png" id="1_exc"]
+[ext_resource type="Texture2D" uid="uid://dffhs4xccwdww" path="res://Assets/emotions/spriteHoe.png" id="2_hoe"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_0"]
+atlas = ExtResource("1_exc")
+region = Rect2(0, 0, 27, 33)
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_1"]
+atlas = ExtResource("1_exc")
+region = Rect2(27, 0, 27, 33)
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_2"]
+atlas = ExtResource("1_exc")
+region = Rect2(54, 0, 27, 33)
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_3"]
+atlas = ExtResource("1_exc")
+region = Rect2(81, 0, 27, 33)
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_4"]
+atlas = ExtResource("1_exc")
+region = Rect2(108, 0, 27, 33)
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_5"]
+atlas = ExtResource("1_exc")
+region = Rect2(135, 0, 27, 33)
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_6"]
+atlas = ExtResource("1_exc")
+region = Rect2(162, 0, 27, 33)
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_7"]
+atlas = ExtResource("1_exc")
+region = Rect2(189, 0, 27, 33)
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_8"]
+atlas = ExtResource("1_exc")
+region = Rect2(216, 0, 27, 33)
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_9"]
+atlas = ExtResource("1_exc")
+region = Rect2(243, 0, 27, 33)
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_10"]
+atlas = ExtResource("1_exc")
+region = Rect2(270, 0, 27, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_0"]
+atlas = ExtResource("2_hoe")
+region = Rect2(0, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_1"]
+atlas = ExtResource("2_hoe")
+region = Rect2(39, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_2"]
+atlas = ExtResource("2_hoe")
+region = Rect2(78, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_3"]
+atlas = ExtResource("2_hoe")
+region = Rect2(117, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_4"]
+atlas = ExtResource("2_hoe")
+region = Rect2(156, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_5"]
+atlas = ExtResource("2_hoe")
+region = Rect2(195, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_6"]
+atlas = ExtResource("2_hoe")
+region = Rect2(234, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_7"]
+atlas = ExtResource("2_hoe")
+region = Rect2(273, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_8"]
+atlas = ExtResource("2_hoe")
+region = Rect2(312, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_9"]
+atlas = ExtResource("2_hoe")
+region = Rect2(351, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_10"]
+atlas = ExtResource("2_hoe")
+region = Rect2(390, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_11"]
+atlas = ExtResource("2_hoe")
+region = Rect2(429, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_12"]
+atlas = ExtResource("2_hoe")
+region = Rect2(468, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_13"]
+atlas = ExtResource("2_hoe")
+region = Rect2(507, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_14"]
+atlas = ExtResource("2_hoe")
+region = Rect2(546, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_15"]
+atlas = ExtResource("2_hoe")
+region = Rect2(585, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_16"]
+atlas = ExtResource("2_hoe")
+region = Rect2(624, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_17"]
+atlas = ExtResource("2_hoe")
+region = Rect2(663, 0, 39, 26)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_18"]
+atlas = ExtResource("2_hoe")
+region = Rect2(702, 0, 39, 26)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_emotes"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("AtlasTexture_exc_0")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_exc_1")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_exc_2")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_exc_3")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_exc_4")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_exc_5")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_exc_6")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_exc_7")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_exc_8")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_exc_9")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_exc_10")}],
+"loop": true,
+"name": &"Exc",
+"speed": 10.0
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_0")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_1")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_2")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_3")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_4")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_5")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_6")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_7")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_8")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_9")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_10")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_11")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_12")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_13")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_14")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_15")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_16")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_17")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_hoe_18")}],
+"loop": true,
+"name": &"Hoe",
+"speed": 10.0
+}]
+
+[node name="EmotionBubble" type="AnimatedSprite2D"]
+visible = false
+position = Vector2(-8, -40)
+sprite_frames = SubResource("SpriteFrames_emotes")
+animation = &"Hoe"
