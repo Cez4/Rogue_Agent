@@ -83,7 +83,7 @@ func _dispatch_intent(intent: Dictionary) -> void:
 			if inspect_target is Node2D and _body.has_method("set_interaction_target"):
 				_body.call("set_interaction_target", inspect_target, 26.0)
 		&"none":
-			_cancel_all_intents()
+			return
 
 
 func _is_player_controlled_body() -> bool:

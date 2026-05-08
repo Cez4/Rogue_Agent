@@ -2,6 +2,7 @@
 extends BTAction
 
 @export var started_var: StringName = &"attack_task_started"
+@export var target_var: StringName = &"combat_target"
 
 
 func _generate_name() -> String:
@@ -32,6 +33,13 @@ func _tick(_delta: float) -> Status:
 		return SUCCESS
 
 	# Start a new attack and immediately switch to RUNNING if pending got set.
+	var target := blackboard.get_var(target_var, null) as Node2D
+	if is_instance_valid(target) and agent.has_method("face_toward"):
+		agent.face_toward(target.global_position)
+	if agent.has_method("get"):
+		var motor_node: Variant = agent.get("motor")
+		if motor_node != null and motor_node.has_method("stop"):
+			motor_node.stop()
 	agent.request_attack()
 	attack_pending = false
 	if agent.has_method("get"):

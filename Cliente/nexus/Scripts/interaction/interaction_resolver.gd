@@ -6,6 +6,7 @@ const INTENT_ATTACK := &"attack"
 const INTENT_INSPECT := &"inspect"
 const INTENT_CHASE_ATTACK := &"chase_attack"
 const INTENT_NONE := &"none"
+const PICK_RADIUS: float = 36.0
 
 
 func resolve_primary(actor: Node2D, click_position: Vector2) -> Dictionary:
@@ -61,6 +62,36 @@ func _pick_interactable(actor: Node2D, click_position: Vector2) -> Node:
 		var owner := _resolve_interactable_owner(collider)
 		if owner != null and owner != actor:
 			return owner
+
+	# Fallback with tolerance radius so right-click from distance is not pixel-perfect on small colliders.
+	var shape := CircleShape2D.new()
+	shape.radius = PICK_RADIUS
+	var shape_query := PhysicsShapeQueryParameters2D.new()
+	shape_query.shape = shape
+	shape_query.transform = Transform2D(0.0, click_position)
+	shape_query.collide_with_areas = true
+	shape_query.collide_with_bodies = true
+	shape_query.exclude = [actor.get_rid()]
+
+	var nearby_hits: Array[Dictionary] = world_2d.direct_space_state.intersect_shape(shape_query, 24)
+	var best_owner: Node = null
+	var best_dist_sq: float = INF
+	for hit in nearby_hits:
+		var collider: Object = hit.get("collider")
+		if collider == null:
+			continue
+		var owner := _resolve_interactable_owner(collider)
+		if owner == null or owner == actor:
+			continue
+		if owner is Node2D:
+			var d2: float = click_position.distance_squared_to((owner as Node2D).global_position)
+			if d2 < best_dist_sq:
+				best_dist_sq = d2
+				best_owner = owner
+		elif best_owner == null:
+			best_owner = owner
+	if best_owner != null:
+		return best_owner
 	return null
 
 

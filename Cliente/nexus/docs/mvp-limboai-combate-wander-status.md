@@ -43,6 +43,11 @@ Estado atual consolidado: `feat/combat-intent-fase4`
   - limpeza garantida de `_attack_pending`.
 - Corte de animacao de ataque resolvido:
   - estado agora sincroniza com fim real da animacao nao-loop.
+- Fix de chase por clique direito distante (apos cancelar):
+  - `intent none` nao cancela mais todos os estados.
+  - aumento de tolerancia de picking (`PICK_RADIUS`).
+  - ajuste do BT de combate do player para remover conflito de percepcao no ramo de ataque.
+  - doc tecnico: `docs/estudo-fix-chase-right-click-distancia-2026-05-08.md`.
 
 ## LimboAI no projeto
 - HSM para execucao de locomocao/ataque no actor.

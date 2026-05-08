@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 @export var movement_config: Resource
 @export var equipment_loadout: EquipmentLoadout
+@export var combat_perception_profile: CombatPerceptionProfile
 @export var player_controlled: bool = true
 @export var is_hostile: bool = false
 @export var use_bt_brain: bool = false
@@ -35,6 +36,13 @@ extends CharacterBody2D
 @export var chase_attack_range: float = 28.0
 @export var interaction_stop_range: float = 26.0
 @export var chase_repath_interval_sec: float = 0.2
+@export_group("Runtime Stats")
+@export var base_perception_radius: float = 120.0
+@export var base_perception_min_distance: float = 28.0
+@export var base_perception_max_distance: float = 148.0
+@export var base_attack_range_bonus: float = 0.0
+@export var base_attack_range_multiplier: float = 0.0
+@export var base_attack_stop_buffer: float = 2.0
 
 @onready var controller: Node = $PlayerController
 @onready var motor: Node = $PlayerMotor
@@ -58,10 +66,13 @@ var _interaction_target: Node2D
 var _interaction_target_range: float = 0.0
 var _next_chase_repath_sec: float = 0.0
 var _spawn_position: Vector2 = Vector2.ZERO
+var _stats: StatsComponent
 
 
 func _ready() -> void:
 	_spawn_position = global_position
+	if combat_perception_profile == null:
+		combat_perception_profile = CombatPerceptionProfile.new()
 	if player_controlled:
 		add_to_group("player")
 	else:
@@ -82,6 +93,7 @@ func _ready() -> void:
 	motor.set("config", movement_config)
 	motor.call("setup", self)
 	controller.call("setup", self)
+	_setup_stats()
 	_setup_interactable_component()
 	_connect_health_signals()
 	_reset_wander_timer()
@@ -224,9 +236,59 @@ func _update_chase_attack() -> void:
 
 
 func get_attack_range() -> float:
+	var range_bonus: float = get_stat_value(&"attack_range_bonus", base_attack_range_bonus)
+	var range_mul: float = get_stat_value(&"attack_range_multiplier", base_attack_range_multiplier)
 	if equipment_loadout != null and equipment_loadout.weapon != null:
-		return maxf(6.0, equipment_loadout.weapon.attack_range)
-	return maxf(6.0, chase_attack_range)
+		var weapon_range: float = float(equipment_loadout.weapon.attack_range)
+		return maxf(6.0, (weapon_range + range_bonus) * (1.0 + range_mul))
+	return maxf(6.0, (chase_attack_range + range_bonus) * (1.0 + range_mul))
+
+
+func get_attack_stop_distance() -> float:
+	var profile_stop_buffer: float = base_attack_stop_buffer
+	if combat_perception_profile != null:
+		profile_stop_buffer = combat_perception_profile.attack_stop_buffer
+	var stop_buffer: float = get_stat_value(&"attack_stop_buffer", profile_stop_buffer)
+	return maxf(2.0, get_attack_range() - stop_buffer)
+
+
+func get_perception_min_distance() -> float:
+	return maxf(0.0, get_stat_value(&"perception_min_distance", base_perception_min_distance))
+
+
+func get_perception_max_distance() -> float:
+	var profile_max: float = base_perception_max_distance
+	if combat_perception_profile != null:
+		profile_max = combat_perception_profile.lose_radius
+	return maxf(get_perception_min_distance(), get_stat_value(&"perception_max_distance", profile_max))
+
+
+func get_combat_acquire_radius() -> float:
+	var profile_acquire: float = base_perception_radius
+	if combat_perception_profile != null:
+		profile_acquire = combat_perception_profile.acquire_radius
+	return maxf(8.0, get_stat_value(&"combat_acquire_radius", profile_acquire))
+
+
+func get_combat_lose_radius() -> float:
+	var profile_lose: float = maxf(get_combat_acquire_radius(), base_perception_max_distance)
+	if combat_perception_profile != null:
+		profile_lose = maxf(get_combat_acquire_radius(), combat_perception_profile.lose_radius)
+	return maxf(get_combat_acquire_radius(), get_stat_value(&"combat_lose_radius", profile_lose))
+
+
+func get_combat_target_memory_sec() -> float:
+	var profile_memory: float = 1.2
+	if combat_perception_profile != null:
+		profile_memory = combat_perception_profile.target_memory_sec
+	return maxf(0.0, get_stat_value(&"combat_target_memory_sec", profile_memory))
+
+
+func get_combat_reacquire_interval_sec() -> float:
+	var profile_reacquire: float = 0.12
+	if combat_perception_profile != null:
+		profile_reacquire = combat_perception_profile.reacquire_interval_sec
+	return maxf(0.01, get_stat_value(&"combat_reacquire_interval_sec", profile_reacquire))
 
 
 func _is_target_alive(target: Node2D) -> bool:
@@ -335,12 +397,22 @@ func update_walk_animation() -> void:
 
 
 func play_attack_animation() -> void:
-	var played := _play_directional_animation(attack_prefix, velocity)
+	var dir: Vector2 = _direction_vector_from_suffix(_last_direction_suffix)
+	var played := _play_directional_animation(attack_prefix, dir)
 	if not played:
 		return
 	var animation_name := StringName("%s_%s" % [attack_prefix, _last_direction_suffix])
 	if animated_sprite != null and animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation(animation_name):
 		animated_sprite.sprite_frames.set_animation_loop(animation_name, false)
+
+
+func orient_attack_hitbox() -> void:
+	var hitbox := get_node_or_null(^"AttackHitbox") as Area2D
+	if hitbox == null:
+		return
+	var base_distance: float = maxf(8.0, hitbox.position.length())
+	var dir: Vector2 = _direction_vector_from_suffix(_last_direction_suffix)
+	hitbox.position = dir * base_distance
 
 
 func wait_for_attack_animation_end(max_wait_sec: float = 1.2) -> void:
@@ -424,8 +496,8 @@ func can_look_target(target: Node2D) -> bool:
 	if now_sec < _next_look_allowed_sec:
 		return false
 
-	var min_dist: float = maxf(0.0, look_interest_min_distance)
-	var max_dist: float = maxf(look_interest_max_distance, look_interest_radius)
+	var min_dist: float = get_perception_min_distance()
+	var max_dist: float = maxf(get_perception_max_distance(), get_stat_value(&"perception_radius", base_perception_radius))
 	if max_dist < min_dist:
 		max_dist = min_dist
 
@@ -561,3 +633,75 @@ func _direction_suffix_from_vector(v: Vector2) -> StringName:
 	if deg >= -67.5 and deg < -22.5:
 		return &"NE"
 	return _last_direction_suffix
+
+
+func _direction_vector_from_suffix(suffix: StringName) -> Vector2:
+	match suffix:
+		&"L":
+			return Vector2(1.0, 0.0)
+		&"SE":
+			return Vector2(0.70710677, 0.70710677)
+		&"S":
+			return Vector2(0.0, 1.0)
+		&"SO":
+			return Vector2(-0.70710677, 0.70710677)
+		&"O":
+			return Vector2(-1.0, 0.0)
+		&"NO":
+			return Vector2(-0.70710677, -0.70710677)
+		&"N":
+			return Vector2(0.0, -1.0)
+		&"NE":
+			return Vector2(0.70710677, -0.70710677)
+		_:
+			return Vector2(0.0, 1.0)
+
+
+func get_stat_value(stat_id: StringName, fallback: float = 0.0) -> float:
+	if _stats == null:
+		return fallback
+	return _stats.get_stat(stat_id, fallback)
+
+
+func _setup_stats() -> void:
+	_stats = get_node_or_null(^"Stats") as StatsComponent
+	if _stats == null:
+		_stats = StatsComponent.new()
+		_stats.name = "Stats"
+		add_child(_stats)
+	_stats.set_base_stats({
+		&"perception_radius": base_perception_radius,
+		&"perception_min_distance": base_perception_min_distance,
+		&"perception_max_distance": base_perception_max_distance,
+		&"combat_acquire_radius": get_combat_acquire_radius(),
+		&"combat_lose_radius": get_combat_lose_radius(),
+		&"combat_target_memory_sec": get_combat_target_memory_sec(),
+		&"combat_reacquire_interval_sec": get_combat_reacquire_interval_sec(),
+		&"attack_range_bonus": base_attack_range_bonus,
+		&"attack_range_multiplier": base_attack_range_multiplier,
+		&"attack_stop_buffer": base_attack_stop_buffer
+	})
+	_apply_loadout_modifiers_to_stats()
+
+
+func _apply_loadout_modifiers_to_stats() -> void:
+	if _stats == null:
+		return
+	_stats.clear_modifiers()
+	if equipment_loadout == null:
+		return
+	_add_item_modifiers(equipment_loadout.weapon)
+	_add_item_modifiers(equipment_loadout.armor)
+	_add_item_modifiers(equipment_loadout.necklace)
+
+
+func _add_item_modifiers(item: Resource) -> void:
+	if item == null:
+		return
+	if item.has_method("get"):
+		var mods: Variant = item.get("stat_modifiers")
+		if mods is Array:
+			for m in mods:
+				var modifier: StatModifier = m as StatModifier
+				if modifier != null:
+					_stats.add_modifier(modifier)

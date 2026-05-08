@@ -28,6 +28,8 @@ func _enter() -> void:
 
 	if agent.has_method("play_attack_animation"):
 		agent.play_attack_animation()
+	if agent.has_method("orient_attack_hitbox"):
+		agent.orient_attack_hitbox()
 
 	var hitbox := agent.get_node_or_null(hitbox_path)
 	if hitbox != null and hitbox.has_method("set_hitbox_enabled"):

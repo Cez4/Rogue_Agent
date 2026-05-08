@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://Scripts/ai/tasks/bt_is_combat_target_in_attack_range.gd" id="4_inrange"]
 [ext_resource type="Script" path="res://Scripts/ai/tasks/bt_request_attack.gd" id="5_attack"]
 [ext_resource type="Script" path="res://Scripts/ai/tasks/bt_chase_combat_target.gd" id="6_chase"]
+[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_validate_combat_target_perception.gd" id="7_perception"]
 
 [sub_resource type="BTAction" id="BTAction_pull"]
 script = ExtResource("1_pull")
@@ -22,6 +23,9 @@ script = ExtResource("4_inrange")
 [sub_resource type="BTAction" id="BTAction_attack"]
 script = ExtResource("5_attack")
 
+[sub_resource type="BTCondition" id="BTCondition_perception_attack"]
+script = ExtResource("7_perception")
+
 [sub_resource type="BTSequence" id="BTSequence_attack"]
 children = [SubResource("BTAction_pull"), SubResource("BTCondition_validate"), SubResource("BTCondition_in_range"), SubResource("BTAction_face"), SubResource("BTAction_attack")]
 
@@ -34,6 +38,9 @@ script = ExtResource("2_validate")
 [sub_resource type="BTAction" id="BTAction_chase"]
 script = ExtResource("6_chase")
 
+[sub_resource type="BTCondition" id="BTCondition_perception_chase"]
+script = ExtResource("7_perception")
+
 [sub_resource type="BTSequence" id="BTSequence_chase"]
 children = [SubResource("BTAction_t1gar"), SubResource("BTCondition_eltfe"), SubResource("BTAction_chase")]
 
@@ -42,3 +49,4 @@ children = [SubResource("BTSequence_attack"), SubResource("BTSequence_chase")]
 
 [resource]
 root_task = SubResource("BTSelector_root")
+
