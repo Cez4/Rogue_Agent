@@ -33,7 +33,9 @@ func _tick(_delta: float) -> Status:
 		return SUCCESS
 
 	# Start a new attack and immediately switch to RUNNING if pending got set.
-	var target := blackboard.get_var(target_var, null) as Node2D
+	var target: Node2D = null
+	if blackboard.has_var(target_var):
+		target = blackboard.get_var(target_var) as Node2D
 	if is_instance_valid(target) and agent.has_method("face_toward"):
 		agent.face_toward(target.global_position)
 	if agent.has_method("get"):

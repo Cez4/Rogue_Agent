@@ -48,6 +48,15 @@ Estado atual consolidado: `feat/combat-intent-fase4`
   - aumento de tolerancia de picking (`PICK_RADIUS`).
   - ajuste do BT de combate do player para remover conflito de percepcao no ramo de ataque.
   - doc tecnico: `docs/estudo-fix-chase-right-click-distancia-2026-05-08.md`.
+- Wildcat combate BT-first (inimigo simbolo do projeto):
+  - BT do wildcat migrado para pipeline de combate completo + fallback wander.
+  - task dedicada de aquisicao de alvo por percepcao (`bt_acquire_combat_target_in_group.gd`).
+  - telemetria de decisao ativa para wildcat (acquire/reacquire/blocked/commit).
+- Ciclo de morte/respawn do wildcat estabilizado:
+  - morte toca `Die_*` sem sobrescrita de walk/attack.
+  - reset de memoria de combate no respawn (limpa blackboard e target lock).
+  - correcao de blackboard missing var em `bt_request_attack`.
+  - doc tecnico: `docs/estudo-wildcat-death-respawn-bt-memory-2026-05-08.md`.
 
 ## LimboAI no projeto
 - HSM para execucao de locomocao/ataque no actor.
@@ -62,13 +71,14 @@ Estado atual consolidado: `feat/combat-intent-fase4`
 - Cliente: predicao/interpolacao apenas visual.
 
 ## Proximos passos tecnicos
-1. Telemetria de decisao BT (por task/status) + correlacao com telemetria de combate.
-2. Feedback de hit:
+1. Calibracao fina por archetype (player/wildcat): percepcao, range, reacquire, memory.
+2. Padronizar pipeline BT de combate para novos hostis (base enemy template).
+3. Feedback de hit:
    - FX local de impacto, flash de dano, popup de numero.
-3. Validacao para futuro multiplayer:
+4. Validacao para futuro multiplayer:
    - gates de range/LOS/cooldown centralizados no host.
-4. Padrao para NPCs:
-   - manter BT + tasks reutilizaveis para todos os NPCs base e bosses.
+5. Padrao para NPCs:
+   - manter BT + tasks reutilizaveis para hostis, companions e bosses.
 
 ## Arquivos-chave
 - Actor base:

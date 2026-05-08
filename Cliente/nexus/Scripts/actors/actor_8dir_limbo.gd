@@ -9,9 +9,11 @@ extends CharacterBody2D
 @export var idle_prefix: String = "Idle"
 @export var walk_prefix: String = "Walk"
 @export var attack_prefix: String = "Attack"
+@export var die_prefix: String = "Die"
 @export var attack_duration_sec: float = 0.35
 @export var enable_respawn: bool = false
 @export var respawn_delay_sec: float = 6.0
+@export var respawn_brain_delay_sec: float = 0.35
 @export var look_interest_radius: float = 120.0
 @export var look_interest_min_distance: float = 28.0
 @export var look_interest_max_distance: float = 148.0
@@ -50,6 +52,7 @@ extends CharacterBody2D
 @onready var idle_state: LimboState = $LimboHSM/IdleState
 @onready var walk_state: LimboState = $LimboHSM/WalkState
 @onready var attack_state: LimboState = $LimboHSM/AttackState
+@onready var bt_player: Node = get_node_or_null(^"BTPlayer")
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var emotion_bubble: AnimatedSprite2D = get_node_or_null(^"EmotionBubble") as AnimatedSprite2D
 
@@ -68,6 +71,7 @@ var _interaction_target_range: float = 0.0
 var _next_chase_repath_sec: float = 0.0
 var _spawn_position: Vector2 = Vector2.ZERO
 var _stats: StatsComponent
+var _is_dead: bool = false
 
 
 func _ready() -> void:
@@ -103,6 +107,8 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if _is_dead:
+		return
 	motor.call("physics_update", delta)
 	_update_interaction_approach()
 	if not use_bt_brain:
@@ -133,6 +139,8 @@ func is_actor_moving() -> bool:
 
 
 func request_attack() -> void:
+	if _is_dead:
+		return
 	if _attack_pending:
 		return
 	_attack_pending = true
@@ -356,7 +364,13 @@ func _connect_health_signals() -> void:
 
 
 func _on_health_death() -> void:
+	_is_dead = true
+	clear_attack_pending()
+	_disable_brain_runtime()
+	if hsm != null:
+		hsm.set_active(false)
 	cancel_all_intents()
+	_play_die_animation()
 	_disable_combat_collision()
 	CombatTelemetry.emit_event(&"target_died", {"actor": name})
 	if not enable_respawn:
@@ -390,9 +404,53 @@ func _respawn_after_delay() -> void:
 	var health := get_node_or_null(^"Health")
 	if health != null and health.has_method("reset_health"):
 		health.call("reset_health")
+	_is_dead = false
 	global_position = _spawn_position
+	velocity = Vector2.ZERO
+	_reset_combat_memory()
 	_enable_combat_collision()
+	if motor != null and motor.has_method("stop"):
+		motor.call("stop")
+	if hsm != null:
+		hsm.set_active(true)
+	play_idle_animation()
+	await get_tree().create_timer(maxf(0.0, respawn_brain_delay_sec)).timeout
+	_enable_brain_runtime()
 	CombatTelemetry.emit_event(&"respawned", {"actor": name})
+
+
+func _disable_brain_runtime() -> void:
+	if bt_player != null and bt_player.has_method("set"):
+		bt_player.set("active", false)
+
+
+func _enable_brain_runtime() -> void:
+	if bt_player != null and bt_player.has_method("set"):
+		bt_player.set("active", true)
+
+
+func _reset_combat_memory() -> void:
+	clear_combat_target()
+	clear_interaction_target()
+	var bb: Variant = null
+	if bt_player != null and bt_player.has_method("get"):
+		bb = bt_player.get("blackboard")
+	if bb != null and bb.has_method("erase_var"):
+		bb.erase_var(&"combat_target")
+		bb.erase_var(&"combat_target_last_seen_ms")
+		bb.erase_var(&"combat_next_reacquire_ms")
+		bb.erase_var(&"attack_task_started")
+		bb.erase_var(&"last_attack_blocked_reason")
+
+
+func _play_die_animation() -> void:
+	if animated_sprite == null or animated_sprite.sprite_frames == null:
+		return
+	var animation_name: StringName = StringName("%s_%s" % [die_prefix, _last_direction_suffix])
+	if not animated_sprite.sprite_frames.has_animation(animation_name):
+		return
+	animated_sprite.sprite_frames.set_animation_loop(animation_name, false)
+	animated_sprite.play(animation_name)
 
 
 func face_toward(target_position: Vector2) -> void:

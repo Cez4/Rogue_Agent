@@ -1,51 +1,88 @@
 [gd_resource type="BehaviorTree" format=3 uid="uid://bnaa8i7xnsml0"]
 
-[ext_resource type="Script" uid="uid://c0jdr5v85mpgc" path="res://Scripts/ai/tasks/bt_acquire_target_in_group.gd" id="1_acquire"]
-[ext_resource type="Script" uid="uid://do0qq6e7aefuo" path="res://Scripts/ai/tasks/bt_is_target_in_range.gd" id="2_inrange"]
-[ext_resource type="Script" uid="uid://bcq1wwy6w0nvr" path="res://Scripts/ai/tasks/bt_look_at_target.gd" id="3_look"]
-[ext_resource type="Script" uid="uid://dk02xd2gjaytq" path="res://Scripts/ai/tasks/bt_idle_wander_loop.gd" id="4_idlewander"]
+[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_acquire_combat_target_in_group.gd" id="1_acquire_combat"]
+[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_pull_combat_target.gd" id="2_pull"]
+[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_validate_combat_target_alive.gd" id="3_validate_alive"]
+[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_validate_combat_target_perception.gd" id="4_validate_perception"]
+[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_is_combat_target_in_attack_range.gd" id="5_inrange"]
+[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_face_combat_target_8dir.gd" id="6_face"]
+[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_request_attack.gd" id="7_attack"]
+[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_chase_combat_target.gd" id="8_chase"]
+[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_idle_wander_loop.gd" id="9_idlewander"]
 
 [sub_resource type="BlackboardPlan" id="BlackboardPlan_wildcat"]
-var/target_player/name = &"target_player"
-var/target_player/type = 24
-var/target_player/hint = 0
-var/target_player/hint_string = ""
-var/look_interest_radius/name = &"look_interest_radius"
-var/look_interest_radius/type = 3
-var/look_interest_radius/value = 72.0
-var/look_interest_radius/hint = 0
-var/look_interest_radius/hint_string = ""
-var/look_hold_sec/name = &"look_hold_sec"
-var/look_hold_sec/type = 3
-var/look_hold_sec/value = 0.65
-var/look_hold_sec/hint = 0
-var/look_hold_sec/hint_string = ""
+var/combat_target/name = &"combat_target"
+var/combat_target/type = 24
+var/combat_target/hint = 0
+var/combat_target/hint_string = ""
+var/combat_target_last_seen_ms/name = &"combat_target_last_seen_ms"
+var/combat_target_last_seen_ms/type = 2
+var/combat_target_last_seen_ms/hint = 0
+var/combat_target_last_seen_ms/hint_string = ""
+var/combat_next_reacquire_ms/name = &"combat_next_reacquire_ms"
+var/combat_next_reacquire_ms/type = 2
+var/combat_next_reacquire_ms/hint = 0
+var/combat_next_reacquire_ms/hint_string = ""
+var/attack_task_started/name = &"attack_task_started"
+var/attack_task_started/type = 1
+var/attack_task_started/hint = 0
+var/attack_task_started/hint_string = ""
+var/last_attack_blocked_reason/name = &"last_attack_blocked_reason"
+var/last_attack_blocked_reason/type = 4
+var/last_attack_blocked_reason/hint = 0
+var/last_attack_blocked_reason/hint_string = ""
 
-[sub_resource type="BTAction" id="BTAction_acquire"]
-script = ExtResource("1_acquire")
+[sub_resource type="BTAction" id="BTAction_acquire_attack"]
+script = ExtResource("1_acquire_combat")
 
-[sub_resource type="BTCondition" id="BTCondition_inrange"]
-script = ExtResource("2_inrange")
+[sub_resource type="BTAction" id="BTAction_pull_attack"]
+script = ExtResource("2_pull")
 
-[sub_resource type="BTAction" id="BTAction_look"]
-script = ExtResource("3_look")
+[sub_resource type="BTCondition" id="BTCondition_alive_attack"]
+script = ExtResource("3_validate_alive")
 
-[sub_resource type="BTSequence" id="BTSequence_look"]
-custom_name = "Wildcat Look At Player"
-children = [SubResource("BTAction_acquire"), SubResource("BTCondition_inrange"), SubResource("BTAction_look")]
+[sub_resource type="BTCondition" id="BTCondition_perception_attack"]
+script = ExtResource("4_validate_perception")
 
-[sub_resource type="BTCooldown" id="BTCooldown_look"]
-children = [SubResource("BTSequence_look")]
+[sub_resource type="BTCondition" id="BTCondition_in_range"]
+script = ExtResource("5_inrange")
 
-[sub_resource type="BTProbability" id="BTProbability_look"]
-children = [SubResource("BTCooldown_look")]
+[sub_resource type="BTAction" id="BTAction_face"]
+script = ExtResource("6_face")
+
+[sub_resource type="BTAction" id="BTAction_attack"]
+script = ExtResource("7_attack")
+
+[sub_resource type="BTSequence" id="BTSequence_attack"]
+custom_name = "Wildcat Combat Attack"
+children = [SubResource("BTAction_acquire_attack"), SubResource("BTAction_pull_attack"), SubResource("BTCondition_alive_attack"), SubResource("BTCondition_perception_attack"), SubResource("BTCondition_in_range"), SubResource("BTAction_face"), SubResource("BTAction_attack")]
+
+[sub_resource type="BTAction" id="BTAction_acquire_chase"]
+script = ExtResource("1_acquire_combat")
+
+[sub_resource type="BTAction" id="BTAction_pull_chase"]
+script = ExtResource("2_pull")
+
+[sub_resource type="BTCondition" id="BTCondition_alive_chase"]
+script = ExtResource("3_validate_alive")
+
+[sub_resource type="BTCondition" id="BTCondition_perception_chase"]
+script = ExtResource("4_validate_perception")
+
+[sub_resource type="BTAction" id="BTAction_chase"]
+script = ExtResource("8_chase")
+
+[sub_resource type="BTSequence" id="BTSequence_chase"]
+custom_name = "Wildcat Combat Chase"
+children = [SubResource("BTAction_acquire_chase"), SubResource("BTAction_pull_chase"), SubResource("BTCondition_alive_chase"), SubResource("BTCondition_perception_chase"), SubResource("BTAction_chase")]
 
 [sub_resource type="BTAction" id="BTAction_idlewander"]
-script = ExtResource("4_idlewander")
+script = ExtResource("9_idlewander")
 
 [sub_resource type="BTDynamicSelector" id="BTSelector_root"]
-children = [SubResource("BTProbability_look"), SubResource("BTAction_idlewander")]
+children = [SubResource("BTSequence_attack"), SubResource("BTSequence_chase"), SubResource("BTAction_idlewander")]
 
 [resource]
 blackboard_plan = SubResource("BlackboardPlan_wildcat")
 root_task = SubResource("BTSelector_root")
+

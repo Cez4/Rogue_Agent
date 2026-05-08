@@ -29,11 +29,15 @@ func _tick(_delta: float) -> Status:
 	if dist_sq <= attack_range * attack_range:
 		blackboard.set_var(blocked_reason_var, "")
 		return SUCCESS
+	var previous_reason: String = ""
+	if blackboard.has_var(blocked_reason_var):
+		previous_reason = str(blackboard.get_var(blocked_reason_var))
 	blackboard.set_var(blocked_reason_var, "out_of_range")
-	CombatTelemetry.emit_event(&"attack_blocked_reason", {
-		"actor": agent.name,
-		"target": target.name,
-		"reason": "out_of_range",
-		"attack_stop_distance": attack_range
-	})
+	if previous_reason != "out_of_range":
+		CombatTelemetry.emit_event(&"attack_blocked_reason", {
+			"actor": agent.name,
+			"target": target.name,
+			"reason": "out_of_range",
+			"attack_stop_distance": attack_range
+		})
 	return FAILURE
