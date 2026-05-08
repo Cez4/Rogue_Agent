@@ -71,8 +71,9 @@ Estado atual consolidado: `feat/combat-intent-fase4`
 - Cliente: predicao/interpolacao apenas visual.
 
 ## Proximos passos tecnicos
-1. Calibracao fina por archetype (player/wildcat): percepcao, range, reacquire, memory.
-2. Padronizar pipeline BT de combate para novos hostis (base enemy template).
+1. Calibracao fina por archetype/arma/status com matriz oficial v1:
+   - `docs/combat-tuning-matrix-v1.md`
+2. Padronizar pipeline BT de combate para novos hostis (base enemy template) apos tuning v1.
 3. Feedback de hit:
    - FX local de impacto, flash de dano, popup de numero.
 4. Validacao para futuro multiplayer:
