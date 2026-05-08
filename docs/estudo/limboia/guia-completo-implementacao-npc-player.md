@@ -210,6 +210,12 @@ Observação:
 - `Hoe` aparece ocasional no wander;
 - sem spam contínuo.
 
+## 10.1 Regra de edição segura de cena
+Durante desenvolvimento com Godot aberto + automação MCP:
+- seguir obrigatoriamente o runbook:
+  - `docs/godotmcp/runbook-edicao-segura-cenas.md`
+- se aparecer popup de mudança externa de `.tscn`, usar `Recarregar do disco` no fluxo padrão.
+
 ---
 
 ## 11) Fontes oficiais
@@ -251,4 +257,3 @@ Foi construída uma base funcional e escalável de gameplay/IA com Godot + Limbo
 - documentação e padrão para evolução.
 
 Estado atual: **funcional e validado em runtime**.
-

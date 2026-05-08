@@ -2021,12 +2021,15 @@ look_interest_max_distance = 84.0
 look_hold_sec = 1.1
 look_cooldown_sec = 8.0
 look_cooldown_jitter_sec = 3.0
+look_emote_hold_sec = 1.9
 enable_wander = true
 wander_delay_min_sec = 1.8
 wander_delay_max_sec = 4.5
 wander_radius_min = 24.0
 wander_radius_max = 96.0
 wander_max_attempts = 12
+wander_emote_hold_sec = 3.0
+wander_emote_chance = 0.35
 
 [node name="EmotionBubble" type="AnimatedSprite2D" parent="." unique_id=1244748270]
 visible = false

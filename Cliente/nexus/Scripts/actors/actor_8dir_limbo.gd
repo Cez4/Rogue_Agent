@@ -14,6 +14,7 @@ extends CharacterBody2D
 @export var look_cooldown_sec: float = 3.0
 @export var look_cooldown_jitter_sec: float = 1.5
 @export var look_emote_name: StringName = &"Exc"
+@export var look_emote_hold_sec: float = 1.8
 
 @export_group("NPC Wander")
 @export var enable_wander: bool = false
@@ -190,7 +191,7 @@ func stop_movement_for_look() -> void:
 
 
 func play_look_emote() -> void:
-	_show_emote(look_emote_name, false, 1.3, 2)
+	_show_emote(look_emote_name, false, maxf(0.2, look_emote_hold_sec), 2)
 
 
 func try_play_wander_emote() -> void:
@@ -200,7 +201,8 @@ func try_play_wander_emote() -> void:
 	if now_sec < _next_wander_emote_allowed_sec:
 		return
 	if randf() > clampf(wander_emote_chance, 0.0, 1.0):
-		_schedule_next_wander_emote()
+		# Retry soon on miss, do not apply full cooldown or emote becomes too rare.
+		_next_wander_emote_allowed_sec = now_sec + 0.9
 		return
 	_show_emote(wander_emote_name, true, maxf(0.2, wander_emote_hold_sec), 1)
 	_schedule_next_wander_emote()

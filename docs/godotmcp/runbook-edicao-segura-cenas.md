@@ -1,0 +1,41 @@
+# Runbook - Edição Segura de Cenas com Godot Aberto
+
+## Problema
+Quando um `.tscn` é modificado por fora do editor (ex.: patch/script/terminal), o Godot mostra:
+`Arquivos foram modificados fora do Godot`.
+
+Isso não é bug de gameplay; é conflito de origem de edição.
+
+## Objetivo
+Evitar perda de trabalho, conflito de cena e comportamento inconsistente durante testes.
+
+## Regra operacional
+1. **Não editar `.tscn` externamente enquanto a cena estiver aberta e em uso ativo no editor.**
+2. Preferir:
+- ajustes em `.gd` (scripts) durante play;
+- quando precisar alterar `.tscn`, parar a execução e aplicar fluxo controlado.
+
+## Fluxo seguro (padrão)
+1. Parar `play` da cena.
+2. Aplicar alterações de arquivo.
+3. No popup do Godot, clicar **`Recarregar do disco`**.
+4. Revisar visualmente a cena.
+5. Salvar (`Ctrl+S`).
+6. Rodar novamente e validar.
+
+## Quando aparecer o popup
+Escolhas:
+- **`Recarregar do disco`**: aceita mudanças externas (recomendado no nosso fluxo).
+- **`Ignorar mudanças externas`**: mantém a versão carregada no editor e descarta o que veio do disco.
+
+## Checklist rápido antes de commit
+- Cena abre sem popup pendente.
+- Sem erros críticos no debugger.
+- Estado funcional reproduzível após reabrir projeto/cena.
+
+## Observação
+Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigatório para manter consistência entre:
+- arquivo no disco,
+- cena aberta no editor,
+- estado de runtime.
+
