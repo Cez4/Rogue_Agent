@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ArmorData" format=3]
+
+[ext_resource type="Script" path="res://Scripts/items/armor_data.gd" id="1_armor"]
+
+[resource]
+script = ExtResource("1_armor")
+item_id = &"armor_cloth_starter"
+display_name = "Cloth Tunic"
+description = "Simple starter armor."
+slot = 1
+armor_value = 1.0

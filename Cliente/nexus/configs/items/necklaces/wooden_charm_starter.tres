@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="NecklaceData" format=3]
+
+[ext_resource type="Script" path="res://Scripts/items/necklace_data.gd" id="1_necklace"]
+
+[resource]
+script = ExtResource("1_necklace")
+item_id = &"necklace_wooden_charm_starter"
+display_name = "Wooden Charm"
+description = "A basic charm with minor vitality."
+slot = 2
+bonus_health = 0.5

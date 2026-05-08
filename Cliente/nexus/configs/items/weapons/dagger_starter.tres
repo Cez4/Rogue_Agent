@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3]
+
+[ext_resource type="Script" path="res://Scripts/items/weapon_data.gd" id="1_weapon"]
+[ext_resource type="Resource" path="res://configs/combat/player_light_attack.tres" id="2_action"]
+
+[resource]
+script = ExtResource("1_weapon")
+item_id = &"weapon_dagger_starter"
+display_name = "Starter Dagger"
+description = "Melee starter weapon."
+slot = 0
+weapon_kind = 0
+attack_range = 46.0
+action_data = ExtResource("2_action")

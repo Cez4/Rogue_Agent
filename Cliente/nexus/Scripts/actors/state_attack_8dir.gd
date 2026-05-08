@@ -40,31 +40,45 @@ func _enter() -> void:
 
 
 func _apply_action_to_hitbox(hitbox: Node) -> void:
-	if action_data == null:
+	var resolved_action: Resource = _resolved_action_data()
+	if resolved_action == null:
 		return
-	if action_data.has_method("get"):
-		hitbox.damage = action_data.get("damage")
-		hitbox.knockback_enabled = action_data.get("knockback_enabled")
-		hitbox.knockback_strength = action_data.get("knockback_strength")
+	hitbox.damage = resolved_action.get("damage")
+	hitbox.knockback_enabled = resolved_action.get("knockback_enabled")
+	hitbox.knockback_strength = resolved_action.get("knockback_strength")
 
 
 func _windup() -> float:
-	return 0.12 if action_data == null else maxf(0.01, float(action_data.get("windup_sec")))
+	var resolved_action: Resource = _resolved_action_data()
+	return 0.12 if resolved_action == null else maxf(0.01, float(resolved_action.get("windup_sec")))
 
 
 func _active() -> float:
-	return 0.08 if action_data == null else maxf(0.01, float(action_data.get("active_sec")))
+	var resolved_action: Resource = _resolved_action_data()
+	return 0.08 if resolved_action == null else maxf(0.01, float(resolved_action.get("active_sec")))
 
 
 func _recover() -> float:
-	return 0.16 if action_data == null else maxf(0.01, float(action_data.get("recover_sec")))
+	var resolved_action: Resource = _resolved_action_data()
+	return 0.16 if resolved_action == null else maxf(0.01, float(resolved_action.get("recover_sec")))
 
 
 func _cooldown() -> float:
-	return 0.24 if action_data == null else maxf(0.0, float(action_data.get("cooldown_sec")))
+	var resolved_action: Resource = _resolved_action_data()
+	return 0.24 if resolved_action == null else maxf(0.0, float(resolved_action.get("cooldown_sec")))
 
 
 func _finish_attack() -> void:
 	if agent != null and agent.has_method("clear_attack_pending"):
 		agent.clear_attack_pending()
 	get_root().dispatch(EVENT_FINISHED)
+
+
+func _resolved_action_data() -> Resource:
+	if agent != null and agent.has_method("get"):
+		var loadout: Variant = agent.get("equipment_loadout")
+		if loadout != null and loadout is EquipmentLoadout:
+			var typed_loadout: EquipmentLoadout = loadout
+			if typed_loadout.weapon != null and typed_loadout.weapon.action_data != null:
+				return typed_loadout.weapon.action_data
+	return action_data

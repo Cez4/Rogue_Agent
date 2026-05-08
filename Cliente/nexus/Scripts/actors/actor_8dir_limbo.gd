@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 @export var movement_config: Resource
+@export var equipment_loadout: EquipmentLoadout
 @export var player_controlled: bool = true
 @export var is_hostile: bool = false
 @export var use_bt_brain: bool = false
@@ -30,6 +31,7 @@ extends CharacterBody2D
 @export var wander_emote_max_cooldown_sec: float = 14.0
 @export var wander_emote_hold_sec: float = 2.0
 @export var chase_attack_range: float = 28.0
+@export var interaction_stop_range: float = 26.0
 @export var chase_repath_interval_sec: float = 0.2
 
 @onready var controller: Node = $PlayerController
@@ -50,6 +52,8 @@ var _next_wander_emote_allowed_sec: float = 0.0
 var _emote_request_id: int = 0
 var _current_emote_priority: int = -1
 var _combat_target: Node2D
+var _interaction_target: Node2D
+var _interaction_target_range: float = 0.0
 var _next_chase_repath_sec: float = 0.0
 
 
@@ -63,6 +67,8 @@ func _ready() -> void:
 
 	if movement_config == null:
 		movement_config = load("res://configs/player/player_movement_config.tres")
+	if equipment_loadout == null and player_controlled:
+		equipment_loadout = load("res://configs/items/loadouts/player_starter_loadout.tres")
 	if movement_config != null:
 		movement_config = movement_config.duplicate(true)
 		if enable_wander and not player_controlled:
@@ -80,6 +86,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	motor.call("physics_update", delta)
+	_update_interaction_approach()
 	_update_chase_attack()
 
 
@@ -126,6 +133,49 @@ func set_combat_target(target: Node2D) -> void:
 
 func clear_combat_target() -> void:
 	_combat_target = null
+	_next_chase_repath_sec = 0.0
+
+
+func cancel_chase_attack() -> void:
+	clear_combat_target()
+	if motor != null and motor.has_method("stop"):
+		motor.call("stop")
+
+
+func set_interaction_target(target: Node2D, stop_range: float = -1.0) -> void:
+	if target == null or not is_instance_valid(target) or target == self:
+		clear_interaction_target()
+		return
+	_interaction_target = target
+	_interaction_target_range = interaction_stop_range if stop_range < 0.0 else maxf(8.0, stop_range)
+
+
+func clear_interaction_target() -> void:
+	_interaction_target = null
+	_interaction_target_range = 0.0
+
+
+func cancel_all_intents() -> void:
+	clear_interaction_target()
+	cancel_chase_attack()
+
+
+func _update_interaction_approach() -> void:
+	if not player_controlled:
+		return
+	if _interaction_target == null:
+		return
+	if not is_instance_valid(_interaction_target):
+		clear_interaction_target()
+		return
+	var dist: float = global_position.distance_to(_interaction_target.global_position)
+	if dist <= maxf(8.0, _interaction_target_range):
+		if motor != null and motor.has_method("stop"):
+			motor.call("stop")
+		clear_interaction_target()
+		return
+	if motor != null and motor.has_method("request_move"):
+		motor.call("request_move", _interaction_target.global_position)
 
 
 func _update_chase_attack() -> void:
@@ -135,11 +185,14 @@ func _update_chase_attack() -> void:
 		_combat_target = null
 		return
 	if _combat_target == self:
-		_combat_target = null
+		clear_combat_target()
+		return
+	if not _is_target_alive(_combat_target):
+		cancel_chase_attack()
 		return
 
-	var dist := global_position.distance_to(_combat_target.global_position)
-	if dist <= chase_attack_range:
+	var dist: float = global_position.distance_to(_combat_target.global_position)
+	if dist <= get_attack_range():
 		if motor != null and motor.has_method("stop"):
 			motor.call("stop")
 		request_attack()
@@ -151,6 +204,21 @@ func _update_chase_attack() -> void:
 	_next_chase_repath_sec = now_sec + maxf(0.05, chase_repath_interval_sec)
 	if motor != null and motor.has_method("request_move"):
 		motor.call("request_move", _combat_target.global_position)
+
+
+func get_attack_range() -> float:
+	if equipment_loadout != null and equipment_loadout.weapon != null:
+		return maxf(6.0, equipment_loadout.weapon.attack_range)
+	return maxf(6.0, chase_attack_range)
+
+
+func _is_target_alive(target: Node2D) -> bool:
+	if target == null or not is_instance_valid(target):
+		return false
+	var health := target.get_node_or_null(^"Health")
+	if health != null and health.has_method("is_alive"):
+		return bool(health.call("is_alive"))
+	return true
 
 
 func play_idle_animation() -> void:
