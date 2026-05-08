@@ -9,6 +9,15 @@
 [ext_resource type="Script" uid="uid://w6oyxr36dcgy" path="res://Scripts/actors/state_idle_8dir.gd" id="7_ogt8j"]
 [ext_resource type="Script" uid="uid://dwo1bk64b01w" path="res://Scripts/actors/state_walk_8dir.gd" id="8_ogt8j"]
 [ext_resource type="Script" uid="uid://d3iujpe3t8fla" path="res://Scripts/actors/state_attack_8dir.gd" id="9_rijvs"]
+[ext_resource type="PackedScene" path="res://cenas/components/emotion_bubble_shared.tscn" id="10_tckef"]
+[ext_resource type="Texture2D" uid="uid://b46nvc0ukccid" path="res://Assets/emotions/spriteExc.png" id="11_ym2kn"]
+[ext_resource type="Texture2D" uid="uid://dffhs4xccwdww" path="res://Assets/emotions/spriteHoe.png" id="12_vtxll"]
+[ext_resource type="PackedScene" path="res://cenas/components/combat/health_component_node.tscn" id="13_vtxll"]
+[ext_resource type="Script" uid="uid://c4albnh7g2uh2" path="res://Scripts/combat/health_component.gd" id="14_s1iqd"]
+[ext_resource type="PackedScene" path="res://cenas/components/combat/attack_hitbox_component_node.tscn" id="15_6ptbh"]
+[ext_resource type="Script" uid="uid://cnyih1kegdel6" path="res://Scripts/combat/hitbox_component.gd" id="16_uk4ck"]
+[ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="17_gonb2"]
+[ext_resource type="Script" uid="uid://dgemf4hu2eypk" path="res://Scripts/combat/hurtbox_component.gd" id="18_j4uu1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5qvh4"]
 atlas = ExtResource("1_kthid")
@@ -2659,6 +2668,229 @@ height = 22.0
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_wo13f"]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_0"]
+atlas = ExtResource("11_ym2kn")
+region = Rect2(0, 0, 27, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_1"]
+atlas = ExtResource("11_ym2kn")
+region = Rect2(27, 0, 27, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_2"]
+atlas = ExtResource("11_ym2kn")
+region = Rect2(54, 0, 27, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_3"]
+atlas = ExtResource("11_ym2kn")
+region = Rect2(81, 0, 27, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_4"]
+atlas = ExtResource("11_ym2kn")
+region = Rect2(108, 0, 27, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_5"]
+atlas = ExtResource("11_ym2kn")
+region = Rect2(135, 0, 27, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_6"]
+atlas = ExtResource("11_ym2kn")
+region = Rect2(162, 0, 27, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_7"]
+atlas = ExtResource("11_ym2kn")
+region = Rect2(189, 0, 27, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_8"]
+atlas = ExtResource("11_ym2kn")
+region = Rect2(216, 0, 27, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_9"]
+atlas = ExtResource("11_ym2kn")
+region = Rect2(243, 0, 27, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc_10"]
+atlas = ExtResource("11_ym2kn")
+region = Rect2(270, 0, 27, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_0"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(0, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_1"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(39, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_2"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(78, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_3"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(117, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_4"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(156, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_5"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(195, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_6"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(234, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_7"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(273, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_8"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(312, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_9"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(351, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_10"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(390, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_11"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(429, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_12"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(468, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_13"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(507, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_14"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(546, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_15"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(585, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_16"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(624, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_17"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(663, 0, 39, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoe_18"]
+atlas = ExtResource("12_vtxll")
+region = Rect2(702, 0, 39, 26)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_emotes"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exc_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exc_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exc_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exc_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exc_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exc_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exc_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exc_7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exc_8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exc_9")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exc_10")
+}],
+"loop": true,
+"name": &"Exc",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_9")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_11")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_12")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_13")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_14")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_15")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_16")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_17")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoe_18")
+}],
+"loop": true,
+"name": &"Hoe",
+"speed": 10.0
+}]
+
 [node name="Player" type="CharacterBody2D" unique_id=1788697171]
 y_sort_enabled = true
 collision_layer = 2
@@ -2716,3 +2948,21 @@ script = ExtResource("8_ogt8j")
 
 [node name="AttackState" type="LimboState" parent="LimboHSM" unique_id=666815536]
 script = ExtResource("9_rijvs")
+
+[node name="Health" type="Node" parent="." unique_id=2099938439 instance=ExtResource("13_vtxll")]
+script = ExtResource("14_s1iqd")
+max_health = 12.0
+
+[node name="AttackHitbox" type="Area2D" parent="." unique_id=198982442 instance=ExtResource("15_6ptbh")]
+position = Vector2(20, 0)
+collision_layer = 8
+collision_mask = 16
+monitoring = false
+monitorable = false
+script = ExtResource("16_uk4ck")
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=343394757 instance=ExtResource("17_gonb2")]
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+script = ExtResource("18_j4uu1")

@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/combat/hitbox_component.gd" id="1_hitbox"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hit"]
+radius = 16.0
+
+[node name="AttackHitbox" type="Area2D"]
+position = Vector2(20, 0)
+collision_layer = 8
+collision_mask = 16
+monitoring = false
+monitorable = false
+script = ExtResource("1_hitbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_hit")

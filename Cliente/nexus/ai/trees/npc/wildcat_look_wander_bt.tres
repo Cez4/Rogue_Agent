@@ -1,4 +1,4 @@
-[gd_resource type="BehaviorTree" format=3]
+[gd_resource type="BehaviorTree" format=3 uid="uid://bnaa8i7xnsml0"]
 
 [ext_resource type="Script" uid="uid://c0jdr5v85mpgc" path="res://Scripts/ai/tasks/bt_acquire_target_in_group.gd" id="1_acquire"]
 [ext_resource type="Script" uid="uid://do0qq6e7aefuo" path="res://Scripts/ai/tasks/bt_is_target_in_range.gd" id="2_inrange"]

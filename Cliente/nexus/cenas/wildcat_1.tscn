@@ -11,10 +11,14 @@
 [ext_resource type="Script" uid="uid://dwo1bk64b01w" path="res://Scripts/actors/state_walk_8dir.gd" id="9_otluh"]
 [ext_resource type="Script" uid="uid://d3iujpe3t8fla" path="res://Scripts/actors/state_attack_8dir.gd" id="10_w5m6h"]
 [ext_resource type="Script" uid="uid://cpo2dt0djpyes" path="res://Scripts/actors/state_wander_8dir.gd" id="11_xusch"]
-[ext_resource type="BehaviorTree" path="res://ai/trees/npc/wildcat_look_wander_bt.tres" id="12_bt"]
+[ext_resource type="BehaviorTree" uid="uid://bnaa8i7xnsml0" path="res://ai/trees/npc/wildcat_look_wander_bt.tres" id="12_bt"]
 [ext_resource type="PackedScene" path="res://cenas/components/emotion_bubble_shared.tscn" id="13_emote"]
 [ext_resource type="Texture2D" uid="uid://b46nvc0ukccid" path="res://Assets/emotions/spriteExc.png" id="14_0ao5k"]
 [ext_resource type="Texture2D" uid="uid://dffhs4xccwdww" path="res://Assets/emotions/spriteHoe.png" id="15_fji62"]
+[ext_resource type="PackedScene" path="res://cenas/components/combat/health_component_node.tscn" id="16_tntqu"]
+[ext_resource type="Script" uid="uid://c4albnh7g2uh2" path="res://Scripts/combat/health_component.gd" id="17_6y1vs"]
+[ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="18_dkk0s"]
+[ext_resource type="Script" uid="uid://dgemf4hu2eypk" path="res://Scripts/combat/hurtbox_component.gd" id="19_wt5fy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijbr8"]
 atlas = ExtResource("1_5uhpa")
@@ -3847,8 +3851,15 @@ script = ExtResource("10_w5m6h")
 [node name="WanderState" type="LimboState" parent="LimboHSM" unique_id=1259319103]
 script = ExtResource("11_xusch")
 
-[node name="EmotionBubble" type="AnimatedSprite2D" parent="." unique_id=587887002 instance=ExtResource("13_emote")]
-visible = false
-position = Vector2(-8, -40)
+[node name="EmotionBubble" parent="." unique_id=587887002 instance=ExtResource("13_emote")]
 sprite_frames = SubResource("SpriteFrames_emotes")
-animation = &"Hoe"
+
+[node name="Health" type="Node" parent="." unique_id=905350051 instance=ExtResource("16_tntqu")]
+script = ExtResource("17_6y1vs")
+max_health = 12.0
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=987265784 instance=ExtResource("18_dkk0s")]
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+script = ExtResource("19_wt5fy")

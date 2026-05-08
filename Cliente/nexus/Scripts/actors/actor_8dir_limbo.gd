@@ -119,6 +119,10 @@ func update_walk_animation() -> void:
 	_play_directional_animation(walk_prefix, velocity)
 
 
+func play_attack_animation() -> void:
+	_play_directional_animation(attack_prefix, velocity)
+
+
 func should_start_wander(delta: float) -> bool:
 	if not enable_wander or player_controlled:
 		return false
