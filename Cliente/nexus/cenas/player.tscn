@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://dwo1bk64b01w" path="res://Scripts/actors/state_walk_8dir.gd" id="8_ogt8j"]
 [ext_resource type="Script" uid="uid://d3iujpe3t8fla" path="res://Scripts/actors/state_attack_8dir.gd" id="9_rijvs"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/health_component_node.tscn" id="13_vtxll"]
+[ext_resource type="BehaviorTree" path="res://ai/trees/player/player_combat_bt.tres" id="13_ym2kn"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/attack_hitbox_component_node.tscn" id="15_6ptbh"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="17_gonb2"]
 
@@ -2662,6 +2663,8 @@ height = 22.0
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_wo13f"]
 
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_tckef"]
+
 [node name="Player" type="CharacterBody2D" unique_id=1788697171]
 y_sort_enabled = true
 collision_layer = 2
@@ -2725,3 +2728,8 @@ script = ExtResource("9_rijvs")
 [node name="AttackHitbox" parent="." unique_id=198982442 instance=ExtResource("15_6ptbh")]
 
 [node name="Hurtbox" parent="." unique_id=343394757 instance=ExtResource("17_gonb2")]
+
+[node name="BTPlayer" type="BTPlayer" parent="." unique_id=1549683201]
+behavior_tree = ExtResource("13_ym2kn")
+blackboard_plan = SubResource("BlackboardPlan_tckef")
+active = false

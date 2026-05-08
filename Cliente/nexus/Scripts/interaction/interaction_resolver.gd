@@ -12,9 +12,13 @@ func resolve_primary(actor: Node2D, click_position: Vector2) -> Dictionary:
 	var target := _pick_interactable(actor, click_position)
 	if target == null:
 		return {"intent": INTENT_MOVE, "target": null, "position": click_position}
+	var interactable: InteractableComponent = _get_interactable_component(target)
+	if interactable != null:
+		var intent_from_component: StringName = interactable.resolve_intent(false)
+		return {"intent": intent_from_component, "target": target, "position": click_position}
 
 	if target.is_in_group(&"hostile"):
-		return {"intent": INTENT_ATTACK, "target": target, "position": click_position}
+		return {"intent": INTENT_NONE, "target": target, "position": click_position}
 
 	if target.is_in_group(&"npc") or target.is_in_group(&"friendly"):
 		return {"intent": INTENT_INSPECT, "target": target, "position": click_position}
@@ -26,6 +30,10 @@ func resolve_secondary(actor: Node2D, click_position: Vector2) -> Dictionary:
 	var target := _pick_interactable(actor, click_position)
 	if target == null:
 		return {"intent": INTENT_NONE, "target": null, "position": click_position}
+	var interactable: InteractableComponent = _get_interactable_component(target)
+	if interactable != null:
+		var intent_from_component: StringName = interactable.resolve_intent(true)
+		return {"intent": intent_from_component, "target": target, "position": click_position}
 	if target.is_in_group(&"hostile"):
 		return {"intent": INTENT_CHASE_ATTACK, "target": target, "position": click_position}
 	return {"intent": INTENT_NONE, "target": target, "position": click_position}
@@ -71,3 +79,9 @@ func _resolve_interactable_owner(collider: Object) -> Node:
 				return cursor
 			cursor = cursor.get_parent()
 	return null
+
+
+func _get_interactable_component(target: Node) -> InteractableComponent:
+	if target == null:
+		return null
+	return target.get_node_or_null(^"Interactable") as InteractableComponent

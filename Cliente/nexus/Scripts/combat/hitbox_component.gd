@@ -26,3 +26,11 @@ func _on_area_entered(area: Area2D) -> void:
 	if knockback_enabled:
 		knockback = Vector2.RIGHT.rotated(global_rotation) * knockback_strength
 	area.take_hit(damage, knockback, self)
+	var source_owner: String = ""
+	if owner != null:
+		source_owner = str(owner.name)
+	CombatTelemetry.emit_event(&"hit_confirmed", {
+		"source_owner": source_owner,
+		"target_area": area.name,
+		"damage": damage
+	})

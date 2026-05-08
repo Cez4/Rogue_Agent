@@ -16,6 +16,16 @@ func _enter() -> void:
 		_finish_attack()
 		return
 
+	var telemetry_target: String = ""
+	if agent.has_method("get"):
+		var current_target: Variant = agent.get("_combat_target")
+		if current_target is Node2D:
+			telemetry_target = str((current_target as Node2D).name)
+	CombatTelemetry.emit_event(&"attack_started", {
+		"actor": str(agent.name),
+		"target": telemetry_target
+	})
+
 	if agent.has_method("play_attack_animation"):
 		agent.play_attack_animation()
 

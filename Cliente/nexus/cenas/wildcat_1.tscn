@@ -3799,6 +3799,8 @@ wander_emote_chance = 0.17
 wander_emote_min_cooldown_sec = 11.0
 wander_emote_max_cooldown_sec = 18.0
 wander_emote_hold_sec = 2.6
+enable_respawn = true
+respawn_delay_sec = 5.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=531992210]
 y_sort_enabled = true

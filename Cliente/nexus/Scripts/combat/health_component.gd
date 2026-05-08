@@ -23,6 +23,10 @@ func take_damage(amount: float, knockback: Vector2 = Vector2.ZERO) -> void:
 		damaged.emit(amount, knockback)
 
 
+func reset_health() -> void:
+	_current_health = maxf(0.0, max_health)
+
+
 func get_current_health() -> float:
 	return _current_health
 

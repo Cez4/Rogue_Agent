@@ -9,6 +9,8 @@ extends CharacterBody2D
 @export var walk_prefix: String = "Walk"
 @export var attack_prefix: String = "Attack"
 @export var attack_duration_sec: float = 0.35
+@export var enable_respawn: bool = false
+@export var respawn_delay_sec: float = 6.0
 @export var look_interest_radius: float = 120.0
 @export var look_interest_min_distance: float = 28.0
 @export var look_interest_max_distance: float = 148.0
@@ -55,9 +57,11 @@ var _combat_target: Node2D
 var _interaction_target: Node2D
 var _interaction_target_range: float = 0.0
 var _next_chase_repath_sec: float = 0.0
+var _spawn_position: Vector2 = Vector2.ZERO
 
 
 func _ready() -> void:
+	_spawn_position = global_position
 	if player_controlled:
 		add_to_group("player")
 	else:
@@ -78,6 +82,8 @@ func _ready() -> void:
 	motor.set("config", movement_config)
 	motor.call("setup", self)
 	controller.call("setup", self)
+	_setup_interactable_component()
+	_connect_health_signals()
 	_reset_wander_timer()
 	_hide_emote_immediate()
 	if not use_bt_brain:
@@ -142,6 +148,7 @@ func cancel_chase_attack() -> void:
 	clear_combat_target()
 	if motor != null and motor.has_method("stop"):
 		motor.call("stop")
+	CombatTelemetry.emit_event(&"chase_canceled", {"actor": name})
 
 
 func set_interaction_target(target: Node2D, stop_range: float = -1.0) -> void:
@@ -149,7 +156,10 @@ func set_interaction_target(target: Node2D, stop_range: float = -1.0) -> void:
 		clear_interaction_target()
 		return
 	_interaction_target = target
-	_interaction_target_range = interaction_stop_range if stop_range < 0.0 else maxf(8.0, stop_range)
+	if stop_range < 0.0:
+		_interaction_target_range = interaction_stop_range
+	else:
+		_interaction_target_range = maxf(8.0, stop_range)
 
 
 func clear_interaction_target() -> void:
@@ -203,10 +213,14 @@ func _update_chase_attack() -> void:
 
 	var now_sec: float = Time.get_ticks_msec() * 0.001
 	if now_sec < _next_chase_repath_sec:
+		if not _attack_pending:
+			play_walk_toward(_combat_target.global_position)
 		return
 	_next_chase_repath_sec = now_sec + maxf(0.05, chase_repath_interval_sec)
 	if motor != null and motor.has_method("request_move"):
 		motor.call("request_move", _combat_target.global_position)
+	if not _attack_pending:
+		play_walk_toward(_combat_target.global_position)
 
 
 func get_attack_range() -> float:
@@ -222,6 +236,75 @@ func _is_target_alive(target: Node2D) -> bool:
 	if health != null and health.has_method("is_alive"):
 		return bool(health.call("is_alive"))
 	return true
+
+
+func _setup_interactable_component() -> void:
+	var interactable := get_node_or_null(^"Interactable") as InteractableComponent
+	if interactable == null:
+		interactable = InteractableComponent.new()
+		interactable.name = "Interactable"
+		add_child(interactable)
+	if is_hostile:
+		interactable.kind = InteractableComponent.Kind.HOSTILE
+		interactable.primary_intent = &"none"
+		interactable.secondary_intent = &"chase_attack"
+	elif player_controlled:
+		interactable.kind = InteractableComponent.Kind.FRIENDLY
+		interactable.primary_intent = &"none"
+		interactable.secondary_intent = &"none"
+	else:
+		interactable.kind = InteractableComponent.Kind.FRIENDLY
+		interactable.primary_intent = &"inspect"
+		interactable.secondary_intent = &"none"
+	interactable.interaction_range = interaction_stop_range
+
+
+func _connect_health_signals() -> void:
+	var health := get_node_or_null(^"Health")
+	if health == null:
+		return
+	if health.has_signal("death") and not health.death.is_connected(_on_health_death):
+		health.death.connect(_on_health_death)
+
+
+func _on_health_death() -> void:
+	cancel_all_intents()
+	_disable_combat_collision()
+	CombatTelemetry.emit_event(&"target_died", {"actor": name})
+	if not enable_respawn:
+		return
+	if not player_controlled:
+		_respawn_after_delay()
+
+
+func _disable_combat_collision() -> void:
+	var hurtbox := get_node_or_null(^"Hurtbox") as Area2D
+	if hurtbox != null:
+		hurtbox.monitoring = false
+		hurtbox.monitorable = false
+	var body_collision := get_node_or_null(^"CollisionShape2D") as CollisionShape2D
+	if body_collision != null:
+		body_collision.disabled = true
+
+
+func _enable_combat_collision() -> void:
+	var hurtbox := get_node_or_null(^"Hurtbox") as Area2D
+	if hurtbox != null:
+		hurtbox.monitoring = true
+		hurtbox.monitorable = true
+	var body_collision := get_node_or_null(^"CollisionShape2D") as CollisionShape2D
+	if body_collision != null:
+		body_collision.disabled = false
+
+
+func _respawn_after_delay() -> void:
+	await get_tree().create_timer(maxf(0.5, respawn_delay_sec)).timeout
+	var health := get_node_or_null(^"Health")
+	if health != null and health.has_method("reset_health"):
+		health.call("reset_health")
+	global_position = _spawn_position
+	_enable_combat_collision()
+	CombatTelemetry.emit_event(&"respawned", {"actor": name})
 
 
 func face_toward(target_position: Vector2) -> void:
@@ -240,6 +323,11 @@ func play_idle_animation() -> void:
 
 func play_walk_animation() -> void:
 	_play_directional_animation(walk_prefix, velocity)
+
+
+func play_walk_toward(target_position: Vector2) -> void:
+	var dir: Vector2 = target_position - global_position
+	_play_directional_animation(walk_prefix, dir)
 
 
 func update_walk_animation() -> void:

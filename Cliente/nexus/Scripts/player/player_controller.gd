@@ -59,12 +59,19 @@ func _dispatch_intent(intent: Dictionary) -> void:
 			var move_pos: Vector2 = intent.get("position", _body.global_position)
 			request_move(move_pos)
 		&"attack":
+			_cancel_combat_intent()
 			_clear_interaction_intent()
-			if _body.has_method("request_attack"):
-				var attack_target: Variant = intent.get("target")
-				if attack_target is Node2D and _body.has_method("set_combat_target"):
-					_body.call("set_combat_target", attack_target)
-				_body.call("request_attack")
+			var attack_target: Variant = intent.get("target")
+			if attack_target is Node2D:
+				var target_node: Node2D = attack_target
+				if _body.has_method("face_toward"):
+					_body.call("face_toward", target_node.global_position)
+				var attack_range: float = 0.0
+				if _body.has_method("get_attack_range"):
+					attack_range = float(_body.call("get_attack_range"))
+				var is_in_range: bool = _body.global_position.distance_to(target_node.global_position) <= maxf(1.0, attack_range)
+				if is_in_range and _body.has_method("request_attack"):
+					_body.call("request_attack")
 		&"chase_attack":
 			_clear_interaction_intent()
 			var chase_target: Variant = intent.get("target")
