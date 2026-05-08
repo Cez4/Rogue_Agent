@@ -10,7 +10,6 @@
 [ext_resource type="PackedScene" uid="uid://c0uxga3owxaus" path="res://cenas/wildcat_1.tscn" id="10_esbpk"]
 [ext_resource type="AudioStream" uid="uid://dm4v3qusgnc6p" path="res://Assets/Sounds/Cidades/moonlight.mp3" id="11_esbpk"]
 [ext_resource type="PackedScene" uid="uid://dr5gls4idb7d1" path="res://cenas/villager_1.tscn" id="11_puycu"]
-[ext_resource type="PackedScene" uid="uid://3abdlx71d6ik" path="res://cenas/Props/barril.tscn" id="12_puycu"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_puycu"]
 
@@ -110,13 +109,13 @@ position = Vector2(573, -104)
 
 [node name="Villager1" parent="." unique_id=1207752769 instance=ExtResource("11_puycu")]
 position = Vector2(399, -140)
+look_interest_min_distance = 28.0
+look_interest_max_distance = 148.0
+look_cooldown_sec = 3.0
+look_cooldown_jitter_sec = 1.5
 
 [node name="Obj" type="TileMapLayer" parent="." unique_id=476215104]
 z_index = -4095
 y_sort_enabled = true
 position = Vector2(204, -157)
 tile_set = SubResource("TileSet_hbp8a")
-
-[node name="Barril" parent="." unique_id=951574367 instance=ExtResource("12_puycu")]
-z_index = -12
-position = Vector2(255, -189)
