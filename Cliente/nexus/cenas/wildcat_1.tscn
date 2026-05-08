@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://dbux36mt8uqe5" path="res://Scripts/actors/actor_8dir_limbo.gd" id="1_bxw7m"]
 [ext_resource type="Texture2D" uid="uid://c3drwa4p3b2si" path="res://Assets/Char/WildCat/Idle.png" id="1_qkdfh"]
 [ext_resource type="Texture2D" uid="uid://dlnaruff1dhyc" path="res://Assets/Char/WildCat/Walk.png" id="2_5uhpa"]
+[ext_resource type="Resource" path="res://configs/combat/profiles/hostile_melee_baseline_v1.tres" id="2_6y1vs"]
 [ext_resource type="Texture2D" uid="uid://s1otrtbxrc7n" path="res://Assets/Char/WildCat/Die.png" id="2_o5al4"]
 [ext_resource type="Script" uid="uid://7ksr7chqpjfu" path="res://Scripts/player/player_controller.gd" id="6_khuiu"]
 [ext_resource type="Script" uid="uid://bfelu52uftmru" path="res://Scripts/player/player_motor.gd" id="7_ddbat"]
@@ -16,9 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://b46nvc0ukccid" path="res://Assets/emotions/spriteExc.png" id="14_0ao5k"]
 [ext_resource type="Texture2D" uid="uid://dffhs4xccwdww" path="res://Assets/emotions/spriteHoe.png" id="15_fji62"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/health_component_node.tscn" id="16_tntqu"]
-[ext_resource type="Script" uid="uid://c4albnh7g2uh2" path="res://Scripts/combat/health_component.gd" id="17_6y1vs"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="18_dkk0s"]
-[ext_resource type="Script" uid="uid://dgemf4hu2eypk" path="res://Scripts/combat/hurtbox_component.gd" id="19_wt5fy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijbr8"]
 atlas = ExtResource("1_5uhpa")
@@ -3779,10 +3778,13 @@ animations = [{
 y_sort_enabled = true
 collision_layer = 2
 script = ExtResource("1_bxw7m")
+combat_perception_profile = ExtResource("2_6y1vs")
 player_controlled = false
 is_hostile = true
 use_bt_brain = true
 attack_prefix = "Attack1"
+enable_respawn = true
+respawn_delay_sec = 5.0
 look_interest_radius = 72.0
 look_interest_min_distance = 22.0
 look_interest_max_distance = 44.0
@@ -3799,8 +3801,6 @@ wander_emote_chance = 0.17
 wander_emote_min_cooldown_sec = 11.0
 wander_emote_max_cooldown_sec = 18.0
 wander_emote_hold_sec = 2.6
-enable_respawn = true
-respawn_delay_sec = 5.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=531992210]
 y_sort_enabled = true
@@ -3857,12 +3857,6 @@ script = ExtResource("11_xusch")
 [node name="EmotionBubble" parent="." unique_id=587887002 instance=ExtResource("13_emote")]
 sprite_frames = SubResource("SpriteFrames_emotes")
 
-[node name="Health" type="Node" parent="." unique_id=905350051 instance=ExtResource("16_tntqu")]
-script = ExtResource("17_6y1vs")
-max_health = 12.0
+[node name="Health" parent="." unique_id=905350051 instance=ExtResource("16_tntqu")]
 
-[node name="Hurtbox" type="Area2D" parent="." unique_id=987265784 instance=ExtResource("18_dkk0s")]
-collision_layer = 16
-collision_mask = 0
-monitoring = false
-script = ExtResource("19_wt5fy")
+[node name="Hurtbox" parent="." unique_id=987265784 instance=ExtResource("18_dkk0s")]

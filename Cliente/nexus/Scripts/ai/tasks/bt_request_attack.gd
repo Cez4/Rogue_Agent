@@ -3,6 +3,8 @@ extends BTAction
 
 @export var started_var: StringName = &"attack_task_started"
 @export var target_var: StringName = &"combat_target"
+@export var blocked_reason_var: StringName = &"last_attack_blocked_reason"
+@export var blocked_latched_var: StringName = &"attack_blocked_latched"
 
 
 func _generate_name() -> String:
@@ -21,6 +23,8 @@ func _tick(_delta: float) -> Status:
 
 	# If an attack is currently executing, keep this task RUNNING until it completes.
 	if attack_pending:
+		blackboard.set_var(blocked_reason_var, "")
+		blackboard.set_var(blocked_latched_var, false)
 		blackboard.set_var(started_var, true)
 		return RUNNING
 
@@ -29,6 +33,8 @@ func _tick(_delta: float) -> Status:
 	if blackboard.has_var(started_var):
 		started = bool(blackboard.get_var(started_var))
 	if started:
+		blackboard.set_var(blocked_reason_var, "")
+		blackboard.set_var(blocked_latched_var, false)
 		blackboard.set_var(started_var, false)
 		return SUCCESS
 
@@ -36,6 +42,10 @@ func _tick(_delta: float) -> Status:
 	var target: Node2D = null
 	if blackboard.has_var(target_var):
 		target = blackboard.get_var(target_var) as Node2D
+	if not is_instance_valid(target):
+		blackboard.set_var(started_var, false)
+		blackboard.set_var(blocked_reason_var, "no_valid_target")
+		return FAILURE
 	if is_instance_valid(target) and agent.has_method("face_toward"):
 		agent.face_toward(target.global_position)
 	if agent.has_method("get"):
@@ -54,11 +64,19 @@ func _tick(_delta: float) -> Status:
 			"actor": agent.name,
 			"target": target_name
 		})
+		blackboard.set_var(blocked_reason_var, "")
+		blackboard.set_var(blocked_latched_var, false)
 		blackboard.set_var(started_var, true)
 		return RUNNING
-	CombatTelemetry.emit_event(&"attack_blocked_reason", {
-		"actor": agent.name,
-		"reason": "request_attack_not_started"
-	})
+	var blocked_latched: bool = false
+	if blackboard.has_var(blocked_latched_var):
+		blocked_latched = bool(blackboard.get_var(blocked_latched_var))
+	blackboard.set_var(blocked_reason_var, "request_attack_not_started")
+	if not blocked_latched:
+		CombatTelemetry.emit_event(&"attack_blocked_reason", {
+			"actor": agent.name,
+			"reason": "request_attack_not_started"
+		})
+		blackboard.set_var(blocked_latched_var, true)
 	blackboard.set_var(started_var, false)
 	return FAILURE

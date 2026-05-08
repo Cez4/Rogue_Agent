@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://b1vdyx8vpdrku" path="res://Assets/Char/PlayerM/Dagger01/Dagger01_Attack1.png" id="1_kthid"]
 [ext_resource type="Script" uid="uid://dbux36mt8uqe5" path="res://Scripts/actors/actor_8dir_limbo.gd" id="1_ogt8j"]
+[ext_resource type="Resource" path="res://configs/combat/profiles/player_melee_baseline_v1.tres" id="2_vtxll"]
 [ext_resource type="Texture2D" uid="uid://ntf2eow5ro8l" path="res://Assets/Char/PlayerM/Unarmed/Idle_Unarmed.png" id="2_xojfc"]
 [ext_resource type="Texture2D" uid="uid://n65y23s7hr2b" path="res://Assets/Char/PlayerM/Unarmed/Walk_Unarmed.png" id="3_15dsx"]
 [ext_resource type="Script" uid="uid://7ksr7chqpjfu" path="res://Scripts/player/player_controller.gd" id="4_r57bi"]
@@ -10,7 +11,7 @@
 [ext_resource type="Script" uid="uid://dwo1bk64b01w" path="res://Scripts/actors/state_walk_8dir.gd" id="8_ogt8j"]
 [ext_resource type="Script" uid="uid://d3iujpe3t8fla" path="res://Scripts/actors/state_attack_8dir.gd" id="9_rijvs"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/health_component_node.tscn" id="13_vtxll"]
-[ext_resource type="BehaviorTree" path="res://ai/trees/player/player_combat_bt.tres" id="13_ym2kn"]
+[ext_resource type="BehaviorTree" uid="uid://clxtjhojbk2dw" path="res://ai/trees/player/player_combat_bt.tres" id="13_ym2kn"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/attack_hitbox_component_node.tscn" id="15_6ptbh"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="17_gonb2"]
 
@@ -2669,10 +2670,11 @@ height = 22.0
 y_sort_enabled = true
 collision_layer = 2
 script = ExtResource("1_ogt8j")
+combat_perception_profile = ExtResource("2_vtxll")
+use_bt_brain = true
 idle_prefix = "Idle_Unarmed"
 walk_prefix = "Walk_Unarmed"
 attack_prefix = "Dagger01_Attack1"
-use_bt_brain = true
 metadata/logic_bricks_graph = {
 "connections": [],
 "next_id": 0,
@@ -2733,4 +2735,3 @@ script = ExtResource("9_rijvs")
 [node name="BTPlayer" type="BTPlayer" parent="." unique_id=1549683201]
 behavior_tree = ExtResource("13_ym2kn")
 blackboard_plan = SubResource("BlackboardPlan_tckef")
-active = true

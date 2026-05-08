@@ -95,16 +95,20 @@ Sinais de problema:
 2. `target_lost` frequente em curta distância.
 3. `reacquire` muito alto com pouco `attack_commit`.
 
-## 6) Tabela de archetypes (preencher por ciclo)
+## 6) Tabela de archetypes (baseline atual + tuning por ciclo)
 | Archetype | Acquire | Lose | Memory | Reacquire | Stop Buffer | HP | Notes |
 |---|---:|---:|---:|---:|---:|---:|---|
-| melee_light_v1 | TBD | TBD | TBD | TBD | TBD | TBD | baseline |
-| melee_tank_v1 | TBD | TBD | TBD | TBD | TBD | TBD | baseline |
+| melee_baseline_current | 120.0 | 148.0 | 1.2 | 0.12 | 2.0 | 10.0 | defaults do actor/combat profile |
+| player_melee_baseline_v1 | 120.0 | 156.0 | 1.2 | 0.12 | 2.0 | 10.0 | `configs/combat/profiles/player_melee_baseline_v1.tres` |
+| hostile_melee_baseline_v1 | 96.0 | 132.0 | 0.75 | 0.14 | 3.5 | 12.0 | `configs/combat/profiles/hostile_melee_baseline_v1.tres` |
+| melee_light_v1 | TBD | TBD | TBD | TBD | TBD | TBD | tuning alvo |
+| melee_tank_v1 | TBD | TBD | TBD | TBD | TBD | TBD | tuning alvo |
 | ranged_skirmisher_v1 | TBD | TBD | TBD | TBD | TBD | TBD | futuro |
 
-## 7) Tabela de armas (preencher por ciclo)
+## 7) Tabela de armas (baseline atual + tuning por ciclo)
 | Weapon | Range | Windup | Active | Recover | Cooldown | Damage | Knockback |
 |---|---:|---:|---:|---:|---:|---:|---|
+| dagger_starter_current | 46.0 | 0.12 | 0.10 | 0.20 | 0.28 | 1.0 | false / 260 |
 | dagger_v1 | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
 | claw_v1 | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
 | sword_v1 | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
@@ -130,6 +134,16 @@ Critério de aprovação:
 2. Não duplicar chase fora de tasks BT quando `use_bt_brain=true`.
 3. Não reintroduzir hardcode de percepção nas tasks.
 4. Não alterar input-intent durante tuning.
+
+## 11) Status atual do ciclo
+1. Ciclo 1 iniciado com perfis explícitos aplicados em cena:
+   - Player -> `player_melee_baseline_v1.tres`
+   - Hostile melee baseline -> `hostile_melee_baseline_v1.tres`
+2. Validação MCP:
+   - `open_scene(mundo.tscn)` + `play_scene` + `get_godot_errors`
+   - sem novo erro de parse/runtime
+3. Próxima ação do ciclo:
+   - coletar telemetria de combate em sessão de teste guiada e ajustar somente variáveis do profile.
 
 ## 10) Referências
 1. Godot NavigationAgent2D:

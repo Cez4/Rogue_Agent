@@ -1,14 +1,14 @@
 [gd_resource type="BehaviorTree" format=3 uid="uid://bnaa8i7xnsml0"]
 
-[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_acquire_combat_target_in_group.gd" id="1_acquire_combat"]
-[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_pull_combat_target.gd" id="2_pull"]
-[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_validate_combat_target_alive.gd" id="3_validate_alive"]
-[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_validate_combat_target_perception.gd" id="4_validate_perception"]
-[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_is_combat_target_in_attack_range.gd" id="5_inrange"]
-[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_face_combat_target_8dir.gd" id="6_face"]
-[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_request_attack.gd" id="7_attack"]
-[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_chase_combat_target.gd" id="8_chase"]
-[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_idle_wander_loop.gd" id="9_idlewander"]
+[ext_resource type="Script" uid="uid://dtnu4grbm8qog" path="res://Scripts/ai/tasks/bt_acquire_combat_target_in_group.gd" id="1_acquire_combat"]
+[ext_resource type="Script" uid="uid://dr4lmrr6lyur3" path="res://Scripts/ai/tasks/bt_pull_combat_target.gd" id="2_pull"]
+[ext_resource type="Script" uid="uid://ejey0wbvj4bq" path="res://Scripts/ai/tasks/bt_validate_combat_target_alive.gd" id="3_validate_alive"]
+[ext_resource type="Script" uid="uid://b0orfy45ioia7" path="res://Scripts/ai/tasks/bt_validate_combat_target_perception.gd" id="4_validate_perception"]
+[ext_resource type="Script" uid="uid://dbpqu4jqdacsi" path="res://Scripts/ai/tasks/bt_is_combat_target_in_attack_range.gd" id="5_inrange"]
+[ext_resource type="Script" uid="uid://d0880ogn0cija" path="res://Scripts/ai/tasks/bt_face_combat_target_8dir.gd" id="6_face"]
+[ext_resource type="Script" uid="uid://cvwjqd4ux02e4" path="res://Scripts/ai/tasks/bt_request_attack.gd" id="7_attack"]
+[ext_resource type="Script" uid="uid://b2xbwfbvabqli" path="res://Scripts/ai/tasks/bt_chase_combat_target.gd" id="8_chase"]
+[ext_resource type="Script" uid="uid://dk02xd2gjaytq" path="res://Scripts/ai/tasks/bt_idle_wander_loop.gd" id="9_idlewander"]
 
 [sub_resource type="BlackboardPlan" id="BlackboardPlan_wildcat"]
 var/combat_target/name = &"combat_target"
@@ -17,18 +17,22 @@ var/combat_target/hint = 0
 var/combat_target/hint_string = ""
 var/combat_target_last_seen_ms/name = &"combat_target_last_seen_ms"
 var/combat_target_last_seen_ms/type = 2
+var/combat_target_last_seen_ms/value = 0
 var/combat_target_last_seen_ms/hint = 0
 var/combat_target_last_seen_ms/hint_string = ""
 var/combat_next_reacquire_ms/name = &"combat_next_reacquire_ms"
 var/combat_next_reacquire_ms/type = 2
+var/combat_next_reacquire_ms/value = 0
 var/combat_next_reacquire_ms/hint = 0
 var/combat_next_reacquire_ms/hint_string = ""
 var/attack_task_started/name = &"attack_task_started"
 var/attack_task_started/type = 1
+var/attack_task_started/value = false
 var/attack_task_started/hint = 0
 var/attack_task_started/hint_string = ""
 var/last_attack_blocked_reason/name = &"last_attack_blocked_reason"
 var/last_attack_blocked_reason/type = 4
+var/last_attack_blocked_reason/value = ""
 var/last_attack_blocked_reason/hint = 0
 var/last_attack_blocked_reason/hint_string = ""
 
@@ -85,4 +89,3 @@ children = [SubResource("BTSequence_attack"), SubResource("BTSequence_chase"), S
 [resource]
 blackboard_plan = SubResource("BlackboardPlan_wildcat")
 root_task = SubResource("BTSelector_root")
-

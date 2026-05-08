@@ -103,3 +103,5 @@ Estado atual consolidado: `feat/combat-intent-fase4`
   - https://docs.godotengine.org/en/stable/classes/class_area2d.html
 - LimboAI docs:
   - https://limboai.readthedocs.io/en/latest/
+- Estudo data-driven (Athena/rAthena aplicado ao projeto):
+  - `docs/estudo-athena-datadriven-aplicacao-rogue-agent-2026-05-08.md`

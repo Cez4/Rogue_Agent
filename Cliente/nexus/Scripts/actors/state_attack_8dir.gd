@@ -17,14 +17,17 @@ func _enter() -> void:
 		return
 
 	var telemetry_target: String = ""
+	var has_valid_telemetry_target: bool = false
 	if agent.has_method("get"):
 		var current_target: Variant = agent.get("_combat_target")
-		if current_target is Node2D:
+		if current_target is Node2D and is_instance_valid(current_target):
 			telemetry_target = str((current_target as Node2D).name)
-	CombatTelemetry.emit_event(&"attack_started", {
-		"actor": str(agent.name),
-		"target": telemetry_target
-	})
+			has_valid_telemetry_target = true
+	if has_valid_telemetry_target:
+		CombatTelemetry.emit_event(&"attack_started", {
+			"actor": str(agent.name),
+			"target": telemetry_target
+		})
 
 	if agent.has_method("play_attack_animation"):
 		agent.play_attack_animation()
