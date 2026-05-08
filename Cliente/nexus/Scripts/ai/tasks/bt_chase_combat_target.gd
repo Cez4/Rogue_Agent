@@ -14,9 +14,16 @@ func _tick(_delta: float) -> Status:
 		return FAILURE
 	if agent == null:
 		return FAILURE
+	var attack_pending: bool = false
+	if agent.has_method("get"):
+		attack_pending = bool(agent.get("_attack_pending"))
 	var motor_node: Variant = null
 	if agent.has_method("get"):
 		motor_node = agent.get("motor")
+	if attack_pending:
+		if motor_node != null and motor_node.has_method("stop"):
+			motor_node.stop()
+		return RUNNING
 	if agent.has_method("get_attack_range"):
 		var attack_range: float = float(agent.get_attack_range())
 		var dist_sq: float = agent.global_position.distance_squared_to(target.global_position)
