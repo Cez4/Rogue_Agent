@@ -228,7 +228,10 @@ func face_toward(target_position: Vector2) -> void:
 	var dir: Vector2 = target_position - global_position
 	if dir.length_squared() < 0.0001:
 		return
-	_play_directional_animation(idle_prefix, dir)
+	# Keep facing updated for 8-dir attack selection, but never interrupt an active attack animation.
+	_last_direction_suffix = _direction_suffix_from_vector(dir)
+	if not _attack_pending:
+		_play_directional_animation(idle_prefix, dir)
 
 
 func play_idle_animation() -> void:
