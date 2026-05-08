@@ -3,6 +3,7 @@ extends BTAction
 
 @export var target_var: StringName = &"combat_target"
 @export var next_reacquire_var: StringName = &"combat_next_reacquire_ms"
+@export var default_reacquire_interval_sec: float = 0.12
 
 
 func _generate_name() -> String:
@@ -43,10 +44,15 @@ func _tick(_delta: float) -> Status:
 			next_reacquire_ms = int(blackboard.get_var(next_reacquire_var))
 		if now_ms >= next_reacquire_ms:
 			motor_node.request_move(target.global_position)
-			var interval_sec: float = 0.12
+			var interval_sec: float = default_reacquire_interval_sec
 			if agent.has_method("get_combat_reacquire_interval_sec"):
 				interval_sec = float(agent.get_combat_reacquire_interval_sec())
 			blackboard.set_var(next_reacquire_var, now_ms + int(interval_sec * 1000.0))
+			CombatTelemetry.emit_event(&"reacquire", {
+				"actor": agent.name,
+				"target": target.name,
+				"interval_sec": interval_sec
+			})
 	if agent.has_method("play_walk_toward"):
 		agent.play_walk_toward(target.global_position)
 	return RUNNING

@@ -45,7 +45,18 @@ func _tick(_delta: float) -> Status:
 	if agent.has_method("get"):
 		attack_pending = bool(agent.get("_attack_pending"))
 	if attack_pending:
+		var target_name: String = ""
+		if is_instance_valid(target):
+			target_name = target.name
+		CombatTelemetry.emit_event(&"attack_commit", {
+			"actor": agent.name,
+			"target": target_name
+		})
 		blackboard.set_var(started_var, true)
 		return RUNNING
+	CombatTelemetry.emit_event(&"attack_blocked_reason", {
+		"actor": agent.name,
+		"reason": "request_attack_not_started"
+	})
 	blackboard.set_var(started_var, false)
 	return FAILURE

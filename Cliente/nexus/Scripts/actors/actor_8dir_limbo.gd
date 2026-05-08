@@ -62,6 +62,7 @@ var _next_wander_emote_allowed_sec: float = 0.0
 var _emote_request_id: int = 0
 var _current_emote_priority: int = -1
 var _combat_target: Node2D
+var _combat_target_manual_lock: bool = false
 var _interaction_target: Node2D
 var _interaction_target_range: float = 0.0
 var _next_chase_repath_sec: float = 0.0
@@ -142,25 +143,50 @@ func clear_attack_pending() -> void:
 	_attack_pending = false
 
 
-func set_combat_target(target: Node2D) -> void:
+func set_combat_target(target: Node2D, manual_lock: bool = true) -> void:
 	if target == null or not is_instance_valid(target):
 		_combat_target = null
+		_combat_target_manual_lock = false
 		return
+	var changed_target: bool = _combat_target != target
 	_combat_target = target
+	_combat_target_manual_lock = manual_lock
 	clear_interaction_target()
 	face_toward(target.global_position)
+	if changed_target:
+		CombatTelemetry.emit_event(&"target_acquired", {
+			"actor": name,
+			"target": target.name,
+			"manual_lock": manual_lock
+		})
 
 
 func clear_combat_target() -> void:
+	var had_target: bool = _combat_target != null and is_instance_valid(_combat_target)
+	var old_target_name: String = ""
+	if had_target:
+		old_target_name = _combat_target.name
 	_combat_target = null
+	_combat_target_manual_lock = false
 	_next_chase_repath_sec = 0.0
+	if had_target:
+		CombatTelemetry.emit_event(&"target_lost", {
+			"actor": name,
+			"target": old_target_name
+		})
 
 
 func cancel_chase_attack() -> void:
+	var had_target: bool = _combat_target != null and is_instance_valid(_combat_target)
 	clear_combat_target()
 	if motor != null and motor.has_method("stop"):
 		motor.call("stop")
-	CombatTelemetry.emit_event(&"chase_canceled", {"actor": name})
+	if had_target:
+		CombatTelemetry.emit_event(&"chase_canceled", {"actor": name})
+
+
+func is_combat_target_manual_lock() -> bool:
+	return _combat_target_manual_lock
 
 
 func set_interaction_target(target: Node2D, stop_range: float = -1.0) -> void:

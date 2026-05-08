@@ -42,7 +42,7 @@ script = ExtResource("6_chase")
 script = ExtResource("7_perception")
 
 [sub_resource type="BTSequence" id="BTSequence_chase"]
-children = [SubResource("BTAction_t1gar"), SubResource("BTCondition_eltfe"), SubResource("BTAction_chase")]
+children = [SubResource("BTAction_t1gar"), SubResource("BTCondition_eltfe"), SubResource("BTCondition_perception_chase"), SubResource("BTAction_chase")]
 
 [sub_resource type="BTDynamicSelector" id="BTSelector_root"]
 children = [SubResource("BTSequence_attack"), SubResource("BTSequence_chase")]
