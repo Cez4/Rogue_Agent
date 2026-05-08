@@ -1,13 +1,14 @@
 # Interaction Intent Fase 2 - Combate + Itens (Status)
 
 Data: 2026-05-08  
-Branch: `feat/interaction-intent-fase2`
+Branch base historica: `feat/interaction-intent-fase2`  
+Estado atual consolidado: `feat/combat-intent-fase4`
 
 ## Objetivo desta entrega
 - Corrigir comportamento mouse-only de intents (cancelar chase, trocar target, parar empurrar em interacao).
 - Preparar base data-driven de itens/equipamentos (arma, armadura, colar) com adaga inicial.
 
-## Ajustes de comportamento
+## Ajustes de comportamento (estado atual)
 1. Cancelamento de chase combat
 - Clique no chao (`move`) cancela intents ativos (`cancel_all_intents`) e inicia walk normal.
 - Clique em alvo social (`inspect`) cancela chase combat antes da acao social.
@@ -26,9 +27,26 @@ Branch: `feat/interaction-intent-fase2`
   - para e limpa intent ao entrar no range.
 - Resolve o problema de "grudar empurrando NPC amigo".
 
-4. Clique secundario sem menu (escopo atual)
+4. Regra de input vigente (mouse-only)
+- Clique esquerdo em chao: `move`.
+- Clique esquerdo em `hostile`: `none` (nao ataca e nao inicia chase).
 - Clique secundario em `hostile`: `chase_attack`.
-- Clique secundario em chao ou alvos nao-hostis: `none` (nao move e cancela intents).
+- Clique secundario em chao ou alvos nao-hostis: `none`.
+
+5. Migracao BT-first no player (LimboAI)
+- `player.tscn` com `use_bt_brain = true`.
+- `BTPlayer` do player ativo com `player_combat_bt.tres`.
+- HSM permanece como executor de animacao/ataque.
+- Loop manual de chase no actor fica desativado quando `use_bt_brain = true` (evita dupla autoridade BT+manual).
+
+6. Correcao de travamento/deslize no chase
+- `bt_chase_combat_target.gd` deixa de forcar `set_combat_target()` em loop (isso forçava idle via `face_toward`).
+- Chase task passa a:
+  - `request_move` no motor;
+  - tocar walk via `play_walk_toward(target)`;
+  - retornar `SUCCESS` ao entrar no range de ataque.
+- Sequencia de ataque BT reordenada para:
+  - `Pull -> Validate -> InRange -> Face -> Attack`.
 
 ## Base de itens/equipamentos
 Scripts novos:
@@ -59,6 +77,6 @@ Integracao:
 - Resultado: sem parser/runtime error na sessao.
 
 ## Proximos passos recomendados
-1. Conectar evento de `Health.death` para animacao de morte + remocao/disable do collider.
-2. Adicionar comando explicito "Stop" como acao dedicada de input (opcional UX).
+1. Telemetria de BT por evento de decisao (task enter/exit, status, alvo).
+2. Aplicar o mesmo padrao BT-first de combate para NPCs hostis futuros (minions/bosses) com blackboard padrao.
 3. Migrar intents para command bus replicavel em multiplayer (cliente envia intencao, host valida e simula).

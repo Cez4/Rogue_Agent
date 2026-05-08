@@ -1,7 +1,8 @@
 # MVP LimboAI + Combate + Wander - Status Tecnico
 
 Data: 2026-05-08
-Branch: `feat/mvp-combate-fase1`
+Branch historica: `feat/mvp-combate-fase1`  
+Estado atual consolidado: `feat/combat-intent-fase4`
 
 ## Objetivo atual
 - Base jogavel com:
@@ -22,9 +23,11 @@ Branch: `feat/mvp-combate-fase1`
 
 ## Fluxo de input e combate (estado atual)
 1. Clique entra em `_unhandled_input` do actor.
-2. Prioridade de ataque:
-   - Se `attack` foi pressionado, chama `request_attack()` e encerra o evento.
-3. Se nao for ataque, segue para `move_click` no controller.
+2. Resolver de intencao define a acao:
+   - esquerdo/chao -> move;
+   - esquerdo/hostile -> none;
+   - direito/hostile -> chase_attack.
+3. BT do player decide chase/ataque; HSM executa animacao/ataque.
 4. `AttackState` executa:
    - windup -> ativa hitbox -> active -> desativa hitbox -> recover.
 5. Estado aguarda fim natural da animacao de ataque antes de finalizar.
@@ -42,8 +45,9 @@ Branch: `feat/mvp-combate-fase1`
   - estado agora sincroniza com fim real da animacao nao-loop.
 
 ## LimboAI no projeto
-- HSM para estados de locomocao/ataque no actor.
+- HSM para execucao de locomocao/ataque no actor.
 - BT para vida de NPC (look/wander com cooldown/janela de interesse).
+- BT de combate ativa no player (`player_combat_bt.tres`) para chase+attack.
 - Emotes acionados por comportamento (ex: surpresa ao notar player, assovio ao vagar).
 
 ## Multiplayer-ready (diretriz em andamento)
@@ -53,15 +57,13 @@ Branch: `feat/mvp-combate-fase1`
 - Cliente: predicao/interpolacao apenas visual.
 
 ## Proximos passos tecnicos
-1. Feedback de hit:
+1. Telemetria de decisao BT (por task/status) + correlacao com telemetria de combate.
+2. Feedback de hit:
    - FX local de impacto, flash de dano, popup de numero.
-2. Telemetria de combate:
-   - eventos: attack_start, attack_active, hit_confirmed, damage_applied, attack_end.
-   - campos minimos: actor_id, target_id, action_id, timestamp, dir, damage.
 3. Validacao para futuro multiplayer:
-   - gates de range/LOS/cooldown centralizados.
+   - gates de range/LOS/cooldown centralizados no host.
 4. Padrao para NPCs:
-   - manter BT + tasks reutilizaveis para todos os NPCs base.
+   - manter BT + tasks reutilizaveis para todos os NPCs base e bosses.
 
 ## Arquivos-chave
 - Actor base:
