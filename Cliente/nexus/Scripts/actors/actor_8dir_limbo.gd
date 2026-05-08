@@ -280,21 +280,21 @@ func _on_health_death() -> void:
 func _disable_combat_collision() -> void:
 	var hurtbox := get_node_or_null(^"Hurtbox") as Area2D
 	if hurtbox != null:
-		hurtbox.monitoring = false
-		hurtbox.monitorable = false
+		hurtbox.set_deferred("monitoring", false)
+		hurtbox.set_deferred("monitorable", false)
 	var body_collision := get_node_or_null(^"CollisionShape2D") as CollisionShape2D
 	if body_collision != null:
-		body_collision.disabled = true
+		body_collision.set_deferred("disabled", true)
 
 
 func _enable_combat_collision() -> void:
 	var hurtbox := get_node_or_null(^"Hurtbox") as Area2D
 	if hurtbox != null:
-		hurtbox.monitoring = true
-		hurtbox.monitorable = true
+		hurtbox.set_deferred("monitoring", true)
+		hurtbox.set_deferred("monitorable", true)
 	var body_collision := get_node_or_null(^"CollisionShape2D") as CollisionShape2D
 	if body_collision != null:
-		body_collision.disabled = false
+		body_collision.set_deferred("disabled", false)
 
 
 func _respawn_after_delay() -> void:
