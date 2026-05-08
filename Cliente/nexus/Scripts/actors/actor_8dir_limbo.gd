@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 @export var movement_config: Resource
 @export var player_controlled: bool = true
+@export var is_hostile: bool = false
 @export var use_bt_brain: bool = false
 @export var idle_prefix: String = "Idle"
 @export var walk_prefix: String = "Walk"
@@ -28,6 +29,8 @@ extends CharacterBody2D
 @export var wander_emote_min_cooldown_sec: float = 8.0
 @export var wander_emote_max_cooldown_sec: float = 14.0
 @export var wander_emote_hold_sec: float = 2.0
+@export var chase_attack_range: float = 28.0
+@export var chase_repath_interval_sec: float = 0.2
 
 @onready var controller: Node = $PlayerController
 @onready var motor: Node = $PlayerMotor
@@ -46,6 +49,8 @@ var _next_look_allowed_sec: float = 0.0
 var _next_wander_emote_allowed_sec: float = 0.0
 var _emote_request_id: int = 0
 var _current_emote_priority: int = -1
+var _combat_target: Node2D
+var _next_chase_repath_sec: float = 0.0
 
 
 func _ready() -> void:
@@ -53,6 +58,8 @@ func _ready() -> void:
 		add_to_group("player")
 	else:
 		add_to_group("npc")
+		if is_hostile:
+			add_to_group("hostile")
 
 	if movement_config == null:
 		movement_config = load("res://configs/player/player_movement_config.tres")
@@ -73,6 +80,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	motor.call("physics_update", delta)
+	_update_chase_attack()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -107,6 +115,42 @@ func request_attack() -> void:
 
 func clear_attack_pending() -> void:
 	_attack_pending = false
+
+
+func set_combat_target(target: Node2D) -> void:
+	if target == null or not is_instance_valid(target):
+		_combat_target = null
+		return
+	_combat_target = target
+
+
+func clear_combat_target() -> void:
+	_combat_target = null
+
+
+func _update_chase_attack() -> void:
+	if not player_controlled:
+		return
+	if _combat_target == null or not is_instance_valid(_combat_target):
+		_combat_target = null
+		return
+	if _combat_target == self:
+		_combat_target = null
+		return
+
+	var dist := global_position.distance_to(_combat_target.global_position)
+	if dist <= chase_attack_range:
+		if motor != null and motor.has_method("stop"):
+			motor.call("stop")
+		request_attack()
+		return
+
+	var now_sec: float = Time.get_ticks_msec() * 0.001
+	if now_sec < _next_chase_repath_sec:
+		return
+	_next_chase_repath_sec = now_sec + maxf(0.05, chase_repath_interval_sec)
+	if motor != null and motor.has_method("request_move"):
+		motor.call("request_move", _combat_target.global_position)
 
 
 func play_idle_animation() -> void:

@@ -3780,6 +3780,7 @@ y_sort_enabled = true
 collision_layer = 2
 script = ExtResource("1_bxw7m")
 player_controlled = false
+is_hostile = true
 use_bt_brain = true
 attack_prefix = "Attack1"
 look_interest_radius = 72.0

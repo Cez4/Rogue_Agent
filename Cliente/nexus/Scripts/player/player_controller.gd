@@ -8,6 +8,12 @@ extends Node
 var _body: CharacterBody2D
 var _motor: Node
 var _resolver: InteractionResolver = InteractionResolver.new()
+var _context_menu: PopupMenu
+var _context_target: Node
+
+const MENU_ID_INSPECT := 1
+const MENU_ID_ATTACK := 2
+const MENU_ID_CHASE_ATTACK := 3
 
 
 func setup(body: CharacterBody2D) -> void:
@@ -15,6 +21,7 @@ func setup(body: CharacterBody2D) -> void:
 	_motor = body.get_node_or_null(motor_path)
 	if _motor == null:
 		push_error("PlayerController requires PlayerMotor at path: %s" % motor_path)
+	_ensure_context_menu()
 
 
 func handle_unhandled_input(event: InputEvent) -> void:
@@ -55,7 +62,14 @@ func _dispatch_intent(intent: Dictionary) -> void:
 			request_move(intent.get("position", _body.global_position))
 		&"attack":
 			if _body.has_method("request_attack"):
+				var attack_target := intent.get("target")
+				if attack_target is Node2D and _body.has_method("set_combat_target"):
+					_body.call("set_combat_target", attack_target)
 				_body.call("request_attack")
+		&"chase_attack":
+			var chase_target := intent.get("target")
+			if chase_target is Node2D and _body.has_method("set_combat_target"):
+				_body.call("set_combat_target", chase_target)
 		&"inspect":
 			var inspect_target: Node = intent.get("target")
 			if inspect_target != null:
@@ -63,4 +77,45 @@ func _dispatch_intent(intent: Dictionary) -> void:
 		&"context_menu":
 			var menu_target: Node = intent.get("target")
 			if menu_target != null:
-				print("[INTENT] context_menu -> %s" % menu_target.name)
+				_show_context_menu(menu_target)
+
+
+func _ensure_context_menu() -> void:
+	if _context_menu != null:
+		return
+	_context_menu = PopupMenu.new()
+	_context_menu.name = "PlayerContextMenu"
+	_context_menu.hide_on_item_selection = true
+	_context_menu.id_pressed.connect(_on_context_menu_item_pressed)
+	_body.get_tree().root.call_deferred("add_child", _context_menu)
+
+
+func _show_context_menu(target: Node) -> void:
+	_ensure_context_menu()
+	if _context_menu == null:
+		return
+	_context_target = target
+	_context_menu.clear()
+	_context_menu.add_item("Inspect", MENU_ID_INSPECT)
+	if target.is_in_group(&"hostile"):
+		_context_menu.add_item("Attack", MENU_ID_ATTACK)
+		_context_menu.add_item("Chase + Attack", MENU_ID_CHASE_ATTACK)
+	var mouse_pos := _body.get_viewport().get_mouse_position()
+	_context_menu.position = mouse_pos + Vector2(8.0, 8.0)
+	_context_menu.popup()
+
+
+func _on_context_menu_item_pressed(id: int) -> void:
+	if _context_target == null:
+		return
+	match id:
+		MENU_ID_INSPECT:
+			print("[INTENT] inspect -> %s" % _context_target.name)
+		MENU_ID_ATTACK:
+			if _body.has_method("set_combat_target") and _context_target is Node2D:
+				_body.call("set_combat_target", _context_target)
+			if _body.has_method("request_attack"):
+				_body.call("request_attack")
+		MENU_ID_CHASE_ATTACK:
+			if _body.has_method("set_combat_target") and _context_target is Node2D:
+				_body.call("set_combat_target", _context_target)
