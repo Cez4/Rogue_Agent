@@ -6,7 +6,6 @@ extends CharacterBody2D
 @export var idle_prefix: String = "Idle"
 @export var walk_prefix: String = "Walk"
 @export var attack_prefix: String = "Attack"
-@export var attack_action: StringName = &"attack"
 @export var attack_duration_sec: float = 0.35
 @export var look_interest_radius: float = 120.0
 @export var look_interest_min_distance: float = 28.0
@@ -81,16 +80,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event.is_echo():
 		return
-	if _is_attack_event(event):
-		request_attack()
-		return
 	controller.call("handle_unhandled_input", event)
-
-
-func _is_attack_event(event: InputEvent) -> bool:
-	if InputMap.has_action(attack_action) and event.is_action_pressed(attack_action):
-		return true
-	return false
 
 
 func _setup_hsm() -> void:
