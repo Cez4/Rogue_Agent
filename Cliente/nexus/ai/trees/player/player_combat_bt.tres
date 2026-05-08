@@ -23,7 +23,7 @@ script = ExtResource("4_inrange")
 script = ExtResource("5_attack")
 
 [sub_resource type="BTSequence" id="BTSequence_attack"]
-children = [SubResource("BTAction_pull"), SubResource("BTCondition_validate"), SubResource("BTAction_face"), SubResource("BTCondition_in_range"), SubResource("BTAction_attack")]
+children = [SubResource("BTAction_pull"), SubResource("BTCondition_validate"), SubResource("BTCondition_in_range"), SubResource("BTAction_face"), SubResource("BTAction_attack")]
 
 [sub_resource type="BTAction" id="BTAction_t1gar"]
 script = ExtResource("1_pull")

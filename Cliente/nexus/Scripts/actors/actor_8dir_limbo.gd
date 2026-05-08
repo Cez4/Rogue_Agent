@@ -86,14 +86,14 @@ func _ready() -> void:
 	_connect_health_signals()
 	_reset_wander_timer()
 	_hide_emote_immediate()
-	if not use_bt_brain:
-		_setup_hsm()
+	_setup_hsm()
 
 
 func _physics_process(delta: float) -> void:
 	motor.call("physics_update", delta)
 	_update_interaction_approach()
-	_update_chase_attack()
+	if not use_bt_brain:
+		_update_chase_attack()
 
 
 func _unhandled_input(event: InputEvent) -> void:

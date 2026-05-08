@@ -2672,6 +2672,7 @@ script = ExtResource("1_ogt8j")
 idle_prefix = "Idle_Unarmed"
 walk_prefix = "Walk_Unarmed"
 attack_prefix = "Dagger01_Attack1"
+use_bt_brain = true
 metadata/logic_bricks_graph = {
 "connections": [],
 "next_id": 0,
@@ -2732,4 +2733,4 @@ script = ExtResource("9_rijvs")
 [node name="BTPlayer" type="BTPlayer" parent="." unique_id=1549683201]
 behavior_tree = ExtResource("13_ym2kn")
 blackboard_plan = SubResource("BlackboardPlan_tckef")
-active = false
+active = true
