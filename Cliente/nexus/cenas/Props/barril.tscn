@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://3abdlx71d6ik"]
+
+[ext_resource type="Texture2D" uid="uid://b5hjgarktxeet" path="res://Assets/Tiles/Obj/Misc A8_N.png" id="1_dw3jv"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dw3jv"]
+
+[node name="Barril" type="Node2D" unique_id=1816587951]
+z_index = -18
+y_sort_enabled = true
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=20053597]
+texture = ExtResource("1_dw3jv")
+
+[node name="foot" type="Marker2D" parent="." unique_id=639422173]
+z_index = -5
+y_sort_enabled = true
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=284204703]
+z_index = -13
+y_sort_enabled = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1028683866]
+z_index = -13
+y_sort_enabled = true
+position = Vector2(-1, 78)
+shape = SubResource("CircleShape2D_dw3jv")

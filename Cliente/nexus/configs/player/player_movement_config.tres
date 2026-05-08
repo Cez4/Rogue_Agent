@@ -1,0 +1,13 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/player_movement_config.gd" id="1_cfg"]
+
+[resource]
+script = ExtResource("1_cfg")
+max_speed = 220.0
+acceleration = 1200.0
+deceleration = 1400.0
+path_desired_distance = 4.0
+target_desired_distance = 6.0
+stop_epsilon = 4.0
+project_target_to_navmesh = true

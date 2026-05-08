@@ -1,0 +1,45 @@
+[gd_resource type="BehaviorTree" format=3 uid="uid://bhy15e1jeto7y"]
+
+[ext_resource type="Script" uid="uid://c0jdr5v85mpgc" path="res://Scripts/ai/tasks/bt_acquire_target_in_group.gd" id="1_acquire"]
+[ext_resource type="Script" uid="uid://do0qq6e7aefuo" path="res://Scripts/ai/tasks/bt_is_target_in_range.gd" id="2_inrange"]
+[ext_resource type="Script" uid="uid://bcq1wwy6w0nvr" path="res://Scripts/ai/tasks/bt_look_at_target.gd" id="3_look"]
+[ext_resource type="Script" uid="uid://dk02xd2gjaytq" path="res://Scripts/ai/tasks/bt_idle_wander_loop.gd" id="4_idlewander"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_villager"]
+var/target_player/name = &"target_player"
+var/target_player/type = 24
+var/target_player/hint = 0
+var/target_player/hint_string = ""
+var/look_interest_radius/name = &"look_interest_radius"
+var/look_interest_radius/type = 3
+var/look_interest_radius/value = 120.0
+var/look_interest_radius/hint = 0
+var/look_interest_radius/hint_string = ""
+var/look_hold_sec/name = &"look_hold_sec"
+var/look_hold_sec/type = 3
+var/look_hold_sec/value = 1.2
+var/look_hold_sec/hint = 0
+var/look_hold_sec/hint_string = ""
+
+[sub_resource type="BTAction" id="BTAction_acquire"]
+script = ExtResource("1_acquire")
+
+[sub_resource type="BTCondition" id="BTCondition_inrange"]
+script = ExtResource("2_inrange")
+
+[sub_resource type="BTAction" id="BTAction_look"]
+script = ExtResource("3_look")
+
+[sub_resource type="BTSequence" id="BTSequence_look"]
+custom_name = "Look At Player"
+children = [SubResource("BTAction_acquire"), SubResource("BTCondition_inrange"), SubResource("BTAction_look")]
+
+[sub_resource type="BTAction" id="BTAction_idlewander"]
+script = ExtResource("4_idlewander")
+
+[sub_resource type="BTSelector" id="BTSelector_root"]
+children = [SubResource("BTSequence_look"), SubResource("BTAction_idlewander")]
+
+[resource]
+blackboard_plan = SubResource("BlackboardPlan_villager")
+root_task = SubResource("BTSelector_root")

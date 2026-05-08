@@ -1,0 +1,24 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Archives and local backups
+*.zip
+*.rar
+*.7z
+
+# Local runtimes / tool caches
+**/.runtime/uv-cache/
+**/.runtime/.venv/
+**/.runtime/venv/
+
+# Godot transient build/import data
+**/.godot/
+**/.import/
+
+# Local AI tool history/cache (not source)
+Cliente/nexus/.gamedev_ai/history/
+Cliente/nexus/.gamedev_ai/vector_db.json
+
+# Local editor binaries (keep out of repo)
+Cliente/godot/*.exe

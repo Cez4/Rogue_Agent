@@ -1,0 +1,17 @@
+﻿{
+  "servers": {
+    "godot-mcp": {
+      "command": "uv",
+      "args": [
+        "run",
+        "C:/Users/ceza/Documents/Rogue_agent/Cliente/nexus/addons/gdai-mcp-plugin-godot/gdai_mcp_server.py"
+      ],
+      "type": "stdio",
+      "env": {
+        "GDAI_MCP_SERVER_PORT": "3571",
+        "GDAI_RUNTIME_SERVER_PORT": "3572",
+        "UV_CACHE_DIR": "C:/Users/ceza/Documents/Rogue_agent/Cliente/nexus/.runtime/uv-cache"
+      }
+    }
+  }
+}

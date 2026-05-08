@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://boyrvxxx81y4c"]
+
+[ext_resource type="PackedScene" uid="uid://bktwja3rtahup" path="res://cenas/mundo.tscn" id="2_smc2o"]
+
+[node name="Main" type="Node2D" unique_id=733258298]
+
+[node name="Mundo" parent="." unique_id=1762976580 instance=ExtResource("2_smc2o")]
