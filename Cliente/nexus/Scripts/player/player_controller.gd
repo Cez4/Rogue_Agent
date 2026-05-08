@@ -21,11 +21,14 @@ func setup(body: CharacterBody2D) -> void:
 	_motor = body.get_node_or_null(motor_path)
 	if _motor == null:
 		push_error("PlayerController requires PlayerMotor at path: %s" % motor_path)
-	_ensure_context_menu()
+	if _is_player_controlled_body():
+		_ensure_context_menu()
 
 
 func handle_unhandled_input(event: InputEvent) -> void:
 	if _body == null or _motor == null:
+		return
+	if not _is_player_controlled_body():
 		return
 	if event.is_echo():
 		return
@@ -59,15 +62,16 @@ func _dispatch_intent(intent: Dictionary) -> void:
 	var intent_name: StringName = intent.get("intent", &"")
 	match intent_name:
 		&"move":
-			request_move(intent.get("position", _body.global_position))
+			var move_pos: Vector2 = intent.get("position", _body.global_position)
+			request_move(move_pos)
 		&"attack":
 			if _body.has_method("request_attack"):
-				var attack_target := intent.get("target")
+				var attack_target: Variant = intent.get("target")
 				if attack_target is Node2D and _body.has_method("set_combat_target"):
 					_body.call("set_combat_target", attack_target)
 				_body.call("request_attack")
 		&"chase_attack":
-			var chase_target := intent.get("target")
+			var chase_target: Variant = intent.get("target")
 			if chase_target is Node2D and _body.has_method("set_combat_target"):
 				_body.call("set_combat_target", chase_target)
 		&"inspect":
@@ -82,6 +86,8 @@ func _dispatch_intent(intent: Dictionary) -> void:
 
 func _ensure_context_menu() -> void:
 	if _context_menu != null:
+		return
+	if not _is_player_controlled_body():
 		return
 	_context_menu = PopupMenu.new()
 	_context_menu.name = "PlayerContextMenu"
@@ -119,3 +125,11 @@ func _on_context_menu_item_pressed(id: int) -> void:
 		MENU_ID_CHASE_ATTACK:
 			if _body.has_method("set_combat_target") and _context_target is Node2D:
 				_body.call("set_combat_target", _context_target)
+
+
+func _is_player_controlled_body() -> bool:
+	if _body == null:
+		return false
+	if _body.has_method("get"):
+		return bool(_body.get("player_controlled"))
+	return false
