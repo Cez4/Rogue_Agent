@@ -11,7 +11,7 @@
 [ext_resource type="Script" uid="uid://dwo1bk64b01w" path="res://Scripts/actors/state_walk_8dir.gd" id="9_otluh"]
 [ext_resource type="Script" uid="uid://d3iujpe3t8fla" path="res://Scripts/actors/state_attack_8dir.gd" id="10_w5m6h"]
 [ext_resource type="Script" uid="uid://cpo2dt0djpyes" path="res://Scripts/actors/state_wander_8dir.gd" id="11_xusch"]
-[ext_resource type="BehaviorTree" uid="uid://bhy15e1jeto7y" path="res://ai/trees/npc/villager_look_wander_bt.tres" id="12_bt"]
+[ext_resource type="BehaviorTree" path="res://ai/trees/npc/wildcat_look_wander_bt.tres" id="12_bt"]
 [ext_resource type="PackedScene" path="res://cenas/components/emotion_bubble_shared.tscn" id="13_emote"]
 [ext_resource type="Texture2D" uid="uid://b46nvc0ukccid" path="res://Assets/emotions/spriteExc.png" id="14_0ao5k"]
 [ext_resource type="Texture2D" uid="uid://dffhs4xccwdww" path="res://Assets/emotions/spriteHoe.png" id="15_fji62"]

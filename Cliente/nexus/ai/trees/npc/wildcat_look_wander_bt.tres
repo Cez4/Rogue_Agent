@@ -1,0 +1,52 @@
+[gd_resource type="BehaviorTree" format=3]
+
+[ext_resource type="Script" uid="uid://c0jdr5v85mpgc" path="res://Scripts/ai/tasks/bt_acquire_target_in_group.gd" id="1_acquire"]
+[ext_resource type="Script" uid="uid://do0qq6e7aefuo" path="res://Scripts/ai/tasks/bt_is_target_in_range.gd" id="2_inrange"]
+[ext_resource type="Script" uid="uid://bcq1wwy6w0nvr" path="res://Scripts/ai/tasks/bt_look_at_target.gd" id="3_look"]
+[ext_resource type="Script" uid="uid://dk02xd2gjaytq" path="res://Scripts/ai/tasks/bt_idle_wander_loop.gd" id="4_idlewander"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_wildcat"]
+var/target_player/name = &"target_player"
+var/target_player/type = 24
+var/target_player/hint = 0
+var/target_player/hint_string = ""
+var/look_interest_radius/name = &"look_interest_radius"
+var/look_interest_radius/type = 3
+var/look_interest_radius/value = 72.0
+var/look_interest_radius/hint = 0
+var/look_interest_radius/hint_string = ""
+var/look_hold_sec/name = &"look_hold_sec"
+var/look_hold_sec/type = 3
+var/look_hold_sec/value = 0.65
+var/look_hold_sec/hint = 0
+var/look_hold_sec/hint_string = ""
+
+[sub_resource type="BTAction" id="BTAction_acquire"]
+script = ExtResource("1_acquire")
+
+[sub_resource type="BTCondition" id="BTCondition_inrange"]
+script = ExtResource("2_inrange")
+
+[sub_resource type="BTAction" id="BTAction_look"]
+script = ExtResource("3_look")
+
+[sub_resource type="BTSequence" id="BTSequence_look"]
+custom_name = "Wildcat Look At Player"
+children = [SubResource("BTAction_acquire"), SubResource("BTCondition_inrange"), SubResource("BTAction_look")]
+
+[sub_resource type="BTCooldown" id="BTCooldown_look"]
+duration = 10.0
+children = [SubResource("BTSequence_look")]
+
+[sub_resource type="BTProbability" id="BTProbability_look"]
+children = [SubResource("BTCooldown_look")]
+
+[sub_resource type="BTAction" id="BTAction_idlewander"]
+script = ExtResource("4_idlewander")
+
+[sub_resource type="BTDynamicSelector" id="BTSelector_root"]
+children = [SubResource("BTProbability_look"), SubResource("BTAction_idlewander")]
+
+[resource]
+blackboard_plan = SubResource("BlackboardPlan_wildcat")
+root_task = SubResource("BTSelector_root")
