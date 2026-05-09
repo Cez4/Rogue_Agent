@@ -170,6 +170,39 @@ func is_combat_target_manual_lock() -> bool:
 	return _combat_target_manual_lock
 
 
+func get_combat_target() -> Node2D:
+	return _combat_target
+
+
+func set_combat_target_internal(target: Node2D, manual_lock: bool) -> void:
+	_combat_target = target
+	_combat_target_manual_lock = manual_lock
+
+
+func reset_combat_target_runtime() -> void:
+	_combat_target = null
+	_combat_target_manual_lock = false
+	_next_chase_repath_sec = 0.0
+
+
+func stop_motor_movement() -> void:
+	if motor != null and motor.has_method("stop"):
+		motor.call("stop")
+
+
+func set_actor_dead(dead: bool) -> void:
+	_is_dead = dead
+
+
+func get_bt_player() -> Node:
+	return bt_player
+
+
+func set_brain_active(active: bool) -> void:
+	if bt_player != null and bt_player.has_method("set"):
+		bt_player.set("active", active)
+
+
 func set_interaction_target(target: Node2D, stop_range: float = -1.0) -> void:
 	if target == null or not is_instance_valid(target) or target == self:
 		clear_interaction_target()

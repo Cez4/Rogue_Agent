@@ -3,12 +3,11 @@ extends RefCounted
 
 static func set_combat_target(actor: Node, target: Node2D, manual_lock: bool = true) -> void:
 	if target == null or not is_instance_valid(target):
-		actor._combat_target = null
-		actor._combat_target_manual_lock = false
+		actor.reset_combat_target_runtime()
 		return
-	var changed_target: bool = actor._combat_target != target
-	actor._combat_target = target
-	actor._combat_target_manual_lock = manual_lock
+	var current_target: Node2D = actor.get_combat_target()
+	var changed_target: bool = current_target != target
+	actor.set_combat_target_internal(target, manual_lock)
 	actor.clear_interaction_target()
 	actor.face_toward(target.global_position)
 	if changed_target:
@@ -20,13 +19,12 @@ static func set_combat_target(actor: Node, target: Node2D, manual_lock: bool = t
 
 
 static func clear_combat_target(actor: Node) -> void:
-	var had_target: bool = actor._combat_target != null and is_instance_valid(actor._combat_target)
+	var current_target: Node2D = actor.get_combat_target()
+	var had_target: bool = current_target != null and is_instance_valid(current_target)
 	var old_target_name: String = ""
 	if had_target:
-		old_target_name = actor._combat_target.name
-	actor._combat_target = null
-	actor._combat_target_manual_lock = false
-	actor._next_chase_repath_sec = 0.0
+		old_target_name = current_target.name
+	actor.reset_combat_target_runtime()
 	if had_target:
 		CombatTelemetry.emit_event(&"target_lost", {
 			"actor": actor.name,
@@ -35,10 +33,10 @@ static func clear_combat_target(actor: Node) -> void:
 
 
 static func cancel_chase_attack(actor: Node) -> void:
-	var had_target: bool = actor._combat_target != null and is_instance_valid(actor._combat_target)
+	var current_target: Node2D = actor.get_combat_target()
+	var had_target: bool = current_target != null and is_instance_valid(current_target)
 	clear_combat_target(actor)
-	if actor.motor != null and actor.motor.has_method("stop"):
-		actor.motor.call("stop")
+	actor.stop_motor_movement()
 	if had_target:
 		CombatTelemetry.emit_event(&"chase_canceled", {"actor": actor.name})
 
@@ -53,7 +51,7 @@ static func is_target_alive(target: Node2D) -> bool:
 
 
 static func on_health_death(actor: Node) -> void:
-	actor._is_dead = true
+	actor.set_actor_dead(true)
 	actor.clear_attack_pending()
 	disable_brain_runtime(actor)
 	if actor.hsm != null:
@@ -89,21 +87,20 @@ static func enable_combat_collision(actor: Node) -> void:
 
 
 static func disable_brain_runtime(actor: Node) -> void:
-	if actor.bt_player != null and actor.bt_player.has_method("set"):
-		actor.bt_player.set("active", false)
+	actor.set_brain_active(false)
 
 
 static func enable_brain_runtime(actor: Node) -> void:
-	if actor.bt_player != null and actor.bt_player.has_method("set"):
-		actor.bt_player.set("active", true)
+	actor.set_brain_active(true)
 
 
 static func reset_combat_memory(actor: Node) -> void:
 	clear_combat_target(actor)
 	actor.clear_interaction_target()
 	var bb: Variant = null
-	if actor.bt_player != null and actor.bt_player.has_method("get"):
-		bb = actor.bt_player.get("blackboard")
+	var bt_player: Node = actor.get_bt_player()
+	if bt_player != null and bt_player.has_method("get"):
+		bb = bt_player.get("blackboard")
 	if bb != null and bb.has_method("erase_var"):
 		bb.erase_var(&"combat_target")
 		bb.erase_var(&"combat_target_last_seen_ms")
