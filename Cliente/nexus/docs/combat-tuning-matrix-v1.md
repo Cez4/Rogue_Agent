@@ -148,6 +148,10 @@ Critério de aprovação:
    - reduce aggro envelope: `acquire 96->88`, `lose 132->124`
    - reduce memory churn: `memory 0.75->0.60`, `reacquire 0.14->0.18`
    - improve melee stop: `stop_buffer 3.5->4.5` (aproxima mais antes de atacar)
+5. Correção de precedência em runtime:
+   - `Stats.attack_stop_buffer` estava inicializando com `base_attack_stop_buffer` (2.0), reduzindo efeito do profile.
+   - corrigido para inicializar com `combat_perception_profile.attack_stop_buffer` quando profile existe.
+   - objetivo: garantir que tuning data-driven do profile seja aplicado de fato no runtime.
 
 ## 10) Referências
 1. Godot NavigationAgent2D:

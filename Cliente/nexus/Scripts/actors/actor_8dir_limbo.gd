@@ -763,7 +763,8 @@ func _setup_stats() -> void:
 		&"combat_reacquire_interval_sec": get_combat_reacquire_interval_sec(),
 		&"attack_range_bonus": base_attack_range_bonus,
 		&"attack_range_multiplier": base_attack_range_multiplier,
-		&"attack_stop_buffer": base_attack_stop_buffer
+		# Keep profile as source-of-truth for stop buffer in tuning passes.
+		&"attack_stop_buffer": combat_perception_profile.attack_stop_buffer if combat_perception_profile != null else base_attack_stop_buffer
 	})
 	_apply_loadout_modifiers_to_stats()
 
