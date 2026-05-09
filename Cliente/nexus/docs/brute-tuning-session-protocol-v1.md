@@ -1,7 +1,7 @@
 ﻿# Brute Tuning Session Protocol v1
 
 Data: 2026-05-09
-Status: em execucao (freeze v1)
+Status: concluido (freeze v1)
 
 ## Baseline atual (antes de ajuste)
 1. Profile: `res://configs/combat/profiles/hostile_brute_profile_v1.tres`
@@ -65,3 +65,40 @@ Status: em execucao (freeze v1)
    - reduzir `attack_blocked_reason=out_of_range` em kite, aproximando um pouco mais antes do commit.
 3. Escopo:
    - sem alteracao de Targeting/Cadence/Survivability.
+
+## T3 aplicado (Cadence-only)
+1. Mudanca:
+   - `recover_sec: 0.30 -> 0.32`
+   - `cooldown_sec: 0.42 -> 0.46`
+2. Objetivo:
+   - reduzir pressao continua de ataques do Brute em kite, abrindo janela maior entre commits.
+3. Escopo:
+   - sem alteracao de Targeting/Approach/Survivability.
+
+## T4 aplicado (Survivability-only)
+1. Mudanca:
+   - `damage: 1.35 -> 1.25`
+2. Objetivo:
+   - reduzir letalidade por ciclo do Brute sem alterar ritmo, range ou targeting.
+3. Escopo:
+   - sem alteracao de Targeting/Approach/Cadence.
+
+## Encerramento da fase (Brute v1 congelado)
+1. Profile final:
+   - `acquire_radius=100.0`
+   - `lose_radius=146.0`
+   - `target_memory_sec=0.95`
+   - `reacquire_interval_sec=0.20`
+   - `attack_stop_buffer=6.6`
+2. Action final:
+   - `attack_range=50.0`
+   - `windup_sec=0.18`
+   - `active_sec=0.12`
+   - `recover_sec=0.32`
+   - `cooldown_sec=0.46`
+   - `damage=1.25`
+   - `max_targets_per_attack=2`
+3. Resultado:
+   - comportamento de archetype pesado preservado (cadencia mais lenta, pressao controlada);
+   - sem regressao de runtime/parse;
+   - telemetria coerente (`attack_commit`, `hit_confirmed`, `target_died/respawned`).

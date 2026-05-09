@@ -297,3 +297,21 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
    - action final: `recover_sec=0.22`, `cooldown_sec=0.32`, `damage=0.85`.
    - survivability final: `max_health=13.0` na cena `hostile_enemy_light.tscn`.
    - proximo alvo de tuning/freeze: Brute v1, mantendo regra de um eixo por ciclo.
+24. Brute v1 congelado (baseline final aprovado):
+   - profile final:
+     - `acquire_radius=100.0`
+     - `lose_radius=146.0`
+     - `target_memory_sec=0.95`
+     - `reacquire_interval_sec=0.20`
+     - `attack_stop_buffer=6.6`
+   - action final:
+     - `attack_range=50.0`
+     - `windup_sec=0.18`
+     - `active_sec=0.12`
+     - `recover_sec=0.32`
+     - `cooldown_sec=0.46`
+     - `damage=1.25`
+     - `max_targets_per_attack=2`
+   - leitura final: archetype pesado mantido com cadencia mais controlada e letalidade ajustada.
+25. Proximo passo de producao:
+   - criar proximo hostil por dados (sem tocar logica) usando `docs/enemy-profile-checklist-v1.md`.

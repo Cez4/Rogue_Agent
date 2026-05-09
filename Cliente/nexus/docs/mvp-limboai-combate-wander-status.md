@@ -2,7 +2,7 @@
 
 Data: 2026-05-09
 Branch historica: `feat/mvp-combate-fase1`
-Estado atual consolidado: `feat/light-tuning-t4-survivability`
+Estado atual consolidado: `feat/brute-tuning-v1`
 
 Atualizacao de estado:
 - Plano final de desacoplamento do actor concluido (Cortes 1-4).
@@ -59,9 +59,22 @@ Atualizacao de estado:
      - `recover_sec=0.22`
      - `cooldown_sec=0.32`
      - `max_health=13.0`
+4. Brute v1: concluido e congelado:
+   - profile: `res://configs/combat/profiles/hostile_brute_profile_v1.tres`
+   - action: `res://configs/combat/hostile_brute_attack_v1.tres`
+   - scene: `res://cenas/enemies/hostile_enemy_brute.tscn`
+   - baseline final:
+     - `acquire_radius=100.0`
+     - `lose_radius=146.0`
+     - `target_memory_sec=0.95`
+     - `reacquire_interval_sec=0.20`
+     - `attack_stop_buffer=6.6`
+     - `recover_sec=0.32`
+     - `cooldown_sec=0.46`
+     - `damage=1.25`
 
 ## Proximos passos tecnicos
-1. Congelar Brute v1 (mesmo protocolo de 4 eixos, sem alterar logica core).
+1. Brute v1 congelado; iniciar proximo hostil por dados usando `enemy-profile-checklist-v1.md`.
 2. Seguir checklist unico por novo inimigo:
    - `docs/enemy-profile-checklist-v1.md`
 3. Atualizar matriz de tuning por ciclo:
