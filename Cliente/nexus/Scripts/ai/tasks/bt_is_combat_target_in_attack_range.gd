@@ -22,11 +22,7 @@ func _tick(_delta: float) -> Status:
 	if agent == null:
 		blackboard.set_var(blocked_reason_var, "missing_agent")
 		return FAILURE
-	var attack_range: float = default_attack_stop_distance
-	if agent.has_method("get_attack_stop_distance"):
-		attack_range = float(agent.get_attack_stop_distance())
-	elif agent.has_method("get_attack_range"):
-		attack_range = float(agent.get_attack_range())
+	var attack_range: float = float(agent.get_attack_stop_distance())
 	var dist_sq: float = agent.global_position.distance_squared_to(target.global_position)
 	if dist_sq <= attack_range * attack_range:
 		blackboard.set_var(blocked_reason_var, "")

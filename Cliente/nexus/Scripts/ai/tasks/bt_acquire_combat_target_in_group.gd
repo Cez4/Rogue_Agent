@@ -16,18 +16,15 @@ func _tick(_delta: float) -> Status:
 		return FAILURE
 
 	var acquire_radius: float = default_acquire_radius
-	if agent.has_method("get_combat_acquire_radius"):
-		acquire_radius = float(agent.get_combat_acquire_radius())
+	acquire_radius = float(agent.get_combat_acquire_radius())
 	acquire_radius = maxf(8.0, acquire_radius)
 	var acquire_radius_sq: float = acquire_radius * acquire_radius
 
 	var current_target: Node2D = null
-	if agent.has_method("get_combat_target"):
-		current_target = agent.get_combat_target() as Node2D
+	current_target = agent.get_combat_target() as Node2D
 	if is_instance_valid(current_target):
-		if agent.has_method("is_target_alive_for_runtime") and not bool(agent.is_target_alive_for_runtime(current_target)):
-			if agent.has_method("clear_combat_target"):
-				agent.clear_combat_target()
+		if not bool(agent.is_target_alive_for_runtime(current_target)):
+			agent.clear_combat_target()
 		else:
 			blackboard.set_var(output_var, current_target)
 			blackboard.set_var(last_seen_time_var, Time.get_ticks_msec())
@@ -46,7 +43,7 @@ func _tick(_delta: float) -> Status:
 			continue
 		if candidate == agent:
 			continue
-		if agent.has_method("is_target_alive_for_runtime") and not bool(agent.is_target_alive_for_runtime(candidate)):
+		if not bool(agent.is_target_alive_for_runtime(candidate)):
 			continue
 		var dist_sq: float = agent.global_position.distance_squared_to(candidate.global_position)
 		if dist_sq > acquire_radius_sq:
@@ -59,8 +56,7 @@ func _tick(_delta: float) -> Status:
 		blackboard.erase_var(output_var)
 		return FAILURE
 
-	if agent.has_method("set_combat_target"):
-		agent.set_combat_target(best_target, false)
+	agent.set_combat_target(best_target, false)
 	blackboard.set_var(output_var, best_target)
 	blackboard.set_var(last_seen_time_var, Time.get_ticks_msec())
 	return SUCCESS

@@ -15,8 +15,8 @@ static func update_interaction_approach(actor: Node) -> void:
 		actor.stop_motor_movement()
 		actor.clear_interaction_target()
 		return
-	if actor.motor != null and actor.motor.has_method("request_move"):
-		actor.motor.call("request_move", target.global_position)
+	if actor.motor != null:
+		actor.motor.request_move(target.global_position)
 
 
 static func update_chase_attack(actor: Node) -> void:
@@ -46,7 +46,6 @@ static func update_chase_attack(actor: Node) -> void:
 			actor.play_walk_toward(target.global_position)
 		return
 	actor.set_next_chase_repath_sec(now_sec + maxf(0.05, actor.chase_repath_interval_sec))
-	if actor.has_method("request_move_runtime"):
-		actor.request_move_runtime(target.global_position)
+	actor.request_move_runtime(target.global_position)
 	if not actor.is_attack_pending_runtime():
 		actor.play_walk_toward(target.global_position)

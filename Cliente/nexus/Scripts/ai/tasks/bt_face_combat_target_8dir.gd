@@ -14,6 +14,7 @@ func _tick(_delta: float) -> Status:
 	var target := blackboard.get_var(target_var) as Node2D
 	if not is_instance_valid(target):
 		return FAILURE
-	if agent != null and agent.has_method("face_toward"):
-		agent.face_toward(target.global_position)
+	if agent == null:
+		return FAILURE
+	agent.face_toward(target.global_position)
 	return SUCCESS

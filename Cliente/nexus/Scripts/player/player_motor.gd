@@ -1,4 +1,5 @@
-﻿extends Node
+extends Node
+class_name PlayerMotor
 
 signal movement_started
 signal movement_finished

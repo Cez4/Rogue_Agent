@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name Actor8DirLimbo
 
 @export var movement_config: Resource
 @export var equipment_loadout: EquipmentLoadout
@@ -46,8 +47,8 @@ extends CharacterBody2D
 @export var base_attack_range_multiplier: float = 0.0
 @export var base_attack_stop_buffer: float = 2.0
 
-@onready var controller: Node = $PlayerController
-@onready var motor: Node = $PlayerMotor
+@onready var controller: PlayerController = $PlayerController
+@onready var motor: PlayerMotor = $PlayerMotor
 @onready var hsm: LimboHSM = $LimboHSM
 @onready var idle_state: LimboState = $LimboHSM/IdleState
 @onready var walk_state: LimboState = $LimboHSM/WalkState
@@ -102,9 +103,9 @@ func _ready() -> void:
 			# Wander NPCs should not depend on nav projection being available in all maps.
 			movement_config.project_target_to_navmesh = false
 
-	motor.set("config", movement_config)
-	motor.call("setup", self)
-	controller.call("setup", self)
+	motor.config = movement_config
+	motor.setup(self)
+	controller.setup(self)
 	_setup_stats()
 	_setup_interactable_component()
 	_connect_health_signals()
@@ -116,7 +117,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if _is_dead:
 		return
-	motor.call("physics_update", delta)
+	motor.physics_update(delta)
 	_update_interaction_approach()
 	if not use_bt_brain:
 		_update_chase_attack()
@@ -127,7 +128,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event.is_echo():
 		return
-	controller.call("handle_unhandled_input", event)
+	controller.handle_unhandled_input(event)
 
 
 func _setup_hsm() -> void:
@@ -142,7 +143,7 @@ func _setup_hsm() -> void:
 
 
 func is_actor_moving() -> bool:
-	return bool(motor.call("is_moving"))
+	return bool(motor.is_moving())
 
 
 func request_attack() -> void:
@@ -190,8 +191,8 @@ func reset_combat_target_runtime() -> void:
 
 
 func stop_motor_movement() -> void:
-	if motor != null and motor.has_method("stop"):
-		motor.call("stop")
+	if motor != null:
+		motor.stop()
 
 
 func set_actor_dead(dead: bool) -> void:
@@ -300,8 +301,8 @@ func is_target_alive_for_runtime(target: Node2D) -> bool:
 
 
 func request_move_runtime(target_position: Vector2) -> void:
-	if motor != null and motor.has_method("request_move"):
-		motor.call("request_move", target_position)
+	if motor != null:
+		motor.request_move(target_position)
 
 
 func get_equipment_loadout_runtime() -> EquipmentLoadout:
@@ -448,8 +449,8 @@ func _respawn_after_delay() -> void:
 	velocity = Vector2.ZERO
 	_reset_combat_memory()
 	_enable_combat_collision()
-	if motor != null and motor.has_method("stop"):
-		motor.call("stop")
+	if motor != null:
+		motor.stop()
 	if hsm != null:
 		hsm.set_active(true)
 	play_idle_animation()
@@ -551,7 +552,7 @@ func begin_wander() -> void:
 	_idle_elapsed_sec = 0.0
 	_reset_wander_timer()
 	var target: Vector2 = _pick_random_wander_target()
-	motor.call("request_move", target)
+	motor.request_move(target)
 
 
 func is_wander_complete() -> bool:
@@ -586,7 +587,7 @@ func trigger_look_cooldown() -> void:
 
 
 func stop_movement_for_look() -> void:
-	if motor != null and motor.has_method("stop"):
+	if motor != null:
 		motor.stop()
 	velocity = Vector2.ZERO
 

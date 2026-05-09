@@ -17,12 +17,9 @@ func _generate_name() -> String:
 func _tick(_delta: float) -> Status:
 	if agent == null:
 		return FAILURE
-	if not agent.has_method("request_attack"):
-		return FAILURE
 
 	var attack_pending: bool = false
-	if agent.has_method("is_attack_pending_runtime"):
-		attack_pending = bool(agent.is_attack_pending_runtime())
+	attack_pending = bool(agent.is_attack_pending_runtime())
 
 	# If an attack is currently executing, keep this task RUNNING until it completes.
 	if attack_pending:
@@ -52,14 +49,12 @@ func _tick(_delta: float) -> Status:
 		blackboard.set_var(started_var, false)
 		blackboard.set_var(blocked_reason_var, "no_valid_target")
 		return FAILURE
-	if is_instance_valid(target) and agent.has_method("face_toward"):
+	if is_instance_valid(target):
 		agent.face_toward(target.global_position)
-	if agent.has_method("stop_motor_movement"):
-		agent.stop_motor_movement()
+	agent.stop_motor_movement()
 	agent.request_attack()
 	attack_pending = false
-	if agent.has_method("is_attack_pending_runtime"):
-		attack_pending = bool(agent.is_attack_pending_runtime())
+	attack_pending = bool(agent.is_attack_pending_runtime())
 	if attack_pending:
 		var target_name: String = ""
 		if is_instance_valid(target):

@@ -22,15 +22,10 @@ func _tick(_delta: float) -> Status:
 	var acquire_radius: float = default_acquire_radius
 	var lose_radius: float = default_lose_radius
 	var memory_sec: float = default_memory_sec
-	var is_manual_lock: bool = false
-	if agent.has_method("is_combat_target_manual_lock"):
-		is_manual_lock = bool(agent.is_combat_target_manual_lock())
-	if agent.has_method("get_combat_acquire_radius"):
-		acquire_radius = float(agent.get_combat_acquire_radius())
-	if agent.has_method("get_combat_lose_radius"):
-		lose_radius = float(agent.get_combat_lose_radius())
-	if agent.has_method("get_combat_target_memory_sec"):
-		memory_sec = float(agent.get_combat_target_memory_sec())
+	var is_manual_lock: bool = bool(agent.is_combat_target_manual_lock())
+	acquire_radius = float(agent.get_combat_acquire_radius())
+	lose_radius = float(agent.get_combat_lose_radius())
+	memory_sec = float(agent.get_combat_target_memory_sec())
 	lose_radius = maxf(lose_radius, acquire_radius)
 	memory_sec = maxf(0.0, memory_sec)
 
@@ -48,8 +43,7 @@ func _tick(_delta: float) -> Status:
 
 	# If target started outside acquire radius and was never seen, reject immediately.
 	if not has_seen and dist_sq > acquire_radius * acquire_radius:
-		if agent.has_method("clear_combat_target"):
-			agent.clear_combat_target()
+		agent.clear_combat_target()
 		return FAILURE
 
 	var last_seen_ms: int = now_ms
@@ -59,6 +53,5 @@ func _tick(_delta: float) -> Status:
 	if elapsed_sec <= memory_sec:
 		return SUCCESS
 
-	if agent.has_method("clear_combat_target"):
-		agent.clear_combat_target()
+	agent.clear_combat_target()
 	return FAILURE

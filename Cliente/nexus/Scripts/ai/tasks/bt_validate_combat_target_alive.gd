@@ -13,13 +13,12 @@ func _tick(_delta: float) -> Status:
 		return FAILURE
 	var target := blackboard.get_var(target_var) as Node2D
 	if not is_instance_valid(target):
-		if agent != null and agent.has_method("clear_combat_target"):
+		if agent != null:
 			agent.clear_combat_target()
 		return FAILURE
-	if agent != null and agent.has_method("is_target_alive_for_runtime"):
+	if agent != null:
 		if agent.is_target_alive_for_runtime(target):
 			return SUCCESS
-		if agent.has_method("clear_combat_target"):
-			agent.clear_combat_target()
+		agent.clear_combat_target()
 		return FAILURE
 	return SUCCESS
