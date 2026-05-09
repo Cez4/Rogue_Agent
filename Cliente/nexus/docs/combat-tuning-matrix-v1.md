@@ -202,3 +202,7 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
    - `attack_stop_buffer: 4.0 -> 4.8` (Wildcat).
    - objetivo: reduzir `attack_blocked_reason=out_of_range` em kite, aproximando mais antes do commit.
    - demais eixos mantidos (targeting/cadence/survivability sem mudança).
+10. Ciclo 7 aplicado (Cadence only):
+   - `recover_sec: 0.22 -> 0.24` (Wildcat claw).
+   - `cooldown_sec: 0.32 -> 0.36` (Wildcat claw).
+   - objetivo: reduzir cadencia excessiva em lock-step e melhorar janela de reposicionamento entre commits.

@@ -60,11 +60,14 @@ Calibrar o comportamento de combate do Wildcat por microciclos curtos, com evide
    - morte/respawn funcionais
 
 ## Proximo passo imediato
-Executar Ciclo 3 no eixo **Approach/Stop**:
-1. ajustar somente `attack_stop_buffer` (um valor por vez);
-2. validar com sessao de 30-60s usando:
+Executar validacao do **Ciclo 7 (Cadence only)**:
+1. validar em sessao de 30-60s usando:
    - `docs/wildcat-tuning-session-protocol-v1.md`;
-3. registrar antes/depois em:
+2. confirmar impacto em:
+   - frequencia de `attack_commit`;
+   - reducao de lock-step em troca de ataques;
+   - manutencao de `out_of_range` sob kite;
+3. registrar resultado na matriz:
    - `docs/combat-tuning-matrix-v1.md`.
 
 ## Riscos e mitigacao
