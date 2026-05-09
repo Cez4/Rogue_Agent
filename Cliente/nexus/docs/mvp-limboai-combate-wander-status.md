@@ -87,6 +87,10 @@ Estado atual consolidado: `feat/actor-combat-profile-runtime`
   - `ActorRuntimeBridge` introduzido para integracao tecnica entre runtimes e actor.
   - runtimes deixam de acessar wrappers `runtime_*` no actor e usam bridge explicito.
   - `actor_8dir_limbo.gd` mantido em 473 linhas com contrato de gameplay estavel.
+- Desacoplamento tecnico BT/HSM (passes v8):
+  - migracao de estado social/wander/emote para `ActorRuntimeBridge`.
+  - remocao dos getters/setters sociais redundantes do actor.
+  - `actor_8dir_limbo.gd` reduzido para 469 linhas sem regressao MCP.
 
 ## LimboAI no projeto
 - HSM para execucao de locomocao/ataque no actor.
@@ -105,7 +109,10 @@ Estado atual consolidado: `feat/actor-combat-profile-runtime`
    - `docs/combat-tuning-matrix-v1.md`
 2. Padronizar pipeline BT de combate para novos hostis (base enemy template) apos tuning v1.
 3. Finalizar acabamento de desacoplamento residual (nao critico):
-   - revisar e reduzir wrappers remanescentes do actor para contrato minimo de orquestracao.
+   - fechar "boundary 100%": remover ultimos acessos diretos a metodo privado do actor fora do bridge.
+   - separar no actor: API de gameplay (BT/HSM/Controller) vs API tecnica (bridge-only).
+   - consolidar duplicidade de timers/estado entre `actor_social_runtime` e `actor_wander_runtime`.
+   - adicionar telemetria tecnica de boundary em modo debug.
 4. Feedback de hit:
    - FX local de impacto, flash de dano, popup de numero.
 5. Validacao para futuro multiplayer:

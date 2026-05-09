@@ -96,6 +96,9 @@ Regra de autoridade:
 21. Integracao tecnica por bridge (v7):
 - `ActorRuntimeBridge` centraliza operacoes tecnicas de runtime sem expor novos metodos de gameplay no actor.
 - contrato do actor para BT/HSM permanece estavel.
+22. Bridge social/wander (v8):
+- estado social (idle/wander/look/emote request/priority) migrado para bridge tecnico.
+- `actor_8dir_limbo.gd` reduzido para 469 linhas mantendo comportamento.
 
 ### Parcial
 1. Smart Objects avancados (Talk/Use/Trade com affordances completos) fora desta fase.
@@ -137,11 +140,15 @@ Regra de autoridade:
 - usar `get_attack_stop_distance()` (com buffer), nao range bruto.
 
 ## Checklist de fechamento do proximo ciclo
-1. Consolidar contrato publico minimo do actor:
-   - reduzir wrappers e garantir API estavel para BT/HSM/runtimes.
-2. Telemetria BT:
+1. Fechar boundary 100%:
+   - remover ultimos acessos diretos a metodos privados do actor fora do bridge.
+2. Formalizar fronteira no actor:
+   - separar secao API gameplay vs API tecnica (bridge-only).
+3. Consolidar social/wander:
+   - unificar timers/estado compartilhado para evitar drift.
+4. Telemetria BT:
    - task enter/exit/status + target id + range final.
-3. Teste de regressao MCP (obrigatorio em cada bloco):
+5. Teste de regressao MCP (obrigatorio em cada bloco):
    - `play_scene`
    - `get_godot_errors`
    - validacao de comportamento (chase/stop/face/attack/death/respawn).

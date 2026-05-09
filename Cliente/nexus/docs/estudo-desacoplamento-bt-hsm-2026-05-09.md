@@ -76,6 +76,10 @@ Reduzir acoplamento dinamico (`has_method`/`.call`) na trilha critica de combate
 - `ActorRuntimeBridge` criado para concentrar integracao tecnica dos runtimes com o actor.
 - runtimes migrados para bridge (`action`, `perception`, `setup`, `targeting`).
 - wrappers `runtime_*` removidos novamente do actor apos migracao e validacao MCP.
+12. Novo corte de desacoplamento (v8):
+- estado social/wander/emote migrado para `ActorRuntimeBridge`.
+- remocao de getters/setters sociais redundantes no actor.
+- validacao MCP sem erro novo de parse/runtime.
 
 ## Resultado pratico
 1. Menor risco de regressao silenciosa por renome de metodo/variavel.
@@ -93,7 +97,7 @@ Resultado:
 - ruido remanescente de `out_of_range/reacquire` coerente com kite.
 
 ## Linhas atuais dos componentes-chave
-- `actor_8dir_limbo.gd`: 473
+- `actor_8dir_limbo.gd`: 469
 - `actor_combat_runtime.gd`: 109
 - `actor_navigation_runtime.gd`: 51
 - `actor_animation_runtime.gd`: 42
@@ -102,8 +106,10 @@ Resultado:
 - `ai/blackboard_keys.gd`: 12
 
 ## Pendencias pequenas (nao criticas)
-1. Extrair bloco de animacao/ataque do actor para runtime dedicado.
-2. Ajustes finos de telemetria por task (correlation id por decisao BT).
+1. Fechar boundary 100%: remover ultimos acessos diretos a metodo privado do actor fora do bridge.
+2. Separar claramente API de gameplay e API tecnica no actor (secao/documentacao).
+3. Consolidar estado/timers comuns entre `actor_social_runtime` e `actor_wander_runtime`.
+4. Ajustes finos de telemetria por task (correlation id por decisao BT).
 
 ## Referencias
 - LimboAI Blackboard best practices:  
