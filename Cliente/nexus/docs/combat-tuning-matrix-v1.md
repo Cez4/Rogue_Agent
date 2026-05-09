@@ -206,3 +206,7 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
    - `recover_sec: 0.22 -> 0.24` (Wildcat claw).
    - `cooldown_sec: 0.32 -> 0.36` (Wildcat claw).
    - objetivo: reduzir cadencia excessiva em lock-step e melhorar janela de reposicionamento entre commits.
+11. Proximo ajuste planejado (Player chase persistence):
+   - foco no profile do Player (nao Wildcat): reduzir cancelamento de chase em longa distancia/kite.
+   - sintomas vistos em telemetria: `manual_lock=true` seguido de repetidos `out_of_range` e depois `target_lost/chase_canceled`.
+   - eixo alvo do proximo ciclo: Targeting do Player (`target_memory_sec`, `lose_radius`, `reacquire_interval_sec`).
