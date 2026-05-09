@@ -195,3 +195,6 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
      - `recover: 0.16 -> 0.22`
      - `cooldown: 0.24 -> 0.32`
    - dano mantido em `1.0`.
+8. Ciclo 5 aplicado (Survivability only):
+   - Wildcat `max_health: 12.0 -> 14.0` (override local na cena).
+   - dano mantido em `1.0` (Player e Wildcat), sem alterar eixo de cadence/targeting.
