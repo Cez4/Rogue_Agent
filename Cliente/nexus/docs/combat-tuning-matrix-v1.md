@@ -217,3 +217,8 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
    - `reacquire_interval_sec: 0.12 -> 0.10`
    - objetivo: reduzir `target_lost/chase_canceled` precoce no lock manual de longa distancia.
    - leitura inicial de telemetria: comportamento ainda perde lock cedo em longa distancia (`target_lost/chase_canceled` persistente); requer novo ciclo de targeting do Player.
+13. Ciclo 9 aplicado (Player Targeting fine-tune):
+   - `lose_radius: 172.0 -> 184.0`
+   - `target_memory_sec: 1.6 -> 1.9`
+   - `reacquire_interval_sec: 0.10` (mantido)
+   - objetivo: aumentar persistencia de chase em longa distancia sem alterar regra de cancelamento por input.
