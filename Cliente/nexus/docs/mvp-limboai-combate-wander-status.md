@@ -125,6 +125,7 @@ Estado atual consolidado: `feat/telemetry-hardening-next`
   - persistencia em `user://debug_telemetry.cfg`.
   - `CombatTelemetry` agora filtra streams por toggle (`combat` / `bt_decision`).
   - `BTDecisionTelemetry` com dedupe por chave + throttle por ator + filtro por transicao + heartbeat.
+  - `ActorRuntimeBridge` com marcador opcional de violacao de contrato (`runtime_boundary_violation`) controlado por `boundary_guard_enabled`.
 
 ## LimboAI no projeto
 - HSM para execucao de locomocao/ataque no actor.

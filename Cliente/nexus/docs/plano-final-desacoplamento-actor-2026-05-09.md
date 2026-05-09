@@ -42,6 +42,12 @@ Deixar `actor_8dir_limbo.gd` como orquestrador fino, com contrato publico minimo
 - Manter `bt_decision` com filtros atuais.
 - Adicionar marcador tecnico opcional para violacao de boundary (somente debug).
 
+Status (2026-05-09):
+- Corte 1: concluido.
+- Corte 2: concluido no essencial.
+- Corte 3: concluido (flag debug `boundary_guard_enabled` + evento `runtime_boundary_violation` no `ActorRuntimeBridge`).
+- Corte 4: pendente (consolidacao final de docs/checklist).
+
 ### Corte 4 - Doc + checklist final
 - Atualizar docs de auditoria e status com fronteira final.
 - Checklist de regressao padrao para PRs futuros.
