@@ -210,3 +210,9 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
    - foco no profile do Player (nao Wildcat): reduzir cancelamento de chase em longa distancia/kite.
    - sintomas vistos em telemetria: `manual_lock=true` seguido de repetidos `out_of_range` e depois `target_lost/chase_canceled`.
    - eixo alvo do proximo ciclo: Targeting do Player (`target_memory_sec`, `lose_radius`, `reacquire_interval_sec`).
+12. Ciclo 8 aplicado (Player Targeting only):
+   - `lose_radius: 156.0 -> 172.0`
+   - `target_memory_sec: 1.2 -> 1.6`
+   - `reacquire_interval_sec: 0.12 -> 0.10`
+   - objetivo: reduzir `target_lost/chase_canceled` precoce no lock manual de longa distancia.
+   - leitura inicial de telemetria: comportamento ainda perde lock cedo em longa distancia (`target_lost/chase_canceled` persistente); requer novo ciclo de targeting do Player.
