@@ -21,11 +21,11 @@ void fragment() {
         float base_wobble = sin((uv.x * 8.0) + TIME * wobble_speed) * wobble_strength;
         float total_wobble = base_wobble + vib_wobble;
         
-        float liquid_line = mix(-1.0, 1.0, fill_level) + total_wobble;
-        float trail_line = mix(-1.0, 1.0, trail_level) + total_wobble;
+        float liquid_line = mix(1.0, -1.0, fill_level) + total_wobble;
+        float trail_line = mix(1.0, -1.0, trail_level) + total_wobble;
         
-        float liquid_mask = step(uv.y, liquid_line);
-        float trail_mask = step(uv.y, trail_line);
+        float liquid_mask = step(liquid_line, uv.y);
+        float trail_mask = step(trail_line, uv.y);
 
         vec4 col = vec4(0.0);
         col = mix(col, trail_color, trail_mask);

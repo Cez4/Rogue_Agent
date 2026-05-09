@@ -95,6 +95,7 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
    - `enable_respawn`
    - `respawn_delay_sec`
 3. Em bug de "travou", confirmar primeiro no log se houve `target_died` (morte real) antes de tratar como freeze.
+4. Auditoria de UI: Ao adicionar novos atores combatentes, confirmar se o nodo `CombatOrb` está presente e configurado com o `follow_offset` correto.
 
 ## Prova de conceito data-driven (fechado)
 1. Conceito validado com 2 hostis reais (`Light` e `Brute`) sem criar script novo por inimigo.

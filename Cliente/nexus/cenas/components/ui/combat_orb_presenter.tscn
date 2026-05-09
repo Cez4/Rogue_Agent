@@ -12,5 +12,5 @@ script = ExtResource("1_i3kp6")
 
 [node name="OrbSprite" type="Sprite2D" parent="." unique_id=1379162227]
 material = SubResource("ShaderMaterial_imc63")
-scale = Vector2(0.1, 0.1)
+scale = Vector2(0.15, 0.15)
 texture = ExtResource("2_gj0d4")
