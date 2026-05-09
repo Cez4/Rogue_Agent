@@ -107,6 +107,10 @@ Regra de autoridade:
 - tasks de combate principais instrumentadas com `task/status/reason`.
 - chave `debug_bt_decision_telemetry` em `AIBlackboardKeys`.
 - debug OFF por padrao (ativacao explicita por blackboard var).
+25. Boundary 100% (hardening de consistencia):
+- runtimes legados de actor migrados para assinatura `actor: Actor8DirLimbo`.
+- reduz risco de acoplamento acidental fora de bridge/contrato tecnico.
+- validacao MCP + logs sem erro novo.
 
 ### Parcial
 1. Smart Objects avancados (Talk/Use/Trade com affordances completos) fora desta fase.
@@ -116,7 +120,7 @@ Regra de autoridade:
 - faltam tasks sociais/wander e (opcional) enter/exit separado por task.
 
 3. Acabamento de boundary:
-- revisar servicos legados para evitar uso acidental fora da camada de bridge.
+- concluido no essencial; manter apenas disciplina de contrato em novas tasks/runtimes.
 
 ### Fora do escopo atual
 1. Multiplayer autoritativo completo (host resolve tudo e replica oficial).
@@ -152,7 +156,7 @@ Regra de autoridade:
 
 ## Checklist de fechamento do proximo ciclo
 1. Boundary 100% (acabamento final):
-   - varredura final de uso acidental fora do bridge.
+   - concluido no essencial nesta fase.
 2. Telemetria BT v2:
    - ampliar para tasks sociais/wander;
    - opcional: eventos enter/exit separados.

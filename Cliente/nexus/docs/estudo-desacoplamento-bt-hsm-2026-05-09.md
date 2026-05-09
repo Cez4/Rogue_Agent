@@ -87,6 +87,10 @@ Reduzir acoplamento dinamico (`has_method`/`.call`) na trilha critica de combate
 - criado `bt_decision_telemetry.gd`.
 - tasks de combate principais instrumentadas com `task/status/reason`.
 - controle por blackboard key `debug_bt_decision_telemetry` (OFF por padrao).
+15. Boundary hardening final em servicos legados (v10):
+- assinatura dos runtimes de actor tipada para `Actor8DirLimbo` (em vez de `Node`) para reforcar contrato.
+- objetivo: impedir uso acidental fora da camada de bridge/contrato tecnico.
+- validado em MCP sem erro novo de parse/runtime.
 
 ## Resultado pratico
 1. Menor risco de regressao silenciosa por renome de metodo/variavel.
@@ -113,9 +117,8 @@ Resultado:
 - `ai/blackboard_keys.gd`: 12
 
 ## Pendencias pequenas (nao criticas)
-1. Boundary 100%: revisao final de uso acidental fora do bridge em servicos legados.
-2. Evoluir telemetria BT para tasks sociais/wander.
-3. Opcional: correlation id/enter-exit por task para analise avancada.
+1. Evoluir telemetria BT para tasks sociais/wander.
+2. Opcional: correlation id/enter-exit por task para analise avancada.
 
 ## Referencias
 - LimboAI Blackboard best practices:  

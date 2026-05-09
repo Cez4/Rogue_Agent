@@ -102,6 +102,9 @@ Estado atual consolidado: `feat/bt-decision-telemetry-hardening`
     - `bt_request_attack.gd`
   - flag de controle no blackboard: `debug_bt_decision_telemetry` (default OFF).
   - chave centralizada em `Scripts/ai/blackboard_keys.gd`.
+- Boundary hardening final (servicos legados):
+  - runtimes de actor tipados para `Actor8DirLimbo` (contrato tecnico forte).
+  - varredura final validada com MCP + logs sem erro novo.
 
 ## LimboAI no projeto
 - HSM para execucao de locomocao/ataque no actor.
@@ -119,8 +122,8 @@ Estado atual consolidado: `feat/bt-decision-telemetry-hardening`
 1. Calibracao fina por archetype/arma/status com matriz oficial v1:
    - `docs/combat-tuning-matrix-v1.md`
 2. Padronizar pipeline BT de combate para novos hostis (base enemy template) apos tuning v1.
-3. Finalizar acabamento residual (nao bloqueante):
-   - boundary 100% (varredura final de uso acidental fora do bridge).
+3. Boundary 100%:
+   - concluido no essencial nesta fase.
 4. Evoluir telemetria BT:
    - ampliar cobertura para tasks sociais/wander.
    - opcional: eventos enter/exit separados por task para analise de arvore.
