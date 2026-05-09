@@ -50,3 +50,18 @@ Status: em execucao (freeze v1)
 2. Se houver perseguicao excessiva e sticky em kite:
    - subir reacquire_interval_sec em passo pequeno.
 3. Se estavel, manter baseline e marcar T1 aprovado sem mudanca.
+
+## T1 executado (Targeting-only)
+1. Resultado: aprovado sem mudanca.
+2. Justificativa:
+   - sem churn anomalo de `target_lost` no Brute em combate ativo;
+   - `reacquire_interval_sec=0.20` coerente com archetype pesado;
+   - perdas de lock observadas no player ligadas a `reason=input_move/death`.
+
+## T2 aplicado (Approach/Stop-only)
+1. Mudanca:
+   - `attack_stop_buffer: 6.2 -> 6.6`
+2. Objetivo:
+   - reduzir `attack_blocked_reason=out_of_range` em kite, aproximando um pouco mais antes do commit.
+3. Escopo:
+   - sem alteracao de Targeting/Cadence/Survivability.
