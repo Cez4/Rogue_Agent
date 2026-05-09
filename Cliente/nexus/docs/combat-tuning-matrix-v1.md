@@ -164,3 +164,10 @@ https://limboai.readthedocs.io/en/latest/classes/class_behaviortree.html
 https://limboai.readthedocs.io/en/latest/classes/class_btaction.html
 5. LimboAI Blackboard:
 https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
+
+## 12) Gate operacional da fase (2026-05-09)
+1. Seguir runbook: `Docs/godotmcp/runbook-edicao-segura-cenas.md`.
+2. Ordem Git obrigatoria: `add -> commit -> status(ahead) -> push -> status(final)`.
+3. Proximo ciclo imediato:
+   - coletar baseline do Wildcat (30-60s, chase/cancel/chase/death/respawn);
+   - ajustar somente `ArchetypeProfile` hostile em um eixo por vez.

@@ -47,6 +47,7 @@ Status (2026-05-09):
 - Corte 2: concluido no essencial.
 - Corte 3: concluido (flag debug `boundary_guard_enabled` + evento `runtime_boundary_violation` no `ActorRuntimeBridge`).
 - Corte 4: concluido (docs consolidados + checklist padrao de regressao para PR).
+- Plano encerrado: pronto para fase de tuning v1 data-driven.
 
 ### Corte 4 - Doc + checklist final
 - Atualizar docs de auditoria e status com fronteira final.
@@ -68,6 +69,11 @@ Status (2026-05-09):
 2. Entrar em tuning v1 data-driven (`combat-tuning-matrix-v1.md`):
    - Targeting -> Approach/Stop -> Cadence -> Survivability.
 3. Expandir template de inimigos sobre contrato estavel.
+
+## Proxima execucao (ativa)
+1. Rodar ciclo de tuning v1 apenas por dados (`.tres`) sem alterar arquitetura.
+2. Capturar baseline de telemetria por sessao MCP.
+3. Aplicar ajuste por um eixo por vez (targeting, depois stop/cadence/survivability).
 
 ## Referencias oficiais usadas
 - Godot Signals (desacoplamento por observer):  
