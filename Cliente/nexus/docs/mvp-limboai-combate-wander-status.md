@@ -2,7 +2,7 @@
 
 Data: 2026-05-09
 Branch historica: `feat/mvp-combate-fase1`  
-Estado atual consolidado: `feat/decoupling-audit-pass-v2`
+Estado atual consolidado: `feat/actor-combat-profile-runtime`
 
 ## Objetivo atual
 - Base jogavel com:
@@ -63,6 +63,14 @@ Estado atual consolidado: `feat/decoupling-audit-pass-v2`
   - centralizacao de keys de blackboard em `Scripts/ai/blackboard_keys.gd`.
   - migracao das tasks principais para `AIBlackboardKeys.*`.
   - docs: `docs/estudo-desacoplamento-bt-hsm-2026-05-09.md`.
+- Desacoplamento tecnico BT/HSM (passes v3):
+  - `ActorCombatProfileRuntime` extraido (range/percepcao data-driven fora do actor principal).
+  - `ActorTargetingRuntime` centraliza acquire/validate/perception/reacquire; tasks BT viraram adaptadoras finas.
+  - `CombatBlockedReasons` padroniza motivos de bloqueio (`out_of_range`, `no_valid_target`, etc).
+  - `Hitbox/Hurtbox` tipados (`HurtboxComponent`/`HealthComponent`) sem reflexao dinamica.
+  - `ActorSetupRuntime` extraido (`_ready`, grupos, setup de config/motor/controller/stats/interactable/sinais/HSM).
+  - `ActorLifecycleRuntime` extraido (respawn/reset/reativacao de brain/telemetria).
+  - `actor_8dir_limbo.gd` reduzido para 558 linhas.
 
 ## LimboAI no projeto
 - HSM para execucao de locomocao/ataque no actor.
@@ -81,8 +89,7 @@ Estado atual consolidado: `feat/decoupling-audit-pass-v2`
    - `docs/combat-tuning-matrix-v1.md`
 2. Padronizar pipeline BT de combate para novos hostis (base enemy template) apos tuning v1.
 3. Finalizar acabamento de desacoplamento residual (nao critico):
-   - `player_motor.gd` (`face_dir` opcional)
-   - `actor_stats_runtime.gd` (itens heterogeneos)
+   - extrair bloco de animacao/ataque do actor (`face/play/wait/orient`) para runtime dedicado.
 4. Feedback de hit:
    - FX local de impacto, flash de dano, popup de numero.
 5. Validacao para futuro multiplayer:
@@ -93,6 +100,13 @@ Estado atual consolidado: `feat/decoupling-audit-pass-v2`
 ## Arquivos-chave
 - Actor base:
   - `Scripts/actors/actor_8dir_limbo.gd`
+- Runtimes de setup/lifecycle:
+  - `Scripts/actors/services/actor_setup_runtime.gd`
+  - `Scripts/actors/services/actor_lifecycle_runtime.gd`
+- Runtime de perfil de combate:
+  - `Scripts/actors/services/actor_combat_profile_runtime.gd`
+- Runtime de targeting:
+  - `Scripts/actors/services/actor_targeting_runtime.gd`
 - Estado ataque:
   - `Scripts/actors/state_attack_8dir.gd`
 - Componentes combate:

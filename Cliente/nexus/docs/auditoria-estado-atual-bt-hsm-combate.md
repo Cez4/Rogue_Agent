@@ -1,7 +1,7 @@
 # Auditoria Tecnica - Estado Atual BT/HSM/Combate
 
 Data: 2026-05-09  
-Branch de referencia: `feat/decoupling-audit-pass-v2`
+Branch de referencia: `feat/actor-combat-profile-runtime`
 
 ## Escopo desta auditoria
 - Consolidar o estado real do combate/intencao contextual.
@@ -72,15 +72,25 @@ Regra de autoridade:
 - tasks BT principais sem `has_method/.call` na trilha critica;
 - estados HSM principais sem reflexao dinamica no fluxo de execucao;
 - keys de blackboard centralizadas em `AIBlackboardKeys`.
+13. Runtime de perfil de combate extraido:
+- `ActorCombatProfileRuntime` com range/percepcao/reacquire data-driven.
+14. Runtime de targeting consolidado:
+- acquire/validate/reacquire centralizados em `ActorTargetingRuntime`.
+15. Setup/lifecycle extraidos do actor:
+- `ActorSetupRuntime` (`_ready`, setup estrutural, sinais, interactable, HSM).
+- `ActorLifecycleRuntime` (respawn/reset/reativacao + telemetria).
+16. Tipagem no caminho de hit/hurt:
+- `HitboxComponent` chama `HurtboxComponent` tipado.
+- `HurtboxComponent` chama `HealthComponent` tipado.
+17. `attack_blocked_reason` padronizado:
+- `combat_blocked_reasons.gd` como fonte unica de motivos.
 
 ### Parcial
 1. Smart Objects avancados (Talk/Use/Trade com affordances completos) fora desta fase.
 
 2. Telemetria ainda basica (sem correlacao por decisao BT/task id).
 
-3. Restam poucos usos defensivos de reflexao fora da trilha critica:
-- `player_motor.gd` (`face_dir` opcional)
-- `actor_stats_runtime.gd` (itens heterogeneos)
+3. `actor_8dir_limbo.gd` ainda centraliza parte da orquestracao de animacao/ataque.
 
 ### Fora do escopo atual
 1. Multiplayer autoritativo completo (host resolve tudo e replica oficial).
@@ -115,19 +125,14 @@ Regra de autoridade:
 - usar `get_attack_stop_distance()` (com buffer), nao range bruto.
 
 ## Checklist de fechamento do proximo ciclo
-1. BT de percepcao combate data-driven:
-- `acquire/lose/reacquire/memory` por stats/profile.
-
-2. Resource de perfil de combate:
-- `CombatProfileData` (cadencia, persistencia chase, thresholds).
-
-3. Telemetria BT:
-- task enter/exit/status + target id + range final.
-
-4. Teste de regressao MCP (obrigatorio em cada bloco):
-- `play_scene`
-- `get_godot_errors`
-- validacao de comportamento (chase/stop/face/attack/death/respawn).
+1. Extrair runtime dedicado de animacao/ataque:
+   - face/play/wait/orient sem mudar comportamento.
+2. Telemetria BT:
+   - task enter/exit/status + target id + range final.
+3. Teste de regressao MCP (obrigatorio em cada bloco):
+   - `play_scene`
+   - `get_godot_errors`
+   - validacao de comportamento (chase/stop/face/attack/death/respawn).
 
 ## Referencias tecnicas
 - Godot NavigationAgent2D:  
