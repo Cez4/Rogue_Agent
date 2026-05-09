@@ -146,8 +146,8 @@ func clear_combat_target() -> void:
 	ActorCombatRuntimeRef.clear_combat_target(self)
 
 
-func cancel_chase_attack() -> void:
-	ActorCombatRuntimeRef.cancel_chase_attack(self)
+func cancel_chase_attack(reason: StringName = &"unknown") -> void:
+	ActorCombatRuntimeRef.cancel_chase_attack(self, reason)
 
 
 func stop_motor_movement() -> void:
@@ -323,8 +323,8 @@ func clear_interaction_target() -> void:
 	ActorTargetingRuntimeRef.clear_interaction_target(self)
 
 
-func cancel_all_intents() -> void:
-	ActorTargetingRuntimeRef.cancel_all_intents(self)
+func cancel_all_intents(reason: StringName = &"unknown") -> void:
+	ActorTargetingRuntimeRef.cancel_all_intents(self, reason)
 
 
 func _update_interaction_approach() -> void:

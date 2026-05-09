@@ -91,7 +91,7 @@ func _is_player_controlled_body() -> bool:
 func _cancel_combat_intent() -> void:
 	if _body == null:
 		return
-	_body.cancel_chase_attack()
+	_body.cancel_chase_attack(&"intent_switch")
 
 
 func _clear_interaction_intent() -> void:
@@ -103,4 +103,4 @@ func _clear_interaction_intent() -> void:
 func _cancel_all_intents() -> void:
 	if _body == null:
 		return
-	_body.cancel_all_intents()
+	_body.cancel_all_intents(&"input_move")

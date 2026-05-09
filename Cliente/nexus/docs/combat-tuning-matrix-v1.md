@@ -89,6 +89,7 @@ Eventos obrigatórios:
 5. `attack_blocked_reason`
 6. `target_died`
 7. `respawned`
+8. `chase_canceled` (com `reason` e `manual_lock`)
 
 Sinais de problema:
 1. `attack_blocked_reason=out_of_range` excessivo durante chase.

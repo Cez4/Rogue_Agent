@@ -32,13 +32,18 @@ static func clear_combat_target(actor: Actor8DirLimbo) -> void:
 		})
 
 
-static func cancel_chase_attack(actor: Actor8DirLimbo) -> void:
+static func cancel_chase_attack(actor: Actor8DirLimbo, reason: StringName = &"unknown") -> void:
 	var current_target: Node2D = actor.get_combat_target()
 	var had_target: bool = current_target != null and is_instance_valid(current_target)
+	var was_manual_lock: bool = bool(actor.is_combat_target_manual_lock())
 	clear_combat_target(actor)
 	actor.stop_motor_movement()
 	if had_target:
-		CombatTelemetry.emit_event(&"chase_canceled", {"actor": actor.name})
+		CombatTelemetry.emit_event(&"chase_canceled", {
+			"actor": actor.name,
+			"reason": String(reason),
+			"manual_lock": was_manual_lock
+		})
 
 
 static func is_target_alive(target: Node2D) -> bool:

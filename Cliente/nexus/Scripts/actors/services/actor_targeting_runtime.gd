@@ -155,6 +155,6 @@ static func clear_interaction_target(actor: Actor8DirLimbo) -> void:
 	ActorRuntimeBridgeRef.clear_interaction_target_internal(actor)
 
 
-static func cancel_all_intents(actor: Actor8DirLimbo) -> void:
+static func cancel_all_intents(actor: Actor8DirLimbo, reason: StringName = &"unknown") -> void:
 	clear_interaction_target(actor)
-	actor.cancel_chase_attack()
+	actor.cancel_chase_attack(reason)
