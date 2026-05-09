@@ -1,5 +1,6 @@
 @tool
 extends BTAction
+const ActorTargetingRuntimeRef = preload("res://Scripts/actors/services/actor_targeting_runtime.gd")
 
 @export var target_var: StringName = AIBlackboardKeys.COMBAT_TARGET
 @export var next_reacquire_var: StringName = AIBlackboardKeys.COMBAT_NEXT_REACQUIRE_MS
@@ -28,14 +29,9 @@ func _tick(_delta: float) -> Status:
 	if dist_sq <= attack_range * attack_range:
 		agent.stop_motor_movement()
 		return SUCCESS
-	var now_ms: int = Time.get_ticks_msec()
-	var next_reacquire_ms: int = 0
-	if blackboard.has_var(next_reacquire_var):
-		next_reacquire_ms = int(blackboard.get_var(next_reacquire_var))
-	if now_ms >= next_reacquire_ms:
+	if ActorTargetingRuntimeRef.should_reacquire_now(agent, blackboard, next_reacquire_var, default_reacquire_interval_sec):
 		agent.request_move_runtime(target.global_position)
 		var interval_sec: float = float(agent.get_combat_reacquire_interval_sec())
-		blackboard.set_var(next_reacquire_var, now_ms + int(interval_sec * 1000.0))
 		CombatTelemetry.emit_event(&"reacquire", {
 			"actor": agent.name,
 			"target": target.name,

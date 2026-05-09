@@ -1,5 +1,6 @@
 @tool
 extends BTCondition
+const CombatBlockedReasonsRef = preload("res://Scripts/combat/combat_blocked_reasons.gd")
 
 @export var target_var: StringName = AIBlackboardKeys.COMBAT_TARGET
 @export var default_attack_stop_distance: float = 28.0
@@ -17,29 +18,29 @@ func _tick(_delta: float) -> Status:
 		return FAILURE
 	var target := blackboard.get_var(target_var) as Node2D
 	if not is_instance_valid(target):
-		blackboard.set_var(blocked_reason_var, "invalid_target")
+		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.INVALID_TARGET)
 		return FAILURE
 	if agent == null:
-		blackboard.set_var(blocked_reason_var, "missing_agent")
+		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.MISSING_AGENT)
 		return FAILURE
 	var attack_range: float = float(agent.get_attack_stop_distance())
 	var dist_sq: float = agent.global_position.distance_squared_to(target.global_position)
 	if dist_sq <= attack_range * attack_range:
-		blackboard.set_var(blocked_reason_var, "")
+		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.NONE)
 		return SUCCESS
 	var previous_reason: String = ""
 	if blackboard.has_var(blocked_reason_var):
 		previous_reason = str(blackboard.get_var(blocked_reason_var))
-	blackboard.set_var(blocked_reason_var, "out_of_range")
+	blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.OUT_OF_RANGE)
 	var now_ms: int = Time.get_ticks_msec()
 	var next_emit_ms: int = 0
 	if blackboard.has_var(blocked_reason_next_emit_ms_var):
 		next_emit_ms = int(blackboard.get_var(blocked_reason_next_emit_ms_var))
-	if previous_reason != "out_of_range" or now_ms >= next_emit_ms:
+	if previous_reason != CombatBlockedReasonsRef.OUT_OF_RANGE or now_ms >= next_emit_ms:
 		CombatTelemetry.emit_event(&"attack_blocked_reason", {
 			"actor": agent.name,
 			"target": target.name,
-			"reason": "out_of_range",
+			"reason": CombatBlockedReasonsRef.OUT_OF_RANGE,
 			"attack_stop_distance": attack_range
 		})
 		var cooldown_ms: int = int(maxf(0.0, blocked_reason_emit_cooldown_sec) * 1000.0)

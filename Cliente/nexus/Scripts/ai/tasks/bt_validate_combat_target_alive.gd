@@ -1,5 +1,6 @@
 @tool
 extends BTCondition
+const ActorTargetingRuntimeRef = preload("res://Scripts/actors/services/actor_targeting_runtime.gd")
 
 @export var target_var: StringName = AIBlackboardKeys.COMBAT_TARGET
 
@@ -9,16 +10,9 @@ func _generate_name() -> String:
 
 
 func _tick(_delta: float) -> Status:
-	if not blackboard.has_var(target_var):
+	if agent == null:
 		return FAILURE
-	var target := blackboard.get_var(target_var) as Node2D
+	var target: Node2D = ActorTargetingRuntimeRef.validate_combat_target_alive(agent, blackboard, target_var)
 	if not is_instance_valid(target):
-		if agent != null:
-			agent.clear_combat_target()
-		return FAILURE
-	if agent != null:
-		if agent.is_target_alive_for_runtime(target):
-			return SUCCESS
-		agent.clear_combat_target()
 		return FAILURE
 	return SUCCESS

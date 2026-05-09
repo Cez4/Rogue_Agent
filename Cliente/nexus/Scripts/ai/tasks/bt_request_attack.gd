@@ -1,5 +1,6 @@
 @tool
 extends BTAction
+const CombatBlockedReasonsRef = preload("res://Scripts/combat/combat_blocked_reasons.gd")
 
 @export var started_var: StringName = AIBlackboardKeys.ATTACK_TASK_STARTED
 @export var target_var: StringName = AIBlackboardKeys.COMBAT_TARGET
@@ -23,8 +24,8 @@ func _tick(_delta: float) -> Status:
 
 	# If an attack is currently executing, keep this task RUNNING until it completes.
 	if attack_pending:
-		_emit_blocked_ended_if_needed("")
-		blackboard.set_var(blocked_reason_var, "")
+		_emit_blocked_ended_if_needed(CombatBlockedReasonsRef.NONE)
+		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.NONE)
 		blackboard.set_var(blocked_latched_var, false)
 		blackboard.set_var(started_var, true)
 		return RUNNING
@@ -34,8 +35,8 @@ func _tick(_delta: float) -> Status:
 	if blackboard.has_var(started_var):
 		started = bool(blackboard.get_var(started_var))
 	if started:
-		_emit_blocked_ended_if_needed("")
-		blackboard.set_var(blocked_reason_var, "")
+		_emit_blocked_ended_if_needed(CombatBlockedReasonsRef.NONE)
+		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.NONE)
 		blackboard.set_var(blocked_latched_var, false)
 		blackboard.set_var(started_var, false)
 		return SUCCESS
@@ -45,9 +46,9 @@ func _tick(_delta: float) -> Status:
 	if blackboard.has_var(target_var):
 		target = blackboard.get_var(target_var) as Node2D
 	if not is_instance_valid(target):
-		_emit_blocked_ended_if_needed("no_valid_target")
+		_emit_blocked_ended_if_needed(CombatBlockedReasonsRef.NO_VALID_TARGET)
 		blackboard.set_var(started_var, false)
-		blackboard.set_var(blocked_reason_var, "no_valid_target")
+		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.NO_VALID_TARGET)
 		return FAILURE
 	if is_instance_valid(target):
 		agent.face_toward(target.global_position)
@@ -63,17 +64,17 @@ func _tick(_delta: float) -> Status:
 			"actor": agent.name,
 			"target": target_name
 		})
-		_emit_blocked_ended_if_needed("")
-		blackboard.set_var(blocked_reason_var, "")
+		_emit_blocked_ended_if_needed(CombatBlockedReasonsRef.NONE)
+		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.NONE)
 		blackboard.set_var(blocked_latched_var, false)
 		blackboard.set_var(started_var, true)
 		return RUNNING
 	var blocked_latched: bool = false
 	if blackboard.has_var(blocked_latched_var):
 		blocked_latched = bool(blackboard.get_var(blocked_latched_var))
-	blackboard.set_var(blocked_reason_var, "request_attack_not_started")
+	blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.REQUEST_ATTACK_NOT_STARTED)
 	if not blocked_latched:
-		_emit_blocked_started_if_needed("request_attack_not_started")
+		_emit_blocked_started_if_needed(CombatBlockedReasonsRef.REQUEST_ATTACK_NOT_STARTED)
 		blackboard.set_var(blocked_latched_var, true)
 	blackboard.set_var(started_var, false)
 	return FAILURE

@@ -1,5 +1,6 @@
 class_name CombatTelemetry
 extends RefCounted
+const CombatBlockedReasonsRef = preload("res://Scripts/combat/combat_blocked_reasons.gd")
 
 static var _dedupe_last_emit_ms: Dictionary = {}
 const _DEFAULT_DEDUPE_MS := 500
@@ -33,7 +34,7 @@ static func _should_suppress(event_name: StringName, payload: Dictionary) -> boo
 	if event_name == &"attack_blocked_reason":
 		var reason: String = str(payload.get("reason", ""))
 		var dedupe_ms: int = _DEFAULT_DEDUPE_MS
-		if reason == "out_of_range":
+		if reason == CombatBlockedReasonsRef.OUT_OF_RANGE:
 			dedupe_ms = _OUT_OF_RANGE_DEDUPE_MS
 		var blocked_key: String = "%s|%s|%s|%s" % [String(event_name), actor, target, reason]
 		var blocked_last_ms: int = int(_dedupe_last_emit_ms.get(blocked_key, -999999999))

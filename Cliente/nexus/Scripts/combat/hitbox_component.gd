@@ -20,12 +20,13 @@ func _on_area_entered(area: Area2D) -> void:
 		return
 	if area.owner == owner:
 		return
-	if not area.has_method("take_hit"):
+	var hurtbox: HurtboxComponent = area as HurtboxComponent
+	if hurtbox == null:
 		return
 	var knockback := Vector2.ZERO
 	if knockback_enabled:
 		knockback = Vector2.RIGHT.rotated(global_rotation) * knockback_strength
-	area.take_hit(damage, knockback, self)
+	hurtbox.take_hit(damage, knockback, self)
 	var source_owner: String = ""
 	if owner != null:
 		source_owner = str(owner.name)

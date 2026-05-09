@@ -77,8 +77,10 @@ var _is_dead: bool = false
 const ActorAnimationRuntimeRef = preload("res://Scripts/actors/services/actor_animation_runtime.gd")
 const ActorCombatProfileRuntimeRef = preload("res://Scripts/actors/services/actor_combat_profile_runtime.gd")
 const ActorCombatRuntimeRef = preload("res://Scripts/actors/services/actor_combat_runtime.gd")
+const ActorLifecycleRuntimeRef = preload("res://Scripts/actors/services/actor_lifecycle_runtime.gd")
 const ActorNavigationRuntimeRef = preload("res://Scripts/actors/services/actor_navigation_runtime.gd")
 const ActorPerceptionRuntimeRef = preload("res://Scripts/actors/services/actor_perception_runtime.gd")
+const ActorSetupRuntimeRef = preload("res://Scripts/actors/services/actor_setup_runtime.gd")
 const ActorSocialRuntimeRef = preload("res://Scripts/actors/services/actor_social_runtime.gd")
 const ActorTargetingRuntimeRef = preload("res://Scripts/actors/services/actor_targeting_runtime.gd")
 const ActorWanderRuntimeRef = preload("res://Scripts/actors/services/actor_wander_runtime.gd")
@@ -87,35 +89,7 @@ const Anim8DirUtilsRef = preload("res://Scripts/actors/services/anim8dir_utils.g
 
 
 func _ready() -> void:
-	_spawn_position = global_position
-	if combat_perception_profile == null:
-		combat_perception_profile = CombatPerceptionProfile.new()
-	if player_controlled:
-		add_to_group("player")
-	else:
-		add_to_group("npc")
-		if is_hostile:
-			add_to_group("hostile")
-
-	if movement_config == null:
-		movement_config = load("res://configs/player/player_movement_config.tres")
-	if equipment_loadout == null and player_controlled:
-		equipment_loadout = load("res://configs/items/loadouts/player_starter_loadout.tres")
-	if movement_config != null:
-		movement_config = movement_config.duplicate(true)
-		if enable_wander and not player_controlled:
-			# Wander NPCs should not depend on nav projection being available in all maps.
-			movement_config.project_target_to_navmesh = false
-
-	motor.config = movement_config
-	motor.setup(self)
-	controller.setup(self)
-	_setup_stats()
-	_setup_interactable_component()
-	_connect_health_signals()
-	_reset_wander_timer()
-	_hide_emote_immediate()
-	_setup_hsm()
+	ActorSetupRuntimeRef.ready(self)
 
 
 func _physics_process(delta: float) -> void:
@@ -201,6 +175,14 @@ func stop_motor_movement() -> void:
 
 func set_actor_dead(dead: bool) -> void:
 	_is_dead = dead
+
+
+func set_spawn_position(value: Vector2) -> void:
+	_spawn_position = value
+
+
+func get_spawn_position() -> Vector2:
+	return _spawn_position
 
 
 func get_bt_player() -> Node:
@@ -370,32 +352,11 @@ func _is_target_alive(target: Node2D) -> bool:
 
 
 func _setup_interactable_component() -> void:
-	var interactable := get_node_or_null(^"Interactable") as InteractableComponent
-	if interactable == null:
-		interactable = InteractableComponent.new()
-		interactable.name = "Interactable"
-		add_child(interactable)
-	if is_hostile:
-		interactable.kind = InteractableComponent.Kind.HOSTILE
-		interactable.primary_intent = &"none"
-		interactable.secondary_intent = &"chase_attack"
-	elif player_controlled:
-		interactable.kind = InteractableComponent.Kind.FRIENDLY
-		interactable.primary_intent = &"none"
-		interactable.secondary_intent = &"none"
-	else:
-		interactable.kind = InteractableComponent.Kind.FRIENDLY
-		interactable.primary_intent = &"inspect"
-		interactable.secondary_intent = &"none"
-	interactable.interaction_range = interaction_stop_range
+	ActorSetupRuntimeRef.setup_interactable_component(self)
 
 
 func _connect_health_signals() -> void:
-	var health := get_node_or_null(^"Health")
-	if health == null:
-		return
-	if health.has_signal("death") and not health.death.is_connected(_on_health_death):
-		health.death.connect(_on_health_death)
+	ActorSetupRuntimeRef.connect_health_signals(self)
 
 
 func _on_health_death() -> void:
@@ -411,23 +372,7 @@ func _enable_combat_collision() -> void:
 
 
 func _respawn_after_delay() -> void:
-	await get_tree().create_timer(maxf(0.5, respawn_delay_sec)).timeout
-	var health := get_node_or_null(^"Health") as HealthComponent
-	if health != null:
-		health.reset_health()
-	_is_dead = false
-	global_position = _spawn_position
-	velocity = Vector2.ZERO
-	_reset_combat_memory()
-	_enable_combat_collision()
-	if motor != null:
-		motor.stop()
-	if hsm != null:
-		hsm.set_active(true)
-	play_idle_animation()
-	await get_tree().create_timer(maxf(0.0, respawn_brain_delay_sec)).timeout
-	_enable_brain_runtime()
-	CombatTelemetry.emit_event(&"respawned", {"actor": name})
+	await ActorLifecycleRuntimeRef.respawn_after_delay(self)
 
 
 func _disable_brain_runtime() -> void:
