@@ -171,3 +171,5 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
 3. Proximo ciclo imediato:
    - coletar baseline do Wildcat (30-60s, chase/cancel/chase/death/respawn);
    - ajustar somente `ArchetypeProfile` hostile em um eixo por vez.
+4. Protocolo operacional de sessao:
+   - `docs/wildcat-tuning-session-protocol-v1.md`
