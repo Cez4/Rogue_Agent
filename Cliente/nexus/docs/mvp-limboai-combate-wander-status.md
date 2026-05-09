@@ -190,6 +190,10 @@ Atualizacao de estado:
      - `recover_sec 0.20 -> 0.22`
      - `cooldown_sec 0.28 -> 0.32`
    - resultado: loop de combate mantido estavel com telemetria coerente e sem erro novo.
+10. Tuning Light recebeu ciclo T4 (Survivability-only):
+   - `max_health 14.0 -> 13.0` em `res://cenas/enemies/hostile_enemy_light.tscn`.
+   - sem alteracao dos eixos targeting/approach/cadence.
+   - objetivo: manter Light mais fragil que baseline, preservando identidade de arquétipo rapido.
 10. Auditoria critica de paridade de combate (8dir) concluida:
    - descoberta: hostis estavam sem `AttackHitbox` em algumas cenas.
    - correcao aplicada em `base/light/brute/wildcat`.

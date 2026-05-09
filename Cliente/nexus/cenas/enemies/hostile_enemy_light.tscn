@@ -3862,7 +3862,7 @@ script = ExtResource("14_frxuc")
 sprite_frames = SubResource("SpriteFrames_emotes")
 
 [node name="Health" parent="." unique_id=905350051 instance=ExtResource("18_i5wkl")]
-max_health = 14.0
+max_health = 13.0
 
 [node name="Hurtbox" parent="." unique_id=987265784 instance=ExtResource("20_05h1s")]
 

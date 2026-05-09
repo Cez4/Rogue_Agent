@@ -286,3 +286,9 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
      - ritmo de commits mais limpo (menos pressao entre ataques),
      - loop funcional mantido (`attack_pending/finished` coerentes),
      - sem erro novo de parse/runtime.
+22. Ciclo Light-T4 aplicado (Survivability only):
+   - cena: `cenas/enemies/hostile_enemy_light.tscn`
+   - `max_health: 14.0 -> 13.0`
+   - sem mudanca de targeting/approach/cadence.
+   - objetivo: reduzir TTK defensivo do Light para reforcar arquétipo leve/agressivo.
+   - gate MCP: `open_scene + play_scene + get_godot_errors` sem erro novo de parse/runtime.
