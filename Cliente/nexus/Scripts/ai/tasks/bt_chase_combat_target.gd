@@ -1,8 +1,8 @@
 @tool
 extends BTAction
 
-@export var target_var: StringName = &"combat_target"
-@export var next_reacquire_var: StringName = &"combat_next_reacquire_ms"
+@export var target_var: StringName = AIBlackboardKeys.COMBAT_TARGET
+@export var next_reacquire_var: StringName = AIBlackboardKeys.COMBAT_NEXT_REACQUIRE_MS
 @export var default_reacquire_interval_sec: float = 0.12
 
 

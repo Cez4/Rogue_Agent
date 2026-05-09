@@ -102,8 +102,8 @@ static func reset_combat_memory(actor: Node) -> void:
 	if bt_player != null and bt_player.has_method("get"):
 		bb = bt_player.get("blackboard")
 	if bb != null and bb.has_method("erase_var"):
-		bb.erase_var(&"combat_target")
-		bb.erase_var(&"combat_target_last_seen_ms")
-		bb.erase_var(&"combat_next_reacquire_ms")
-		bb.erase_var(&"attack_task_started")
-		bb.erase_var(&"last_attack_blocked_reason")
+		bb.erase_var(AIBlackboardKeys.COMBAT_TARGET)
+		bb.erase_var(AIBlackboardKeys.COMBAT_TARGET_LAST_SEEN_MS)
+		bb.erase_var(AIBlackboardKeys.COMBAT_NEXT_REACQUIRE_MS)
+		bb.erase_var(AIBlackboardKeys.ATTACK_TASK_STARTED)
+		bb.erase_var(AIBlackboardKeys.LAST_ATTACK_BLOCKED_REASON)

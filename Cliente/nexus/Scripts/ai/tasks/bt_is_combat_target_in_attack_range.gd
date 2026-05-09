@@ -1,10 +1,10 @@
 @tool
 extends BTCondition
 
-@export var target_var: StringName = &"combat_target"
+@export var target_var: StringName = AIBlackboardKeys.COMBAT_TARGET
 @export var default_attack_stop_distance: float = 28.0
-@export var blocked_reason_var: StringName = &"last_attack_blocked_reason"
-@export var blocked_reason_next_emit_ms_var: StringName = &"attack_blocked_next_emit_ms"
+@export var blocked_reason_var: StringName = AIBlackboardKeys.LAST_ATTACK_BLOCKED_REASON
+@export var blocked_reason_next_emit_ms_var: StringName = AIBlackboardKeys.ATTACK_BLOCKED_NEXT_EMIT_MS
 @export var blocked_reason_emit_cooldown_sec: float = 0.65
 
 

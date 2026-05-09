@@ -1,7 +1,7 @@
 @tool
 extends BTCondition
 
-@export var target_var: StringName = &"combat_target"
+@export var target_var: StringName = AIBlackboardKeys.COMBAT_TARGET
 
 
 func _generate_name() -> String:

@@ -1,8 +1,8 @@
 @tool
 extends BTCondition
 
-@export var target_var: StringName = &"combat_target"
-@export var last_seen_time_var: StringName = &"combat_target_last_seen_ms"
+@export var target_var: StringName = AIBlackboardKeys.COMBAT_TARGET
+@export var last_seen_time_var: StringName = AIBlackboardKeys.COMBAT_TARGET_LAST_SEEN_MS
 @export var default_acquire_radius: float = 120.0
 @export var default_lose_radius: float = 156.0
 @export var default_memory_sec: float = 1.2

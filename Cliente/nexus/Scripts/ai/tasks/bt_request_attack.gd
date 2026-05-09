@@ -1,12 +1,12 @@
 @tool
 extends BTAction
 
-@export var started_var: StringName = &"attack_task_started"
-@export var target_var: StringName = &"combat_target"
-@export var blocked_reason_var: StringName = &"last_attack_blocked_reason"
-@export var blocked_latched_var: StringName = &"attack_blocked_latched"
-@export var blocked_active_var: StringName = &"attack_blocked_active"
-@export var blocked_pending_since_ms_var: StringName = &"attack_blocked_pending_since_ms"
+@export var started_var: StringName = AIBlackboardKeys.ATTACK_TASK_STARTED
+@export var target_var: StringName = AIBlackboardKeys.COMBAT_TARGET
+@export var blocked_reason_var: StringName = AIBlackboardKeys.LAST_ATTACK_BLOCKED_REASON
+@export var blocked_latched_var: StringName = AIBlackboardKeys.ATTACK_BLOCKED_LATCHED
+@export var blocked_active_var: StringName = AIBlackboardKeys.ATTACK_BLOCKED_ACTIVE
+@export var blocked_pending_since_ms_var: StringName = AIBlackboardKeys.ATTACK_BLOCKED_PENDING_SINCE_MS
 @export var blocked_started_min_duration_sec: float = 0.25
 
 

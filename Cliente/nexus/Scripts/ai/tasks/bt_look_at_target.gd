@@ -11,25 +11,23 @@ func _generate_name() -> String:
 
 func _enter() -> void:
 	_elapsed = 0.0
-	if agent != null and agent.has_method("stop_movement_for_look"):
-		agent.stop_movement_for_look()
-	if agent != null and agent.has_method("play_look_emote"):
-		agent.play_look_emote()
+	if agent == null:
+		return
+	agent.stop_movement_for_look()
+	agent.play_look_emote()
 
 func _tick(delta: float) -> Status:
 	var target := blackboard.get_var(target_var, null) as Node2D
 	if not is_instance_valid(target):
 		return FAILURE
 
-	if agent != null and agent.has_method("look_toward"):
-		agent.look_toward(target.global_position)
+	if agent == null:
+		return FAILURE
+	agent.look_toward(target.global_position)
 
 	_elapsed += delta
-	var hold_sec := 1.2
-	if agent != null and agent.has_method("get"):
-		hold_sec = float(agent.get(StringName(hold_sec_var)))
+	var hold_sec: float = float(agent.look_hold_sec)
 	if _elapsed >= hold_sec:
-		if agent != null and agent.has_method("trigger_look_cooldown"):
-			agent.trigger_look_cooldown()
+		agent.trigger_look_cooldown()
 		return SUCCESS
 	return RUNNING

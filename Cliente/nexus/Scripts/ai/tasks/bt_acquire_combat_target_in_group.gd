@@ -2,8 +2,8 @@
 extends BTAction
 
 @export var group: StringName = &"player"
-@export var output_var: StringName = &"combat_target"
-@export var last_seen_time_var: StringName = &"combat_target_last_seen_ms"
+@export var output_var: StringName = AIBlackboardKeys.COMBAT_TARGET
+@export var last_seen_time_var: StringName = AIBlackboardKeys.COMBAT_TARGET_LAST_SEEN_MS
 @export var default_acquire_radius: float = 120.0
 
 

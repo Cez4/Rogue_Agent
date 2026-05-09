@@ -18,38 +18,34 @@ func _enter() -> void:
 
 	var telemetry_target: String = ""
 	var has_valid_telemetry_target: bool = false
-	if agent.has_method("get_combat_target"):
-		var current_target: Node2D = agent.get_combat_target() as Node2D
-		if is_instance_valid(current_target):
-			telemetry_target = str(current_target.name)
-			has_valid_telemetry_target = true
+	var current_target: Node2D = agent.get_combat_target() as Node2D
+	if is_instance_valid(current_target):
+		telemetry_target = str(current_target.name)
+		has_valid_telemetry_target = true
 	if has_valid_telemetry_target:
 		CombatTelemetry.emit_event(&"attack_started", {
 			"actor": str(agent.name),
 			"target": telemetry_target
 		})
 
-	if agent.has_method("play_attack_animation"):
-		agent.play_attack_animation()
-	if agent.has_method("orient_attack_hitbox"):
-		agent.orient_attack_hitbox()
+	agent.play_attack_animation()
+	agent.orient_attack_hitbox()
 
-	var hitbox := agent.get_node_or_null(hitbox_path)
-	if hitbox != null and hitbox.has_method("set_hitbox_enabled"):
+	var hitbox := agent.get_node_or_null(hitbox_path) as HitboxComponent
+	if hitbox != null:
 		_apply_action_to_hitbox(hitbox)
 		hitbox.set_hitbox_enabled(false)
 
 	await get_tree().create_timer(_windup()).timeout
-	if hitbox != null and hitbox.has_method("set_hitbox_enabled"):
+	if hitbox != null:
 		hitbox.set_hitbox_enabled(true)
 
 	await get_tree().create_timer(_active()).timeout
-	if hitbox != null and hitbox.has_method("set_hitbox_enabled"):
+	if hitbox != null:
 		hitbox.set_hitbox_enabled(false)
 
 	await get_tree().create_timer(_recover()).timeout
-	if agent.has_method("wait_for_attack_animation_end"):
-		await agent.wait_for_attack_animation_end(_windup() + _active() + _recover())
+	await agent.wait_for_attack_animation_end(_windup() + _active() + _recover())
 	_cooldown_until_sec = Time.get_ticks_msec() * 0.001 + _cooldown()
 	_finish_attack()
 
@@ -84,13 +80,13 @@ func _cooldown() -> float:
 
 
 func _finish_attack() -> void:
-	if agent != null and agent.has_method("clear_attack_pending"):
+	if agent != null:
 		agent.clear_attack_pending()
 	get_root().dispatch(EVENT_FINISHED)
 
 
 func _resolved_action_data() -> Resource:
-	if agent != null and agent.has_method("get_equipment_loadout_runtime"):
+	if agent != null:
 		var loadout: EquipmentLoadout = agent.get_equipment_loadout_runtime() as EquipmentLoadout
 		if loadout != null and loadout.weapon != null and loadout.weapon.action_data != null:
 			return loadout.weapon.action_data
