@@ -162,6 +162,16 @@ func set_combat_target_internal(target: Node2D, manual_lock: bool) -> void:
 	_combat_target_manual_lock = manual_lock
 
 
+func set_interaction_target_internal(target: Node2D, stop_range: float) -> void:
+	_interaction_target = target
+	_interaction_target_range = stop_range
+
+
+func clear_interaction_target_internal() -> void:
+	_interaction_target = null
+	_interaction_target_range = 0.0
+
+
 func reset_combat_target_runtime() -> void:
 	_combat_target = null
 	_combat_target_manual_lock = false
@@ -351,7 +361,7 @@ func get_combat_reacquire_interval_sec() -> float:
 	return ActorCombatProfileRuntimeRef.get_combat_reacquire_interval_sec(self)
 
 
-func _on_health_death() -> void:
+func on_health_death() -> void:
 	ActorCombatRuntimeRef.on_health_death(self)
 
 

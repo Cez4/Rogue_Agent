@@ -2,13 +2,11 @@ class_name ActorRuntimeBridge
 extends RefCounted
 
 static func set_interaction_target_internal(actor: Node, target: Node2D, stop_range: float) -> void:
-	actor._interaction_target = target
-	actor._interaction_target_range = stop_range
+	actor.set_interaction_target_internal(target, stop_range)
 
 
 static func clear_interaction_target_internal(actor: Node) -> void:
-	actor._interaction_target = null
-	actor._interaction_target_range = 0.0
+	actor.clear_interaction_target_internal()
 
 
 static func play_directional(actor: Node, prefix: String, direction_source: Vector2) -> bool:
@@ -40,7 +38,7 @@ static func reset_wander_timer(actor: Node) -> void:
 
 
 static func on_health_death(actor: Node) -> void:
-	actor._on_health_death()
+	actor.on_health_death()
 
 
 static func get_idle_elapsed(actor: Node) -> float:

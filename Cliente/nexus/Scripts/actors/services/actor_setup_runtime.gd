@@ -67,5 +67,5 @@ static func _connect_health_signals(actor: Node) -> void:
 	var health := actor.get_node_or_null(^"Health")
 	if health == null:
 		return
-	if health.has_signal("death") and not health.death.is_connected(actor._on_health_death):
-		health.death.connect(actor._on_health_death)
+	if health.has_signal("death") and not health.death.is_connected(actor.on_health_death):
+		health.death.connect(actor.on_health_death)
