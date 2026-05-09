@@ -5,6 +5,7 @@ var _panel: PanelContainer
 var _combat_toggle: CheckButton
 var _thought_toggle: CheckButton
 var _dedupe_spin: SpinBox
+var _actor_min_spin: SpinBox
 
 func _ready() -> void:
 	layer = 50
@@ -64,6 +65,21 @@ func _build_ui() -> void:
 	_dedupe_spin.value_changed.connect(_on_dedupe_changed)
 	hbox.add_child(_dedupe_spin)
 
+	var hbox_actor := HBoxContainer.new()
+	hbox_actor.add_theme_constant_override("separation", 8)
+	vbox.add_child(hbox_actor)
+
+	var actor_label := Label.new()
+	actor_label.text = "Thought actor min ms"
+	hbox_actor.add_child(actor_label)
+
+	_actor_min_spin = SpinBox.new()
+	_actor_min_spin.min_value = 0
+	_actor_min_spin.max_value = 5000
+	_actor_min_spin.step = 50
+	_actor_min_spin.value_changed.connect(_on_actor_min_changed)
+	hbox_actor.add_child(_actor_min_spin)
+
 func _sync_from_settings() -> void:
 	var settings := _get_settings()
 	if settings == null:
@@ -71,6 +87,7 @@ func _sync_from_settings() -> void:
 	_combat_toggle.button_pressed = settings.combat_enabled
 	_thought_toggle.button_pressed = settings.thought_enabled
 	_dedupe_spin.value = settings.thought_dedupe_ms
+	_actor_min_spin.value = settings.thought_actor_min_interval_ms
 
 func _on_combat_toggled(enabled: bool) -> void:
 	var settings := _get_settings()
@@ -89,6 +106,12 @@ func _on_dedupe_changed(value: float) -> void:
 	if settings == null:
 		return
 	settings.set_thought_dedupe_ms(int(value))
+
+func _on_actor_min_changed(value: float) -> void:
+	var settings := _get_settings()
+	if settings == null:
+		return
+	settings.set_thought_actor_min_interval_ms(int(value))
 
 func _get_settings() -> Node:
 	var tree := Engine.get_main_loop() as SceneTree
