@@ -47,3 +47,6 @@ Escopo: PRs que alteram actor, runtimes, BT tasks, HSM states, input de intencao
   - `docs/mvp-limboai-combate-wander-status.md`
   - `docs/auditoria-estado-atual-bt-hsm-combate.md`
 - [ ] Registrar risco residual e prox. passo tecnico.
+- [ ] Fluxo Git executado em modo serial (sem paralelismo) e sync confirmado:
+  - `git status -sb`
+  - `git rev-list --left-right --count origin/<branch>...HEAD` = `0 0`.

@@ -130,6 +130,10 @@ Regra de autoridade:
 29. Plano final de desacoplamento concluido:
 - cortes 1-4 concluídos.
 - checklist padrao de regressao para PR criado em `docs/checklist-regressao-pr-actor-bt-hsm.md`.
+30. Hardening operacional de versionamento:
+- fluxo Git serial formalizado no runbook (sem comandos Git em paralelo).
+- validacao de sincronizacao por `rev-list` (`0 0` = local/remoto alinhados).
+- tratamento padrao para falhas operacionais de ambiente (`index.lock`/SSH intermitente) sem risco ao historico.
 
 ### Parcial
 1. Smart Objects avancados (Talk/Use/Trade com affordances completos) fora desta fase.
