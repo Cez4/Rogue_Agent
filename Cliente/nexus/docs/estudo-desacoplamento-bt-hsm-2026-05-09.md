@@ -1,7 +1,7 @@
 # Estudo de Desacoplamento BT/HSM - 2026-05-09
 
 Data: 2026-05-09  
-Branch de execucao (atual): `feat/actor-combat-profile-runtime`
+Branch de execucao (atual): `feat/bt-decision-telemetry-hardening`
 
 ## Objetivo
 Reduzir acoplamento dinamico (`has_method`/`.call`) na trilha critica de combate, mantendo comportamento funcional no Godot + LimboAI.
@@ -80,6 +80,13 @@ Reduzir acoplamento dinamico (`has_method`/`.call`) na trilha critica de combate
 - estado social/wander/emote migrado para `ActorRuntimeBridge`.
 - remocao de getters/setters sociais redundantes no actor.
 - validacao MCP sem erro novo de parse/runtime.
+13. Boundary hardening (v9):
+- `ActorRuntimeBridge` tipado com `Actor8DirLimbo` em vez de `Node`.
+- contrato tecnico de interaction/death fechado por API publica do actor.
+14. Telemetria BT (v1):
+- criado `bt_decision_telemetry.gd`.
+- tasks de combate principais instrumentadas com `task/status/reason`.
+- controle por blackboard key `debug_bt_decision_telemetry` (OFF por padrao).
 
 ## Resultado pratico
 1. Menor risco de regressao silenciosa por renome de metodo/variavel.
@@ -97,7 +104,7 @@ Resultado:
 - ruido remanescente de `out_of_range/reacquire` coerente com kite.
 
 ## Linhas atuais dos componentes-chave
-- `actor_8dir_limbo.gd`: 469
+- `actor_8dir_limbo.gd`: 309
 - `actor_combat_runtime.gd`: 109
 - `actor_navigation_runtime.gd`: 51
 - `actor_animation_runtime.gd`: 42
@@ -106,10 +113,9 @@ Resultado:
 - `ai/blackboard_keys.gd`: 12
 
 ## Pendencias pequenas (nao criticas)
-1. Fechar boundary 100%: remover ultimos acessos diretos a metodo privado do actor fora do bridge.
-2. Separar claramente API de gameplay e API tecnica no actor (secao/documentacao).
-3. Consolidar estado/timers comuns entre `actor_social_runtime` e `actor_wander_runtime`.
-4. Ajustes finos de telemetria por task (correlation id por decisao BT).
+1. Boundary 100%: revisao final de uso acidental fora do bridge em servicos legados.
+2. Evoluir telemetria BT para tasks sociais/wander.
+3. Opcional: correlation id/enter-exit por task para analise avancada.
 
 ## Referencias
 - LimboAI Blackboard best practices:  

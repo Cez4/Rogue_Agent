@@ -1,7 +1,7 @@
 # Auditoria Tecnica - Estado Atual BT/HSM/Combate
 
 Data: 2026-05-09  
-Branch de referencia: `feat/actor-combat-profile-runtime`
+Branch de referencia: `feat/bt-decision-telemetry-hardening`
 
 ## Escopo desta auditoria
 - Consolidar o estado real do combate/intencao contextual.
@@ -99,13 +99,24 @@ Regra de autoridade:
 22. Bridge social/wander (v8):
 - estado social (idle/wander/look/emote request/priority) migrado para bridge tecnico.
 - `actor_8dir_limbo.gd` reduzido para 469 linhas mantendo comportamento.
+23. Boundary hardening adicional:
+- `ActorRuntimeBridge` tipado para `Actor8DirLimbo` (contrato tecnico explicito).
+- conexao de `Health.death` via API publica (`on_health_death`) sem dependencia de metodo privado.
+24. Telemetria de decisao BT (v1):
+- helper `Scripts/ai/bt_decision_telemetry.gd` adicionado.
+- tasks de combate principais instrumentadas com `task/status/reason`.
+- chave `debug_bt_decision_telemetry` em `AIBlackboardKeys`.
+- debug OFF por padrao (ativacao explicita por blackboard var).
 
 ### Parcial
 1. Smart Objects avancados (Talk/Use/Trade com affordances completos) fora desta fase.
 
-2. Telemetria ainda basica (sem correlacao por decisao BT/task id).
+2. Telemetria BT ainda parcial:
+- combate principal coberto;
+- faltam tasks sociais/wander e (opcional) enter/exit separado por task.
 
-3. `actor_8dir_limbo.gd` ainda possui wrappers de delegacao que podem ser consolidados em contrato menor.
+3. Acabamento de boundary:
+- revisar servicos legados para evitar uso acidental fora da camada de bridge.
 
 ### Fora do escopo atual
 1. Multiplayer autoritativo completo (host resolve tudo e replica oficial).
@@ -140,14 +151,11 @@ Regra de autoridade:
 - usar `get_attack_stop_distance()` (com buffer), nao range bruto.
 
 ## Checklist de fechamento do proximo ciclo
-1. Fechar boundary 100%:
-   - remover ultimos acessos diretos a metodos privados do actor fora do bridge.
-2. Formalizar fronteira no actor:
-   - separar secao API gameplay vs API tecnica (bridge-only).
-3. Consolidar social/wander:
-   - unificar timers/estado compartilhado para evitar drift.
-4. Telemetria BT:
-   - task enter/exit/status + target id + range final.
+1. Boundary 100% (acabamento final):
+   - varredura final de uso acidental fora do bridge.
+2. Telemetria BT v2:
+   - ampliar para tasks sociais/wander;
+   - opcional: eventos enter/exit separados.
 5. Teste de regressao MCP (obrigatorio em cada bloco):
    - `play_scene`
    - `get_godot_errors`

@@ -2,7 +2,7 @@
 
 Data: 2026-05-09
 Branch historica: `feat/mvp-combate-fase1`  
-Estado atual consolidado: `feat/actor-combat-profile-runtime`
+Estado atual consolidado: `feat/bt-decision-telemetry-hardening`
 
 ## Objetivo atual
 - Base jogavel com:
@@ -119,19 +119,16 @@ Estado atual consolidado: `feat/actor-combat-profile-runtime`
 1. Calibracao fina por archetype/arma/status com matriz oficial v1:
    - `docs/combat-tuning-matrix-v1.md`
 2. Padronizar pipeline BT de combate para novos hostis (base enemy template) apos tuning v1.
-3. Finalizar acabamento de desacoplamento residual (nao critico):
-   - fechar "boundary 100%": remover ultimos acessos diretos a metodo privado do actor fora do bridge.
-   - separar no actor: API de gameplay (BT/HSM/Controller) vs API tecnica (bridge-only).
-   - consolidar duplicidade de timers/estado entre `actor_social_runtime` e `actor_wander_runtime`.
-   - adicionar telemetria tecnica de boundary em modo debug.
+3. Finalizar acabamento residual (nao bloqueante):
+   - boundary 100% (varredura final de uso acidental fora do bridge).
 4. Evoluir telemetria BT:
    - ampliar cobertura para tasks sociais/wander.
    - opcional: eventos enter/exit separados por task para analise de arvore.
-4. Feedback de hit:
+5. Feedback de hit:
    - FX local de impacto, flash de dano, popup de numero.
-5. Validacao para futuro multiplayer:
+6. Validacao para futuro multiplayer:
    - gates de range/LOS/cooldown centralizados no host.
-6. Padrao para NPCs:
+7. Padrao para NPCs:
    - manter BT + tasks reutilizaveis para hostis, companions e bosses.
 
 ## Arquivos-chave
