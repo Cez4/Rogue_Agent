@@ -173,3 +173,9 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
    - ajustar somente `ArchetypeProfile` hostile em um eixo por vez.
 4. Protocolo operacional de sessao:
    - `docs/wildcat-tuning-session-protocol-v1.md`
+5. Ciclo 2 aplicado (Targeting only):
+   - `acquire_radius: 88.0 -> 92.0`
+   - `lose_radius: 124.0 -> 132.0`
+   - `target_memory_sec: 0.60 -> 0.75`
+   - `reacquire_interval_sec: 0.18 -> 0.16`
+   - `attack_stop_buffer` mantido em `4.5` (sem mudanca de eixo).
