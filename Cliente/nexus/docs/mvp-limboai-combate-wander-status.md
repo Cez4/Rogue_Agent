@@ -91,6 +91,17 @@ Estado atual consolidado: `feat/actor-combat-profile-runtime`
   - migracao de estado social/wander/emote para `ActorRuntimeBridge`.
   - remocao dos getters/setters sociais redundantes do actor.
   - `actor_8dir_limbo.gd` reduzido para 469 linhas sem regressao MCP.
+- Telemetria de decisao BT (passo inicial):
+  - adicionado `Scripts/ai/bt_decision_telemetry.gd` para eventos `bt_decision` com `task/status/reason`.
+  - tasks de combate principais instrumentadas:
+    - `bt_acquire_combat_target_in_group.gd`
+    - `bt_validate_combat_target_alive.gd`
+    - `bt_validate_combat_target_perception.gd`
+    - `bt_chase_combat_target.gd`
+    - `bt_is_combat_target_in_attack_range.gd`
+    - `bt_request_attack.gd`
+  - flag de controle no blackboard: `debug_bt_decision_telemetry` (default OFF).
+  - chave centralizada em `Scripts/ai/blackboard_keys.gd`.
 
 ## LimboAI no projeto
 - HSM para execucao de locomocao/ataque no actor.
@@ -113,6 +124,9 @@ Estado atual consolidado: `feat/actor-combat-profile-runtime`
    - separar no actor: API de gameplay (BT/HSM/Controller) vs API tecnica (bridge-only).
    - consolidar duplicidade de timers/estado entre `actor_social_runtime` e `actor_wander_runtime`.
    - adicionar telemetria tecnica de boundary em modo debug.
+4. Evoluir telemetria BT:
+   - ampliar cobertura para tasks sociais/wander.
+   - opcional: eventos enter/exit separados por task para analise de arvore.
 4. Feedback de hit:
    - FX local de impacto, flash de dano, popup de numero.
 5. Validacao para futuro multiplayer:

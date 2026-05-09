@@ -1,6 +1,7 @@
 @tool
 extends BTAction
 const CombatBlockedReasonsRef = preload("res://Scripts/combat/combat_blocked_reasons.gd")
+const BTDecisionTelemetryRef = preload("res://Scripts/ai/bt_decision_telemetry.gd")
 
 @export var started_var: StringName = AIBlackboardKeys.ATTACK_TASK_STARTED
 @export var target_var: StringName = AIBlackboardKeys.COMBAT_TARGET
@@ -9,6 +10,7 @@ const CombatBlockedReasonsRef = preload("res://Scripts/combat/combat_blocked_rea
 @export var blocked_active_var: StringName = AIBlackboardKeys.ATTACK_BLOCKED_ACTIVE
 @export var blocked_pending_since_ms_var: StringName = AIBlackboardKeys.ATTACK_BLOCKED_PENDING_SINCE_MS
 @export var blocked_started_min_duration_sec: float = 0.25
+@export var debug_decision_var: StringName = AIBlackboardKeys.DEBUG_BT_DECISION_TELEMETRY
 
 
 func _generate_name() -> String:
@@ -17,6 +19,7 @@ func _generate_name() -> String:
 
 func _tick(_delta: float) -> Status:
 	if agent == null:
+		BTDecisionTelemetryRef.emit("RequestAttack", agent, blackboard, debug_decision_var, "FAILURE", "no_agent")
 		return FAILURE
 
 	var attack_pending: bool = false
@@ -28,6 +31,7 @@ func _tick(_delta: float) -> Status:
 		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.NONE)
 		blackboard.set_var(blocked_latched_var, false)
 		blackboard.set_var(started_var, true)
+		BTDecisionTelemetryRef.emit("RequestAttack", agent, blackboard, debug_decision_var, "RUNNING", "attack_pending")
 		return RUNNING
 
 	# If we already started an attack and now pending is false, the attack finished.
@@ -39,6 +43,7 @@ func _tick(_delta: float) -> Status:
 		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.NONE)
 		blackboard.set_var(blocked_latched_var, false)
 		blackboard.set_var(started_var, false)
+		BTDecisionTelemetryRef.emit("RequestAttack", agent, blackboard, debug_decision_var, "SUCCESS", "attack_finished")
 		return SUCCESS
 
 	# Start a new attack and immediately switch to RUNNING if pending got set.
@@ -49,6 +54,7 @@ func _tick(_delta: float) -> Status:
 		_emit_blocked_ended_if_needed(CombatBlockedReasonsRef.NO_VALID_TARGET)
 		blackboard.set_var(started_var, false)
 		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.NO_VALID_TARGET)
+		BTDecisionTelemetryRef.emit("RequestAttack", agent, blackboard, debug_decision_var, "FAILURE", "no_valid_target")
 		return FAILURE
 	if is_instance_valid(target):
 		agent.face_toward(target.global_position)
@@ -68,6 +74,7 @@ func _tick(_delta: float) -> Status:
 		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.NONE)
 		blackboard.set_var(blocked_latched_var, false)
 		blackboard.set_var(started_var, true)
+		BTDecisionTelemetryRef.emit("RequestAttack", agent, blackboard, debug_decision_var, "RUNNING", "attack_started")
 		return RUNNING
 	var blocked_latched: bool = false
 	if blackboard.has_var(blocked_latched_var):
@@ -77,6 +84,7 @@ func _tick(_delta: float) -> Status:
 		_emit_blocked_started_if_needed(CombatBlockedReasonsRef.REQUEST_ATTACK_NOT_STARTED)
 		blackboard.set_var(blocked_latched_var, true)
 	blackboard.set_var(started_var, false)
+	BTDecisionTelemetryRef.emit("RequestAttack", agent, blackboard, debug_decision_var, "FAILURE", CombatBlockedReasonsRef.REQUEST_ATTACK_NOT_STARTED)
 	return FAILURE
 
 
