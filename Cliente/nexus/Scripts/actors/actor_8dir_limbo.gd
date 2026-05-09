@@ -73,6 +73,9 @@ var _spawn_position: Vector2 = Vector2.ZERO
 var _stats: StatsComponent
 var _is_dead: bool = false
 
+const ActorCombatRuntimeRef = preload("res://Scripts/actors/services/actor_combat_runtime.gd")
+const Anim8DirUtilsRef = preload("res://Scripts/actors/services/anim8dir_utils.gd")
+
 
 func _ready() -> void:
 	_spawn_position = global_position
@@ -152,45 +155,15 @@ func clear_attack_pending() -> void:
 
 
 func set_combat_target(target: Node2D, manual_lock: bool = true) -> void:
-	if target == null or not is_instance_valid(target):
-		_combat_target = null
-		_combat_target_manual_lock = false
-		return
-	var changed_target: bool = _combat_target != target
-	_combat_target = target
-	_combat_target_manual_lock = manual_lock
-	clear_interaction_target()
-	face_toward(target.global_position)
-	if changed_target:
-		CombatTelemetry.emit_event(&"target_acquired", {
-			"actor": name,
-			"target": target.name,
-			"manual_lock": manual_lock
-		})
+	ActorCombatRuntimeRef.set_combat_target(self, target, manual_lock)
 
 
 func clear_combat_target() -> void:
-	var had_target: bool = _combat_target != null and is_instance_valid(_combat_target)
-	var old_target_name: String = ""
-	if had_target:
-		old_target_name = _combat_target.name
-	_combat_target = null
-	_combat_target_manual_lock = false
-	_next_chase_repath_sec = 0.0
-	if had_target:
-		CombatTelemetry.emit_event(&"target_lost", {
-			"actor": name,
-			"target": old_target_name
-		})
+	ActorCombatRuntimeRef.clear_combat_target(self)
 
 
 func cancel_chase_attack() -> void:
-	var had_target: bool = _combat_target != null and is_instance_valid(_combat_target)
-	clear_combat_target()
-	if motor != null and motor.has_method("stop"):
-		motor.call("stop")
-	if had_target:
-		CombatTelemetry.emit_event(&"chase_canceled", {"actor": name})
+	ActorCombatRuntimeRef.cancel_chase_attack(self)
 
 
 func is_combat_target_manual_lock() -> bool:
@@ -326,12 +299,7 @@ func get_combat_reacquire_interval_sec() -> float:
 
 
 func _is_target_alive(target: Node2D) -> bool:
-	if target == null or not is_instance_valid(target):
-		return false
-	var health := target.get_node_or_null(^"Health")
-	if health != null and health.has_method("is_alive"):
-		return bool(health.call("is_alive"))
-	return true
+	return ActorCombatRuntimeRef.is_target_alive(target)
 
 
 func _setup_interactable_component() -> void:
@@ -364,39 +332,15 @@ func _connect_health_signals() -> void:
 
 
 func _on_health_death() -> void:
-	_is_dead = true
-	clear_attack_pending()
-	_disable_brain_runtime()
-	if hsm != null:
-		hsm.set_active(false)
-	cancel_all_intents()
-	_play_die_animation()
-	_disable_combat_collision()
-	CombatTelemetry.emit_event(&"target_died", {"actor": name})
-	if not enable_respawn:
-		return
-	if not player_controlled:
-		_respawn_after_delay()
+	ActorCombatRuntimeRef.on_health_death(self)
 
 
 func _disable_combat_collision() -> void:
-	var hurtbox := get_node_or_null(^"Hurtbox") as Area2D
-	if hurtbox != null:
-		hurtbox.set_deferred("monitoring", false)
-		hurtbox.set_deferred("monitorable", false)
-	var body_collision := get_node_or_null(^"CollisionShape2D") as CollisionShape2D
-	if body_collision != null:
-		body_collision.set_deferred("disabled", true)
+	ActorCombatRuntimeRef.disable_combat_collision(self)
 
 
 func _enable_combat_collision() -> void:
-	var hurtbox := get_node_or_null(^"Hurtbox") as Area2D
-	if hurtbox != null:
-		hurtbox.set_deferred("monitoring", true)
-		hurtbox.set_deferred("monitorable", true)
-	var body_collision := get_node_or_null(^"CollisionShape2D") as CollisionShape2D
-	if body_collision != null:
-		body_collision.set_deferred("disabled", false)
+	ActorCombatRuntimeRef.enable_combat_collision(self)
 
 
 func _respawn_after_delay() -> void:
@@ -420,27 +364,15 @@ func _respawn_after_delay() -> void:
 
 
 func _disable_brain_runtime() -> void:
-	if bt_player != null and bt_player.has_method("set"):
-		bt_player.set("active", false)
+	ActorCombatRuntimeRef.disable_brain_runtime(self)
 
 
 func _enable_brain_runtime() -> void:
-	if bt_player != null and bt_player.has_method("set"):
-		bt_player.set("active", true)
+	ActorCombatRuntimeRef.enable_brain_runtime(self)
 
 
 func _reset_combat_memory() -> void:
-	clear_combat_target()
-	clear_interaction_target()
-	var bb: Variant = null
-	if bt_player != null and bt_player.has_method("get"):
-		bb = bt_player.get("blackboard")
-	if bb != null and bb.has_method("erase_var"):
-		bb.erase_var(&"combat_target")
-		bb.erase_var(&"combat_target_last_seen_ms")
-		bb.erase_var(&"combat_next_reacquire_ms")
-		bb.erase_var(&"attack_task_started")
-		bb.erase_var(&"last_attack_blocked_reason")
+	ActorCombatRuntimeRef.reset_combat_memory(self)
 
 
 func _play_die_animation() -> void:
@@ -458,7 +390,7 @@ func face_toward(target_position: Vector2) -> void:
 	if dir.length_squared() < 0.0001:
 		return
 	# Keep facing updated for 8-dir attack selection, but never interrupt an active attack animation.
-	_last_direction_suffix = _direction_suffix_from_vector(dir)
+	_last_direction_suffix = Anim8DirUtilsRef.direction_suffix_from_vector(dir, _last_direction_suffix)
 	if not _attack_pending:
 		_play_directional_animation(idle_prefix, dir)
 
@@ -481,7 +413,7 @@ func update_walk_animation() -> void:
 
 
 func play_attack_animation() -> void:
-	var dir: Vector2 = _direction_vector_from_suffix(_last_direction_suffix)
+	var dir: Vector2 = Anim8DirUtilsRef.direction_vector_from_suffix(_last_direction_suffix)
 	var played := _play_directional_animation(attack_prefix, dir)
 	if not played:
 		return
@@ -495,7 +427,7 @@ func orient_attack_hitbox() -> void:
 	if hitbox == null:
 		return
 	var base_distance: float = maxf(8.0, hitbox.position.length())
-	var dir: Vector2 = _direction_vector_from_suffix(_last_direction_suffix)
+	var dir: Vector2 = Anim8DirUtilsRef.direction_vector_from_suffix(_last_direction_suffix)
 	hitbox.position = dir * base_distance
 
 
@@ -686,7 +618,7 @@ func _reset_wander_timer() -> void:
 func _play_directional_animation(prefix: String, direction_source: Vector2) -> bool:
 	if animated_sprite == null or animated_sprite.sprite_frames == null:
 		return false
-	var suffix: StringName = _direction_suffix_from_vector(direction_source)
+	var suffix: StringName = Anim8DirUtilsRef.direction_suffix_from_vector(direction_source, _last_direction_suffix)
 	_last_direction_suffix = suffix
 	var animation_name: StringName = StringName("%s_%s" % [prefix, suffix])
 	if animated_sprite.sprite_frames.has_animation(animation_name):
@@ -696,49 +628,11 @@ func _play_directional_animation(prefix: String, direction_source: Vector2) -> b
 
 
 func _direction_suffix_from_vector(v: Vector2) -> StringName:
-	if v.length_squared() < 0.0001:
-		return _last_direction_suffix
-
-	var deg: float = rad_to_deg(atan2(v.y, v.x))
-	if deg >= -22.5 and deg < 22.5:
-		return &"L"
-	if deg >= 22.5 and deg < 67.5:
-		return &"SE"
-	if deg >= 67.5 and deg < 112.5:
-		return &"S"
-	if deg >= 112.5 and deg < 157.5:
-		return &"SO"
-	if deg >= 157.5 or deg < -157.5:
-		return &"O"
-	if deg >= -157.5 and deg < -112.5:
-		return &"NO"
-	if deg >= -112.5 and deg < -67.5:
-		return &"N"
-	if deg >= -67.5 and deg < -22.5:
-		return &"NE"
-	return _last_direction_suffix
+	return Anim8DirUtilsRef.direction_suffix_from_vector(v, _last_direction_suffix)
 
 
 func _direction_vector_from_suffix(suffix: StringName) -> Vector2:
-	match suffix:
-		&"L":
-			return Vector2(1.0, 0.0)
-		&"SE":
-			return Vector2(0.70710677, 0.70710677)
-		&"S":
-			return Vector2(0.0, 1.0)
-		&"SO":
-			return Vector2(-0.70710677, 0.70710677)
-		&"O":
-			return Vector2(-1.0, 0.0)
-		&"NO":
-			return Vector2(-0.70710677, -0.70710677)
-		&"N":
-			return Vector2(0.0, -1.0)
-		&"NE":
-			return Vector2(0.70710677, -0.70710677)
-		_:
-			return Vector2(0.0, 1.0)
+	return Anim8DirUtilsRef.direction_vector_from_suffix(suffix)
 
 
 func get_stat_value(stat_id: StringName, fallback: float = 0.0) -> float:
