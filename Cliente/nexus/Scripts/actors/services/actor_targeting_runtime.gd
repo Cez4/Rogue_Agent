@@ -1,5 +1,6 @@
 class_name ActorTargetingRuntime
 extends RefCounted
+const ActorRuntimeBridgeRef = preload("res://Scripts/actors/services/actor_runtime_bridge.gd")
 
 static func acquire_combat_target_in_group(
 	actor: Node,
@@ -147,11 +148,11 @@ static func set_interaction_target(actor: Node, target: Node2D, stop_range: floa
 		interaction_range = actor.interaction_stop_range
 	else:
 		interaction_range = maxf(8.0, stop_range)
-	actor.set_interaction_target_internal(target, interaction_range)
+	ActorRuntimeBridgeRef.set_interaction_target_internal(actor, target, interaction_range)
 
 
 static func clear_interaction_target(actor: Node) -> void:
-	actor.clear_interaction_target_internal()
+	ActorRuntimeBridgeRef.clear_interaction_target_internal(actor)
 
 
 static func cancel_all_intents(actor: Node) -> void:

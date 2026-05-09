@@ -93,6 +93,9 @@ Regra de autoridade:
 20. Consolidacao de contrato minimo (v6):
 - remocao de wrappers internos adicionais de lifecycle/combat.
 - `actor_8dir_limbo.gd` reduziu para 473 linhas.
+21. Integracao tecnica por bridge (v7):
+- `ActorRuntimeBridge` centraliza operacoes tecnicas de runtime sem expor novos metodos de gameplay no actor.
+- contrato do actor para BT/HSM permanece estavel.
 
 ### Parcial
 1. Smart Objects avancados (Talk/Use/Trade com affordances completos) fora desta fase.

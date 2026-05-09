@@ -72,6 +72,10 @@ Reduzir acoplamento dinamico (`has_method`/`.call`) na trilha critica de combate
 10. Novo corte de desacoplamento (v6):
 - remocao de wrappers internos de lifecycle/combat no actor.
 - `ActorLifecycleRuntime` passou a depender de `ActorCombatRuntime` diretamente para reset/colisao/brain.
+11. Novo corte de desacoplamento (v7):
+- `ActorRuntimeBridge` criado para concentrar integracao tecnica dos runtimes com o actor.
+- runtimes migrados para bridge (`action`, `perception`, `setup`, `targeting`).
+- wrappers `runtime_*` removidos novamente do actor apos migracao e validacao MCP.
 
 ## Resultado pratico
 1. Menor risco de regressao silenciosa por renome de metodo/variavel.

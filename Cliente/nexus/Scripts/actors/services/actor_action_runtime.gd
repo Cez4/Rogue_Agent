@@ -3,6 +3,7 @@ extends RefCounted
 
 const Anim8DirUtilsRef = preload("res://Scripts/actors/services/anim8dir_utils.gd")
 const ActorAnimationRuntimeRef = preload("res://Scripts/actors/services/actor_animation_runtime.gd")
+const ActorRuntimeBridgeRef = preload("res://Scripts/actors/services/actor_runtime_bridge.gd")
 
 static func face_toward(actor: Node, target_position: Vector2) -> void:
 	var dir: Vector2 = target_position - actor.global_position
@@ -12,7 +13,7 @@ static func face_toward(actor: Node, target_position: Vector2) -> void:
 	var suffix: StringName = Anim8DirUtilsRef.direction_suffix_from_vector(dir, actor.get_last_direction_suffix())
 	actor.set_last_direction_suffix(suffix)
 	if not bool(actor.is_attack_pending_runtime()):
-		actor.play_directional_runtime(actor.idle_prefix, dir)
+		ActorRuntimeBridgeRef.play_directional(actor, actor.idle_prefix, dir)
 
 
 static func face_dir(actor: Node, x_axis: float) -> void:
@@ -22,25 +23,25 @@ static func face_dir(actor: Node, x_axis: float) -> void:
 
 
 static func play_idle_animation(actor: Node) -> void:
-	actor.play_directional_runtime(actor.idle_prefix, actor.velocity)
+	ActorRuntimeBridgeRef.play_directional(actor, actor.idle_prefix, actor.velocity)
 
 
 static func play_walk_animation(actor: Node) -> void:
-	actor.play_directional_runtime(actor.walk_prefix, actor.velocity)
+	ActorRuntimeBridgeRef.play_directional(actor, actor.walk_prefix, actor.velocity)
 
 
 static func play_walk_toward(actor: Node, target_position: Vector2) -> void:
 	var dir: Vector2 = target_position - actor.global_position
-	actor.play_directional_runtime(actor.walk_prefix, dir)
+	ActorRuntimeBridgeRef.play_directional(actor, actor.walk_prefix, dir)
 
 
 static func update_walk_animation(actor: Node) -> void:
-	actor.play_directional_runtime(actor.walk_prefix, actor.velocity)
+	ActorRuntimeBridgeRef.play_directional(actor, actor.walk_prefix, actor.velocity)
 
 
 static func play_attack_animation(actor: Node) -> void:
 	var dir: Vector2 = Anim8DirUtilsRef.direction_vector_from_suffix(actor.get_last_direction_suffix())
-	var played: bool = bool(actor.play_directional_runtime(actor.attack_prefix, dir))
+	var played: bool = bool(ActorRuntimeBridgeRef.play_directional(actor, actor.attack_prefix, dir))
 	if not played:
 		return
 	ActorAnimationRuntimeRef.setup_attack_animation(actor.animated_sprite, actor.attack_prefix, actor.get_last_direction_suffix())
@@ -64,7 +65,7 @@ static func wait_for_attack_animation_end(actor: Node, max_wait_sec: float = 1.2
 	if actor.animated_sprite.animation != animation_name:
 		return
 
-	var estimated_len: float = float(actor.estimate_animation_length_runtime(animation_name))
+	var estimated_len: float = float(ActorRuntimeBridgeRef.estimate_animation_length(actor, animation_name))
 	var timeout_sec := maxf(0.1, maxf(max_wait_sec, estimated_len + 0.06))
 	var deadline_sec: float = Time.get_ticks_msec() * 0.001 + timeout_sec
 	while Time.get_ticks_msec() * 0.001 < deadline_sec:
@@ -76,7 +77,7 @@ static func wait_for_attack_animation_end(actor: Node, max_wait_sec: float = 1.2
 
 
 static func play_attack_animation_and_finish(actor: Node) -> void:
-	var played: bool = bool(actor.play_directional_runtime(actor.attack_prefix, actor.velocity))
+	var played: bool = bool(ActorRuntimeBridgeRef.play_directional(actor, actor.attack_prefix, actor.velocity))
 	if played:
 		var expected := StringName("%s_%s" % [actor.attack_prefix, actor.get_last_direction_suffix()])
 		if actor.animated_sprite.animation == expected:

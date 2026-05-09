@@ -270,16 +270,6 @@ func set_stats_component(stats: StatsComponent) -> void:
 	_stats = stats
 
 
-func set_interaction_target_internal(target: Node2D, stop_range: float) -> void:
-	_interaction_target = target
-	_interaction_target_range = stop_range
-
-
-func clear_interaction_target_internal() -> void:
-	_interaction_target = null
-	_interaction_target_range = 0.0
-
-
 func get_interaction_target() -> Node2D:
 	return _interaction_target
 
@@ -298,38 +288,6 @@ func set_next_chase_repath_sec(value: float) -> void:
 
 func is_attack_pending_runtime() -> bool:
 	return _attack_pending
-
-
-func play_directional_runtime(prefix: String, direction_source: Vector2) -> bool:
-	return _play_directional_animation(prefix, direction_source)
-
-
-func estimate_animation_length_runtime(animation_name: StringName) -> float:
-	return _estimate_animation_length_sec(animation_name)
-
-
-func show_emote_runtime(animation_name: StringName, loop: bool, hold_sec: float, priority: int) -> void:
-	await _show_emote(animation_name, loop, hold_sec, priority)
-
-
-func hide_emote_runtime() -> void:
-	_hide_emote_immediate()
-
-
-func setup_stats_runtime() -> void:
-	_setup_stats()
-
-
-func setup_hsm_runtime() -> void:
-	_setup_hsm()
-
-
-func reset_wander_timer_runtime() -> void:
-	_reset_wander_timer()
-
-
-func on_health_death_runtime() -> void:
-	_on_health_death()
 
 
 func is_target_alive_for_runtime(target: Node2D) -> bool:

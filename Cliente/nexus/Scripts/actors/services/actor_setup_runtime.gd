@@ -1,5 +1,6 @@
 class_name ActorSetupRuntime
 extends RefCounted
+const ActorRuntimeBridgeRef = preload("res://Scripts/actors/services/actor_runtime_bridge.gd")
 
 static func ready(actor: Node) -> void:
 	actor.set_spawn_position(actor.global_position)
@@ -25,12 +26,12 @@ static func ready(actor: Node) -> void:
 	actor.motor.config = actor.movement_config
 	actor.motor.setup(actor)
 	actor.controller.setup(actor)
-	actor.setup_stats_runtime()
+	ActorRuntimeBridgeRef.setup_stats(actor)
 	_setup_interactable_component(actor)
 	_connect_health_signals(actor)
-	actor.reset_wander_timer_runtime()
-	actor.hide_emote_runtime()
-	actor.setup_hsm_runtime()
+	ActorRuntimeBridgeRef.reset_wander_timer(actor)
+	ActorRuntimeBridgeRef.hide_emote(actor)
+	ActorRuntimeBridgeRef.setup_hsm(actor)
 
 
 static func setup_interactable_component(actor: Node) -> void:
@@ -66,5 +67,5 @@ static func _connect_health_signals(actor: Node) -> void:
 	var health := actor.get_node_or_null(^"Health")
 	if health == null:
 		return
-	if health.has_signal("death") and not health.death.is_connected(actor.on_health_death_runtime):
-		health.death.connect(actor.on_health_death_runtime)
+	if health.has_signal("death") and not health.death.is_connected(actor._on_health_death):
+		health.death.connect(actor._on_health_death)

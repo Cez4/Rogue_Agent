@@ -61,3 +61,13 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 5. Atualizar docs de estado quando houver mudanca estrutural.
 6. So entao commit + push.
 
+
+## Workflow de desacoplamento seguro (aprovado no projeto)
+1. Mapear contrato usado por BT/HSM/Controller antes de alterar.
+2. Extrair responsabilidade para runtime pequeno (uma responsabilidade por vez).
+3. Evitar acesso direto a campo privado do actor dentro dos runtimes.
+4. Usar bridge/contrato explicito para integracao tecnica entre runtimes e actor.
+5. Validar em MCP a cada bloco: open_scene -> play_scene -> get_godot_errors.
+6. So consolidar (remover wrappers) depois que MCP estiver limpo.
+7. Atualizar docs de estado na mesma entrega.
+
