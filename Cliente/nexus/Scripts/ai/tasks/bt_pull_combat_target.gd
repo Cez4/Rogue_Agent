@@ -9,9 +9,9 @@ func _generate_name() -> String:
 
 
 func _tick(_delta: float) -> Status:
-	if agent == null or not agent.has_method("get"):
+	if agent == null or not agent.has_method("get_combat_target"):
 		return FAILURE
-	var target: Variant = agent.get("_combat_target")
+	var target: Variant = agent.get_combat_target()
 	if target == null or not is_instance_valid(target):
 		blackboard.erase_var(output_var)
 		return FAILURE

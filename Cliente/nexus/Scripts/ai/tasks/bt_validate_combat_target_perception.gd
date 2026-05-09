@@ -50,10 +50,6 @@ func _tick(_delta: float) -> Status:
 	if not has_seen and dist_sq > acquire_radius * acquire_radius:
 		if agent.has_method("clear_combat_target"):
 			agent.clear_combat_target()
-		CombatTelemetry.emit_event(&"target_lost", {
-			"actor": agent.name,
-			"reason": "outside_acquire_radius"
-		})
 		return FAILURE
 
 	var last_seen_ms: int = now_ms
@@ -65,8 +61,4 @@ func _tick(_delta: float) -> Status:
 
 	if agent.has_method("clear_combat_target"):
 		agent.clear_combat_target()
-	CombatTelemetry.emit_event(&"target_lost", {
-		"actor": agent.name,
-		"reason": "memory_timeout"
-	})
 	return FAILURE
