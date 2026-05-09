@@ -257,3 +257,32 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
 18. Nota operacional de coleta:
    - lote mais recente veio misturado (predominancia de eventos do Brute), portanto nao usado para recalibrar Light;
    - baseline Light mantido com base no lote isolado anterior validado.
+19. Ciclo Light-T1 aplicado (Targeting only):
+   - profile: `configs/combat/profiles/hostile_light_profile_v1.tres`
+   - `acquire_radius: 84.0` (mantido)
+   - `lose_radius: 120.0 -> 126.0`
+   - `target_memory_sec: 0.55 -> 0.65`
+   - `reacquire_interval_sec: 0.14 -> 0.16`
+   - `attack_stop_buffer: 3.8` (mantido, sem mudanca de eixo)
+   - objetivo: reduzir churn de reacquire e perda precoce de alvo sem alterar cadence/approach.
+   - gate MCP: `open_scene + play_scene + get_godot_errors` sem erro novo de parse/runtime.
+20. Ciclo Light-T2 aplicado (Approach/Stop only):
+   - profile: `configs/combat/profiles/hostile_light_profile_v1.tres`
+   - `attack_stop_buffer: 3.8 -> 4.2`
+   - targeting mantido do T1:
+     - `acquire_radius: 84.0`
+     - `lose_radius: 126.0`
+     - `target_memory_sec: 0.65`
+     - `reacquire_interval_sec: 0.16`
+   - leitura de telemetria:
+     - `attack_stop_distance: 24.2 -> 23.8`
+     - ciclo de combate preservado sem erro novo.
+21. Ciclo Light-T3 aplicado (Cadence only):
+   - action: `configs/combat/hostile_light_attack_v1.tres`
+   - `recover_sec: 0.20 -> 0.22`
+   - `cooldown_sec: 0.28 -> 0.32`
+   - sem mudanca de targeting/approach.
+   - leitura de telemetria:
+     - ritmo de commits mais limpo (menos pressao entre ataques),
+     - loop funcional mantido (`attack_pending/finished` coerentes),
+     - sem erro novo de parse/runtime.

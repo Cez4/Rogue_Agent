@@ -175,6 +175,21 @@ Atualizacao de estado:
    - `docs/guia-saude-projeto-godot-limboai-2026-05-09.md`
 6. Estudo de saude operacional consolidado (auditoria + boas praticas oficiais):
    - `docs/estudo-saude-projeto-godot-limboai-2026-05-09.md`
+7. Checklist unico para producao de novos hostis por dados:
+   - `docs/enemy-profile-checklist-v1.md`
+8. Tuning Light (Targeting-only) iniciado:
+   - `lose_radius 120.0 -> 126.0`
+   - `target_memory_sec 0.55 -> 0.65`
+   - `reacquire_interval_sec 0.14 -> 0.16`
+   - `acquire_radius` e `attack_stop_buffer` mantidos (sem mistura de eixo).
+9. Tuning Light avancou com dois ciclos adicionais:
+   - T2 Approach/Stop-only:
+     - `attack_stop_buffer 3.8 -> 4.2`
+     - `attack_stop_distance` observado: `24.2 -> 23.8`
+   - T3 Cadence-only:
+     - `recover_sec 0.20 -> 0.22`
+     - `cooldown_sec 0.28 -> 0.32`
+   - resultado: loop de combate mantido estavel com telemetria coerente e sem erro novo.
 4. Evoluir telemetria BT:
    - opcional: eventos enter/exit separados por task para analise de arvore.
    - opcional: presets de perfil (`quiet`, `balanced`, `verbose`) no painel debug.
