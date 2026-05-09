@@ -75,6 +75,7 @@ var _is_dead: bool = false
 
 const ActorCombatRuntimeRef = preload("res://Scripts/actors/services/actor_combat_runtime.gd")
 const ActorSocialRuntimeRef = preload("res://Scripts/actors/services/actor_social_runtime.gd")
+const ActorStatsRuntimeRef = preload("res://Scripts/actors/services/actor_stats_runtime.gd")
 const Anim8DirUtilsRef = preload("res://Scripts/actors/services/anim8dir_utils.gd")
 
 
@@ -262,6 +263,14 @@ func set_current_emote_priority(value: int) -> void:
 
 func get_emotion_bubble() -> AnimatedSprite2D:
 	return emotion_bubble
+
+
+func get_stats_component() -> StatsComponent:
+	return _stats
+
+
+func set_stats_component(stats: StatsComponent) -> void:
+	_stats = stats
 
 
 func set_interaction_target(target: Node2D, stop_range: float = -1.0) -> void:
@@ -677,42 +686,15 @@ func _direction_vector_from_suffix(suffix: StringName) -> Vector2:
 
 
 func get_stat_value(stat_id: StringName, fallback: float = 0.0) -> float:
-	if _stats == null:
-		return fallback
-	return _stats.get_stat(stat_id, fallback)
+	return ActorStatsRuntimeRef.get_stat_value(self, stat_id, fallback)
 
 
 func _setup_stats() -> void:
-	_stats = get_node_or_null(^"Stats") as StatsComponent
-	if _stats == null:
-		_stats = StatsComponent.new()
-		_stats.name = "Stats"
-		add_child(_stats)
-	_stats.set_base_stats({
-		&"perception_radius": base_perception_radius,
-		&"perception_min_distance": base_perception_min_distance,
-		&"perception_max_distance": base_perception_max_distance,
-		&"combat_acquire_radius": get_combat_acquire_radius(),
-		&"combat_lose_radius": get_combat_lose_radius(),
-		&"combat_target_memory_sec": get_combat_target_memory_sec(),
-		&"combat_reacquire_interval_sec": get_combat_reacquire_interval_sec(),
-		&"attack_range_bonus": base_attack_range_bonus,
-		&"attack_range_multiplier": base_attack_range_multiplier,
-		# Keep profile as source-of-truth for stop buffer in tuning passes.
-		&"attack_stop_buffer": combat_perception_profile.attack_stop_buffer if combat_perception_profile != null else base_attack_stop_buffer
-	})
-	_apply_loadout_modifiers_to_stats()
+	ActorStatsRuntimeRef.setup_stats(self)
 
 
 func _apply_loadout_modifiers_to_stats() -> void:
-	if _stats == null:
-		return
-	_stats.clear_modifiers()
-	if equipment_loadout == null:
-		return
-	_add_item_modifiers(equipment_loadout.weapon)
-	_add_item_modifiers(equipment_loadout.armor)
-	_add_item_modifiers(equipment_loadout.necklace)
+	ActorStatsRuntimeRef.apply_loadout_modifiers_to_stats(self)
 
 
 func _add_item_modifiers(item: Resource) -> void:
