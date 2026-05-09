@@ -2,26 +2,6 @@ class_name ActorSocialRuntime
 extends RefCounted
 const ActorRuntimeBridgeRef = preload("res://Scripts/actors/services/actor_runtime_bridge.gd")
 
-static func should_start_wander(actor: Node, delta: float) -> bool:
-	if not actor.enable_wander or actor.player_controlled:
-		return false
-	if actor.is_actor_moving():
-		ActorRuntimeBridgeRef.set_idle_elapsed(actor, 0.0)
-		return false
-	ActorRuntimeBridgeRef.set_idle_elapsed(actor, ActorRuntimeBridgeRef.get_idle_elapsed(actor) + delta)
-	return ActorRuntimeBridgeRef.get_idle_elapsed(actor) >= ActorRuntimeBridgeRef.get_next_wander_delay(actor)
-
-
-static func reset_wander_timer(actor: Node) -> void:
-	ActorRuntimeBridgeRef.set_next_wander_delay(actor, randf_range(actor.wander_delay_min_sec, actor.wander_delay_max_sec))
-
-
-static func schedule_next_wander_emote(actor: Node) -> void:
-	var now_sec: float = Time.get_ticks_msec() * 0.001
-	var min_cd: float = maxf(0.0, actor.wander_emote_min_cooldown_sec)
-	var max_cd: float = maxf(min_cd, actor.wander_emote_max_cooldown_sec)
-	ActorRuntimeBridgeRef.set_next_wander_emote_allowed(actor, now_sec + randf_range(min_cd, max_cd))
-
 
 static func trigger_look_cooldown(actor: Node) -> void:
 	var now_sec: float = Time.get_ticks_msec() * 0.001

@@ -109,6 +109,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	controller.handle_unhandled_input(event)
 
 
+# Gameplay API (BT/HSM/Controller)
 func _setup_hsm() -> void:
 	hsm.add_transition(idle_state, walk_state, idle_state.EVENT_FINISHED)
 	hsm.add_transition(walk_state, idle_state, walk_state.EVENT_FINISHED)
@@ -228,6 +229,7 @@ func set_stats_component(stats: StatsComponent) -> void:
 	_stats = stats
 
 
+# Bridge-only API (integracao tecnica de runtimes)
 func _bridge_get_float_state(key: StringName) -> float:
 	match key:
 		&"idle_elapsed":
