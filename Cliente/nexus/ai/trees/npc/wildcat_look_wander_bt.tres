@@ -35,6 +35,16 @@ var/last_attack_blocked_reason/type = 4
 var/last_attack_blocked_reason/value = ""
 var/last_attack_blocked_reason/hint = 0
 var/last_attack_blocked_reason/hint_string = ""
+var/debug_bt_decision_telemetry/name = &"debug_bt_decision_telemetry"
+var/debug_bt_decision_telemetry/type = 1
+var/debug_bt_decision_telemetry/value = true
+var/debug_bt_decision_telemetry/hint = 0
+var/debug_bt_decision_telemetry/hint_string = ""
+var/debug_bt_decision_dedupe_ms/name = &"debug_bt_decision_dedupe_ms"
+var/debug_bt_decision_dedupe_ms/type = 2
+var/debug_bt_decision_dedupe_ms/value = 700
+var/debug_bt_decision_dedupe_ms/hint = 0
+var/debug_bt_decision_dedupe_ms/hint_string = ""
 
 [sub_resource type="BTAction" id="BTAction_acquire_attack"]
 script = ExtResource("1_acquire_combat")

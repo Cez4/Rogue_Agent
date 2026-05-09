@@ -53,6 +53,7 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 4. Checklist minimo MCP: open_scene -> play_scene -> get_godot_errors -> conferir telemetria.
 5. Estudo tecnico e obrigatorio antes de codar: ler docs internos relevantes + docs oficiais Godot + docs oficiais LimboAI do tema da tarefa.
 6. Se houver duvida de API/comportamento, pesquisar primeiro nas docs oficiais e registrar as fontes no doc de estudo/estado.
+7. Toda logica nova exige teste funcional + evidencia de telemetria/log como criterio de aceite (lei do projeto).
 
 
 ## Fluxo oficial do projeto (obrigatorio)
@@ -63,6 +64,7 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 5. Conferir comportamento e telemetria no log (chase/attack/death/respawn) antes de seguir.
 6. Atualizar docs de estado quando houver mudanca estrutural.
 7. So entao commit + push.
+8. Nao considerar entrega concluida sem teste reproduzivel + telemetria conferida.
 
 
 ## Workflow de desacoplamento seguro (aprovado no projeto)

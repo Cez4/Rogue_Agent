@@ -107,6 +107,10 @@ Regra de autoridade:
 - tasks de combate principais instrumentadas com `task/status/reason`.
 - chave `debug_bt_decision_telemetry` em `AIBlackboardKeys`.
 - debug OFF por padrao (ativacao explicita por blackboard var).
+26. Telemetria de decisao BT (v2):
+- cobertura estendida para tasks sociais/wander (`acquire_target`, `is_target_in_range`, `look_at_target`, `idle_wander_loop`).
+- mantido modelo debug-gated (OFF por padrao).
+- validacao MCP + logs sem erro novo.
 25. Boundary 100% (hardening de consistencia):
 - runtimes legados de actor migrados para assinatura `actor: Actor8DirLimbo`.
 - reduz risco de acoplamento acidental fora de bridge/contrato tecnico.
@@ -116,8 +120,8 @@ Regra de autoridade:
 1. Smart Objects avancados (Talk/Use/Trade com affordances completos) fora desta fase.
 
 2. Telemetria BT ainda parcial:
-- combate principal coberto;
-- faltam tasks sociais/wander e (opcional) enter/exit separado por task.
+- combate + social/wander cobertos;
+- faltam (opcional) enter/exit separado por task.
 
 3. Acabamento de boundary:
 - concluido no essencial; manter apenas disciplina de contrato em novas tasks/runtimes.
@@ -158,7 +162,7 @@ Regra de autoridade:
 1. Boundary 100% (acabamento final):
    - concluido no essencial nesta fase.
 2. Telemetria BT v2:
-   - ampliar para tasks sociais/wander;
+   - concluida no essencial (social/wander cobertos);
    - opcional: eventos enter/exit separados.
 5. Teste de regressao MCP (obrigatorio em cada bloco):
    - `play_scene`

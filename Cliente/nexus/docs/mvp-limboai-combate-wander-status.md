@@ -102,6 +102,14 @@ Estado atual consolidado: `feat/bt-decision-telemetry-hardening`
     - `bt_request_attack.gd`
   - flag de controle no blackboard: `debug_bt_decision_telemetry` (default OFF).
   - chave centralizada em `Scripts/ai/blackboard_keys.gd`.
+- Telemetria de decisao BT (v2 - social/wander):
+  - cobertura adicionada para tasks:
+    - `bt_acquire_target_in_group.gd`
+    - `bt_is_target_in_range.gd`
+    - `bt_look_at_target.gd`
+    - `bt_idle_wander_loop.gd`
+  - eventos continuam `bt_decision` (`task/status/reason`) com debug OFF por padrao.
+  - validacao MCP sem parse/runtime novo.
 - Boundary hardening final (servicos legados):
   - runtimes de actor tipados para `Actor8DirLimbo` (contrato tecnico forte).
   - varredura final validada com MCP + logs sem erro novo.
@@ -125,7 +133,6 @@ Estado atual consolidado: `feat/bt-decision-telemetry-hardening`
 3. Boundary 100%:
    - concluido no essencial nesta fase.
 4. Evoluir telemetria BT:
-   - ampliar cobertura para tasks sociais/wander.
    - opcional: eventos enter/exit separados por task para analise de arvore.
 5. Feedback de hit:
    - FX local de impacto, flash de dano, popup de numero.

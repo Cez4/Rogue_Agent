@@ -11,6 +11,7 @@ Regra:
 4. So depois implementar.
 5. Validar no Godot MCP: `open_scene -> play_scene -> get_godot_errors`.
 6. Registrar fontes no doc de estudo/status da entrega.
+7. Toda logica nova deve ter teste funcional + telemetria/log comprovando o comportamento.
 
 Checklist rapido:
 - [ ] Doc interno lido.
@@ -18,6 +19,7 @@ Checklist rapido:
 - [ ] LimboAI docs lido.
 - [ ] Mudanca pequena e desacoplada.
 - [ ] MCP validado sem erro novo.
+- [ ] Telemetria/log do comportamento novo conferida.
 - [ ] Fontes registradas no doc.
 
 Fontes base:

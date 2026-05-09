@@ -17,6 +17,7 @@ Antes de alterar codigo ou cena:
 4. Aplicar mudanca minima necessaria (sem over-engineering).
 5. Testar no editor/cena alvo.
 6. Registrar no doc de progresso o que foi feito e por que.
+7. Confirmar telemetria/log da logica nova (evento/sinal esperado no output).
 
 ## Fontes oficiais prioritarias
 Godot:
@@ -45,7 +46,11 @@ LimboAI:
 - Contexto consultado (links usados).
 - Mudanca aplicada.
 - Evidencia de teste (cena/teste executado e resultado).
+- Evidencia de telemetria/log da logica nova (quando aplicavel, obrigatorio).
 - Riscos remanescentes (se houver).
+
+## Lei de aceite tecnico
+- Logica nova sem teste + telemetria comprovada nao e considerada concluida.
 
 ## Regra de evidencia (obrigatoria)
 - Toda mudanca tecnica deve citar pelo menos 1 fonte oficial (Godot ou LimboAI) no doc de estudo/status da entrega.
