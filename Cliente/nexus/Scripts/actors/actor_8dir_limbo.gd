@@ -210,64 +210,60 @@ func request_respawn_after_death() -> void:
 	await ActorLifecycleRuntimeRef.respawn_after_delay(self)
 
 
-func get_idle_elapsed_sec() -> float:
-	return _idle_elapsed_sec
-
-
-func set_idle_elapsed_sec(value: float) -> void:
-	_idle_elapsed_sec = value
-
-
-func get_next_wander_delay_sec() -> float:
-	return _next_wander_delay_sec
-
-
-func set_next_wander_delay_sec(value: float) -> void:
-	_next_wander_delay_sec = value
-
-
-func get_next_look_allowed_sec() -> float:
-	return _next_look_allowed_sec
-
-
-func set_next_look_allowed_sec(value: float) -> void:
-	_next_look_allowed_sec = value
-
-
-func get_next_wander_emote_allowed_sec() -> float:
-	return _next_wander_emote_allowed_sec
-
-
-func set_next_wander_emote_allowed_sec(value: float) -> void:
-	_next_wander_emote_allowed_sec = value
-
-
-func get_emote_request_id() -> int:
-	return _emote_request_id
-
-
-func increment_emote_request_id() -> void:
-	_emote_request_id += 1
-
-
-func get_current_emote_priority() -> int:
-	return _current_emote_priority
-
-
-func set_current_emote_priority(value: int) -> void:
-	_current_emote_priority = value
-
-
-func get_emotion_bubble() -> AnimatedSprite2D:
-	return emotion_bubble
-
-
 func get_stats_component() -> StatsComponent:
 	return _stats
 
 
 func set_stats_component(stats: StatsComponent) -> void:
 	_stats = stats
+
+
+func _bridge_get_float_state(key: StringName) -> float:
+	match key:
+		&"idle_elapsed":
+			return _idle_elapsed_sec
+		&"next_wander_delay":
+			return _next_wander_delay_sec
+		&"next_look_allowed":
+			return _next_look_allowed_sec
+		&"next_wander_emote_allowed":
+			return _next_wander_emote_allowed_sec
+		_:
+			return 0.0
+
+
+func _bridge_set_float_state(key: StringName, value: float) -> void:
+	match key:
+		&"idle_elapsed":
+			_idle_elapsed_sec = value
+		&"next_wander_delay":
+			_next_wander_delay_sec = value
+		&"next_look_allowed":
+			_next_look_allowed_sec = value
+		&"next_wander_emote_allowed":
+			_next_wander_emote_allowed_sec = value
+
+
+func _bridge_get_int_state(key: StringName) -> int:
+	match key:
+		&"emote_request_id":
+			return _emote_request_id
+		&"current_emote_priority":
+			return _current_emote_priority
+		_:
+			return 0
+
+
+func _bridge_set_int_state(key: StringName, value: int) -> void:
+	match key:
+		&"emote_request_id":
+			_emote_request_id = value
+		&"current_emote_priority":
+			_current_emote_priority = value
+
+
+func _bridge_get_emotion_bubble() -> AnimatedSprite2D:
+	return emotion_bubble
 
 
 func get_interaction_target() -> Node2D:

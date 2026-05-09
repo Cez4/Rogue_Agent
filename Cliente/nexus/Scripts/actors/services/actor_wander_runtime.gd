@@ -2,19 +2,20 @@ class_name ActorWanderRuntime
 extends RefCounted
 
 const ActorSocialRuntimeRef = preload("res://Scripts/actors/services/actor_social_runtime.gd")
+const ActorRuntimeBridgeRef = preload("res://Scripts/actors/services/actor_runtime_bridge.gd")
 
 static func should_start_wander(actor: Node, delta: float) -> bool:
 	if not actor.enable_wander or actor.player_controlled:
 		return false
 	if actor.is_actor_moving():
-		actor.set_idle_elapsed_sec(0.0)
+		ActorRuntimeBridgeRef.set_idle_elapsed(actor, 0.0)
 		return false
-	actor.set_idle_elapsed_sec(actor.get_idle_elapsed_sec() + delta)
-	return actor.get_idle_elapsed_sec() >= actor.get_next_wander_delay_sec()
+	ActorRuntimeBridgeRef.set_idle_elapsed(actor, ActorRuntimeBridgeRef.get_idle_elapsed(actor) + delta)
+	return ActorRuntimeBridgeRef.get_idle_elapsed(actor) >= ActorRuntimeBridgeRef.get_next_wander_delay(actor)
 
 
 static func begin_wander(actor: Node) -> void:
-	actor.set_idle_elapsed_sec(0.0)
+	ActorRuntimeBridgeRef.set_idle_elapsed(actor, 0.0)
 	reset_wander_timer(actor)
 	var target: Vector2 = pick_random_wander_target(actor)
 	if actor.motor != null:
@@ -29,11 +30,11 @@ static func try_play_wander_emote(actor: Node) -> void:
 	if not actor.is_actor_moving():
 		return
 	var now_sec: float = Time.get_ticks_msec() * 0.001
-	if now_sec < actor.get_next_wander_emote_allowed_sec():
+	if now_sec < ActorRuntimeBridgeRef.get_next_wander_emote_allowed(actor):
 		return
 	if randf() > clampf(actor.wander_emote_chance, 0.0, 1.0):
 		# Retry soon on miss, do not apply full cooldown or emote becomes too rare.
-		actor.set_next_wander_emote_allowed_sec(now_sec + 0.9)
+		ActorRuntimeBridgeRef.set_next_wander_emote_allowed(actor, now_sec + 0.9)
 		return
 	await ActorSocialRuntimeRef.show_emote(
 		actor,
@@ -49,7 +50,7 @@ static func schedule_next_wander_emote(actor: Node) -> void:
 	var now_sec: float = Time.get_ticks_msec() * 0.001
 	var min_cd: float = maxf(0.0, actor.wander_emote_min_cooldown_sec)
 	var max_cd: float = maxf(min_cd, actor.wander_emote_max_cooldown_sec)
-	actor.set_next_wander_emote_allowed_sec(now_sec + randf_range(min_cd, max_cd))
+	ActorRuntimeBridgeRef.set_next_wander_emote_allowed(actor, now_sec + randf_range(min_cd, max_cd))
 
 
 static func pick_random_wander_target(actor: Node) -> Vector2:
@@ -71,4 +72,4 @@ static func pick_random_wander_target(actor: Node) -> Vector2:
 
 
 static func reset_wander_timer(actor: Node) -> void:
-	actor.set_next_wander_delay_sec(randf_range(actor.wander_delay_min_sec, actor.wander_delay_max_sec))
+	ActorRuntimeBridgeRef.set_next_wander_delay(actor, randf_range(actor.wander_delay_min_sec, actor.wander_delay_max_sec))

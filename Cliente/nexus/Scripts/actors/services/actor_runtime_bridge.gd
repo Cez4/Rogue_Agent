@@ -41,3 +41,56 @@ static func reset_wander_timer(actor: Node) -> void:
 
 static func on_health_death(actor: Node) -> void:
 	actor._on_health_death()
+
+
+static func get_idle_elapsed(actor: Node) -> float:
+	return float(actor._bridge_get_float_state(&"idle_elapsed"))
+
+
+static func set_idle_elapsed(actor: Node, value: float) -> void:
+	actor._bridge_set_float_state(&"idle_elapsed", value)
+
+
+static func get_next_wander_delay(actor: Node) -> float:
+	return float(actor._bridge_get_float_state(&"next_wander_delay"))
+
+
+static func set_next_wander_delay(actor: Node, value: float) -> void:
+	actor._bridge_set_float_state(&"next_wander_delay", value)
+
+
+static func get_next_look_allowed(actor: Node) -> float:
+	return float(actor._bridge_get_float_state(&"next_look_allowed"))
+
+
+static func set_next_look_allowed(actor: Node, value: float) -> void:
+	actor._bridge_set_float_state(&"next_look_allowed", value)
+
+
+static func get_next_wander_emote_allowed(actor: Node) -> float:
+	return float(actor._bridge_get_float_state(&"next_wander_emote_allowed"))
+
+
+static func set_next_wander_emote_allowed(actor: Node, value: float) -> void:
+	actor._bridge_set_float_state(&"next_wander_emote_allowed", value)
+
+
+static func get_emote_request_id(actor: Node) -> int:
+	return int(actor._bridge_get_int_state(&"emote_request_id"))
+
+
+static func increment_emote_request_id(actor: Node) -> void:
+	var next_id: int = get_emote_request_id(actor) + 1
+	actor._bridge_set_int_state(&"emote_request_id", next_id)
+
+
+static func get_current_emote_priority(actor: Node) -> int:
+	return int(actor._bridge_get_int_state(&"current_emote_priority"))
+
+
+static func set_current_emote_priority(actor: Node, value: int) -> void:
+	actor._bridge_set_int_state(&"current_emote_priority", value)
+
+
+static func get_emotion_bubble(actor: Node) -> AnimatedSprite2D:
+	return actor._bridge_get_emotion_bubble()
