@@ -74,6 +74,7 @@ var _stats: StatsComponent
 var _is_dead: bool = false
 
 const ActorCombatRuntimeRef = preload("res://Scripts/actors/services/actor_combat_runtime.gd")
+const ActorSocialRuntimeRef = preload("res://Scripts/actors/services/actor_social_runtime.gd")
 const Anim8DirUtilsRef = preload("res://Scripts/actors/services/anim8dir_utils.gd")
 
 
@@ -201,6 +202,66 @@ func get_bt_player() -> Node:
 func set_brain_active(active: bool) -> void:
 	if bt_player != null and bt_player.has_method("set"):
 		bt_player.set("active", active)
+
+
+func play_die_animation_runtime() -> void:
+	_play_die_animation()
+
+
+func request_respawn_after_death() -> void:
+	_respawn_after_delay()
+
+
+func get_idle_elapsed_sec() -> float:
+	return _idle_elapsed_sec
+
+
+func set_idle_elapsed_sec(value: float) -> void:
+	_idle_elapsed_sec = value
+
+
+func get_next_wander_delay_sec() -> float:
+	return _next_wander_delay_sec
+
+
+func set_next_wander_delay_sec(value: float) -> void:
+	_next_wander_delay_sec = value
+
+
+func get_next_look_allowed_sec() -> float:
+	return _next_look_allowed_sec
+
+
+func set_next_look_allowed_sec(value: float) -> void:
+	_next_look_allowed_sec = value
+
+
+func get_next_wander_emote_allowed_sec() -> float:
+	return _next_wander_emote_allowed_sec
+
+
+func set_next_wander_emote_allowed_sec(value: float) -> void:
+	_next_wander_emote_allowed_sec = value
+
+
+func get_emote_request_id() -> int:
+	return _emote_request_id
+
+
+func increment_emote_request_id() -> void:
+	_emote_request_id += 1
+
+
+func get_current_emote_priority() -> int:
+	return _current_emote_priority
+
+
+func set_current_emote_priority(value: int) -> void:
+	_current_emote_priority = value
+
+
+func get_emotion_bubble() -> AnimatedSprite2D:
+	return emotion_bubble
 
 
 func set_interaction_target(target: Node2D, stop_range: float = -1.0) -> void:
@@ -496,14 +557,7 @@ func _estimate_animation_length_sec(animation_name: StringName) -> float:
 
 
 func should_start_wander(delta: float) -> bool:
-	if not enable_wander or player_controlled:
-		return false
-	if is_actor_moving():
-		_idle_elapsed_sec = 0.0
-		return false
-	_idle_elapsed_sec += delta
-	var should_wander := _idle_elapsed_sec >= _next_wander_delay_sec
-	return should_wander
+	return ActorSocialRuntimeRef.should_start_wander(self, delta)
 
 
 func begin_wander() -> void:
@@ -537,27 +591,11 @@ func look_toward(target_position: Vector2) -> void:
 
 
 func can_look_target(target: Node2D) -> bool:
-	if target == null or not is_instance_valid(target):
-		return false
-	if is_actor_moving():
-		return false
-	var now_sec: float = Time.get_ticks_msec() * 0.001
-	if now_sec < _next_look_allowed_sec:
-		return false
-
-	var min_dist: float = get_perception_min_distance()
-	var max_dist: float = maxf(get_perception_max_distance(), get_stat_value(&"perception_radius", base_perception_radius))
-	if max_dist < min_dist:
-		max_dist = min_dist
-
-	var dist_sq: float = global_position.distance_squared_to(target.global_position)
-	return dist_sq >= min_dist * min_dist and dist_sq <= max_dist * max_dist
+	return ActorSocialRuntimeRef.can_look_target(self, target)
 
 
 func trigger_look_cooldown() -> void:
-	var now_sec: float = Time.get_ticks_msec() * 0.001
-	var cooldown: float = maxf(0.0, look_cooldown_sec + randf_range(0.0, maxf(0.0, look_cooldown_jitter_sec)))
-	_next_look_allowed_sec = now_sec + cooldown
+	ActorSocialRuntimeRef.trigger_look_cooldown(self)
 
 
 func stop_movement_for_look() -> void:
@@ -585,45 +623,15 @@ func try_play_wander_emote() -> void:
 
 
 func _schedule_next_wander_emote() -> void:
-	var now_sec: float = Time.get_ticks_msec() * 0.001
-	var min_cd: float = maxf(0.0, wander_emote_min_cooldown_sec)
-	var max_cd: float = maxf(min_cd, wander_emote_max_cooldown_sec)
-	_next_wander_emote_allowed_sec = now_sec + randf_range(min_cd, max_cd)
+	ActorSocialRuntimeRef.schedule_next_wander_emote(self)
 
 
 func _show_emote(animation_name: StringName, loop: bool, hold_sec: float, priority: int) -> void:
-	if emotion_bubble == null or emotion_bubble.sprite_frames == null:
-		return
-	if not emotion_bubble.sprite_frames.has_animation(animation_name):
-		return
-	if priority < _current_emote_priority:
-		return
-
-	_current_emote_priority = priority
-	_emote_request_id += 1
-	var request_id := _emote_request_id
-
-	emotion_bubble.visible = true
-	emotion_bubble.animation = animation_name
-	emotion_bubble.sprite_frames.set_animation_loop(animation_name, loop)
-	emotion_bubble.play(animation_name)
-
-	if loop:
-		await get_tree().create_timer(maxf(0.05, hold_sec)).timeout
-	else:
-		await get_tree().create_timer(maxf(0.05, hold_sec)).timeout
-
-	if request_id != _emote_request_id:
-		return
-	_hide_emote_immediate()
+	await ActorSocialRuntimeRef.show_emote(self, animation_name, loop, hold_sec, priority)
 
 
 func _hide_emote_immediate() -> void:
-	if emotion_bubble == null:
-		return
-	emotion_bubble.stop()
-	emotion_bubble.visible = false
-	_current_emote_priority = -1
+	ActorSocialRuntimeRef.hide_emote_immediate(self)
 
 
 func _pick_random_wander_target() -> Vector2:
@@ -645,7 +653,7 @@ func _pick_random_wander_target() -> Vector2:
 
 
 func _reset_wander_timer() -> void:
-	_next_wander_delay_sec = randf_range(wander_delay_min_sec, wander_delay_max_sec)
+	ActorSocialRuntimeRef.reset_wander_timer(self)
 
 
 func _play_directional_animation(prefix: String, direction_source: Vector2) -> bool:

@@ -57,13 +57,13 @@ static func on_health_death(actor: Node) -> void:
 	if actor.hsm != null:
 		actor.hsm.set_active(false)
 	actor.cancel_all_intents()
-	actor._play_die_animation()
+	actor.play_die_animation_runtime()
 	disable_combat_collision(actor)
 	CombatTelemetry.emit_event(&"target_died", {"actor": actor.name})
 	if not actor.enable_respawn:
 		return
 	if not actor.player_controlled:
-		actor._respawn_after_delay()
+		actor.request_respawn_after_death()
 
 
 static func disable_combat_collision(actor: Node) -> void:
