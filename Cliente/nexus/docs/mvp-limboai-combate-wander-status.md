@@ -34,6 +34,16 @@ Atualizacao de estado:
 4. Boundary/bridge do actor estabilizado (desacoplamento concluido na fase atual).
 5. Paridade de combate 8dir concluida (hostis com Health + Hurtbox + AttackHitbox).
 
+## Correcoes criticas recentes (runtime/lifecycle)
+1. Hitbox seguro em callback de fisica:
+   - `hitbox_component.gd` passou a usar `set_deferred("monitoring", ...)` e `set_deferred("monitorable", ...)`.
+   - remove erro: `Function blocked during in/out signal`.
+2. Fluxo de morte do player confirmado por log:
+   - `target_died` -> `chase_canceled(reason=death)` -> `respawned`.
+3. Causa raiz de "travar em pe" encontrada em override de cena instanciada:
+   - `mundo.tscn` sobrescrevia `die_prefix/enable_respawn/respawn_delay_sec` do player.
+   - regra oficial: auditar override no mapa principal sempre que `player.tscn` parecer "ignorado".
+
 ## Tuning v1 consolidado
 1. Wildcat v1: concluido.
 2. Player targeting: estabilizado para chase manual com cancelamento por motivo.

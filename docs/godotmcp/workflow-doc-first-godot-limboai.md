@@ -42,6 +42,7 @@ LimboAI:
 - Manter mudancas pequenas, testaveis e reversiveis.
 - Para multiplayer/co-op: cliente envia intencao, estado oficial vem do host.
 - Em combate melee, garantir paridade de composicao nas cenas (Health + Hurtbox + AttackHitbox) para todo ator combatente.
+- Em bugs de morte/respawn, auditar primeiro overrides da cena instanciadora (ex.: `mundo.tscn`) antes de mexer no script base.
 
 ## Saida minima esperada por tarefa
 - Contexto consultado (links usados).
@@ -53,6 +54,7 @@ LimboAI:
 ## Lei de aceite tecnico
 - Logica nova sem teste + telemetria comprovada nao e considerada concluida.
 - Auditoria periodica de saude (docs do projeto + docs web oficiais) e obrigatoria ao abrir nova fase.
+- Em alteracao de lifecycle/combat, validar no log ao menos: `target_died`, `chase_canceled` com motivo e `respawned` (quando aplicavel).
 
 ## Regra de evidencia (obrigatoria)
 - Toda mudanca tecnica deve citar pelo menos 1 fonte oficial (Godot ou LimboAI) no doc de estudo/status da entrega.

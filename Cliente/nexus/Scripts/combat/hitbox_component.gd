@@ -17,8 +17,9 @@ func _ready() -> void:
 
 
 func set_hitbox_enabled(enabled: bool) -> void:
-	monitoring = enabled
-	monitorable = enabled
+	# Physics-safe toggling: this can be called during in/out signals.
+	set_deferred("monitoring", enabled)
+	set_deferred("monitorable", enabled)
 	if enabled:
 		_begin_attack_window()
 

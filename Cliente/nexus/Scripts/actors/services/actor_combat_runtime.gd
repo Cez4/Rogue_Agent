@@ -61,14 +61,13 @@ static func on_health_death(actor: Actor8DirLimbo) -> void:
 	disable_brain_runtime(actor)
 	if actor.hsm != null:
 		actor.hsm.set_active(false)
-	actor.cancel_all_intents()
+	actor.cancel_all_intents(&"death")
 	actor._bridge_play_die_animation_runtime()
 	disable_combat_collision(actor)
 	CombatTelemetry.emit_event(&"target_died", {"actor": actor.name})
 	if not actor.enable_respawn:
 		return
-	if not actor.player_controlled:
-		actor._bridge_request_respawn_after_death()
+	actor._bridge_request_respawn_after_death()
 
 
 static func disable_combat_collision(actor: Actor8DirLimbo) -> void:

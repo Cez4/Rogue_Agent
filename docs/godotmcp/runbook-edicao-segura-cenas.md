@@ -87,3 +87,11 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 6. So consolidar (remover wrappers) depois que MCP estiver limpo.
 7. Atualizar docs de estado na mesma entrega.
 
+
+## Regra critica (cenas instanciadas)
+1. Alterar `res://cenas/player.tscn` nao garante efeito em `res://cenas/mundo.tscn` se houver override no nodo instanciado.
+2. Sempre auditar overrides no mapa principal para propriedades criticas:
+   - `die_prefix`
+   - `enable_respawn`
+   - `respawn_delay_sec`
+3. Em bug de "travou", confirmar primeiro no log se houve `target_died` (morte real) antes de tratar como freeze.

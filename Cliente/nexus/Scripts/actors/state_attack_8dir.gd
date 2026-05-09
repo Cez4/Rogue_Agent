@@ -50,6 +50,15 @@ func _enter() -> void:
 	_finish_attack()
 
 
+func _exit() -> void:
+	# Hardening: if this state is interrupted mid-coroutine, ensure combat does not stay locked.
+	if agent != null:
+		var hitbox := agent.get_node_or_null(hitbox_path) as HitboxComponent
+		if hitbox != null:
+			hitbox.set_hitbox_enabled(false)
+		agent.clear_attack_pending()
+
+
 func _apply_action_to_hitbox(hitbox: Node) -> void:
 	var resolved_action: Resource = _resolved_action_data()
 	if resolved_action == null:
