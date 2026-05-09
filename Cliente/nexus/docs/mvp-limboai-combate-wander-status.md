@@ -161,6 +161,10 @@ Atualizacao de estado:
 3. Tuning v1 fechado com baseline aprovado (wildcat + player + telemetria de cancel reason).
 4. Proxima fase: padronizar pipeline BT de combate para novos hostis (base enemy template).
    - baseline inicial criado: `res://cenas/enemies/hostile_enemy_base.tscn`.
+   - A/B inicial criado por dados (sem mudar logica core):
+     - `res://cenas/enemies/hostile_enemy_light.tscn`
+     - `res://cenas/enemies/hostile_enemy_brute.tscn`
+     - perfis/action dedicados em `configs/combat/`.
 5. Guardrails de saude do projeto documentados:
    - `docs/guia-saude-projeto-godot-limboai-2026-05-09.md`
 4. Evoluir telemetria BT:

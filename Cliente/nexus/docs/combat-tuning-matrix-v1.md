@@ -227,3 +227,14 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
    - `lose_radius: 184.0` (mantido)
    - `target_memory_sec: 1.9` (mantido)
    - objetivo: reduzir ruido de reacquire/blocked em kite sem afetar lock manual.
+15. Producao data-driven de hostis (A/B de personalidade):
+   - novos profiles:
+     - `configs/combat/profiles/hostile_light_profile_v1.tres`
+     - `configs/combat/profiles/hostile_brute_profile_v1.tres`
+   - novos actions:
+     - `configs/combat/hostile_light_attack_v1.tres` (`max_targets_per_attack=1`)
+     - `configs/combat/hostile_brute_attack_v1.tres` (`max_targets_per_attack=2`)
+   - novas cenas derivadas do template:
+     - `cenas/enemies/hostile_enemy_light.tscn`
+     - `cenas/enemies/hostile_enemy_brute.tscn`
+   - validacao MCP: `play_scene + get_godot_errors` sem erro novo de parse/runtime.

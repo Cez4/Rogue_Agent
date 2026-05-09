@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CombatActionData" format=3]
+
+[ext_resource type="Script" path="res://Scripts/combat/combat_action_data.gd" id="1_action"]
+
+[resource]
+script = ExtResource("1_action")
+attack_range = 50.0
+windup_sec = 0.18
+active_sec = 0.12
+recover_sec = 0.3
+cooldown_sec = 0.42
+damage = 1.35
+knockback_enabled = false
+knockback_strength = 300.0
+one_hit_per_target_per_attack = true
+max_targets_per_attack = 2

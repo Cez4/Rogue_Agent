@@ -9,3 +9,5 @@ extends Resource
 @export var damage: float = 1.0
 @export var knockback_enabled: bool = false
 @export var knockback_strength: float = 280.0
+@export var one_hit_per_target_per_attack: bool = true
+@export var max_targets_per_attack: int = 0

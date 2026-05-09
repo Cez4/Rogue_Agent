@@ -11,7 +11,12 @@
 [ext_resource type="PackedScene" path="res://cenas/debug/debug_telemetry_panel.tscn" id="11_8iuxu"]
 [ext_resource type="AudioStream" uid="uid://dm4v3qusgnc6p" path="res://Assets/Sounds/Cidades/moonlight.mp3" id="11_esbpk"]
 [ext_resource type="PackedScene" uid="uid://dr5gls4idb7d1" path="res://cenas/villager_1.tscn" id="11_puycu"]
-[ext_resource type="Script" path="res://Scripts/debug/debug_telemetry_panel.gd" id="12_843sb"]
+[ext_resource type="PackedScene" uid="uid://daw0a7qkbtyg2" path="res://cenas/enemies/hostile_enemy_base.tscn" id="12_puycu"]
+[ext_resource type="PackedScene" uid="uid://daw0a7qkbtyg2" path="res://cenas/enemies/hostile_enemy_light.tscn" id="13_dww6m"]
+[ext_resource type="Script" uid="uid://dbux36mt8uqe5" path="res://Scripts/actors/actor_8dir_limbo.gd" id="14_rdmaj"]
+[ext_resource type="Resource" path="res://configs/combat/profiles/hostile_light_profile_v1.tres" id="15_3aakq"]
+[ext_resource type="PackedScene" uid="uid://daw0a7qkbtyg2" path="res://cenas/enemies/hostile_enemy_brute.tscn" id="16_3aakq"]
+[ext_resource type="Resource" path="res://configs/combat/profiles/hostile_brute_profile_v1.tres" id="17_uhglm"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_puycu"]
 
@@ -123,5 +128,65 @@ y_sort_enabled = true
 position = Vector2(204, -157)
 tile_set = SubResource("TileSet_hbp8a")
 
-[node name="DebugTelemetryPanel" type="CanvasLayer" parent="." unique_id=1958740719 instance=ExtResource("11_8iuxu")]
-script = ExtResource("12_843sb")
+[node name="DebugTelemetryPanel" parent="." unique_id=1958740719 instance=ExtResource("11_8iuxu")]
+
+[node name="HostileEnemyBase" parent="." unique_id=1801204926 instance=ExtResource("12_puycu")]
+position = Vector2(686, -96)
+
+[node name="HostileEnemyLight" type="CharacterBody2D" parent="." unique_id=1559449004 instance=ExtResource("13_dww6m")]
+y_sort_enabled = true
+position = Vector2(760, -120)
+collision_layer = 2
+script = ExtResource("14_rdmaj")
+combat_perception_profile = ExtResource("15_3aakq")
+player_controlled = false
+is_hostile = true
+use_bt_brain = true
+attack_prefix = "Attack1"
+enable_respawn = true
+respawn_delay_sec = 5.0
+look_interest_radius = 72.0
+look_interest_min_distance = 22.0
+look_interest_max_distance = 44.0
+look_hold_sec = 0.65
+look_cooldown_sec = 9.0
+look_cooldown_jitter_sec = 4.0
+look_emote_hold_sec = 1.55
+enable_wander = true
+wander_delay_min_sec = 0.7
+wander_delay_max_sec = 3.5
+wander_radius_min = 56.0
+wander_radius_max = 116.0
+wander_emote_chance = 0.17
+wander_emote_min_cooldown_sec = 11.0
+wander_emote_max_cooldown_sec = 18.0
+wander_emote_hold_sec = 2.6
+
+[node name="HostileEnemyBrute" type="CharacterBody2D" parent="." unique_id=1083701903 instance=ExtResource("16_3aakq")]
+y_sort_enabled = true
+position = Vector2(840, -120)
+collision_layer = 2
+script = ExtResource("14_rdmaj")
+combat_perception_profile = ExtResource("17_uhglm")
+player_controlled = false
+is_hostile = true
+use_bt_brain = true
+attack_prefix = "Attack1"
+enable_respawn = true
+respawn_delay_sec = 5.0
+look_interest_radius = 72.0
+look_interest_min_distance = 22.0
+look_interest_max_distance = 44.0
+look_hold_sec = 0.65
+look_cooldown_sec = 9.0
+look_cooldown_jitter_sec = 4.0
+look_emote_hold_sec = 1.55
+enable_wander = true
+wander_delay_min_sec = 0.7
+wander_delay_max_sec = 3.5
+wander_radius_min = 56.0
+wander_radius_max = 116.0
+wander_emote_chance = 0.17
+wander_emote_min_cooldown_sec = 11.0
+wander_emote_max_cooldown_sec = 18.0
+wander_emote_hold_sec = 2.6

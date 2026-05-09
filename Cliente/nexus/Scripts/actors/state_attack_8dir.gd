@@ -57,6 +57,8 @@ func _apply_action_to_hitbox(hitbox: Node) -> void:
 	hitbox.damage = resolved_action.get("damage")
 	hitbox.knockback_enabled = resolved_action.get("knockback_enabled")
 	hitbox.knockback_strength = resolved_action.get("knockback_strength")
+	hitbox.one_hit_per_target_per_attack = resolved_action.get("one_hit_per_target_per_attack")
+	hitbox.max_targets_per_attack = resolved_action.get("max_targets_per_attack")
 
 
 func _windup() -> float:

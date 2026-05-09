@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CombatPerceptionProfile" format=3]
+
+[ext_resource type="Script" path="res://Scripts/combat/combat_perception_profile.gd" id="1_profile"]
+
+[resource]
+script = ExtResource("1_profile")
+acquire_radius = 84.0
+lose_radius = 120.0
+target_memory_sec = 0.55
+reacquire_interval_sec = 0.14
+attack_stop_buffer = 3.8
