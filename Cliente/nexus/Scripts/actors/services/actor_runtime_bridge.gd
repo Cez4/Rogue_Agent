@@ -2,11 +2,11 @@ class_name ActorRuntimeBridge
 extends RefCounted
 
 static func set_interaction_target_internal(actor: Actor8DirLimbo, target: Node2D, stop_range: float) -> void:
-	actor.set_interaction_target_internal(target, stop_range)
+	actor._bridge_set_interaction_target_internal(target, stop_range)
 
 
 static func clear_interaction_target_internal(actor: Actor8DirLimbo) -> void:
-	actor.clear_interaction_target_internal()
+	actor._bridge_clear_interaction_target_internal()
 
 
 static func play_directional(actor: Actor8DirLimbo, prefix: String, direction_source: Vector2) -> bool:

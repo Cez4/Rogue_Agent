@@ -3,11 +3,11 @@ extends RefCounted
 
 static func set_combat_target(actor: Actor8DirLimbo, target: Node2D, manual_lock: bool = true) -> void:
 	if target == null or not is_instance_valid(target):
-		actor.reset_combat_target_runtime()
+		actor._bridge_reset_combat_target_runtime()
 		return
 	var current_target: Node2D = actor.get_combat_target()
 	var changed_target: bool = current_target != target
-	actor.set_combat_target_internal(target, manual_lock)
+	actor._bridge_set_combat_target_internal(target, manual_lock)
 	actor.clear_interaction_target()
 	actor.face_toward(target.global_position)
 	if changed_target:
@@ -24,7 +24,7 @@ static func clear_combat_target(actor: Actor8DirLimbo) -> void:
 	var old_target_name: String = ""
 	if had_target:
 		old_target_name = current_target.name
-	actor.reset_combat_target_runtime()
+	actor._bridge_reset_combat_target_runtime()
 	if had_target:
 		CombatTelemetry.emit_event(&"target_lost", {
 			"actor": actor.name,
@@ -51,19 +51,19 @@ static func is_target_alive(target: Node2D) -> bool:
 
 
 static func on_health_death(actor: Actor8DirLimbo) -> void:
-	actor.set_actor_dead(true)
+	actor._bridge_set_actor_dead(true)
 	actor.clear_attack_pending()
 	disable_brain_runtime(actor)
 	if actor.hsm != null:
 		actor.hsm.set_active(false)
 	actor.cancel_all_intents()
-	actor.play_die_animation_runtime()
+	actor._bridge_play_die_animation_runtime()
 	disable_combat_collision(actor)
 	CombatTelemetry.emit_event(&"target_died", {"actor": actor.name})
 	if not actor.enable_respawn:
 		return
 	if not actor.player_controlled:
-		actor.request_respawn_after_death()
+		actor._bridge_request_respawn_after_death()
 
 
 static func disable_combat_collision(actor: Actor8DirLimbo) -> void:

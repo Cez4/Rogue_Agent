@@ -150,6 +150,10 @@ func cancel_chase_attack() -> void:
 	ActorCombatRuntimeRef.cancel_chase_attack(self)
 
 
+func stop_motor_movement() -> void:
+	_bridge_stop_motor_movement()
+
+
 func is_combat_target_manual_lock() -> bool:
 	return _combat_target_manual_lock
 
@@ -158,33 +162,33 @@ func get_combat_target() -> Node2D:
 	return _combat_target
 
 
-func set_combat_target_internal(target: Node2D, manual_lock: bool) -> void:
+func _bridge_set_combat_target_internal(target: Node2D, manual_lock: bool) -> void:
 	_combat_target = target
 	_combat_target_manual_lock = manual_lock
 
 
-func set_interaction_target_internal(target: Node2D, stop_range: float) -> void:
+func _bridge_set_interaction_target_internal(target: Node2D, stop_range: float) -> void:
 	_interaction_target = target
 	_interaction_target_range = stop_range
 
 
-func clear_interaction_target_internal() -> void:
+func _bridge_clear_interaction_target_internal() -> void:
 	_interaction_target = null
 	_interaction_target_range = 0.0
 
 
-func reset_combat_target_runtime() -> void:
+func _bridge_reset_combat_target_runtime() -> void:
 	_combat_target = null
 	_combat_target_manual_lock = false
 	_next_chase_repath_sec = 0.0
 
 
-func stop_motor_movement() -> void:
+func _bridge_stop_motor_movement() -> void:
 	if motor != null:
 		motor.stop()
 
 
-func set_actor_dead(dead: bool) -> void:
+func _bridge_set_actor_dead(dead: bool) -> void:
 	_is_dead = dead
 
 
@@ -213,19 +217,19 @@ func set_brain_active(active: bool) -> void:
 		bt_player.set("active", active)
 
 
-func play_die_animation_runtime() -> void:
+func _bridge_play_die_animation_runtime() -> void:
 	ActorAnimationRuntimeRef.play_die_animation(animated_sprite, die_prefix, _last_direction_suffix)
 
 
-func request_respawn_after_death() -> void:
+func _bridge_request_respawn_after_death() -> void:
 	await ActorLifecycleRuntimeRef.respawn_after_delay(self)
 
 
-func get_stats_component() -> StatsComponent:
+func _bridge_get_stats_component() -> StatsComponent:
 	return _stats
 
 
-func set_stats_component(stats: StatsComponent) -> void:
+func _bridge_set_stats_component(stats: StatsComponent) -> void:
 	_stats = stats
 
 
@@ -278,19 +282,19 @@ func _bridge_get_emotion_bubble() -> AnimatedSprite2D:
 	return emotion_bubble
 
 
-func get_interaction_target() -> Node2D:
+func _bridge_get_interaction_target() -> Node2D:
 	return _interaction_target
 
 
-func get_interaction_target_range() -> float:
+func _bridge_get_interaction_target_range() -> float:
 	return _interaction_target_range
 
 
-func get_next_chase_repath_sec() -> float:
+func _bridge_get_next_chase_repath_sec() -> float:
 	return _next_chase_repath_sec
 
 
-func set_next_chase_repath_sec(value: float) -> void:
+func _bridge_set_next_chase_repath_sec(value: float) -> void:
 	_next_chase_repath_sec = value
 
 

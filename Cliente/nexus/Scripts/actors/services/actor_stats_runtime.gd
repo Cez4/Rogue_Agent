@@ -7,7 +7,7 @@ static func setup_stats(actor: Actor8DirLimbo) -> void:
 		stats = StatsComponent.new()
 		stats.name = "Stats"
 		actor.add_child(stats)
-	actor.set_stats_component(stats)
+	actor._bridge_set_stats_component(stats)
 	stats.set_base_stats({
 		&"perception_radius": actor.base_perception_radius,
 		&"perception_min_distance": actor.base_perception_min_distance,
@@ -24,7 +24,7 @@ static func setup_stats(actor: Actor8DirLimbo) -> void:
 
 
 static func apply_loadout_modifiers_to_stats(actor: Actor8DirLimbo) -> void:
-	var stats: StatsComponent = actor.get_stats_component()
+	var stats: StatsComponent = actor._bridge_get_stats_component()
 	if stats == null:
 		return
 	stats.clear_modifiers()
@@ -41,13 +41,13 @@ static func add_item_modifiers(actor: Actor8DirLimbo, item: EquipmentData) -> vo
 	var mods: Array[StatModifier] = item.stat_modifiers
 	for modifier in mods:
 		if modifier != null:
-			var stats: StatsComponent = actor.get_stats_component()
+			var stats: StatsComponent = actor._bridge_get_stats_component()
 			if stats != null:
 				stats.add_modifier(modifier)
 
 
 static func get_stat_value(actor: Actor8DirLimbo, stat_id: StringName, fallback: float = 0.0) -> float:
-	var stats: StatsComponent = actor.get_stats_component()
+	var stats: StatsComponent = actor._bridge_get_stats_component()
 	if stats == null:
 		return fallback
 	return stats.get_stat(stat_id, fallback)
