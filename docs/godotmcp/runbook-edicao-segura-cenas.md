@@ -66,6 +66,16 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 7. Fluxo Git obrigatorio: git add -> git commit -> git status -sb (ahead 1) -> git push origin <branch> -> git status -sb final (sincronizado).
 8. Nao inverter ordem de commit/push e nao considerar concluido enquanto o push nao confirmar envio do commit local.
 9. Nao considerar entrega concluida sem teste reproduzivel + telemetria conferida.
+10. Nao executar comandos Git em paralelo (sempre serial).
+11. Se houver duvida de sync, validar com:
+   - `git rev-list --left-right --count origin/<branch>...HEAD`
+   - esperado em sync: `0 0`.
+12. Se ocorrer `index.lock: Permission denied`, tratar como problema operacional de permissao/sessao:
+   - repetir comando em modo elevado;
+   - manter fluxo normal (sem comandos destrutivos).
+13. Se ocorrer erro SSH intermitente (ex.: `couldn't create signal pipe`):
+   - repetir push explicito da branch;
+   - confirmar sincronizacao com `rev-list` + `status -sb`.
 
 
 ## Workflow de desacoplamento seguro (aprovado no projeto)
