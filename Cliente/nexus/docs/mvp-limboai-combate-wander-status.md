@@ -2,7 +2,12 @@
 
 Data: 2026-05-09
 Branch historica: `feat/mvp-combate-fase1`  
-Estado atual consolidado: `feat/telemetry-hardening-next`
+Estado atual consolidado: `feat/final-actor-decoupling-phase`
+
+Atualizacao de estado:
+- Plano final de desacoplamento do actor concluido (Cortes 1-4).
+- Checklist padrao de regressao para PR criado:
+  - `docs/checklist-regressao-pr-actor-bt-hsm.md`
 
 ## Objetivo atual
 - Base jogavel com:
