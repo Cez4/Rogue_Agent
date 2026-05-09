@@ -73,6 +73,7 @@ var _spawn_position: Vector2 = Vector2.ZERO
 var _stats: StatsComponent
 var _is_dead: bool = false
 
+const ActorAnimationRuntimeRef = preload("res://Scripts/actors/services/actor_animation_runtime.gd")
 const ActorCombatRuntimeRef = preload("res://Scripts/actors/services/actor_combat_runtime.gd")
 const ActorNavigationRuntimeRef = preload("res://Scripts/actors/services/actor_navigation_runtime.gd")
 const ActorSocialRuntimeRef = preload("res://Scripts/actors/services/actor_social_runtime.gd")
@@ -461,13 +462,7 @@ func _reset_combat_memory() -> void:
 
 
 func _play_die_animation() -> void:
-	if animated_sprite == null or animated_sprite.sprite_frames == null:
-		return
-	var animation_name: StringName = StringName("%s_%s" % [die_prefix, _last_direction_suffix])
-	if not animated_sprite.sprite_frames.has_animation(animation_name):
-		return
-	animated_sprite.sprite_frames.set_animation_loop(animation_name, false)
-	animated_sprite.play(animation_name)
+	ActorAnimationRuntimeRef.play_die_animation(animated_sprite, die_prefix, _last_direction_suffix)
 
 
 func face_toward(target_position: Vector2) -> void:
@@ -502,9 +497,7 @@ func play_attack_animation() -> void:
 	var played := _play_directional_animation(attack_prefix, dir)
 	if not played:
 		return
-	var animation_name := StringName("%s_%s" % [attack_prefix, _last_direction_suffix])
-	if animated_sprite != null and animated_sprite.sprite_frames != null and animated_sprite.sprite_frames.has_animation(animation_name):
-		animated_sprite.sprite_frames.set_animation_loop(animation_name, false)
+	ActorAnimationRuntimeRef.setup_attack_animation(animated_sprite, attack_prefix, _last_direction_suffix)
 
 
 func orient_attack_hitbox() -> void:
@@ -538,13 +531,7 @@ func wait_for_attack_animation_end(max_wait_sec: float = 1.2) -> void:
 
 
 func _estimate_animation_length_sec(animation_name: StringName) -> float:
-	if animated_sprite == null or animated_sprite.sprite_frames == null:
-		return 0.0
-	var frame_count: int = animated_sprite.sprite_frames.get_frame_count(animation_name)
-	var fps: float = animated_sprite.sprite_frames.get_animation_speed(animation_name)
-	if frame_count <= 0 or fps <= 0.0:
-		return 0.0
-	return float(frame_count) / fps
+	return ActorAnimationRuntimeRef.estimate_animation_length_sec(animated_sprite, animation_name)
 
 
 func should_start_wander(delta: float) -> bool:
@@ -648,15 +635,9 @@ func _reset_wander_timer() -> void:
 
 
 func _play_directional_animation(prefix: String, direction_source: Vector2) -> bool:
-	if animated_sprite == null or animated_sprite.sprite_frames == null:
-		return false
-	var suffix: StringName = Anim8DirUtilsRef.direction_suffix_from_vector(direction_source, _last_direction_suffix)
-	_last_direction_suffix = suffix
-	var animation_name: StringName = StringName("%s_%s" % [prefix, suffix])
-	if animated_sprite.sprite_frames.has_animation(animation_name):
-		animated_sprite.play(animation_name)
-		return true
-	return false
+	var result: Dictionary = ActorAnimationRuntimeRef.play_directional_animation(animated_sprite, prefix, direction_source, _last_direction_suffix)
+	_last_direction_suffix = result.get("suffix", _last_direction_suffix)
+	return bool(result.get("played", false))
 
 
 func _direction_suffix_from_vector(v: Vector2) -> StringName:
