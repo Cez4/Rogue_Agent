@@ -677,15 +677,3 @@ func _setup_stats() -> void:
 
 func _apply_loadout_modifiers_to_stats() -> void:
 	ActorStatsRuntimeRef.apply_loadout_modifiers_to_stats(self)
-
-
-func _add_item_modifiers(item: Resource) -> void:
-	if item == null:
-		return
-	if item.has_method("get"):
-		var mods: Variant = item.get("stat_modifiers")
-		if mods is Array:
-			for m in mods:
-				var modifier: StatModifier = m as StatModifier
-				if modifier != null:
-					_stats.add_modifier(modifier)
