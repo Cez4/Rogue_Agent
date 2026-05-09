@@ -8,8 +8,10 @@
 [ext_resource type="Texture2D" uid="uid://bmb2f7ekkjc1b" path="res://Assets/Tiles/Walls/Wall B1_E.png" id="6_bo0jt"]
 [ext_resource type="PackedScene" uid="uid://wpp7ba6ss3ad" path="res://cenas/player.tscn" id="8_i5d5d"]
 [ext_resource type="PackedScene" uid="uid://c0uxga3owxaus" path="res://cenas/wildcat_1.tscn" id="10_esbpk"]
+[ext_resource type="PackedScene" path="res://cenas/debug/debug_telemetry_panel.tscn" id="11_8iuxu"]
 [ext_resource type="AudioStream" uid="uid://dm4v3qusgnc6p" path="res://Assets/Sounds/Cidades/moonlight.mp3" id="11_esbpk"]
 [ext_resource type="PackedScene" uid="uid://dr5gls4idb7d1" path="res://cenas/villager_1.tscn" id="11_puycu"]
+[ext_resource type="Script" path="res://Scripts/debug/debug_telemetry_panel.gd" id="12_843sb"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_puycu"]
 
@@ -120,3 +122,6 @@ z_index = -4095
 y_sort_enabled = true
 position = Vector2(204, -157)
 tile_set = SubResource("TileSet_hbp8a")
+
+[node name="DebugTelemetryPanel" type="CanvasLayer" parent="." unique_id=1958740719 instance=ExtResource("11_8iuxu")]
+script = ExtResource("12_843sb")

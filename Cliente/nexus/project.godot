@@ -22,6 +22,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GDAIMCPRuntime="*uid://dcne7ryelpxmn"
+DebugTelemetrySettings="*res://Scripts/debug/debug_telemetry_settings.gd"
 
 [display]
 

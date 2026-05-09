@@ -8,6 +8,8 @@ const _REACQUIRE_DEDUPE_MS := 450
 const _OUT_OF_RANGE_DEDUPE_MS := 650
 
 static func emit_event(event_name: StringName, payload: Dictionary) -> void:
+	if not _is_enabled_for_event(event_name):
+		return
 	if _should_suppress(event_name, payload):
 		return
 	var line := {
@@ -16,6 +18,25 @@ static func emit_event(event_name: StringName, payload: Dictionary) -> void:
 		"data": payload
 	}
 	print("[COMBAT_TELEMETRY] %s" % JSON.stringify(line))
+
+
+static func _is_enabled_for_event(event_name: StringName) -> bool:
+	var settings := _get_debug_settings()
+	if settings == null:
+		return true
+	if event_name == &"bt_decision":
+		return bool(settings.get("thought_enabled"))
+	# Always allow this control event even when streams are toggled off.
+	if event_name == &"telemetry_toggle_changed":
+		return true
+	return bool(settings.get("combat_enabled"))
+
+
+static func _get_debug_settings() -> Node:
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return null
+	return tree.root.get_node_or_null("DebugTelemetrySettings")
 
 
 static func _should_suppress(event_name: StringName, payload: Dictionary) -> bool:
