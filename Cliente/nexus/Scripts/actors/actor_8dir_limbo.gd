@@ -74,6 +74,7 @@ var _stats: StatsComponent
 var _is_dead: bool = false
 
 const ActorCombatRuntimeRef = preload("res://Scripts/actors/services/actor_combat_runtime.gd")
+const ActorNavigationRuntimeRef = preload("res://Scripts/actors/services/actor_navigation_runtime.gd")
 const ActorSocialRuntimeRef = preload("res://Scripts/actors/services/actor_social_runtime.gd")
 const ActorStatsRuntimeRef = preload("res://Scripts/actors/services/actor_stats_runtime.gd")
 const Anim8DirUtilsRef = preload("res://Scripts/actors/services/anim8dir_utils.gd")
@@ -273,6 +274,30 @@ func set_stats_component(stats: StatsComponent) -> void:
 	_stats = stats
 
 
+func get_interaction_target() -> Node2D:
+	return _interaction_target
+
+
+func get_interaction_target_range() -> float:
+	return _interaction_target_range
+
+
+func get_next_chase_repath_sec() -> float:
+	return _next_chase_repath_sec
+
+
+func set_next_chase_repath_sec(value: float) -> void:
+	_next_chase_repath_sec = value
+
+
+func is_attack_pending_runtime() -> bool:
+	return _attack_pending
+
+
+func is_target_alive_for_runtime(target: Node2D) -> bool:
+	return _is_target_alive(target)
+
+
 func set_interaction_target(target: Node2D, stop_range: float = -1.0) -> void:
 	if target == null or not is_instance_valid(target) or target == self:
 		clear_interaction_target()
@@ -295,54 +320,11 @@ func cancel_all_intents() -> void:
 
 
 func _update_interaction_approach() -> void:
-	if not player_controlled:
-		return
-	if _interaction_target == null:
-		return
-	if not is_instance_valid(_interaction_target):
-		clear_interaction_target()
-		return
-	var dist: float = global_position.distance_to(_interaction_target.global_position)
-	if dist <= maxf(8.0, _interaction_target_range):
-		if motor != null and motor.has_method("stop"):
-			motor.call("stop")
-		clear_interaction_target()
-		return
-	if motor != null and motor.has_method("request_move"):
-		motor.call("request_move", _interaction_target.global_position)
+	ActorNavigationRuntimeRef.update_interaction_approach(self)
 
 
 func _update_chase_attack() -> void:
-	if not player_controlled:
-		return
-	if _combat_target == null or not is_instance_valid(_combat_target):
-		_combat_target = null
-		return
-	if _combat_target == self:
-		clear_combat_target()
-		return
-	if not _is_target_alive(_combat_target):
-		cancel_chase_attack()
-		return
-
-	var dist: float = global_position.distance_to(_combat_target.global_position)
-	if dist <= get_attack_range():
-		if motor != null and motor.has_method("stop"):
-			motor.call("stop")
-		face_toward(_combat_target.global_position)
-		request_attack()
-		return
-
-	var now_sec: float = Time.get_ticks_msec() * 0.001
-	if now_sec < _next_chase_repath_sec:
-		if not _attack_pending:
-			play_walk_toward(_combat_target.global_position)
-		return
-	_next_chase_repath_sec = now_sec + maxf(0.05, chase_repath_interval_sec)
-	if motor != null and motor.has_method("request_move"):
-		motor.call("request_move", _combat_target.global_position)
-	if not _attack_pending:
-		play_walk_toward(_combat_target.global_position)
+	ActorNavigationRuntimeRef.update_chase_attack(self)
 
 
 func get_attack_range() -> float:
