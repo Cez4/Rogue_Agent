@@ -77,7 +77,10 @@ var _is_dead: bool = false
 const ActorAnimationRuntimeRef = preload("res://Scripts/actors/services/actor_animation_runtime.gd")
 const ActorCombatRuntimeRef = preload("res://Scripts/actors/services/actor_combat_runtime.gd")
 const ActorNavigationRuntimeRef = preload("res://Scripts/actors/services/actor_navigation_runtime.gd")
+const ActorPerceptionRuntimeRef = preload("res://Scripts/actors/services/actor_perception_runtime.gd")
 const ActorSocialRuntimeRef = preload("res://Scripts/actors/services/actor_social_runtime.gd")
+const ActorTargetingRuntimeRef = preload("res://Scripts/actors/services/actor_targeting_runtime.gd")
+const ActorWanderRuntimeRef = preload("res://Scripts/actors/services/actor_wander_runtime.gd")
 const ActorStatsRuntimeRef = preload("res://Scripts/actors/services/actor_stats_runtime.gd")
 const Anim8DirUtilsRef = preload("res://Scripts/actors/services/anim8dir_utils.gd")
 
@@ -310,24 +313,15 @@ func get_equipment_loadout_runtime() -> EquipmentLoadout:
 
 
 func set_interaction_target(target: Node2D, stop_range: float = -1.0) -> void:
-	if target == null or not is_instance_valid(target) or target == self:
-		clear_interaction_target()
-		return
-	_interaction_target = target
-	if stop_range < 0.0:
-		_interaction_target_range = interaction_stop_range
-	else:
-		_interaction_target_range = maxf(8.0, stop_range)
+	ActorTargetingRuntimeRef.set_interaction_target(self, target, stop_range)
 
 
 func clear_interaction_target() -> void:
-	_interaction_target = null
-	_interaction_target_range = 0.0
+	ActorTargetingRuntimeRef.clear_interaction_target(self)
 
 
 func cancel_all_intents() -> void:
-	clear_interaction_target()
-	cancel_chase_attack()
+	ActorTargetingRuntimeRef.cancel_all_intents(self)
 
 
 func _update_interaction_approach() -> void:
@@ -551,18 +545,15 @@ func _estimate_animation_length_sec(animation_name: StringName) -> float:
 
 
 func should_start_wander(delta: float) -> bool:
-	return ActorSocialRuntimeRef.should_start_wander(self, delta)
+	return ActorWanderRuntimeRef.should_start_wander(self, delta)
 
 
 func begin_wander() -> void:
-	_idle_elapsed_sec = 0.0
-	_reset_wander_timer()
-	var target: Vector2 = _pick_random_wander_target()
-	motor.request_move(target)
+	ActorWanderRuntimeRef.begin_wander(self)
 
 
 func is_wander_complete() -> bool:
-	return not is_actor_moving()
+	return ActorWanderRuntimeRef.is_wander_complete(self)
 
 
 func play_attack_animation_and_finish() -> void:
@@ -580,44 +571,31 @@ func play_attack_animation_and_finish() -> void:
 
 
 func look_toward(target_position: Vector2) -> void:
-	var dir := target_position - global_position
-	_play_directional_animation(idle_prefix, dir)
+	ActorPerceptionRuntimeRef.look_toward(self, target_position)
 
 
 func can_look_target(target: Node2D) -> bool:
-	return ActorSocialRuntimeRef.can_look_target(self, target)
+	return ActorPerceptionRuntimeRef.can_look_target(self, target)
 
 
 func trigger_look_cooldown() -> void:
-	ActorSocialRuntimeRef.trigger_look_cooldown(self)
+	ActorPerceptionRuntimeRef.trigger_look_cooldown(self)
 
 
 func stop_movement_for_look() -> void:
-	if motor != null:
-		motor.stop()
-	velocity = Vector2.ZERO
+	ActorPerceptionRuntimeRef.stop_movement_for_look(self)
 
 
 func play_look_emote() -> void:
-	_show_emote(look_emote_name, false, maxf(0.2, look_emote_hold_sec), 2)
+	ActorPerceptionRuntimeRef.play_look_emote(self)
 
 
 func try_play_wander_emote() -> void:
-	if not is_actor_moving():
-		return
-	var now_sec: float = Time.get_ticks_msec() * 0.001
-	if now_sec < _next_wander_emote_allowed_sec:
-		return
-	if randf() > clampf(wander_emote_chance, 0.0, 1.0):
-		# Retry soon on miss, do not apply full cooldown or emote becomes too rare.
-		_next_wander_emote_allowed_sec = now_sec + 0.9
-		return
-	_show_emote(wander_emote_name, true, maxf(0.2, wander_emote_hold_sec), 1)
-	_schedule_next_wander_emote()
+	ActorWanderRuntimeRef.try_play_wander_emote(self)
 
 
 func _schedule_next_wander_emote() -> void:
-	ActorSocialRuntimeRef.schedule_next_wander_emote(self)
+	ActorWanderRuntimeRef.schedule_next_wander_emote(self)
 
 
 func _show_emote(animation_name: StringName, loop: bool, hold_sec: float, priority: int) -> void:
@@ -628,26 +606,8 @@ func _hide_emote_immediate() -> void:
 	ActorSocialRuntimeRef.hide_emote_immediate(self)
 
 
-func _pick_random_wander_target() -> Vector2:
-	var nav := get_node_or_null(^"NavigationAgent2D") as NavigationAgent2D
-	if nav == null:
-		return global_position
-	var nav_map: RID = nav.get_navigation_map()
-	if not nav_map.is_valid():
-		return global_position
-
-	for _i in range(maxi(1, wander_max_attempts)):
-		var angle: float = randf() * TAU
-		var dist: float = randf_range(wander_radius_min, wander_radius_max)
-		var raw: Vector2 = global_position + Vector2(cos(angle), sin(angle)) * dist
-		var projected: Vector2 = NavigationServer2D.map_get_closest_point(nav_map, raw)
-		if projected.distance_to(global_position) > 8.0:
-			return projected
-	return global_position
-
-
 func _reset_wander_timer() -> void:
-	ActorSocialRuntimeRef.reset_wander_timer(self)
+	ActorWanderRuntimeRef.reset_wander_timer(self)
 
 
 func _play_directional_animation(prefix: String, direction_source: Vector2) -> bool:
