@@ -63,8 +63,9 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 4. Validar cada bloco no Godot MCP imediatamente: open_scene -> play_scene -> get_godot_errors.
 5. Conferir comportamento e telemetria no log (chase/attack/death/respawn) antes de seguir.
 6. Atualizar docs de estado quando houver mudanca estrutural.
-7. So entao commit + push.
-8. Nao considerar entrega concluida sem teste reproduzivel + telemetria conferida.
+7. Fluxo Git obrigatorio: git add -> git commit -> git status -sb (ahead 1) -> git push origin <branch> -> git status -sb final (sincronizado).
+8. Nao inverter ordem de commit/push e nao considerar concluido enquanto o push nao confirmar envio do commit local.
+9. Nao considerar entrega concluida sem teste reproduzivel + telemetria conferida.
 
 
 ## Workflow de desacoplamento seguro (aprovado no projeto)
