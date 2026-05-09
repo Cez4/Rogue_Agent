@@ -222,3 +222,8 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
    - `target_memory_sec: 1.6 -> 1.9`
    - `reacquire_interval_sec: 0.10` (mantido)
    - objetivo: aumentar persistencia de chase em longa distancia sem alterar regra de cancelamento por input.
+14. Ciclo 10 aplicado (Player Targeting final pass):
+   - `reacquire_interval_sec: 0.10 -> 0.12`
+   - `lose_radius: 184.0` (mantido)
+   - `target_memory_sec: 1.9` (mantido)
+   - objetivo: reduzir ruido de reacquire/blocked em kite sem afetar lock manual.
