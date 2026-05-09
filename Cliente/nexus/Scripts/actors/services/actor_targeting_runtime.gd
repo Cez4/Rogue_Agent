@@ -3,7 +3,7 @@ extends RefCounted
 const ActorRuntimeBridgeRef = preload("res://Scripts/actors/services/actor_runtime_bridge.gd")
 
 static func acquire_combat_target_in_group(
-	actor: Node,
+	actor: Actor8DirLimbo,
 	blackboard: Blackboard,
 	group: StringName,
 	output_var: StringName,
@@ -56,7 +56,7 @@ static func acquire_combat_target_in_group(
 
 
 static func validate_combat_target_alive(
-	actor: Node,
+	actor: Actor8DirLimbo,
 	blackboard: Blackboard,
 	target_var: StringName
 ) -> Node2D:
@@ -73,7 +73,7 @@ static func validate_combat_target_alive(
 
 
 static func validate_combat_target_perception(
-	actor: Node,
+	actor: Actor8DirLimbo,
 	blackboard: Blackboard,
 	target_var: StringName,
 	last_seen_time_var: StringName,
@@ -122,7 +122,7 @@ static func validate_combat_target_perception(
 
 
 static func should_reacquire_now(
-	actor: Node,
+	actor: Actor8DirLimbo,
 	blackboard: Blackboard,
 	next_reacquire_var: StringName,
 	default_reacquire_interval_sec: float
@@ -139,7 +139,7 @@ static func should_reacquire_now(
 	return true
 
 
-static func set_interaction_target(actor: Node, target: Node2D, stop_range: float = -1.0) -> void:
+static func set_interaction_target(actor: Actor8DirLimbo, target: Node2D, stop_range: float = -1.0) -> void:
 	if target == null or not is_instance_valid(target) or target == actor:
 		clear_interaction_target(actor)
 		return
@@ -151,10 +151,10 @@ static func set_interaction_target(actor: Node, target: Node2D, stop_range: floa
 	ActorRuntimeBridgeRef.set_interaction_target_internal(actor, target, interaction_range)
 
 
-static func clear_interaction_target(actor: Node) -> void:
+static func clear_interaction_target(actor: Actor8DirLimbo) -> void:
 	ActorRuntimeBridgeRef.clear_interaction_target_internal(actor)
 
 
-static func cancel_all_intents(actor: Node) -> void:
+static func cancel_all_intents(actor: Actor8DirLimbo) -> void:
 	clear_interaction_target(actor)
 	actor.cancel_chase_attack()

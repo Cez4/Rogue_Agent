@@ -1,7 +1,7 @@
 class_name ActorStatsRuntime
 extends RefCounted
 
-static func setup_stats(actor: Node) -> void:
+static func setup_stats(actor: Actor8DirLimbo) -> void:
 	var stats: StatsComponent = actor.get_node_or_null(^"Stats") as StatsComponent
 	if stats == null:
 		stats = StatsComponent.new()
@@ -23,7 +23,7 @@ static func setup_stats(actor: Node) -> void:
 	apply_loadout_modifiers_to_stats(actor)
 
 
-static func apply_loadout_modifiers_to_stats(actor: Node) -> void:
+static func apply_loadout_modifiers_to_stats(actor: Actor8DirLimbo) -> void:
 	var stats: StatsComponent = actor.get_stats_component()
 	if stats == null:
 		return
@@ -35,7 +35,7 @@ static func apply_loadout_modifiers_to_stats(actor: Node) -> void:
 	add_item_modifiers(actor, actor.equipment_loadout.necklace)
 
 
-static func add_item_modifiers(actor: Node, item: EquipmentData) -> void:
+static func add_item_modifiers(actor: Actor8DirLimbo, item: EquipmentData) -> void:
 	if item == null:
 		return
 	var mods: Array[StatModifier] = item.stat_modifiers
@@ -46,7 +46,7 @@ static func add_item_modifiers(actor: Node, item: EquipmentData) -> void:
 				stats.add_modifier(modifier)
 
 
-static func get_stat_value(actor: Node, stat_id: StringName, fallback: float = 0.0) -> float:
+static func get_stat_value(actor: Actor8DirLimbo, stat_id: StringName, fallback: float = 0.0) -> float:
 	var stats: StatsComponent = actor.get_stats_component()
 	if stats == null:
 		return fallback

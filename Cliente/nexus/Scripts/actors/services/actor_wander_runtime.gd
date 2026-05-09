@@ -4,7 +4,7 @@ extends RefCounted
 const ActorSocialRuntimeRef = preload("res://Scripts/actors/services/actor_social_runtime.gd")
 const ActorRuntimeBridgeRef = preload("res://Scripts/actors/services/actor_runtime_bridge.gd")
 
-static func should_start_wander(actor: Node, delta: float) -> bool:
+static func should_start_wander(actor: Actor8DirLimbo, delta: float) -> bool:
 	if not actor.enable_wander or actor.player_controlled:
 		return false
 	if actor.is_actor_moving():
@@ -14,7 +14,7 @@ static func should_start_wander(actor: Node, delta: float) -> bool:
 	return ActorRuntimeBridgeRef.get_idle_elapsed(actor) >= ActorRuntimeBridgeRef.get_next_wander_delay(actor)
 
 
-static func begin_wander(actor: Node) -> void:
+static func begin_wander(actor: Actor8DirLimbo) -> void:
 	ActorRuntimeBridgeRef.set_idle_elapsed(actor, 0.0)
 	reset_wander_timer(actor)
 	var target: Vector2 = pick_random_wander_target(actor)
@@ -22,11 +22,11 @@ static func begin_wander(actor: Node) -> void:
 		actor.motor.request_move(target)
 
 
-static func is_wander_complete(actor: Node) -> bool:
+static func is_wander_complete(actor: Actor8DirLimbo) -> bool:
 	return not actor.is_actor_moving()
 
 
-static func try_play_wander_emote(actor: Node) -> void:
+static func try_play_wander_emote(actor: Actor8DirLimbo) -> void:
 	if not actor.is_actor_moving():
 		return
 	var now_sec: float = Time.get_ticks_msec() * 0.001
@@ -46,14 +46,14 @@ static func try_play_wander_emote(actor: Node) -> void:
 	schedule_next_wander_emote(actor)
 
 
-static func schedule_next_wander_emote(actor: Node) -> void:
+static func schedule_next_wander_emote(actor: Actor8DirLimbo) -> void:
 	var now_sec: float = Time.get_ticks_msec() * 0.001
 	var min_cd: float = maxf(0.0, actor.wander_emote_min_cooldown_sec)
 	var max_cd: float = maxf(min_cd, actor.wander_emote_max_cooldown_sec)
 	ActorRuntimeBridgeRef.set_next_wander_emote_allowed(actor, now_sec + randf_range(min_cd, max_cd))
 
 
-static func pick_random_wander_target(actor: Node) -> Vector2:
+static func pick_random_wander_target(actor: Actor8DirLimbo) -> Vector2:
 	var nav := actor.get_node_or_null(^"NavigationAgent2D") as NavigationAgent2D
 	if nav == null:
 		return actor.global_position
@@ -71,5 +71,5 @@ static func pick_random_wander_target(actor: Node) -> Vector2:
 	return actor.global_position
 
 
-static func reset_wander_timer(actor: Node) -> void:
+static func reset_wander_timer(actor: Actor8DirLimbo) -> void:
 	ActorRuntimeBridgeRef.set_next_wander_delay(actor, randf_range(actor.wander_delay_min_sec, actor.wander_delay_max_sec))

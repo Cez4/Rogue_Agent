@@ -1,7 +1,7 @@
 class_name ActorCombatRuntime
 extends RefCounted
 
-static func set_combat_target(actor: Node, target: Node2D, manual_lock: bool = true) -> void:
+static func set_combat_target(actor: Actor8DirLimbo, target: Node2D, manual_lock: bool = true) -> void:
 	if target == null or not is_instance_valid(target):
 		actor.reset_combat_target_runtime()
 		return
@@ -18,7 +18,7 @@ static func set_combat_target(actor: Node, target: Node2D, manual_lock: bool = t
 		})
 
 
-static func clear_combat_target(actor: Node) -> void:
+static func clear_combat_target(actor: Actor8DirLimbo) -> void:
 	var current_target: Node2D = actor.get_combat_target()
 	var had_target: bool = current_target != null and is_instance_valid(current_target)
 	var old_target_name: String = ""
@@ -32,7 +32,7 @@ static func clear_combat_target(actor: Node) -> void:
 		})
 
 
-static func cancel_chase_attack(actor: Node) -> void:
+static func cancel_chase_attack(actor: Actor8DirLimbo) -> void:
 	var current_target: Node2D = actor.get_combat_target()
 	var had_target: bool = current_target != null and is_instance_valid(current_target)
 	clear_combat_target(actor)
@@ -50,7 +50,7 @@ static func is_target_alive(target: Node2D) -> bool:
 	return true
 
 
-static func on_health_death(actor: Node) -> void:
+static func on_health_death(actor: Actor8DirLimbo) -> void:
 	actor.set_actor_dead(true)
 	actor.clear_attack_pending()
 	disable_brain_runtime(actor)
@@ -66,7 +66,7 @@ static func on_health_death(actor: Node) -> void:
 		actor.request_respawn_after_death()
 
 
-static func disable_combat_collision(actor: Node) -> void:
+static func disable_combat_collision(actor: Actor8DirLimbo) -> void:
 	var hurtbox := actor.get_node_or_null(^"Hurtbox") as Area2D
 	if hurtbox != null:
 		hurtbox.set_deferred("monitoring", false)
@@ -76,7 +76,7 @@ static func disable_combat_collision(actor: Node) -> void:
 		body_collision.set_deferred("disabled", true)
 
 
-static func enable_combat_collision(actor: Node) -> void:
+static func enable_combat_collision(actor: Actor8DirLimbo) -> void:
 	var hurtbox := actor.get_node_or_null(^"Hurtbox") as Area2D
 	if hurtbox != null:
 		hurtbox.set_deferred("monitoring", true)
@@ -86,15 +86,15 @@ static func enable_combat_collision(actor: Node) -> void:
 		body_collision.set_deferred("disabled", false)
 
 
-static func disable_brain_runtime(actor: Node) -> void:
+static func disable_brain_runtime(actor: Actor8DirLimbo) -> void:
 	actor.set_brain_active(false)
 
 
-static func enable_brain_runtime(actor: Node) -> void:
+static func enable_brain_runtime(actor: Actor8DirLimbo) -> void:
 	actor.set_brain_active(true)
 
 
-static func reset_combat_memory(actor: Node) -> void:
+static func reset_combat_memory(actor: Actor8DirLimbo) -> void:
 	clear_combat_target(actor)
 	actor.clear_interaction_target()
 	var bb: Blackboard = null

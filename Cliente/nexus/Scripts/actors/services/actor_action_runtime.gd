@@ -5,7 +5,7 @@ const Anim8DirUtilsRef = preload("res://Scripts/actors/services/anim8dir_utils.g
 const ActorAnimationRuntimeRef = preload("res://Scripts/actors/services/actor_animation_runtime.gd")
 const ActorRuntimeBridgeRef = preload("res://Scripts/actors/services/actor_runtime_bridge.gd")
 
-static func face_toward(actor: Node, target_position: Vector2) -> void:
+static func face_toward(actor: Actor8DirLimbo, target_position: Vector2) -> void:
 	var dir: Vector2 = target_position - actor.global_position
 	if dir.length_squared() < 0.0001:
 		return
@@ -16,30 +16,30 @@ static func face_toward(actor: Node, target_position: Vector2) -> void:
 		ActorRuntimeBridgeRef.play_directional(actor, actor.idle_prefix, dir)
 
 
-static func face_dir(actor: Node, x_axis: float) -> void:
+static func face_dir(actor: Actor8DirLimbo, x_axis: float) -> void:
 	if absf(x_axis) <= 0.01:
 		return
 	face_toward(actor, actor.global_position + Vector2(signf(x_axis), 0.0) * 16.0)
 
 
-static func play_idle_animation(actor: Node) -> void:
+static func play_idle_animation(actor: Actor8DirLimbo) -> void:
 	ActorRuntimeBridgeRef.play_directional(actor, actor.idle_prefix, actor.velocity)
 
 
-static func play_walk_animation(actor: Node) -> void:
+static func play_walk_animation(actor: Actor8DirLimbo) -> void:
 	ActorRuntimeBridgeRef.play_directional(actor, actor.walk_prefix, actor.velocity)
 
 
-static func play_walk_toward(actor: Node, target_position: Vector2) -> void:
+static func play_walk_toward(actor: Actor8DirLimbo, target_position: Vector2) -> void:
 	var dir: Vector2 = target_position - actor.global_position
 	ActorRuntimeBridgeRef.play_directional(actor, actor.walk_prefix, dir)
 
 
-static func update_walk_animation(actor: Node) -> void:
+static func update_walk_animation(actor: Actor8DirLimbo) -> void:
 	ActorRuntimeBridgeRef.play_directional(actor, actor.walk_prefix, actor.velocity)
 
 
-static func play_attack_animation(actor: Node) -> void:
+static func play_attack_animation(actor: Actor8DirLimbo) -> void:
 	var dir: Vector2 = Anim8DirUtilsRef.direction_vector_from_suffix(actor.get_last_direction_suffix())
 	var played: bool = bool(ActorRuntimeBridgeRef.play_directional(actor, actor.attack_prefix, dir))
 	if not played:
@@ -47,7 +47,7 @@ static func play_attack_animation(actor: Node) -> void:
 	ActorAnimationRuntimeRef.setup_attack_animation(actor.animated_sprite, actor.attack_prefix, actor.get_last_direction_suffix())
 
 
-static func orient_attack_hitbox(actor: Node) -> void:
+static func orient_attack_hitbox(actor: Actor8DirLimbo) -> void:
 	var hitbox := actor.get_node_or_null(^"AttackHitbox") as Area2D
 	if hitbox == null:
 		return
@@ -56,7 +56,7 @@ static func orient_attack_hitbox(actor: Node) -> void:
 	hitbox.position = dir * base_distance
 
 
-static func wait_for_attack_animation_end(actor: Node, max_wait_sec: float = 1.2) -> void:
+static func wait_for_attack_animation_end(actor: Actor8DirLimbo, max_wait_sec: float = 1.2) -> void:
 	if actor.animated_sprite == null or actor.animated_sprite.sprite_frames == null:
 		return
 	var animation_name := StringName("%s_%s" % [actor.attack_prefix, actor.get_last_direction_suffix()])
@@ -76,7 +76,7 @@ static func wait_for_attack_animation_end(actor: Node, max_wait_sec: float = 1.2
 		await actor.get_tree().process_frame
 
 
-static func play_attack_animation_and_finish(actor: Node) -> void:
+static func play_attack_animation_and_finish(actor: Actor8DirLimbo) -> void:
 	var played: bool = bool(ActorRuntimeBridgeRef.play_directional(actor, actor.attack_prefix, actor.velocity))
 	if played:
 		var expected := StringName("%s_%s" % [actor.attack_prefix, actor.get_last_direction_suffix()])

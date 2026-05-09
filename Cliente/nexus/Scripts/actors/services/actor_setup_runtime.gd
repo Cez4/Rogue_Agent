@@ -2,7 +2,7 @@ class_name ActorSetupRuntime
 extends RefCounted
 const ActorRuntimeBridgeRef = preload("res://Scripts/actors/services/actor_runtime_bridge.gd")
 
-static func ready(actor: Node) -> void:
+static func ready(actor: Actor8DirLimbo) -> void:
 	actor.set_spawn_position(actor.global_position)
 	if actor.combat_perception_profile == null:
 		actor.combat_perception_profile = CombatPerceptionProfile.new()
@@ -34,15 +34,15 @@ static func ready(actor: Node) -> void:
 	ActorRuntimeBridgeRef.setup_hsm(actor)
 
 
-static func setup_interactable_component(actor: Node) -> void:
+static func setup_interactable_component(actor: Actor8DirLimbo) -> void:
 	_setup_interactable_component(actor)
 
 
-static func connect_health_signals(actor: Node) -> void:
+static func connect_health_signals(actor: Actor8DirLimbo) -> void:
 	_connect_health_signals(actor)
 
 
-static func _setup_interactable_component(actor: Node) -> void:
+static func _setup_interactable_component(actor: Actor8DirLimbo) -> void:
 	var interactable := actor.get_node_or_null(^"Interactable") as InteractableComponent
 	if interactable == null:
 		interactable = InteractableComponent.new()
@@ -63,7 +63,7 @@ static func _setup_interactable_component(actor: Node) -> void:
 	interactable.interaction_range = actor.interaction_stop_range
 
 
-static func _connect_health_signals(actor: Node) -> void:
+static func _connect_health_signals(actor: Actor8DirLimbo) -> void:
 	var health := actor.get_node_or_null(^"Health")
 	if health == null:
 		return

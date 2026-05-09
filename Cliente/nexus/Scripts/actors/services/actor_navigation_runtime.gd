@@ -1,7 +1,7 @@
 class_name ActorNavigationRuntime
 extends RefCounted
 
-static func update_interaction_approach(actor: Node) -> void:
+static func update_interaction_approach(actor: Actor8DirLimbo) -> void:
 	if not actor.player_controlled:
 		return
 	var target: Node2D = actor.get_interaction_target()
@@ -19,7 +19,7 @@ static func update_interaction_approach(actor: Node) -> void:
 		actor.motor.request_move(target.global_position)
 
 
-static func update_chase_attack(actor: Node) -> void:
+static func update_chase_attack(actor: Actor8DirLimbo) -> void:
 	if not actor.player_controlled:
 		return
 	var target: Node2D = actor.get_combat_target()

@@ -2,7 +2,7 @@ class_name ActorLifecycleRuntime
 extends RefCounted
 const ActorCombatRuntimeRef = preload("res://Scripts/actors/services/actor_combat_runtime.gd")
 
-static func respawn_after_delay(actor: Node) -> void:
+static func respawn_after_delay(actor: Actor8DirLimbo) -> void:
 	await actor.get_tree().create_timer(maxf(0.5, actor.respawn_delay_sec)).timeout
 	var health := actor.get_node_or_null(^"Health") as HealthComponent
 	if health != null:
