@@ -56,6 +56,10 @@ Padronizar onboarding de novos inimigos usando somente dados (`.tres` + cena tem
 - `hit_confirmed` (quando receber/acertar)
 - `target_died` + `respawned` (se aplicavel)
 
+## Fila atual de producao
+1. Light v1: congelado.
+2. Brute v1: proximo freeze.
+
 ## Protocolo de tuning (um eixo por vez)
 1. Targeting: `acquire/lose/memory/reacquire`.
 2. Approach/Stop: `attack_stop_buffer` + `attack_range`.
