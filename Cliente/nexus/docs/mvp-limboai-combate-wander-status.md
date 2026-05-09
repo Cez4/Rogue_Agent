@@ -131,6 +131,15 @@ Atualizacao de estado:
   - `CombatTelemetry` agora filtra streams por toggle (`combat` / `bt_decision`).
   - `BTDecisionTelemetry` com dedupe por chave + throttle por ator + filtro por transicao + heartbeat.
   - `ActorRuntimeBridge` com marcador opcional de violacao de contrato (`runtime_boundary_violation`) controlado por `boundary_guard_enabled`.
+- Telemetria de combate (v4 - classificacao de cancelamento):
+  - `chase_canceled` inclui `reason` e `manual_lock`.
+  - `PlayerController` marca cancelamento por input de movimento como `reason=input_move`.
+  - leitura de kite fica confiavel (sem falso positivo de perda de lock).
+
+- Tuning data-driven (fase ativa) atualizado:
+  - Wildcat ciclo 6 (Approach/Stop): `attack_stop_buffer 4.0 -> 4.8`.
+  - Wildcat ciclo 7 (Cadence): `recover 0.22 -> 0.24`, `cooldown 0.32 -> 0.36`.
+  - Player ciclo 8 (Targeting): `lose_radius 156 -> 172`, `memory 1.2 -> 1.6`, `reacquire 0.12 -> 0.10`.
 
 ## LimboAI no projeto
 - HSM para execucao de locomocao/ataque no actor.
@@ -149,7 +158,8 @@ Atualizacao de estado:
    - `docs/combat-tuning-matrix-v1.md`
 2. Plano de execucao do tuning Wildcat (fase ativa):
    - `docs/plano-tuning-wildcat-v1-2026-05-09.md`
-3. Padronizar pipeline BT de combate para novos hostis (base enemy template) apos tuning v1.
+3. Proximo ciclo imediato: Player targeting fine-tune (ciclo 9) usando telemetria com `reason`.
+4. Padronizar pipeline BT de combate para novos hostis (base enemy template) apos tuning v1.
 4. Evoluir telemetria BT:
    - opcional: eventos enter/exit separados por task para analise de arvore.
    - opcional: presets de perfil (`quiet`, `balanced`, `verbose`) no painel debug.

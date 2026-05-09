@@ -59,16 +59,29 @@ Calibrar o comportamento de combate do Wildcat por microciclos curtos, com evide
    - ataque commit completo
    - morte/respawn funcionais
 
+## Estado atual consolidado
+1. Ciclo 6 (Approach/Stop) aplicado:
+   - `hostile.attack_stop_buffer: 4.0 -> 4.8`
+2. Ciclo 7 (Cadence) aplicado:
+   - `wildcat claw recover_sec: 0.22 -> 0.24`
+   - `wildcat claw cooldown_sec: 0.32 -> 0.36`
+3. Ciclo 8 (Player Targeting) aplicado:
+   - `player lose_radius: 156.0 -> 172.0`
+   - `player target_memory_sec: 1.2 -> 1.6`
+   - `player reacquire_interval_sec: 0.12 -> 0.10`
+4. Telemetria de cancelamento separada por motivo:
+   - `chase_canceled` agora inclui `reason` e `manual_lock`
+   - permite distinguir cancelamento intencional de kite (`reason=input_move`) de perda real de percepcao.
+
 ## Proximo passo imediato
-Executar validacao do **Ciclo 7 (Cadence only)**:
-1. validar em sessao de 30-60s usando:
-   - `docs/wildcat-tuning-session-protocol-v1.md`;
-2. confirmar impacto em:
-   - frequencia de `attack_commit`;
-   - reducao de lock-step em troca de ataques;
-   - manutencao de `out_of_range` sob kite;
-3. registrar resultado na matriz:
-   - `docs/combat-tuning-matrix-v1.md`.
+Executar **Ciclo 9 (Player Targeting fine-tune)**:
+1. manter arquitetura e ataque sem alteracao;
+2. ajustar somente dados do profile do player em passos pequenos:
+   - `target_memory_sec` e/ou `lose_radius`;
+3. validar em sessao 30-60s com kite real (clique no chao);
+4. usar telemetria para separar:
+   - esperado: `chase_canceled reason=input_move`;
+   - problema real: `chase_canceled` sem `input_move` em lock manual.
 
 ## Riscos e mitigacao
 1. Ajuste excessivo de stop buffer causar empurra/oscilacao.
