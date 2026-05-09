@@ -156,10 +156,10 @@ Atualizacao de estado:
 ## Proximos passos tecnicos
 1. Calibracao fina por archetype/arma/status com matriz oficial v1:
    - `docs/combat-tuning-matrix-v1.md`
-2. Plano de execucao do tuning Wildcat (fase ativa):
+2. Plano de execucao do tuning Wildcat (fase concluida):
    - `docs/plano-tuning-wildcat-v1-2026-05-09.md`
-3. Proximo ciclo imediato: Player targeting fine-tune (ciclo 9) usando telemetria com `reason`.
-4. Padronizar pipeline BT de combate para novos hostis (base enemy template) apos tuning v1.
+3. Tuning v1 fechado com baseline aprovado (wildcat + player + telemetria de cancel reason).
+4. Proxima fase: padronizar pipeline BT de combate para novos hostis (base enemy template).
 4. Evoluir telemetria BT:
    - opcional: eventos enter/exit separados por task para analise de arvore.
    - opcional: presets de perfil (`quiet`, `balanced`, `verbose`) no painel debug.

@@ -2,7 +2,7 @@
 
 Data: 2026-05-09
 Branch alvo: `feat/final-actor-decoupling-phase`
-Status: ativo
+Status: concluido (baseline v1 congelado)
 
 ## Contexto
 - Plano de desacoplamento do actor foi concluido.
@@ -72,16 +72,27 @@ Calibrar o comportamento de combate do Wildcat por microciclos curtos, com evide
 4. Telemetria de cancelamento separada por motivo:
    - `chase_canceled` agora inclui `reason` e `manual_lock`
    - permite distinguir cancelamento intencional de kite (`reason=input_move`) de perda real de percepcao.
+5. Ciclo 10 (Player Targeting final pass) aplicado:
+   - `reacquire_interval_sec: 0.10 -> 0.12`
+   - validado em MCP + telemetria.
+
+## Encerramento da fase
+Baseline v1 aprovado para continuidade:
+1. Wildcat:
+   - profile hostile com `attack_stop_buffer=4.8`
+   - claw action com `recover=0.24` e `cooldown=0.36`
+2. Player:
+   - profile com `lose_radius=184.0`
+   - `target_memory_sec=1.9`
+   - `reacquire_interval_sec=0.12`
+3. Telemetria:
+   - `chase_canceled` com `reason/manual_lock` adotado como criterio de leitura oficial para cenarios de kite.
 
 ## Proximo passo imediato
-Executar **Ciclo 9 (Player Targeting fine-tune)**:
-1. manter arquitetura e ataque sem alteracao;
-2. ajustar somente dados do profile do player em passos pequenos:
-   - `target_memory_sec` e/ou `lose_radius`;
-3. validar em sessao 30-60s com kite real (clique no chao);
-4. usar telemetria para separar:
-   - esperado: `chase_canceled reason=input_move`;
-   - problema real: `chase_canceled` sem `input_move` em lock manual.
+Abrir proxima fase de producao:
+1. criar template base de inimigo hostil reutilizavel (BT/HSM + perfis v1);
+2. aplicar primeiro no Wildcat como prefab de referencia;
+3. manter gate MCP e telemetria como qualidade obrigatoria por PR.
 
 ## Riscos e mitigacao
 1. Ajuste excessivo de stop buffer causar empurra/oscilacao.
