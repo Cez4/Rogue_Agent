@@ -7,7 +7,7 @@
 @export var walk_animation: StringName = &"Walk_Unarmed_S"
 
 var _body: CharacterBody2D
-var _motor: Node
+var _motor: PlayerMotor
 var _animated_sprite: AnimatedSprite2D
 
 var _hsm: LimboHSM
@@ -17,7 +17,7 @@ var _walk_state: LimboState
 
 func setup(body: CharacterBody2D) -> void:
 	_body = body
-	_motor = body.get_node_or_null(motor_path)
+	_motor = body.get_node_or_null(motor_path) as PlayerMotor
 	_animated_sprite = body.get_node_or_null(animated_sprite_path) as AnimatedSprite2D
 
 	if _motor == null:
@@ -62,12 +62,12 @@ func _on_walk_enter() -> void:
 
 
 func _on_idle_update(_delta: float) -> void:
-	if _motor != null and _motor.call("is_moving"):
+	if _motor != null and _motor.is_moving():
 		_hsm.dispatch(&"movement_started")
 
 
 func _on_walk_update(_delta: float) -> void:
-	if _motor == null or not _motor.call("is_moving"):
+	if _motor == null or not _motor.is_moving():
 		_hsm.dispatch(&"movement_finished")
 
 

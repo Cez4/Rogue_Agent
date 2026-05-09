@@ -2,8 +2,8 @@
 
 @export var movement_config: Resource
 
-@onready var controller: Node = $PlayerController
-@onready var motor: Node = $PlayerMotor
+@onready var controller: PlayerController = $PlayerController
+@onready var motor: PlayerMotor = $PlayerMotor
 @onready var hsm: LimboHSM = $LimboHSM
 @onready var idle_state: LimboState = $LimboHSM/IdleState
 @onready var walk_state: LimboState = $LimboHSM/WalkState
@@ -16,18 +16,18 @@ func _ready() -> void:
 	if movement_config == null:
 		movement_config = load("res://configs/player/player_movement_config.tres")
 
-	motor.set("config", movement_config)
-	motor.call("setup", self)
-	controller.call("setup", self)
+	motor.config = movement_config
+	motor.setup(self)
+	controller.setup(self)
 	_setup_hsm()
 
 
 func _physics_process(delta: float) -> void:
-	motor.call("physics_update", delta)
+	motor.physics_update(delta)
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	controller.call("handle_unhandled_input", event)
+	controller.handle_unhandled_input(event)
 
 
 func _setup_hsm() -> void:
@@ -38,7 +38,7 @@ func _setup_hsm() -> void:
 
 
 func is_player_moving() -> bool:
-	return bool(motor.call("is_moving"))
+	return bool(motor.is_moving())
 
 
 func play_idle_animation() -> void:

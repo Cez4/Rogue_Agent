@@ -44,9 +44,9 @@ static func cancel_chase_attack(actor: Node) -> void:
 static func is_target_alive(target: Node2D) -> bool:
 	if target == null or not is_instance_valid(target):
 		return false
-	var health := target.get_node_or_null(^"Health")
-	if health != null and health.has_method("is_alive"):
-		return bool(health.call("is_alive"))
+	var health := target.get_node_or_null(^"Health") as HealthComponent
+	if health != null:
+		return bool(health.is_alive())
 	return true
 
 
@@ -97,11 +97,11 @@ static func enable_brain_runtime(actor: Node) -> void:
 static func reset_combat_memory(actor: Node) -> void:
 	clear_combat_target(actor)
 	actor.clear_interaction_target()
-	var bb: Variant = null
+	var bb: Blackboard = null
 	var bt_player: Node = actor.get_bt_player()
-	if bt_player != null and bt_player.has_method("get"):
-		bb = bt_player.get("blackboard")
-	if bb != null and bb.has_method("erase_var"):
+	if bt_player != null:
+		bb = bt_player.get("blackboard") as Blackboard
+	if bb != null:
 		bb.erase_var(AIBlackboardKeys.COMBAT_TARGET)
 		bb.erase_var(AIBlackboardKeys.COMBAT_TARGET_LAST_SEEN_MS)
 		bb.erase_var(AIBlackboardKeys.COMBAT_NEXT_REACQUIRE_MS)
