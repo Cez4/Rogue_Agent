@@ -179,3 +179,19 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
    - `target_memory_sec: 0.60 -> 0.75`
    - `reacquire_interval_sec: 0.18 -> 0.16`
    - `attack_stop_buffer` mantido em `4.5` (sem mudanca de eixo).
+6. Ciclo 3 aplicado (Approach/Stop only):
+   - `attack_stop_buffer: 4.5 -> 4.0`
+   - targeting mantido do ciclo 2:
+     - `acquire_radius: 92.0`
+     - `lose_radius: 132.0`
+     - `target_memory_sec: 0.75`
+     - `reacquire_interval_sec: 0.16`
+7. Ciclo 4 aplicado (Cadence only):
+   - novo profile de ataque do Wildcat:
+     - `configs/combat/wildcat_claw_attack_v1.tres`
+   - tempos (antes default state_attack):
+     - `windup: 0.12 -> 0.14`
+     - `active: 0.08 -> 0.09`
+     - `recover: 0.16 -> 0.22`
+     - `cooldown: 0.24 -> 0.32`
+   - dano mantido em `1.0`.

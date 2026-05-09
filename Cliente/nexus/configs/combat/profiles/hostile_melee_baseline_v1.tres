@@ -8,4 +8,4 @@ acquire_radius = 92.0
 lose_radius = 132.0
 target_memory_sec = 0.75
 reacquire_interval_sec = 0.16
-attack_stop_buffer = 4.5
+attack_stop_buffer = 4.0

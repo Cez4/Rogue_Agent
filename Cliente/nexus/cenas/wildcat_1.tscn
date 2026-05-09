@@ -18,6 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://dffhs4xccwdww" path="res://Assets/emotions/spriteHoe.png" id="15_fji62"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/health_component_node.tscn" id="16_tntqu"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="18_dkk0s"]
+[ext_resource type="Resource" path="res://configs/combat/wildcat_claw_attack_v1.tres" id="19_wcatatk"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijbr8"]
 atlas = ExtResource("1_5uhpa")
@@ -3850,6 +3851,7 @@ script = ExtResource("9_otluh")
 
 [node name="AttackState" type="LimboState" parent="LimboHSM" unique_id=952194669]
 script = ExtResource("10_w5m6h")
+action_data = ExtResource("19_wcatatk")
 
 [node name="WanderState" type="LimboState" parent="LimboHSM" unique_id=1259319103]
 script = ExtResource("11_xusch")
