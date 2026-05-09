@@ -145,21 +145,19 @@ Atualizacao de estado:
 - Cliente: predicao/interpolacao apenas visual.
 
 ## Proximos passos tecnicos
-1. Fechamento final do desacoplamento do actor (pre-escala):
-   - `docs/plano-final-desacoplamento-actor-2026-05-09.md`
-2. Calibracao fina por archetype/arma/status com matriz oficial v1:
+1. Calibracao fina por archetype/arma/status com matriz oficial v1:
    - `docs/combat-tuning-matrix-v1.md`
+2. Plano de execucao do tuning Wildcat (fase ativa):
+   - `docs/plano-tuning-wildcat-v1-2026-05-09.md`
 3. Padronizar pipeline BT de combate para novos hostis (base enemy template) apos tuning v1.
-4. Boundary 100%:
-   - concluido no essencial nesta fase.
-5. Evoluir telemetria BT:
+4. Evoluir telemetria BT:
    - opcional: eventos enter/exit separados por task para analise de arvore.
    - opcional: presets de perfil (`quiet`, `balanced`, `verbose`) no painel debug.
-6. Feedback de hit:
+5. Feedback de hit:
    - FX local de impacto, flash de dano, popup de numero.
-7. Validacao para futuro multiplayer:
+6. Validacao para futuro multiplayer:
    - gates de range/LOS/cooldown centralizados no host.
-8. Padrao para NPCs:
+7. Padrao para NPCs:
    - manter BT + tasks reutilizaveis para hostis, companions e bosses.
 
 ## Arquivos-chave
