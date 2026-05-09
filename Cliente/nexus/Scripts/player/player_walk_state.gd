@@ -2,14 +2,14 @@
 
 
 func _enter() -> void:
-	if agent != null and agent.has_method("play_walk_animation"):
-		agent.play_walk_animation()
+	if agent == null:
+		return
+	agent.play_walk_animation()
 
 
 func _update(_delta: float) -> void:
 	if agent == null:
 		return
-	if agent.has_method("update_walk_animation"):
-		agent.update_walk_animation()
-	if agent.has_method("is_player_moving") and not agent.is_player_moving():
+	agent.update_walk_animation()
+	if not agent.is_player_moving():
 		get_root().dispatch(EVENT_FINISHED)

@@ -204,7 +204,7 @@ func get_bt_player() -> Node:
 
 
 func set_brain_active(active: bool) -> void:
-	if bt_player != null and bt_player.has_method("set"):
+	if bt_player != null:
 		bt_player.set("active", active)
 
 
@@ -441,9 +441,9 @@ func _enable_combat_collision() -> void:
 
 func _respawn_after_delay() -> void:
 	await get_tree().create_timer(maxf(0.5, respawn_delay_sec)).timeout
-	var health := get_node_or_null(^"Health")
-	if health != null and health.has_method("reset_health"):
-		health.call("reset_health")
+	var health := get_node_or_null(^"Health") as HealthComponent
+	if health != null:
+		health.reset_health()
 	_is_dead = false
 	global_position = _spawn_position
 	velocity = Vector2.ZERO
