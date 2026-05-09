@@ -2,19 +2,21 @@
 
 Data: 2026-05-09  
 Branch: `feat/combat-orb-ui-contextual`  
-Status: implementado e validado (commit 3d1ae1b)
+Status: implementado e validado (commit ef5b8fe)
 
 ## Resultados da Implementação
 1. **Shader Avançado:** Integrado com suporte a `trail_level` e `vibration`.
 2. **Presenter Robusto:** Uso de Tweens para animações de impacto (vibration) e trail (ghost bar).
 3. **Feedback de Vida Baixa:** Alerta visual automático via shader quando HP < 25%.
 4. **Contexto:** Validado em Player e Hostiles (Light/Brute).
+5. **Anti-Overlap (Dynamic Side-Offset):** Orbs agora usam `top_level = true` e se separam lateralmente (Player -> Esquerda, Target -> Direita) para evitar sobreposição em combate próximo.
 
 ## Eixos de Tuning (Ajustados)
-- `trail_delay`: 0.4s (tempo de espera antes da barra branca descer).
-- `trail_duration`: 0.6s (suavidade da descida).
-- `vibration_duration`: 0.3s (tempo de oscilação do líquido no hit).
-- `alert_threshold`: 0.25 (ponto de mudança de cor).
+- `trail_delay`: 0.4s.
+- `trail_duration`: 0.6s.
+- `vibration_duration`: 0.3s.
+- `side_separation`: 35.0px (espaçamento lateral para evitar overlap).
+- `interpolation_weight`: 12.0 (suavidade do movimento da orb).
 
 ## Objetivo
 Adicionar UI de vida em formato orb (shader) com visibilidade contextual, sem impactar lógica de combate/rede.
