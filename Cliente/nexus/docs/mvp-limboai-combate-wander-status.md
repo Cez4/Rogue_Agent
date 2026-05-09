@@ -71,6 +71,14 @@ Estado atual consolidado: `feat/actor-combat-profile-runtime`
   - `ActorSetupRuntime` extraido (`_ready`, grupos, setup de config/motor/controller/stats/interactable/sinais/HSM).
   - `ActorLifecycleRuntime` extraido (respawn/reset/reativacao de brain/telemetria).
   - `actor_8dir_limbo.gd` reduzido para 558 linhas.
+- Desacoplamento tecnico BT/HSM (passes v4):
+  - `ActorActionRuntime` extraido para face/play/wait/orient/finalizacao de ataque.
+  - API publica do actor preservada; HSM/BT continuam sem mudanca de comportamento.
+  - validacao MCP obrigatoria apos refactor: `open_scene` + `play_scene` + `get_godot_errors`.
+  - `actor_8dir_limbo.gd` reduzido para 526 linhas.
+- Desacoplamento tecnico BT/HSM (passes v5):
+  - limpeza de wrappers privados redundantes no actor (contrato minimo mais enxuto).
+  - `actor_8dir_limbo.gd` reduzido para 501 linhas.
 
 ## LimboAI no projeto
 - HSM para execucao de locomocao/ataque no actor.
@@ -89,7 +97,7 @@ Estado atual consolidado: `feat/actor-combat-profile-runtime`
    - `docs/combat-tuning-matrix-v1.md`
 2. Padronizar pipeline BT de combate para novos hostis (base enemy template) apos tuning v1.
 3. Finalizar acabamento de desacoplamento residual (nao critico):
-   - extrair bloco de animacao/ataque do actor (`face/play/wait/orient`) para runtime dedicado.
+   - revisar e reduzir wrappers remanescentes do actor para contrato minimo de orquestracao.
 4. Feedback de hit:
    - FX local de impacto, flash de dano, popup de numero.
 5. Validacao para futuro multiplayer:

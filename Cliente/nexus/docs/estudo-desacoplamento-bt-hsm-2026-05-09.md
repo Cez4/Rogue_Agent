@@ -57,6 +57,18 @@ Reduzir acoplamento dinamico (`has_method`/`.call`) na trilha critica de combate
 - `actor_lifecycle_runtime.gd` centraliza respawn/reset de runtime.
 - `combat_blocked_reasons.gd` remove strings soltas de blocked reasons.
 - `hitbox_component.gd` e `hurtbox_component.gd` tipados sem reflexao dinamica.
+8. Novo corte de desacoplamento (v4):
+- `actor_action_runtime.gd` centraliza:
+  - `face_toward` / `face_dir`
+  - `play_idle_animation` / `play_walk_animation` / `play_walk_toward` / `update_walk_animation`
+  - `play_attack_animation` / `orient_attack_hitbox`
+  - `wait_for_attack_animation_end`
+  - `play_attack_animation_and_finish`
+- `actor_8dir_limbo.gd` manteve API publica e delegou o bloco de action sem alterar o fluxo BT/HSM.
+- runbook atualizado com validacao MCP pos-refactor.
+9. Novo corte de desacoplamento (v5):
+- remocao de wrappers privados mortos no `actor_8dir_limbo.gd`.
+- inlining de validacao simples de alvo vivo no contrato runtime.
 
 ## Resultado pratico
 1. Menor risco de regressao silenciosa por renome de metodo/variavel.
@@ -74,7 +86,7 @@ Resultado:
 - ruido remanescente de `out_of_range/reacquire` coerente com kite.
 
 ## Linhas atuais dos componentes-chave
-- `actor_8dir_limbo.gd`: 558
+- `actor_8dir_limbo.gd`: 501
 - `actor_combat_runtime.gd`: 109
 - `actor_navigation_runtime.gd`: 51
 - `actor_animation_runtime.gd`: 42

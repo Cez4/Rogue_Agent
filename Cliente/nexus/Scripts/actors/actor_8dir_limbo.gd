@@ -75,6 +75,7 @@ var _stats: StatsComponent
 var _is_dead: bool = false
 
 const ActorAnimationRuntimeRef = preload("res://Scripts/actors/services/actor_animation_runtime.gd")
+const ActorActionRuntimeRef = preload("res://Scripts/actors/services/actor_action_runtime.gd")
 const ActorCombatProfileRuntimeRef = preload("res://Scripts/actors/services/actor_combat_profile_runtime.gd")
 const ActorCombatRuntimeRef = preload("res://Scripts/actors/services/actor_combat_runtime.gd")
 const ActorLifecycleRuntimeRef = preload("res://Scripts/actors/services/actor_lifecycle_runtime.gd")
@@ -85,7 +86,6 @@ const ActorSocialRuntimeRef = preload("res://Scripts/actors/services/actor_socia
 const ActorTargetingRuntimeRef = preload("res://Scripts/actors/services/actor_targeting_runtime.gd")
 const ActorWanderRuntimeRef = preload("res://Scripts/actors/services/actor_wander_runtime.gd")
 const ActorStatsRuntimeRef = preload("res://Scripts/actors/services/actor_stats_runtime.gd")
-const Anim8DirUtilsRef = preload("res://Scripts/actors/services/anim8dir_utils.gd")
 
 
 func _ready() -> void:
@@ -183,6 +183,14 @@ func set_spawn_position(value: Vector2) -> void:
 
 func get_spawn_position() -> Vector2:
 	return _spawn_position
+
+
+func get_last_direction_suffix() -> StringName:
+	return _last_direction_suffix
+
+
+func set_last_direction_suffix(value: StringName) -> void:
+	_last_direction_suffix = value
 
 
 func get_bt_player() -> Node:
@@ -283,7 +291,7 @@ func is_attack_pending_runtime() -> bool:
 
 
 func is_target_alive_for_runtime(target: Node2D) -> bool:
-	return _is_target_alive(target)
+	return ActorCombatRuntimeRef.is_target_alive(target)
 
 
 func request_move_runtime(target_position: Vector2) -> void:
@@ -347,18 +355,6 @@ func get_combat_reacquire_interval_sec() -> float:
 	return ActorCombatProfileRuntimeRef.get_combat_reacquire_interval_sec(self)
 
 
-func _is_target_alive(target: Node2D) -> bool:
-	return ActorCombatRuntimeRef.is_target_alive(target)
-
-
-func _setup_interactable_component() -> void:
-	ActorSetupRuntimeRef.setup_interactable_component(self)
-
-
-func _connect_health_signals() -> void:
-	ActorSetupRuntimeRef.connect_health_signals(self)
-
-
 func _on_health_death() -> void:
 	ActorCombatRuntimeRef.on_health_death(self)
 
@@ -392,74 +388,39 @@ func _play_die_animation() -> void:
 
 
 func face_toward(target_position: Vector2) -> void:
-	var dir: Vector2 = target_position - global_position
-	if dir.length_squared() < 0.0001:
-		return
-	# Keep facing updated for 8-dir attack selection, but never interrupt an active attack animation.
-	_last_direction_suffix = Anim8DirUtilsRef.direction_suffix_from_vector(dir, _last_direction_suffix)
-	if not _attack_pending:
-		_play_directional_animation(idle_prefix, dir)
+	ActorActionRuntimeRef.face_toward(self, target_position)
 
 
 func face_dir(x_axis: float) -> void:
-	if absf(x_axis) <= 0.01:
-		return
-	face_toward(global_position + Vector2(signf(x_axis), 0.0) * 16.0)
+	ActorActionRuntimeRef.face_dir(self, x_axis)
 
 
 func play_idle_animation() -> void:
-	_play_directional_animation(idle_prefix, velocity)
+	ActorActionRuntimeRef.play_idle_animation(self)
 
 
 func play_walk_animation() -> void:
-	_play_directional_animation(walk_prefix, velocity)
+	ActorActionRuntimeRef.play_walk_animation(self)
 
 
 func play_walk_toward(target_position: Vector2) -> void:
-	var dir: Vector2 = target_position - global_position
-	_play_directional_animation(walk_prefix, dir)
+	ActorActionRuntimeRef.play_walk_toward(self, target_position)
 
 
 func update_walk_animation() -> void:
-	_play_directional_animation(walk_prefix, velocity)
+	ActorActionRuntimeRef.update_walk_animation(self)
 
 
 func play_attack_animation() -> void:
-	var dir: Vector2 = Anim8DirUtilsRef.direction_vector_from_suffix(_last_direction_suffix)
-	var played := _play_directional_animation(attack_prefix, dir)
-	if not played:
-		return
-	ActorAnimationRuntimeRef.setup_attack_animation(animated_sprite, attack_prefix, _last_direction_suffix)
+	ActorActionRuntimeRef.play_attack_animation(self)
 
 
 func orient_attack_hitbox() -> void:
-	var hitbox := get_node_or_null(^"AttackHitbox") as Area2D
-	if hitbox == null:
-		return
-	var base_distance: float = maxf(8.0, hitbox.position.length())
-	var dir: Vector2 = Anim8DirUtilsRef.direction_vector_from_suffix(_last_direction_suffix)
-	hitbox.position = dir * base_distance
+	ActorActionRuntimeRef.orient_attack_hitbox(self)
 
 
 func wait_for_attack_animation_end(max_wait_sec: float = 1.2) -> void:
-	if animated_sprite == null or animated_sprite.sprite_frames == null:
-		return
-	var animation_name := StringName("%s_%s" % [attack_prefix, _last_direction_suffix])
-	if not animated_sprite.sprite_frames.has_animation(animation_name):
-		return
-	if animated_sprite.animation != animation_name:
-		return
-
-	var estimated_len := _estimate_animation_length_sec(animation_name)
-	var timeout_sec := maxf(0.1, maxf(max_wait_sec, estimated_len + 0.06))
-	var deadline_sec: float = Time.get_ticks_msec() * 0.001 + timeout_sec
-	while Time.get_ticks_msec() * 0.001 < deadline_sec:
-		# AnimatedSprite2D stops playing when non-loop animation reaches the end.
-		if animated_sprite.animation != animation_name:
-			return
-		if not animated_sprite.is_playing():
-			return
-		await get_tree().process_frame
+	await ActorActionRuntimeRef.wait_for_attack_animation_end(self, max_wait_sec)
 
 
 func _estimate_animation_length_sec(animation_name: StringName) -> float:
@@ -479,16 +440,10 @@ func is_wander_complete() -> bool:
 
 
 func play_attack_animation_and_finish() -> void:
-	var played := _play_directional_animation(attack_prefix, velocity)
-	if played:
-		var expected := StringName("%s_%s" % [attack_prefix, _last_direction_suffix])
-		if animated_sprite.animation == expected:
-			await animated_sprite.animation_finished
-		else:
-			await get_tree().create_timer(attack_duration_sec).timeout
-	else:
-		await get_tree().create_timer(0.05).timeout
-	_attack_pending = false
+	await ActorActionRuntimeRef.play_attack_animation_and_finish(self)
+
+
+func dispatch_attack_state_finished() -> void:
 	attack_state.get_root().dispatch(attack_state.EVENT_FINISHED)
 
 
@@ -538,21 +493,9 @@ func _play_directional_animation(prefix: String, direction_source: Vector2) -> b
 	return bool(result.get("played", false))
 
 
-func _direction_suffix_from_vector(v: Vector2) -> StringName:
-	return Anim8DirUtilsRef.direction_suffix_from_vector(v, _last_direction_suffix)
-
-
-func _direction_vector_from_suffix(suffix: StringName) -> Vector2:
-	return Anim8DirUtilsRef.direction_vector_from_suffix(suffix)
-
-
 func get_stat_value(stat_id: StringName, fallback: float = 0.0) -> float:
 	return ActorStatsRuntimeRef.get_stat_value(self, stat_id, fallback)
 
 
 func _setup_stats() -> void:
 	ActorStatsRuntimeRef.setup_stats(self)
-
-
-func _apply_loadout_modifiers_to_stats() -> void:
-	ActorStatsRuntimeRef.apply_loadout_modifiers_to_stats(self)

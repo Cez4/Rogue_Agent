@@ -84,13 +84,19 @@ Regra de autoridade:
 - `HurtboxComponent` chama `HealthComponent` tipado.
 17. `attack_blocked_reason` padronizado:
 - `combat_blocked_reasons.gd` como fonte unica de motivos.
+18. Runtime de action/animacao extraido:
+- `ActorActionRuntime` centraliza face/play/wait/orient/finalizacao de ataque.
+- `actor_8dir_limbo.gd` reduziu para 526 linhas mantendo contrato do BT/HSM.
+19. Consolidacao de contrato minimo (v5):
+- remocao de wrappers privados redundantes sem impacto no contrato publico.
+- `actor_8dir_limbo.gd` reduziu para 501 linhas.
 
 ### Parcial
 1. Smart Objects avancados (Talk/Use/Trade com affordances completos) fora desta fase.
 
 2. Telemetria ainda basica (sem correlacao por decisao BT/task id).
 
-3. `actor_8dir_limbo.gd` ainda centraliza parte da orquestracao de animacao/ataque.
+3. `actor_8dir_limbo.gd` ainda possui wrappers de delegacao que podem ser consolidados em contrato menor.
 
 ### Fora do escopo atual
 1. Multiplayer autoritativo completo (host resolve tudo e replica oficial).
@@ -125,8 +131,8 @@ Regra de autoridade:
 - usar `get_attack_stop_distance()` (com buffer), nao range bruto.
 
 ## Checklist de fechamento do proximo ciclo
-1. Extrair runtime dedicado de animacao/ataque:
-   - face/play/wait/orient sem mudar comportamento.
+1. Consolidar contrato publico minimo do actor:
+   - reduzir wrappers e garantir API estavel para BT/HSM/runtimes.
 2. Telemetria BT:
    - task enter/exit/status + target id + range final.
 3. Teste de regressao MCP (obrigatorio em cada bloco):

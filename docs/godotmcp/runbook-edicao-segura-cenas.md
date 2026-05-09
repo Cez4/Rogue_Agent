@@ -39,3 +39,25 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 - cena aberta no editor,
 - estado de runtime.
 
+
+## Validacao MCP apos refactor
+1. open_scene(res://cenas/mundo.tscn)
+2. play_scene(current)
+3. get_godot_errors sem parse/runtime novo
+
+
+## Lei do fluxo (obrigatoria)
+1. Godot MCP e obrigatorio em toda alteracao de logica/comportamento.
+2. MCP e a validacao em tempo real (nossos olhos e maos): abrir cena, rodar e ler erros/logs apos cada bloco.
+3. Nao fechar refactor sem validacao MCP.
+4. Checklist minimo MCP: open_scene -> play_scene -> get_godot_errors -> conferir telemetria.
+
+
+## Fluxo oficial do projeto (obrigatorio)
+1. Estudar contexto antes de alterar: docs do projeto + scripts afetados + estado atual.
+2. Alterar em blocos pequenos e desacoplados (um runtime/uma responsabilidade por vez).
+3. Validar cada bloco no Godot MCP imediatamente: open_scene -> play_scene -> get_godot_errors.
+4. Conferir comportamento e telemetria no log (chase/attack/death/respawn) antes de seguir.
+5. Atualizar docs de estado quando houver mudanca estrutural.
+6. So entao commit + push.
+
