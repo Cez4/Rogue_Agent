@@ -165,6 +165,9 @@ Atualizacao de estado:
      - `res://cenas/enemies/hostile_enemy_light.tscn`
      - `res://cenas/enemies/hostile_enemy_brute.tscn`
      - perfis/action dedicados em `configs/combat/`.
+   - validacao isolada confirmada para Brute:
+     - engage/attack/death completos em telemetria;
+     - `attack_stop_distance=21.8`, `reacquire=0.2` (perfil pesado coerente).
 5. Guardrails de saude do projeto documentados:
    - `docs/guia-saude-projeto-godot-limboai-2026-05-09.md`
 4. Evoluir telemetria BT:

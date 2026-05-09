@@ -238,3 +238,11 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
      - `cenas/enemies/hostile_enemy_light.tscn`
      - `cenas/enemies/hostile_enemy_brute.tscn`
    - validacao MCP: `play_scene + get_godot_errors` sem erro novo de parse/runtime.
+16. Validacao isolada do Brute (telemetria concreta):
+   - engage confirmado: `target_acquired` + `AcquireCombatTargetInGroup SUCCESS`.
+   - loop de combate confirmado: `attack_started -> attack_commit -> attack_pending -> attack_finished`.
+   - recebeu dano de forma consistente (`hit_confirmed`) e completou ciclo de morte (`target_lost/chase_canceled/target_died`).
+   - metricas observadas no runtime:
+     - `attack_stop_distance = 21.8`
+     - `reacquire interval_sec = 0.2`
+   - leitura: comportamento coerente para archetype pesado (cadencia mais lenta e aproximacao mais curta que Light).
