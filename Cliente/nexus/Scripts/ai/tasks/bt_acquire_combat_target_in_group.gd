@@ -22,10 +22,10 @@ func _tick(_delta: float) -> Status:
 	var acquire_radius_sq: float = acquire_radius * acquire_radius
 
 	var current_target: Node2D = null
-	if agent.has_method("get"):
-		current_target = agent.get("_combat_target") as Node2D
+	if agent.has_method("get_combat_target"):
+		current_target = agent.get_combat_target() as Node2D
 	if is_instance_valid(current_target):
-		if agent.has_method("_is_target_alive") and not bool(agent._is_target_alive(current_target)):
+		if agent.has_method("is_target_alive_for_runtime") and not bool(agent.is_target_alive_for_runtime(current_target)):
 			if agent.has_method("clear_combat_target"):
 				agent.clear_combat_target()
 		else:
@@ -46,7 +46,7 @@ func _tick(_delta: float) -> Status:
 			continue
 		if candidate == agent:
 			continue
-		if agent.has_method("_is_target_alive") and not bool(agent._is_target_alive(candidate)):
+		if agent.has_method("is_target_alive_for_runtime") and not bool(agent.is_target_alive_for_runtime(candidate)):
 			continue
 		var dist_sq: float = agent.global_position.distance_squared_to(candidate.global_position)
 		if dist_sq > acquire_radius_sq:

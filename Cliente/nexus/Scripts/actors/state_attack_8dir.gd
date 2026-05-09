@@ -18,10 +18,10 @@ func _enter() -> void:
 
 	var telemetry_target: String = ""
 	var has_valid_telemetry_target: bool = false
-	if agent.has_method("get"):
-		var current_target: Variant = agent.get("_combat_target")
-		if current_target is Node2D and is_instance_valid(current_target):
-			telemetry_target = str((current_target as Node2D).name)
+	if agent.has_method("get_combat_target"):
+		var current_target: Node2D = agent.get_combat_target() as Node2D
+		if is_instance_valid(current_target):
+			telemetry_target = str(current_target.name)
 			has_valid_telemetry_target = true
 	if has_valid_telemetry_target:
 		CombatTelemetry.emit_event(&"attack_started", {
@@ -90,10 +90,8 @@ func _finish_attack() -> void:
 
 
 func _resolved_action_data() -> Resource:
-	if agent != null and agent.has_method("get"):
-		var loadout: Variant = agent.get("equipment_loadout")
-		if loadout != null and loadout is EquipmentLoadout:
-			var typed_loadout: EquipmentLoadout = loadout
-			if typed_loadout.weapon != null and typed_loadout.weapon.action_data != null:
-				return typed_loadout.weapon.action_data
+	if agent != null and agent.has_method("get_equipment_loadout_runtime"):
+		var loadout: EquipmentLoadout = agent.get_equipment_loadout_runtime() as EquipmentLoadout
+		if loadout != null and loadout.weapon != null and loadout.weapon.action_data != null:
+			return loadout.weapon.action_data
 	return action_data

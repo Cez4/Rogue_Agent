@@ -16,8 +16,8 @@ func _tick(_delta: float) -> Status:
 		if agent != null and agent.has_method("clear_combat_target"):
 			agent.clear_combat_target()
 		return FAILURE
-	if agent != null and agent.has_method("_is_target_alive"):
-		if agent._is_target_alive(target):
+	if agent != null and agent.has_method("is_target_alive_for_runtime"):
+		if agent.is_target_alive_for_runtime(target):
 			return SUCCESS
 		if agent.has_method("clear_combat_target"):
 			agent.clear_combat_target()

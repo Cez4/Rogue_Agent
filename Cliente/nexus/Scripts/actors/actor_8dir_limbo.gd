@@ -299,6 +299,15 @@ func is_target_alive_for_runtime(target: Node2D) -> bool:
 	return _is_target_alive(target)
 
 
+func request_move_runtime(target_position: Vector2) -> void:
+	if motor != null and motor.has_method("request_move"):
+		motor.call("request_move", target_position)
+
+
+func get_equipment_loadout_runtime() -> EquipmentLoadout:
+	return equipment_loadout
+
+
 func set_interaction_target(target: Node2D, stop_range: float = -1.0) -> void:
 	if target == null or not is_instance_valid(target) or target == self:
 		clear_interaction_target()
