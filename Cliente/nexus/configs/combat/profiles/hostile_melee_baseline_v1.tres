@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource("1_profile")
-acquire_radius = 96.0
-lose_radius = 132.0
-target_memory_sec = 0.75
-reacquire_interval_sec = 0.14
-attack_stop_buffer = 3.5
+acquire_radius = 88.0
+lose_radius = 124.0
+target_memory_sec = 0.6
+reacquire_interval_sec = 0.18
+attack_stop_buffer = 4.5

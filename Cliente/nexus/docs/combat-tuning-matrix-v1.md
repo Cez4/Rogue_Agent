@@ -100,7 +100,7 @@ Sinais de problema:
 |---|---:|---:|---:|---:|---:|---:|---|
 | melee_baseline_current | 120.0 | 148.0 | 1.2 | 0.12 | 2.0 | 10.0 | defaults do actor/combat profile |
 | player_melee_baseline_v1 | 120.0 | 156.0 | 1.2 | 0.12 | 2.0 | 10.0 | `configs/combat/profiles/player_melee_baseline_v1.tres` |
-| hostile_melee_baseline_v1 | 96.0 | 132.0 | 0.75 | 0.14 | 3.5 | 12.0 | `configs/combat/profiles/hostile_melee_baseline_v1.tres` |
+| hostile_melee_baseline_v1 | 88.0 | 124.0 | 0.60 | 0.18 | 4.5 | 12.0 | `configs/combat/profiles/hostile_melee_baseline_v1.tres` |
 | melee_light_v1 | TBD | TBD | TBD | TBD | TBD | TBD | tuning alvo |
 | melee_tank_v1 | TBD | TBD | TBD | TBD | TBD | TBD | tuning alvo |
 | ranged_skirmisher_v1 | TBD | TBD | TBD | TBD | TBD | TBD | futuro |
@@ -144,6 +144,10 @@ Critério de aprovação:
    - sem novo erro de parse/runtime
 3. Próxima ação do ciclo:
    - coletar telemetria de combate em sessão de teste guiada e ajustar somente variáveis do profile.
+4. Ajuste aplicado no Wildcat (passo atual):
+   - reduce aggro envelope: `acquire 96->88`, `lose 132->124`
+   - reduce memory churn: `memory 0.75->0.60`, `reacquire 0.14->0.18`
+   - improve melee stop: `stop_buffer 3.5->4.5` (aproxima mais antes de atacar)
 
 ## 10) Referências
 1. Godot NavigationAgent2D:

@@ -6,6 +6,8 @@ extends BTAction
 @export var blocked_reason_var: StringName = &"last_attack_blocked_reason"
 @export var blocked_latched_var: StringName = &"attack_blocked_latched"
 @export var blocked_active_var: StringName = &"attack_blocked_active"
+@export var blocked_pending_since_ms_var: StringName = &"attack_blocked_pending_since_ms"
+@export var blocked_started_min_duration_sec: float = 0.25
 
 
 func _generate_name() -> String:
@@ -90,11 +92,22 @@ func _emit_blocked_started_if_needed(reason: String) -> void:
 		active = bool(blackboard.get_var(blocked_active_var))
 	if active:
 		return
+	var now_ms: int = Time.get_ticks_msec()
+	var pending_since_ms: int = -1
+	if blackboard.has_var(blocked_pending_since_ms_var):
+		pending_since_ms = int(blackboard.get_var(blocked_pending_since_ms_var))
+	if pending_since_ms < 0:
+		blackboard.set_var(blocked_pending_since_ms_var, now_ms)
+		return
+	var min_duration_ms: int = int(maxf(0.0, blocked_started_min_duration_sec) * 1000.0)
+	if now_ms - pending_since_ms < min_duration_ms:
+		return
 	CombatTelemetry.emit_event(&"attack_blocked_started", {
 		"actor": agent.name,
 		"reason": reason
 	})
 	blackboard.set_var(blocked_active_var, true)
+	blackboard.set_var(blocked_pending_since_ms_var, -1)
 
 
 func _emit_blocked_ended_if_needed(next_reason: String) -> void:
@@ -102,9 +115,11 @@ func _emit_blocked_ended_if_needed(next_reason: String) -> void:
 	if blackboard.has_var(blocked_active_var):
 		active = bool(blackboard.get_var(blocked_active_var))
 	if not active:
+		blackboard.set_var(blocked_pending_since_ms_var, -1)
 		return
 	CombatTelemetry.emit_event(&"attack_blocked_ended", {
 		"actor": agent.name,
 		"next_reason": next_reason
 	})
 	blackboard.set_var(blocked_active_var, false)
+	blackboard.set_var(blocked_pending_since_ms_var, -1)
