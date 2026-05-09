@@ -190,6 +190,12 @@ Atualizacao de estado:
      - `recover_sec 0.20 -> 0.22`
      - `cooldown_sec 0.28 -> 0.32`
    - resultado: loop de combate mantido estavel com telemetria coerente e sem erro novo.
+10. Auditoria critica de paridade de combate (8dir) concluida:
+   - descoberta: hostis estavam sem `AttackHitbox` em algumas cenas.
+   - correcao aplicada em `base/light/brute/wildcat`.
+   - evidencia: `hit_confirmed` com `source_owner` inimigo em runtime.
+   - estudo tecnico:
+     - `docs/estudo-combat-hitbox-paridade-8dir-2026-05-09.md`
 4. Evoluir telemetria BT:
    - opcional: eventos enter/exit separados por task para analise de arvore.
    - opcional: presets de perfil (`quiet`, `balanced`, `verbose`) no painel debug.

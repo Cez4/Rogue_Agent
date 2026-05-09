@@ -1,7 +1,7 @@
-[gd_scene format=3 uid="uid://hu72wisxvpab"]
+[gd_scene format=3 uid="uid://c7a7itng4jhp8"]
 
 [ext_resource type="Script" uid="uid://dbux36mt8uqe5" path="res://Scripts/actors/actor_8dir_limbo.gd" id="1_l8egd"]
-[ext_resource type="Resource" path="res://configs/combat/profiles/hostile_light_profile_v1.tres" id="2_cq7xd"]
+[ext_resource type="Resource" uid="uid://qu366ceee5n" path="res://configs/combat/profiles/hostile_light_profile_v1.tres" id="2_cq7xd"]
 [ext_resource type="Texture2D" uid="uid://2xasgbebdvsh" path="res://Assets/Char/WildCat/Attack1.png" id="3_vsdir"]
 [ext_resource type="Texture2D" uid="uid://s1otrtbxrc7n" path="res://Assets/Char/WildCat/Die.png" id="4_pprg3"]
 [ext_resource type="Texture2D" uid="uid://c3drwa4p3b2si" path="res://Assets/Char/WildCat/Idle.png" id="5_mqb08"]
@@ -12,15 +12,15 @@
 [ext_resource type="Script" uid="uid://w6oyxr36dcgy" path="res://Scripts/actors/state_idle_8dir.gd" id="10_5v8ye"]
 [ext_resource type="Script" uid="uid://dwo1bk64b01w" path="res://Scripts/actors/state_walk_8dir.gd" id="11_tacm5"]
 [ext_resource type="Script" uid="uid://d3iujpe3t8fla" path="res://Scripts/actors/state_attack_8dir.gd" id="12_60t1r"]
-[ext_resource type="Resource" path="res://configs/combat/hostile_light_attack_v1.tres" id="13_texcc"]
+[ext_resource type="Resource" uid="uid://brpygd3iih0ks" path="res://configs/combat/hostile_light_attack_v1.tres" id="13_texcc"]
 [ext_resource type="Script" uid="uid://cpo2dt0djpyes" path="res://Scripts/actors/state_wander_8dir.gd" id="14_frxuc"]
 [ext_resource type="PackedScene" path="res://cenas/components/emotion_bubble_shared.tscn" id="15_lvdsk"]
 [ext_resource type="Texture2D" uid="uid://b46nvc0ukccid" path="res://Assets/emotions/spriteExc.png" id="16_ae4fc"]
 [ext_resource type="Texture2D" uid="uid://dffhs4xccwdww" path="res://Assets/emotions/spriteHoe.png" id="17_m3isr"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/health_component_node.tscn" id="18_i5wkl"]
-[ext_resource type="Script" uid="uid://c4albnh7g2uh2" path="res://Scripts/combat/health_component.gd" id="19_ja0ys"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="20_05h1s"]
-[ext_resource type="Script" uid="uid://dgemf4hu2eypk" path="res://Scripts/combat/hurtbox_component.gd" id="21_jgie8"]
+[ext_resource type="PackedScene" path="res://cenas/components/combat/attack_hitbox_component_node.tscn" id="20_wtst7"]
+[ext_resource type="Script" uid="uid://cnyih1kegdel6" path="res://Scripts/combat/hitbox_component.gd" id="21_ygsh7"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijbr8"]
 atlas = ExtResource("3_vsdir")
@@ -3858,18 +3858,18 @@ action_data = ExtResource("13_texcc")
 [node name="WanderState" type="LimboState" parent="LimboHSM" unique_id=1259319103]
 script = ExtResource("14_frxuc")
 
-[node name="EmotionBubble" type="AnimatedSprite2D" parent="." unique_id=587887002 instance=ExtResource("15_lvdsk")]
-visible = false
-position = Vector2(-8, -40)
+[node name="EmotionBubble" parent="." unique_id=587887002 instance=ExtResource("15_lvdsk")]
 sprite_frames = SubResource("SpriteFrames_emotes")
-animation = &"Hoe"
 
-[node name="Health" type="Node" parent="." unique_id=905350051 instance=ExtResource("18_i5wkl")]
-script = ExtResource("19_ja0ys")
+[node name="Health" parent="." unique_id=905350051 instance=ExtResource("18_i5wkl")]
 max_health = 14.0
 
-[node name="Hurtbox" type="Area2D" parent="." unique_id=987265784 instance=ExtResource("20_05h1s")]
-collision_layer = 16
-collision_mask = 0
+[node name="Hurtbox" parent="." unique_id=987265784 instance=ExtResource("20_05h1s")]
+
+[node name="AttackHitbox" type="Area2D" parent="." unique_id=1741533143 instance=ExtResource("20_wtst7")]
+position = Vector2(20, 0)
+collision_layer = 8
+collision_mask = 16
 monitoring = false
-script = ExtResource("21_jgie8")
+monitorable = false
+script = ExtResource("21_ygsh7")

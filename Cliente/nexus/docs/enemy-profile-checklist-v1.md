@@ -36,6 +36,10 @@ Padronizar onboarding de novos inimigos usando somente dados (`.tres` + cena tem
 - `combat_perception_profile` -> profile do inimigo.
 - `combat_action_data` -> action do inimigo.
 - confirmar grupos (`hostile`, `npc`) conforme contrato atual.
+ - confirmar paridade de componentes de combate:
+   - `Health`
+   - `Hurtbox`
+   - `AttackHitbox`
 
 5. Nao alterar logica:
 - proibido editar BT task/script para balancear um inimigo.

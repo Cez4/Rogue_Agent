@@ -41,6 +41,7 @@ LimboAI:
 - Preferir configuracao por Resource/export vars (data-driven).
 - Manter mudancas pequenas, testaveis e reversiveis.
 - Para multiplayer/co-op: cliente envia intencao, estado oficial vem do host.
+- Em combate melee, garantir paridade de composicao nas cenas (Health + Hurtbox + AttackHitbox) para todo ator combatente.
 
 ## Saida minima esperada por tarefa
 - Contexto consultado (links usados).

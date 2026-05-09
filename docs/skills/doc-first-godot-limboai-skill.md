@@ -13,6 +13,7 @@ Regra:
 6. Registrar fontes no doc de estudo/status da entrega.
 7. Toda logica nova deve ter teste funcional + telemetria/log comprovando o comportamento.
 8. Em troca de fase, rodar auditoria de saude: docs internos + docs web oficiais + estado atual do codigo.
+9. Em qualquer ajuste de combate, validar paridade de composicao da cena (Health + Hurtbox + AttackHitbox) em todos os combatentes.
 
 Checklist rapido:
 - [ ] Doc interno lido.
@@ -23,6 +24,7 @@ Checklist rapido:
 - [ ] Telemetria/log do comportamento novo conferida.
 - [ ] Fontes registradas no doc.
 - [ ] Eixo de tuning registrado (quando aplicavel) e resultado anotado.
+- [ ] Paridade de componentes de combate validada nas cenas alteradas.
 
 Fontes base:
 - Godot: https://docs.godotengine.org/en/stable/

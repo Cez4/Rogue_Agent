@@ -19,6 +19,8 @@
 [ext_resource type="PackedScene" path="res://cenas/components/combat/health_component_node.tscn" id="16_tntqu"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="18_dkk0s"]
 [ext_resource type="Resource" path="res://configs/combat/wildcat_claw_attack_v1.tres" id="19_wcatatk"]
+[ext_resource type="PackedScene" path="res://cenas/components/combat/attack_hitbox_component_node.tscn" id="20_igu0s"]
+[ext_resource type="Script" uid="uid://cnyih1kegdel6" path="res://Scripts/combat/hitbox_component.gd" id="21_ligv6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijbr8"]
 atlas = ExtResource("1_5uhpa")
@@ -3863,3 +3865,11 @@ sprite_frames = SubResource("SpriteFrames_emotes")
 max_health = 14.0
 
 [node name="Hurtbox" parent="." unique_id=987265784 instance=ExtResource("18_dkk0s")]
+
+[node name="AttackHitbox" type="Area2D" parent="." unique_id=1142482952 instance=ExtResource("20_igu0s")]
+position = Vector2(20, 0)
+collision_layer = 8
+collision_mask = 16
+monitoring = false
+monitorable = false
+script = ExtResource("21_ligv6")
