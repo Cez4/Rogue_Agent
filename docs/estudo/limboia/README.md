@@ -131,3 +131,17 @@ No seu projeto, a sequência robusta é:
 - https://limboai.readthedocs.io/en/stable/classes/class_limbohsm.html
 - https://limboai.readthedocs.io/en/stable/classes/class_limbostate.html
 - https://limboai.readthedocs.io/en/latest/behavior-trees/custom-tasks.html
+
+## 9) Prova de conceito no projeto (status real)
+1. O conceito data-driven para inimigos foi provado com 2 variantes em producao:
+   - `hostile_enemy_light.tscn`
+   - `hostile_enemy_brute.tscn`
+2. Ambos usam o mesmo core de logica (BT/HSM/actor), variando por dados:
+   - `combat_perception_profile` dedicado
+   - `combat_action_data` dedicado
+3. Telemetria confirmou a diferenca de comportamento por dados (sem hardcode por inimigo):
+   - diferenca de `attack_stop_distance`
+   - diferenca de `damage`
+   - cadencia ajustada por `recover/cooldown`
+4. Conclusao tecnica:
+   - padrao aprovado para escalar novos inimigos sem duplicar logica.

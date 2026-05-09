@@ -296,7 +296,7 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
    - profile final: `lose_radius=126.0`, `target_memory_sec=0.65`, `reacquire_interval_sec=0.16`, `attack_stop_buffer=4.2`.
    - action final: `recover_sec=0.22`, `cooldown_sec=0.32`, `damage=0.85`.
    - survivability final: `max_health=13.0` na cena `hostile_enemy_light.tscn`.
-   - proximo alvo de tuning/freeze: Brute v1, mantendo regra de um eixo por ciclo.
+   - fase concluida e mantida como baseline.
 24. Brute v1 congelado (baseline final aprovado):
    - profile final:
      - `acquire_radius=100.0`

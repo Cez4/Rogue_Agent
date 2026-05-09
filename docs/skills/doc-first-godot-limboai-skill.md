@@ -15,6 +15,7 @@ Regra:
 8. Em troca de fase, rodar auditoria de saude: docs internos + docs web oficiais + estado atual do codigo.
 9. Em qualquer ajuste de combate, validar paridade de composicao da cena (Health + Hurtbox + AttackHitbox) em todos os combatentes.
 10. Em bug de morte/respawn, verificar override no nodo instanciado da cena-mapa antes de alterar o script base.
+11. Em fase de producao de inimigos, provar variacao por dados com pelo menos 2 inimigos reais antes de escalar conteudo.
 
 Checklist rapido:
 - [ ] Doc interno lido.
@@ -27,6 +28,7 @@ Checklist rapido:
 - [ ] Eixo de tuning registrado (quando aplicavel) e resultado anotado.
 - [ ] Paridade de componentes de combate validada nas cenas alteradas.
 - [ ] Em lifecycle, log confirma `target_died` -> `chase_canceled(reason=death)` -> `respawned` (se habilitado).
+- [ ] Prova data-driven registrada: mesma logica, perfis `.tres` diferentes e telemetria mostrando comportamento distinto.
 
 Fontes base:
 - Godot: https://docs.godotengine.org/en/stable/

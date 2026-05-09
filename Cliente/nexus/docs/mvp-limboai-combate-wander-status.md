@@ -110,3 +110,9 @@ Atualizacao de estado:
   - https://docs.godotengine.org/en/4.1/classes/class_navigationagent2d.html
 - Godot Navigation guide:
   - https://docs.godotengine.org/en/stable/tutorials/navigation/navigation_using_navigationagents.html
+
+## Prova de conceito data-driven (confirmada)
+1. Validada com 2 inimigos reais em producao: `HostileEnemyLight` e `HostileEnemyBrute`.
+2. Ambos compartilham a mesma logica core (BT/HSM/actor).
+3. Variacao de comportamento vem apenas de dados (`combat_perception_profile` e `combat_action_data`).
+4. Telemetria comprovou diferenca por dados (range efetivo de parada, cadence e dano) sem script dedicado por inimigo.

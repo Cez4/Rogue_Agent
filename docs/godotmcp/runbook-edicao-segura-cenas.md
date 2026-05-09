@@ -95,3 +95,15 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
    - `enable_respawn`
    - `respawn_delay_sec`
 3. Em bug de "travou", confirmar primeiro no log se houve `target_died` (morte real) antes de tratar como freeze.
+
+## Prova de conceito data-driven (fechado)
+1. Conceito validado com 2 hostis reais (`Light` e `Brute`) sem criar script novo por inimigo.
+2. Mesmo core para ambos:
+   - `actor_8dir_limbo.gd`
+   - BT/HSM e pipeline de combate iguais.
+3. Diferenca de comportamento vem somente de dados:
+   - `combat_perception_profile` (.tres)
+   - `combat_action_data` (.tres)
+4. Critério de aceite:
+   - telemetria confirma variacao por dados (`attack_stop_distance`, `damage`, cadence),
+   - sem erro novo em `get_godot_errors`.
