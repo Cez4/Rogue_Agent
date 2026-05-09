@@ -91,6 +91,7 @@ Baseline v1 aprovado para continuidade:
 ## Proximo passo imediato
 Abrir proxima fase de producao:
 1. criar template base de inimigo hostil reutilizavel (BT/HSM + perfis v1);
+   - status: iniciado (template baseline criado em `res://cenas/enemies/hostile_enemy_base.tscn`).
 2. aplicar primeiro no Wildcat como prefab de referencia;
 3. manter gate MCP e telemetria como qualidade obrigatoria por PR.
 
