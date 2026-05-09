@@ -102,9 +102,6 @@ navigation_polygon = SubResource("NavigationPolygon_8iuxu")
 
 [node name="Player" parent="." unique_id=1788697171 instance=ExtResource("8_i5d5d")]
 position = Vector2(264, -85)
-die_prefix = "Dagger01_Die"
-enable_respawn = true
-respawn_delay_sec = 4.0
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1882526807]
 stream = ExtResource("11_esbpk")
