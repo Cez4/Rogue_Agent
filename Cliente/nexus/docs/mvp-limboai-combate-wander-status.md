@@ -160,6 +160,8 @@ Atualizacao de estado:
    - `docs/plano-tuning-wildcat-v1-2026-05-09.md`
 3. Tuning v1 fechado com baseline aprovado (wildcat + player + telemetria de cancel reason).
 4. Proxima fase: padronizar pipeline BT de combate para novos hostis (base enemy template).
+5. Guardrails de saude do projeto documentados:
+   - `docs/guia-saude-projeto-godot-limboai-2026-05-09.md`
 4. Evoluir telemetria BT:
    - opcional: eventos enter/exit separados por task para analise de arvore.
    - opcional: presets de perfil (`quiet`, `balanced`, `verbose`) no painel debug.
