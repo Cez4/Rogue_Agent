@@ -6,6 +6,8 @@ var _combat_toggle: CheckButton
 var _thought_toggle: CheckButton
 var _dedupe_spin: SpinBox
 var _actor_min_spin: SpinBox
+var _transitions_only_toggle: CheckButton
+var _heartbeat_spin: SpinBox
 
 func _ready() -> void:
 	layer = 50
@@ -50,6 +52,11 @@ func _build_ui() -> void:
 	_thought_toggle.toggled.connect(_on_thought_toggled)
 	vbox.add_child(_thought_toggle)
 
+	_transitions_only_toggle = CheckButton.new()
+	_transitions_only_toggle.text = "Thought transitions only"
+	_transitions_only_toggle.toggled.connect(_on_transitions_only_toggled)
+	vbox.add_child(_transitions_only_toggle)
+
 	var hbox := HBoxContainer.new()
 	hbox.add_theme_constant_override("separation", 8)
 	vbox.add_child(hbox)
@@ -80,14 +87,31 @@ func _build_ui() -> void:
 	_actor_min_spin.value_changed.connect(_on_actor_min_changed)
 	hbox_actor.add_child(_actor_min_spin)
 
+	var hbox_heartbeat := HBoxContainer.new()
+	hbox_heartbeat.add_theme_constant_override("separation", 8)
+	vbox.add_child(hbox_heartbeat)
+
+	var heartbeat_label := Label.new()
+	heartbeat_label.text = "Thought heartbeat ms"
+	hbox_heartbeat.add_child(heartbeat_label)
+
+	_heartbeat_spin = SpinBox.new()
+	_heartbeat_spin.min_value = 0
+	_heartbeat_spin.max_value = 10000
+	_heartbeat_spin.step = 100
+	_heartbeat_spin.value_changed.connect(_on_heartbeat_changed)
+	hbox_heartbeat.add_child(_heartbeat_spin)
+
 func _sync_from_settings() -> void:
 	var settings := _get_settings()
 	if settings == null:
 		return
 	_combat_toggle.button_pressed = settings.combat_enabled
 	_thought_toggle.button_pressed = settings.thought_enabled
+	_transitions_only_toggle.button_pressed = settings.thought_transitions_only
 	_dedupe_spin.value = settings.thought_dedupe_ms
 	_actor_min_spin.value = settings.thought_actor_min_interval_ms
+	_heartbeat_spin.value = settings.thought_heartbeat_ms
 
 func _on_combat_toggled(enabled: bool) -> void:
 	var settings := _get_settings()
@@ -112,6 +136,18 @@ func _on_actor_min_changed(value: float) -> void:
 	if settings == null:
 		return
 	settings.set_thought_actor_min_interval_ms(int(value))
+
+func _on_transitions_only_toggled(enabled: bool) -> void:
+	var settings := _get_settings()
+	if settings == null:
+		return
+	settings.set_thought_transitions_only(enabled)
+
+func _on_heartbeat_changed(value: float) -> void:
+	var settings := _get_settings()
+	if settings == null:
+		return
+	settings.set_thought_heartbeat_ms(int(value))
 
 func _get_settings() -> Node:
 	var tree := Engine.get_main_loop() as SceneTree
