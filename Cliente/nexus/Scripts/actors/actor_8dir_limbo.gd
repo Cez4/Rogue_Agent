@@ -75,6 +75,7 @@ var _stats: StatsComponent
 var _is_dead: bool = false
 
 const ActorAnimationRuntimeRef = preload("res://Scripts/actors/services/actor_animation_runtime.gd")
+const ActorCombatProfileRuntimeRef = preload("res://Scripts/actors/services/actor_combat_profile_runtime.gd")
 const ActorCombatRuntimeRef = preload("res://Scripts/actors/services/actor_combat_runtime.gd")
 const ActorNavigationRuntimeRef = preload("res://Scripts/actors/services/actor_navigation_runtime.gd")
 const ActorPerceptionRuntimeRef = preload("res://Scripts/actors/services/actor_perception_runtime.gd")
@@ -333,59 +334,35 @@ func _update_chase_attack() -> void:
 
 
 func get_attack_range() -> float:
-	var range_bonus: float = get_stat_value(&"attack_range_bonus", base_attack_range_bonus)
-	var range_mul: float = get_stat_value(&"attack_range_multiplier", base_attack_range_multiplier)
-	if equipment_loadout != null and equipment_loadout.weapon != null:
-		var weapon_range: float = float(equipment_loadout.weapon.attack_range)
-		return maxf(6.0, (weapon_range + range_bonus) * (1.0 + range_mul))
-	return maxf(6.0, (chase_attack_range + range_bonus) * (1.0 + range_mul))
+	return ActorCombatProfileRuntimeRef.get_attack_range(self)
 
 
 func get_attack_stop_distance() -> float:
-	var profile_stop_buffer: float = base_attack_stop_buffer
-	if combat_perception_profile != null:
-		profile_stop_buffer = combat_perception_profile.attack_stop_buffer
-	var stop_buffer: float = get_stat_value(&"attack_stop_buffer", profile_stop_buffer)
-	return maxf(2.0, get_attack_range() - stop_buffer)
+	return ActorCombatProfileRuntimeRef.get_attack_stop_distance(self)
 
 
 func get_perception_min_distance() -> float:
-	return maxf(0.0, get_stat_value(&"perception_min_distance", base_perception_min_distance))
+	return ActorCombatProfileRuntimeRef.get_perception_min_distance(self)
 
 
 func get_perception_max_distance() -> float:
-	var profile_max: float = base_perception_max_distance
-	if combat_perception_profile != null:
-		profile_max = combat_perception_profile.lose_radius
-	return maxf(get_perception_min_distance(), get_stat_value(&"perception_max_distance", profile_max))
+	return ActorCombatProfileRuntimeRef.get_perception_max_distance(self)
 
 
 func get_combat_acquire_radius() -> float:
-	var profile_acquire: float = base_perception_radius
-	if combat_perception_profile != null:
-		profile_acquire = combat_perception_profile.acquire_radius
-	return maxf(8.0, get_stat_value(&"combat_acquire_radius", profile_acquire))
+	return ActorCombatProfileRuntimeRef.get_combat_acquire_radius(self)
 
 
 func get_combat_lose_radius() -> float:
-	var profile_lose: float = maxf(get_combat_acquire_radius(), base_perception_max_distance)
-	if combat_perception_profile != null:
-		profile_lose = maxf(get_combat_acquire_radius(), combat_perception_profile.lose_radius)
-	return maxf(get_combat_acquire_radius(), get_stat_value(&"combat_lose_radius", profile_lose))
+	return ActorCombatProfileRuntimeRef.get_combat_lose_radius(self)
 
 
 func get_combat_target_memory_sec() -> float:
-	var profile_memory: float = 1.2
-	if combat_perception_profile != null:
-		profile_memory = combat_perception_profile.target_memory_sec
-	return maxf(0.0, get_stat_value(&"combat_target_memory_sec", profile_memory))
+	return ActorCombatProfileRuntimeRef.get_combat_target_memory_sec(self)
 
 
 func get_combat_reacquire_interval_sec() -> float:
-	var profile_reacquire: float = 0.12
-	if combat_perception_profile != null:
-		profile_reacquire = combat_perception_profile.reacquire_interval_sec
-	return maxf(0.01, get_stat_value(&"combat_reacquire_interval_sec", profile_reacquire))
+	return ActorCombatProfileRuntimeRef.get_combat_reacquire_interval_sec(self)
 
 
 func _is_target_alive(target: Node2D) -> bool:
