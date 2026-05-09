@@ -1,7 +1,7 @@
 # Auditoria Tecnica - Estado Atual BT/HSM/Combate
 
-Data: 2026-05-08  
-Branch de referencia: `feat/combat-intent-fase4`
+Data: 2026-05-09  
+Branch de referencia: `feat/decoupling-audit-pass-v2`
 
 ## Escopo desta auditoria
 - Consolidar o estado real do combate/intencao contextual.
@@ -67,16 +67,20 @@ Regra de autoridade:
 - distancia de parada para ataque.
 - percepcao de look consultando stats.
 
+12. Desacoplamento tecnico consolidado:
+- componentes core tipados (`Actor8DirLimbo`, `PlayerController`, `PlayerMotor`);
+- tasks BT principais sem `has_method/.call` na trilha critica;
+- estados HSM principais sem reflexao dinamica no fluxo de execucao;
+- keys de blackboard centralizadas em `AIBlackboardKeys`.
+
 ### Parcial
-1. Percepcao de combate completa ainda nao esta toda data-driven no BT:
-- acquire radius
-- lose radius
-- reacquire interval
-- memory time sem LOS
+1. Smart Objects avancados (Talk/Use/Trade com affordances completos) fora desta fase.
 
-2. Smart Objects avancados (Talk/Use/Trade com affordances completos) fora desta fase.
+2. Telemetria ainda basica (sem correlacao por decisao BT/task id).
 
-3. Telemetria ainda basica (sem correlacao por decisao BT/task id).
+3. Restam poucos usos defensivos de reflexao fora da trilha critica:
+- `player_motor.gd` (`face_dir` opcional)
+- `actor_stats_runtime.gd` (itens heterogeneos)
 
 ### Fora do escopo atual
 1. Multiplayer autoritativo completo (host resolve tudo e replica oficial).
@@ -137,4 +141,3 @@ https://limboai.readthedocs.io/en/latest/classes/class_btaction.html
 
 - LimboAI Blackboard:  
 https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
-

@@ -1,8 +1,8 @@
 # MVP LimboAI + Combate + Wander - Status Tecnico
 
-Data: 2026-05-08
+Data: 2026-05-09
 Branch historica: `feat/mvp-combate-fase1`  
-Estado atual consolidado: `feat/combat-intent-fase4`
+Estado atual consolidado: `feat/decoupling-audit-pass-v2`
 
 ## Objetivo atual
 - Base jogavel com:
@@ -57,6 +57,12 @@ Estado atual consolidado: `feat/combat-intent-fase4`
   - reset de memoria de combate no respawn (limpa blackboard e target lock).
   - correcao de blackboard missing var em `bt_request_attack`.
   - doc tecnico: `docs/estudo-wildcat-death-respawn-bt-memory-2026-05-08.md`.
+- Desacoplamento tecnico BT/HSM (passes v1/v2):
+  - tipagem explicita dos componentes core (`Actor8DirLimbo`, `PlayerController`, `PlayerMotor`).
+  - remocao de `has_method/.call` na trilha critica de input/combate.
+  - centralizacao de keys de blackboard em `Scripts/ai/blackboard_keys.gd`.
+  - migracao das tasks principais para `AIBlackboardKeys.*`.
+  - docs: `docs/estudo-desacoplamento-bt-hsm-2026-05-09.md`.
 
 ## LimboAI no projeto
 - HSM para execucao de locomocao/ataque no actor.
@@ -74,11 +80,14 @@ Estado atual consolidado: `feat/combat-intent-fase4`
 1. Calibracao fina por archetype/arma/status com matriz oficial v1:
    - `docs/combat-tuning-matrix-v1.md`
 2. Padronizar pipeline BT de combate para novos hostis (base enemy template) apos tuning v1.
-3. Feedback de hit:
+3. Finalizar acabamento de desacoplamento residual (nao critico):
+   - `player_motor.gd` (`face_dir` opcional)
+   - `actor_stats_runtime.gd` (itens heterogeneos)
+4. Feedback de hit:
    - FX local de impacto, flash de dano, popup de numero.
-4. Validacao para futuro multiplayer:
+5. Validacao para futuro multiplayer:
    - gates de range/LOS/cooldown centralizados no host.
-5. Padrao para NPCs:
+6. Padrao para NPCs:
    - manter BT + tasks reutilizaveis para hostis, companions e bosses.
 
 ## Arquivos-chave
