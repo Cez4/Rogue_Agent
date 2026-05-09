@@ -59,6 +59,8 @@ Padronizar onboarding de novos inimigos usando somente dados (`.tres` + cena tem
 ## Fila atual de producao
 1. Light v1: congelado.
 2. Brute v1: proximo freeze.
+3. Protocolo da sessao Brute:
+   - `docs/brute-tuning-session-protocol-v1.md`
 
 ## Protocolo de tuning (um eixo por vez)
 1. Targeting: `acquire/lose/memory/reacquire`.
