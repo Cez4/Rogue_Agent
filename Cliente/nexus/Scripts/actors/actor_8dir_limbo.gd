@@ -485,6 +485,12 @@ func face_toward(target_position: Vector2) -> void:
 		_play_directional_animation(idle_prefix, dir)
 
 
+func face_dir(x_axis: float) -> void:
+	if absf(x_axis) <= 0.01:
+		return
+	face_toward(global_position + Vector2(signf(x_axis), 0.0) * 16.0)
+
+
 func play_idle_animation() -> void:
 	_play_directional_animation(idle_prefix, velocity)
 

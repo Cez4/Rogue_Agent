@@ -41,6 +41,12 @@ func is_player_moving() -> bool:
 	return bool(motor.is_moving())
 
 
+func face_dir(x_axis: float) -> void:
+	if absf(x_axis) <= 0.01:
+		return
+	_play_directional_animation("Walk_Unarmed", Vector2(signf(x_axis), 0.0))
+
+
 func play_idle_animation() -> void:
 	_play_directional_animation("Idle_Unarmed", velocity)
 

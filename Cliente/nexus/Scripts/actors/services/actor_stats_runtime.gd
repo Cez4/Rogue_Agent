@@ -35,18 +35,15 @@ static func apply_loadout_modifiers_to_stats(actor: Node) -> void:
 	add_item_modifiers(actor, actor.equipment_loadout.necklace)
 
 
-static func add_item_modifiers(actor: Node, item: Resource) -> void:
+static func add_item_modifiers(actor: Node, item: EquipmentData) -> void:
 	if item == null:
 		return
-	if item.has_method("get"):
-		var mods: Variant = item.get("stat_modifiers")
-		if mods is Array:
-			for m in mods:
-				var modifier: StatModifier = m as StatModifier
-				if modifier != null:
-					var stats: StatsComponent = actor.get_stats_component()
-					if stats != null:
-						stats.add_modifier(modifier)
+	var mods: Array[StatModifier] = item.stat_modifiers
+	for modifier in mods:
+		if modifier != null:
+			var stats: StatsComponent = actor.get_stats_component()
+			if stats != null:
+				stats.add_modifier(modifier)
 
 
 static func get_stat_value(actor: Node, stat_id: StringName, fallback: float = 0.0) -> float:

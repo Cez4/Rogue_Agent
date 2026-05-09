@@ -87,9 +87,6 @@ func physics_update(delta: float) -> void:
 	_body.velocity = _body.velocity.move_toward(steering_velocity, accel * delta)
 	_body.move_and_slide()
 
-	if absf(_body.velocity.x) > 0.01 and _body.has_method("face_dir"):
-		_body.face_dir(_body.velocity.x)
-
 	if config != null and _body.global_position.distance_to(_navigation_agent.target_position) <= config.stop_epsilon:
 		_has_target = false
 		movement_finished.emit()
