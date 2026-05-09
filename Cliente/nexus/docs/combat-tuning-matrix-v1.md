@@ -198,3 +198,7 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
 8. Ciclo 5 aplicado (Survivability only):
    - Wildcat `max_health: 12.0 -> 14.0` (override local na cena).
    - dano mantido em `1.0` (Player e Wildcat), sem alterar eixo de cadence/targeting.
+9. Ciclo 6 aplicado (Approach/Stop only):
+   - `attack_stop_buffer: 4.0 -> 4.8` (Wildcat).
+   - objetivo: reduzir `attack_blocked_reason=out_of_range` em kite, aproximando mais antes do commit.
+   - demais eixos mantidos (targeting/cadence/survivability sem mudança).
