@@ -51,10 +51,12 @@ LimboAI:
 
 ## Lei de aceite tecnico
 - Logica nova sem teste + telemetria comprovada nao e considerada concluida.
+- Auditoria periodica de saude (docs do projeto + docs web oficiais) e obrigatoria ao abrir nova fase.
 
 ## Regra de evidencia (obrigatoria)
 - Toda mudanca tecnica deve citar pelo menos 1 fonte oficial (Godot ou LimboAI) no doc de estudo/status da entrega.
 - Se tocar BT/HSM/Navigation/Animation/Input, citar a pagina especifica da classe/metodo.
+- Em fase de tuning, registrar tambem o eixo da iteracao (Targeting/Approach/Cadence/Survivability) e o resultado de telemetria.
 
 ## Observacao
 Este workflow nao bloqueia entregas rapidas.

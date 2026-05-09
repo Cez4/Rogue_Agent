@@ -168,8 +168,13 @@ Atualizacao de estado:
    - validacao isolada confirmada para Brute:
      - engage/attack/death completos em telemetria;
      - `attack_stop_distance=21.8`, `reacquire=0.2` (perfil pesado coerente).
+   - validacao isolada confirmada para Light:
+     - engage/attack/death completos em telemetria;
+     - `attack_stop_distance=24.2`, `reacquire=0.14` (perfil leve coerente).
 5. Guardrails de saude do projeto documentados:
    - `docs/guia-saude-projeto-godot-limboai-2026-05-09.md`
+6. Estudo de saude operacional consolidado (auditoria + boas praticas oficiais):
+   - `docs/estudo-saude-projeto-godot-limboai-2026-05-09.md`
 4. Evoluir telemetria BT:
    - opcional: eventos enter/exit separados por task para analise de arvore.
    - opcional: presets de perfil (`quiet`, `balanced`, `verbose`) no painel debug.

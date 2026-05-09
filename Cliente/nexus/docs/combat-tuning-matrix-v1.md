@@ -246,3 +246,14 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
      - `attack_stop_distance = 21.8`
      - `reacquire interval_sec = 0.2`
    - leitura: comportamento coerente para archetype pesado (cadencia mais lenta e aproximacao mais curta que Light).
+17. Validacao isolada do Light (telemetria concreta):
+   - engage confirmado: `target_acquired` + `AcquireCombatTargetInGroup SUCCESS`.
+   - loop de combate confirmado: `attack_started -> attack_commit -> attack_pending -> attack_finished`.
+   - recebeu dano de forma consistente (`hit_confirmed`) e completou ciclo de morte (`target_lost/chase_canceled/target_died`).
+   - metricas observadas no runtime:
+     - `attack_stop_distance = 24.2`
+     - `reacquire interval_sec = 0.14`
+   - leitura: comportamento coerente para archetype leve (reacquire mais rapido e alcance efetivo de parada maior que Brute).
+18. Nota operacional de coleta:
+   - lote mais recente veio misturado (predominancia de eventos do Brute), portanto nao usado para recalibrar Light;
+   - baseline Light mantido com base no lote isolado anterior validado.

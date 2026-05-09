@@ -12,6 +12,7 @@ Regra:
 5. Validar no Godot MCP: `open_scene -> play_scene -> get_godot_errors`.
 6. Registrar fontes no doc de estudo/status da entrega.
 7. Toda logica nova deve ter teste funcional + telemetria/log comprovando o comportamento.
+8. Em troca de fase, rodar auditoria de saude: docs internos + docs web oficiais + estado atual do codigo.
 
 Checklist rapido:
 - [ ] Doc interno lido.
@@ -21,6 +22,7 @@ Checklist rapido:
 - [ ] MCP validado sem erro novo.
 - [ ] Telemetria/log do comportamento novo conferida.
 - [ ] Fontes registradas no doc.
+- [ ] Eixo de tuning registrado (quando aplicavel) e resultado anotado.
 
 Fontes base:
 - Godot: https://docs.godotengine.org/en/stable/

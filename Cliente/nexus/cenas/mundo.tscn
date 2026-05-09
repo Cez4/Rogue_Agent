@@ -12,10 +12,10 @@
 [ext_resource type="AudioStream" uid="uid://dm4v3qusgnc6p" path="res://Assets/Sounds/Cidades/moonlight.mp3" id="11_esbpk"]
 [ext_resource type="PackedScene" uid="uid://dr5gls4idb7d1" path="res://cenas/villager_1.tscn" id="11_puycu"]
 [ext_resource type="PackedScene" uid="uid://daw0a7qkbtyg2" path="res://cenas/enemies/hostile_enemy_base.tscn" id="12_puycu"]
-[ext_resource type="PackedScene" uid="uid://daw0a7qkbtyg2" path="res://cenas/enemies/hostile_enemy_light.tscn" id="13_dww6m"]
+[ext_resource type="PackedScene" path="res://cenas/enemies/hostile_enemy_light.tscn" id="13_dww6m"]
 [ext_resource type="Script" uid="uid://dbux36mt8uqe5" path="res://Scripts/actors/actor_8dir_limbo.gd" id="14_rdmaj"]
 [ext_resource type="Resource" path="res://configs/combat/profiles/hostile_light_profile_v1.tres" id="15_3aakq"]
-[ext_resource type="PackedScene" uid="uid://daw0a7qkbtyg2" path="res://cenas/enemies/hostile_enemy_brute.tscn" id="16_3aakq"]
+[ext_resource type="PackedScene" path="res://cenas/enemies/hostile_enemy_brute.tscn" id="16_3aakq"]
 [ext_resource type="Resource" path="res://configs/combat/profiles/hostile_brute_profile_v1.tres" id="17_uhglm"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_puycu"]
@@ -112,7 +112,7 @@ volume_db = -31.987
 autoplay = true
 
 [node name="Wildcat" parent="." unique_id=1867670523 instance=ExtResource("10_esbpk")]
-position = Vector2(573, -104)
+position = Vector2(717, -81)
 
 [node name="Villager1" parent="." unique_id=1207752769 instance=ExtResource("11_puycu")]
 position = Vector2(399, -140)
@@ -131,11 +131,11 @@ tile_set = SubResource("TileSet_hbp8a")
 [node name="DebugTelemetryPanel" parent="." unique_id=1958740719 instance=ExtResource("11_8iuxu")]
 
 [node name="HostileEnemyBase" parent="." unique_id=1801204926 instance=ExtResource("12_puycu")]
-position = Vector2(686, -96)
+position = Vector2(757, -109)
 
 [node name="HostileEnemyLight" type="CharacterBody2D" parent="." unique_id=1559449004 instance=ExtResource("13_dww6m")]
 y_sort_enabled = true
-position = Vector2(760, -120)
+position = Vector2(-21, -168)
 collision_layer = 2
 script = ExtResource("14_rdmaj")
 combat_perception_profile = ExtResource("15_3aakq")
@@ -164,7 +164,7 @@ wander_emote_hold_sec = 2.6
 
 [node name="HostileEnemyBrute" type="CharacterBody2D" parent="." unique_id=1083701903 instance=ExtResource("16_3aakq")]
 y_sort_enabled = true
-position = Vector2(840, -120)
+position = Vector2(712, -115)
 collision_layer = 2
 script = ExtResource("14_rdmaj")
 combat_perception_profile = ExtResource("17_uhglm")
