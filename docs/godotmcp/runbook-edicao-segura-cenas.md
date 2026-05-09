@@ -51,15 +51,18 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 2. MCP e a validacao em tempo real (nossos olhos e maos): abrir cena, rodar e ler erros/logs apos cada bloco.
 3. Nao fechar refactor sem validacao MCP.
 4. Checklist minimo MCP: open_scene -> play_scene -> get_godot_errors -> conferir telemetria.
+5. Estudo tecnico e obrigatorio antes de codar: ler docs internos relevantes + docs oficiais Godot + docs oficiais LimboAI do tema da tarefa.
+6. Se houver duvida de API/comportamento, pesquisar primeiro nas docs oficiais e registrar as fontes no doc de estudo/estado.
 
 
 ## Fluxo oficial do projeto (obrigatorio)
 1. Estudar contexto antes de alterar: docs do projeto + scripts afetados + estado atual.
-2. Alterar em blocos pequenos e desacoplados (um runtime/uma responsabilidade por vez).
-3. Validar cada bloco no Godot MCP imediatamente: open_scene -> play_scene -> get_godot_errors.
-4. Conferir comportamento e telemetria no log (chase/attack/death/respawn) antes de seguir.
-5. Atualizar docs de estado quando houver mudanca estrutural.
-6. So entao commit + push.
+2. Estudar referencia oficial antes de alterar: Godot docs + LimboAI docs do topico (BT/HSM/Nav/Animation/Input).
+3. Alterar em blocos pequenos e desacoplados (um runtime/uma responsabilidade por vez).
+4. Validar cada bloco no Godot MCP imediatamente: open_scene -> play_scene -> get_godot_errors.
+5. Conferir comportamento e telemetria no log (chase/attack/death/respawn) antes de seguir.
+6. Atualizar docs de estado quando houver mudanca estrutural.
+7. So entao commit + push.
 
 
 ## Workflow de desacoplamento seguro (aprovado no projeto)

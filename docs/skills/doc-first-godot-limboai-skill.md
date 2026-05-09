@@ -1,0 +1,25 @@
+# Skill - Doc-First Godot + LimboAI (Obrigatorio)
+
+Objetivo:
+- Evitar implementacao com API incorreta.
+- Garantir estudo continuo antes de alterar logica.
+
+Regra:
+1. Ler docs internos do projeto sobre o tema.
+2. Ler docs oficiais Godot da classe/sistema usado.
+3. Ler docs oficiais LimboAI da classe/sistema usado.
+4. So depois implementar.
+5. Validar no Godot MCP: `open_scene -> play_scene -> get_godot_errors`.
+6. Registrar fontes no doc de estudo/status da entrega.
+
+Checklist rapido:
+- [ ] Doc interno lido.
+- [ ] Godot docs lido.
+- [ ] LimboAI docs lido.
+- [ ] Mudanca pequena e desacoplada.
+- [ ] MCP validado sem erro novo.
+- [ ] Fontes registradas no doc.
+
+Fontes base:
+- Godot: https://docs.godotengine.org/en/stable/
+- LimboAI: https://limboai.readthedocs.io/en/stable/
