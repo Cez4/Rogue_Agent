@@ -2,7 +2,7 @@
 
 Data: 2026-05-09
 Branch historica: `feat/mvp-combate-fase1`  
-Estado atual consolidado: `feat/bt-decision-telemetry-hardening`
+Estado atual consolidado: `feat/telemetry-hardening-next`
 
 ## Objetivo atual
 - Base jogavel com:
@@ -113,6 +113,18 @@ Estado atual consolidado: `feat/bt-decision-telemetry-hardening`
 - Boundary hardening final (servicos legados):
   - runtimes de actor tipados para `Actor8DirLimbo` (contrato tecnico forte).
   - varredura final validada com MCP + logs sem erro novo.
+- Telemetria debug operavel em runtime (v3):
+  - painel em `cenas/debug/debug_telemetry_panel.tscn` (HUD `CanvasLayer`, atalho F9).
+  - settings globais via autoload `DebugTelemetrySettings`:
+    - `combat_enabled`
+    - `thought_enabled`
+    - `thought_dedupe_ms`
+    - `thought_actor_min_interval_ms`
+    - `thought_transitions_only`
+    - `thought_heartbeat_ms`
+  - persistencia em `user://debug_telemetry.cfg`.
+  - `CombatTelemetry` agora filtra streams por toggle (`combat` / `bt_decision`).
+  - `BTDecisionTelemetry` com dedupe por chave + throttle por ator + filtro por transicao + heartbeat.
 
 ## LimboAI no projeto
 - HSM para execucao de locomocao/ataque no actor.
@@ -127,18 +139,21 @@ Estado atual consolidado: `feat/bt-decision-telemetry-hardening`
 - Cliente: predicao/interpolacao apenas visual.
 
 ## Proximos passos tecnicos
-1. Calibracao fina por archetype/arma/status com matriz oficial v1:
+1. Fechamento final do desacoplamento do actor (pre-escala):
+   - `docs/plano-final-desacoplamento-actor-2026-05-09.md`
+2. Calibracao fina por archetype/arma/status com matriz oficial v1:
    - `docs/combat-tuning-matrix-v1.md`
-2. Padronizar pipeline BT de combate para novos hostis (base enemy template) apos tuning v1.
-3. Boundary 100%:
+3. Padronizar pipeline BT de combate para novos hostis (base enemy template) apos tuning v1.
+4. Boundary 100%:
    - concluido no essencial nesta fase.
-4. Evoluir telemetria BT:
+5. Evoluir telemetria BT:
    - opcional: eventos enter/exit separados por task para analise de arvore.
-5. Feedback de hit:
+   - opcional: presets de perfil (`quiet`, `balanced`, `verbose`) no painel debug.
+6. Feedback de hit:
    - FX local de impacto, flash de dano, popup de numero.
-6. Validacao para futuro multiplayer:
+7. Validacao para futuro multiplayer:
    - gates de range/LOS/cooldown centralizados no host.
-7. Padrao para NPCs:
+8. Padrao para NPCs:
    - manter BT + tasks reutilizaveis para hostis, companions e bosses.
 
 ## Arquivos-chave
@@ -162,6 +177,10 @@ Estado atual consolidado: `feat/bt-decision-telemetry-hardening`
   - `configs/combat/player_light_attack.tres`
 - Cena principal:
   - `cenas/mundo.tscn`
+- Telemetria debug:
+  - `Scripts/debug/debug_telemetry_settings.gd`
+  - `Scripts/debug/debug_telemetry_panel.gd`
+  - `cenas/debug/debug_telemetry_panel.tscn`
 
 ## Referencias
 - Godot AnimatedSprite2D:

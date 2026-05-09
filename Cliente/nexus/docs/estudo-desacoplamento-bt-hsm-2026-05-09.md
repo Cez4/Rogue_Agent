@@ -1,7 +1,7 @@
 # Estudo de Desacoplamento BT/HSM - 2026-05-09
 
 Data: 2026-05-09  
-Branch de execucao (atual): `feat/bt-decision-telemetry-hardening`
+Branch de execucao (atual): `feat/telemetry-hardening-next`
 
 ## Objetivo
 Reduzir acoplamento dinamico (`has_method`/`.call`) na trilha critica de combate, mantendo comportamento funcional no Godot + LimboAI.
@@ -98,6 +98,15 @@ Reduzir acoplamento dinamico (`has_method`/`.call`) na trilha critica de combate
 - assinatura dos runtimes de actor tipada para `Actor8DirLimbo` (em vez de `Node`) para reforcar contrato.
 - objetivo: impedir uso acidental fora da camada de bridge/contrato tecnico.
 - validado em MCP sem erro novo de parse/runtime.
+16. Telemetria debug operacional (v11):
+- `DebugTelemetrySettings` (autoload) para controle global dos streams.
+- `DebugTelemetryPanel` (`CanvasLayer`, F9) para toggles em runtime.
+- filtros acumulados de legibilidade:
+  - dedupe por chave;
+  - throttle por ator;
+  - transicoes-only;
+  - heartbeat;
+  - throttle especifico por reason (`attack_pending`, `idling`, `moving`).
 
 ## Resultado pratico
 1. Menor risco de regressao silenciosa por renome de metodo/variavel.
@@ -115,13 +124,16 @@ Resultado:
 - ruido remanescente de `out_of_range/reacquire` coerente com kite.
 
 ## Linhas atuais dos componentes-chave
-- `actor_8dir_limbo.gd`: 309
+- `actor_8dir_limbo.gd`: 481
 - `actor_combat_runtime.gd`: 109
 - `actor_navigation_runtime.gd`: 51
 - `actor_animation_runtime.gd`: 42
 - `player_controller.gd`: 106
 - `player_motor.gd`: 103
 - `ai/blackboard_keys.gd`: 12
+- `ai/bt_decision_telemetry.gd`: 73
+- `debug/debug_telemetry_panel.gd`: 157
+- `debug/debug_telemetry_settings.gd`: 93
 
 ## Pendencias pequenas (nao criticas)
 1. Opcional: correlation id/enter-exit por task para analise avancada.

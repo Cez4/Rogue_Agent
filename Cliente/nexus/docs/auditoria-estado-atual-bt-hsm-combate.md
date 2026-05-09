@@ -1,7 +1,7 @@
 # Auditoria Tecnica - Estado Atual BT/HSM/Combate
 
 Data: 2026-05-09  
-Branch de referencia: `feat/bt-decision-telemetry-hardening`
+Branch de referencia: `feat/telemetry-hardening-next`
 
 ## Escopo desta auditoria
 - Consolidar o estado real do combate/intencao contextual.
@@ -115,6 +115,15 @@ Regra de autoridade:
 - runtimes legados de actor migrados para assinatura `actor: Actor8DirLimbo`.
 - reduz risco de acoplamento acidental fora de bridge/contrato tecnico.
 - validacao MCP + logs sem erro novo.
+27. Telemetria runtime com controle operacional:
+- painel de debug (F9) com toggles de stream.
+- stream de combate sempre disponivel e filtravel por `combat_enabled`.
+- stream de pensamento (`bt_decision`) filtravel por:
+  - `thought_enabled`
+  - dedupe por chave
+  - throttle por ator
+  - transicoes-only + heartbeat.
+- persistencia local em `user://debug_telemetry.cfg`.
 
 ### Parcial
 1. Smart Objects avancados (Talk/Use/Trade com affordances completos) fora desta fase.
@@ -161,6 +170,8 @@ Regra de autoridade:
 ## Checklist de fechamento do proximo ciclo
 1. Boundary 100% (acabamento final):
    - concluido no essencial nesta fase.
+   - proximo ciclo: acabamento final pre-escala conforme:
+     - `docs/plano-final-desacoplamento-actor-2026-05-09.md`
 2. Telemetria BT v2:
    - concluida no essencial (social/wander cobertos);
    - opcional: eventos enter/exit separados.
