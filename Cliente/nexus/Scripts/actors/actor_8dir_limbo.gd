@@ -203,11 +203,11 @@ func set_brain_active(active: bool) -> void:
 
 
 func play_die_animation_runtime() -> void:
-	_play_die_animation()
+	ActorAnimationRuntimeRef.play_die_animation(animated_sprite, die_prefix, _last_direction_suffix)
 
 
 func request_respawn_after_death() -> void:
-	_respawn_after_delay()
+	await ActorLifecycleRuntimeRef.respawn_after_delay(self)
 
 
 func get_idle_elapsed_sec() -> float:
@@ -357,34 +357,6 @@ func get_combat_reacquire_interval_sec() -> float:
 
 func _on_health_death() -> void:
 	ActorCombatRuntimeRef.on_health_death(self)
-
-
-func _disable_combat_collision() -> void:
-	ActorCombatRuntimeRef.disable_combat_collision(self)
-
-
-func _enable_combat_collision() -> void:
-	ActorCombatRuntimeRef.enable_combat_collision(self)
-
-
-func _respawn_after_delay() -> void:
-	await ActorLifecycleRuntimeRef.respawn_after_delay(self)
-
-
-func _disable_brain_runtime() -> void:
-	ActorCombatRuntimeRef.disable_brain_runtime(self)
-
-
-func _enable_brain_runtime() -> void:
-	ActorCombatRuntimeRef.enable_brain_runtime(self)
-
-
-func _reset_combat_memory() -> void:
-	ActorCombatRuntimeRef.reset_combat_memory(self)
-
-
-func _play_die_animation() -> void:
-	ActorAnimationRuntimeRef.play_die_animation(animated_sprite, die_prefix, _last_direction_suffix)
 
 
 func face_toward(target_position: Vector2) -> void:

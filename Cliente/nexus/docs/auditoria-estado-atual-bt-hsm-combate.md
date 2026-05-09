@@ -90,6 +90,9 @@ Regra de autoridade:
 19. Consolidacao de contrato minimo (v5):
 - remocao de wrappers privados redundantes sem impacto no contrato publico.
 - `actor_8dir_limbo.gd` reduziu para 501 linhas.
+20. Consolidacao de contrato minimo (v6):
+- remocao de wrappers internos adicionais de lifecycle/combat.
+- `actor_8dir_limbo.gd` reduziu para 473 linhas.
 
 ### Parcial
 1. Smart Objects avancados (Talk/Use/Trade com affordances completos) fora desta fase.

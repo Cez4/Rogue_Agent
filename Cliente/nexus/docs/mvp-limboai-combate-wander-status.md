@@ -79,6 +79,10 @@ Estado atual consolidado: `feat/actor-combat-profile-runtime`
 - Desacoplamento tecnico BT/HSM (passes v5):
   - limpeza de wrappers privados redundantes no actor (contrato minimo mais enxuto).
   - `actor_8dir_limbo.gd` reduzido para 501 linhas.
+- Desacoplamento tecnico BT/HSM (passes v6):
+  - consolidacao adicional do contrato minimo: lifecycle/combat wrappers internos removidos.
+  - `ActorLifecycleRuntime` passa a chamar runtime de combate diretamente para reset/colisao/brain.
+  - `actor_8dir_limbo.gd` reduzido para 473 linhas.
 
 ## LimboAI no projeto
 - HSM para execucao de locomocao/ataque no actor.

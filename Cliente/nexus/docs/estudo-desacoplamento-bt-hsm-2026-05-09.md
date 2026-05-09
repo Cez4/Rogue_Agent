@@ -69,6 +69,9 @@ Reduzir acoplamento dinamico (`has_method`/`.call`) na trilha critica de combate
 9. Novo corte de desacoplamento (v5):
 - remocao de wrappers privados mortos no `actor_8dir_limbo.gd`.
 - inlining de validacao simples de alvo vivo no contrato runtime.
+10. Novo corte de desacoplamento (v6):
+- remocao de wrappers internos de lifecycle/combat no actor.
+- `ActorLifecycleRuntime` passou a depender de `ActorCombatRuntime` diretamente para reset/colisao/brain.
 
 ## Resultado pratico
 1. Menor risco de regressao silenciosa por renome de metodo/variavel.
@@ -86,7 +89,7 @@ Resultado:
 - ruido remanescente de `out_of_range/reacquire` coerente com kite.
 
 ## Linhas atuais dos componentes-chave
-- `actor_8dir_limbo.gd`: 501
+- `actor_8dir_limbo.gd`: 473
 - `actor_combat_runtime.gd`: 109
 - `actor_navigation_runtime.gd`: 51
 - `actor_animation_runtime.gd`: 42
