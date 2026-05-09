@@ -7,10 +7,11 @@ enum DisplayMode {
 }
 
 @export var display_mode: DisplayMode = DisplayMode.PLAYER_COMBAT_ONLY
-@export var follow_offset: Vector2 = Vector2(-28.0, -44.0)
+@export var follow_offset: Vector2 = Vector2(0.0, -44.0)
 @export var poll_interval_sec: float = 0.12
 @export var hide_when_dead: bool = true
 @export_group("Visuals")
+@export var side_separation: float = 35.0
 @export var trail_delay: float = 0.4
 @export var trail_duration: float = 0.6
 @export var vibration_duration: float = 0.3
@@ -31,6 +32,7 @@ var _trail_tween: Tween
 var _vib_tween: Tween
 
 func _ready() -> void:
+	top_level = true
 	_actor = get_parent() as Actor8DirLimbo
 	if _actor == null:
 		set_process(false)
@@ -46,24 +48,41 @@ func _ready() -> void:
 	_ensure_unique_material()
 	_update_shader_parameters()
 	_set_orb_visible(false, &"init")
+	_update_position(1.0)
 
 func _process(delta: float) -> void:
 	if _actor == null:
 		return
-	position = follow_offset
-	_elapsed += delta
-	if _elapsed < poll_interval_sec:
-		return
-	_elapsed = 0.0
-	var should_show: bool = _should_show_orb()
-	if should_show != _is_visible_orb:
-		var reason: StringName = &"state_change"
-		if not should_show:
-			reason = &"hidden"
-		_set_orb_visible(should_show, reason)
 	
-	if should_show:
+	_elapsed += delta
+	if _elapsed >= poll_interval_sec:
+		_elapsed = 0.0
+		var should_show: bool = _should_show_orb()
+		if should_show != _is_visible_orb:
+			var reason: StringName = &"state_change"
+			if not should_show:
+				reason = &"hidden"
+			_set_orb_visible(should_show, reason)
+			if should_show:
+				_update_position(1.0)
+	
+	if _is_visible_orb:
 		_check_fill_sync()
+		_update_position(delta * 12.0)
+
+func _update_position(weight: float) -> void:
+	if _actor == null: return
+	var side_offset := Vector2.ZERO
+	if display_mode == DisplayMode.PLAYER_COMBAT_ONLY:
+		side_offset.x = -side_separation
+	elif display_mode == DisplayMode.HOSTILE_SELECTED_AND_IN_COMBAT:
+		side_offset.x = side_separation
+		
+	var target_pos: Vector2 = _actor.global_position + follow_offset + side_offset
+	if weight >= 1.0:
+		global_position = target_pos
+	else:
+		global_position = global_position.lerp(target_pos, weight)
 
 func _on_health_damaged(_amount: float, _knockback: Vector2) -> void:
 	_trigger_damage_visuals()
