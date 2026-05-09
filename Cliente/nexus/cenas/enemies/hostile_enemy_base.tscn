@@ -21,6 +21,8 @@
 [ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="20_05h1s"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/attack_hitbox_component_node.tscn" id="20_l8egd"]
 [ext_resource type="Script" uid="uid://cnyih1kegdel6" path="res://Scripts/combat/hitbox_component.gd" id="21_cq7xd"]
+[ext_resource type="PackedScene" uid="uid://cpqqeuy3ge470" path="res://cenas/components/ui/combat_orb_presenter.tscn" id="22_vsdir"]
+[ext_resource type="Script" uid="uid://ckly2vu2kieg3" path="res://Scripts/ui/orb/combat_orb_presenter.gd" id="23_pprg3"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijbr8"]
 atlas = ExtResource("3_vsdir")
@@ -3873,3 +3875,8 @@ collision_mask = 16
 monitoring = false
 monitorable = false
 script = ExtResource("21_cq7xd")
+
+[node name="CombatOrb" type="Node2D" parent="." unique_id=2024503709 instance=ExtResource("22_vsdir")]
+script = ExtResource("23_pprg3")
+display_mode = 1
+follow_offset = Vector2(-34, -44)

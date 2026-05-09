@@ -1,0 +1,204 @@
+extends Node2D
+class_name CombatOrbPresenter
+
+enum DisplayMode {
+	PLAYER_COMBAT_ONLY,
+	HOSTILE_SELECTED_AND_IN_COMBAT
+}
+
+@export var display_mode: DisplayMode = DisplayMode.PLAYER_COMBAT_ONLY
+@export var follow_offset: Vector2 = Vector2(-28.0, -44.0)
+@export var poll_interval_sec: float = 0.12
+@export var hide_when_dead: bool = true
+@export_group("Visuals")
+@export var trail_delay: float = 0.4
+@export var trail_duration: float = 0.6
+@export var vibration_duration: float = 0.3
+@export var alert_threshold: float = 0.25
+
+@onready var orb_sprite: Sprite2D = $OrbSprite
+
+var _actor: Actor8DirLimbo
+var _health: HealthComponent
+var _player_ref: Actor8DirLimbo
+var _orb_material: ShaderMaterial
+var _is_visible_orb: bool = false
+var _elapsed: float = 0.0
+
+var _current_fill: float = 1.0
+var _current_trail: float = 1.0
+var _trail_tween: Tween
+var _vib_tween: Tween
+
+func _ready() -> void:
+	_actor = get_parent() as Actor8DirLimbo
+	if _actor == null:
+		set_process(false)
+		return
+	_health = _actor.get_node_or_null(^"Health") as HealthComponent
+	if _health != null:
+		if not _health.damaged.is_connected(_on_health_damaged):
+			_health.damaged.connect(_on_health_damaged)
+		if not _health.death.is_connected(_on_health_death):
+			_health.death.connect(_on_health_death)
+		_current_fill = _get_health_ratio()
+		_current_trail = _current_fill
+	_ensure_unique_material()
+	_update_shader_parameters()
+	_set_orb_visible(false, &"init")
+
+func _process(delta: float) -> void:
+	if _actor == null:
+		return
+	position = follow_offset
+	_elapsed += delta
+	if _elapsed < poll_interval_sec:
+		return
+	_elapsed = 0.0
+	var should_show: bool = _should_show_orb()
+	if should_show != _is_visible_orb:
+		var reason: StringName = &"state_change"
+		if not should_show:
+			reason = &"hidden"
+		_set_orb_visible(should_show, reason)
+	
+	if should_show:
+		_check_fill_sync()
+
+func _on_health_damaged(_amount: float, _knockback: Vector2) -> void:
+	_trigger_damage_visuals()
+
+func _on_health_death() -> void:
+	_trigger_damage_visuals()
+	if hide_when_dead:
+		_set_orb_visible(false, &"death")
+
+func _ensure_unique_material() -> void:
+	if orb_sprite == null:
+		return
+	var mat := orb_sprite.material as ShaderMaterial
+	if mat == null:
+		return
+	_orb_material = mat.duplicate() as ShaderMaterial
+	orb_sprite.material = _orb_material
+
+func _get_health_ratio() -> float:
+	if _health == null: return 0.0
+	var max_h: float = maxf(1.0, _health.max_health)
+	return clampf(_health.get_current_health() / max_h, 0.0, 1.0)
+
+func _check_fill_sync() -> void:
+	var target_fill = _get_health_ratio()
+	if absf(_current_fill - target_fill) > 0.001:
+		_current_fill = target_fill
+		_update_shader_parameters()
+
+func _trigger_damage_visuals() -> void:
+	var target_fill = _get_health_ratio()
+	_current_fill = target_fill
+	
+	# Vibration effect
+	if _vib_tween: _vib_tween.kill()
+	_vib_tween = create_tween()
+	_vib_tween.tween_property(self, "_vibration_value", 1.0, 0.05)
+	_vib_tween.tween_property(self, "_vibration_value", 0.0, vibration_duration).set_delay(0.05)
+	
+	# Trail effect
+	if _trail_tween: _trail_tween.kill()
+	_trail_tween = create_tween()
+	_trail_tween.set_parallel(false)
+	_trail_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_trail_tween.tween_property(self, "_current_trail", target_fill, trail_duration).set_delay(trail_delay)
+	
+	_update_shader_parameters()
+
+var _vibration_value: float = 0.0:
+	set(v):
+		_vibration_value = v
+		if _orb_material:
+			_orb_material.set_shader_parameter(&"vibration", v)
+
+func _update_shader_parameters() -> void:
+	if _orb_material == null:
+		return
+	_orb_material.set_shader_parameter(&"fill_level", _current_fill)
+	_orb_material.set_shader_parameter(&"trail_level", _current_trail)
+	
+	# Low health alert color adjustment
+	if _current_fill <= alert_threshold:
+		_orb_material.set_shader_parameter(&"fill_color", Color(1.0, 0.1, 0.1, 1.0)) # Bright red
+	else:
+		_orb_material.set_shader_parameter(&"fill_color", Color(0.9, 0.15, 0.18, 0.95)) # Original red
+
+func _set_orb_visible(value: bool, reason: StringName) -> void:
+	_is_visible_orb = value
+	if orb_sprite != null:
+		orb_sprite.visible = value
+	CombatTelemetry.emit_event(&"orb_visibility", {
+		"actor": _actor.name,
+		"visible": value,
+		"reason": String(reason),
+		"mode": _mode_to_string(display_mode)
+	})
+
+func _mode_to_string(mode: DisplayMode) -> String:
+	match mode:
+		DisplayMode.PLAYER_COMBAT_ONLY:
+			return "player_combat_only"
+		DisplayMode.HOSTILE_SELECTED_AND_IN_COMBAT:
+			return "hostile_selected_and_in_combat"
+		_:
+			return "unknown"
+
+func _should_show_orb() -> bool:
+	if _actor == null:
+		return false
+	if _health == null:
+		return false
+	if hide_when_dead and not _health.is_alive():
+		return false
+	match display_mode:
+		DisplayMode.PLAYER_COMBAT_ONLY:
+			if not _actor.player_controlled:
+				return false
+			return _is_actor_in_combat(_actor)
+		DisplayMode.HOSTILE_SELECTED_AND_IN_COMBAT:
+			if _actor.player_controlled:
+				return false
+			if not _is_actor_in_combat(_actor):
+				return false
+			var player := _get_player_ref()
+			if player == null:
+				return false
+			var selected_target: Node2D = player.get_combat_target()
+			return selected_target == _actor
+		_:
+			return false
+
+func _is_actor_in_combat(actor: Actor8DirLimbo) -> bool:
+	var target: Node2D = actor.get_combat_target()
+	if target != null and is_instance_valid(target):
+		return true
+	return _is_targeted_by_hostile(actor)
+
+func _is_targeted_by_hostile(actor: Actor8DirLimbo) -> bool:
+	var tree := get_tree()
+	if tree == null:
+		return false
+	for node in tree.get_nodes_in_group(&"hostile"):
+		var hostile := node as Actor8DirLimbo
+		if hostile == null:
+			continue
+		var target: Node2D = hostile.get_combat_target()
+		if target == actor:
+			return true
+	return false
+
+func _get_player_ref() -> Actor8DirLimbo:
+	if _player_ref != null and is_instance_valid(_player_ref):
+		return _player_ref
+	var tree := get_tree()
+	if tree == null:
+		return null
+	_player_ref = tree.get_first_node_in_group(&"player") as Actor8DirLimbo
+	return _player_ref

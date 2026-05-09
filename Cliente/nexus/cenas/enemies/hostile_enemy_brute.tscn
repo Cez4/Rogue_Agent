@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dtbefadsc7t38"]
 
 [ext_resource type="Script" uid="uid://dbux36mt8uqe5" path="res://Scripts/actors/actor_8dir_limbo.gd" id="1_l8egd"]
-[ext_resource type="Resource" path="res://configs/combat/profiles/hostile_brute_profile_v1.tres" id="2_cq7xd"]
+[ext_resource type="Resource" uid="uid://d274qms8ixdmu" path="res://configs/combat/profiles/hostile_brute_profile_v1.tres" id="2_cq7xd"]
 [ext_resource type="Texture2D" uid="uid://2xasgbebdvsh" path="res://Assets/Char/WildCat/Attack1.png" id="3_vsdir"]
 [ext_resource type="Texture2D" uid="uid://s1otrtbxrc7n" path="res://Assets/Char/WildCat/Die.png" id="4_pprg3"]
 [ext_resource type="Texture2D" uid="uid://c3drwa4p3b2si" path="res://Assets/Char/WildCat/Idle.png" id="5_mqb08"]
@@ -12,7 +12,7 @@
 [ext_resource type="Script" uid="uid://w6oyxr36dcgy" path="res://Scripts/actors/state_idle_8dir.gd" id="10_5v8ye"]
 [ext_resource type="Script" uid="uid://dwo1bk64b01w" path="res://Scripts/actors/state_walk_8dir.gd" id="11_tacm5"]
 [ext_resource type="Script" uid="uid://d3iujpe3t8fla" path="res://Scripts/actors/state_attack_8dir.gd" id="12_60t1r"]
-[ext_resource type="Resource" path="res://configs/combat/hostile_brute_attack_v1.tres" id="13_texcc"]
+[ext_resource type="Resource" uid="uid://bc4te3iympdsx" path="res://configs/combat/hostile_brute_attack_v1.tres" id="13_texcc"]
 [ext_resource type="Script" uid="uid://cpo2dt0djpyes" path="res://Scripts/actors/state_wander_8dir.gd" id="14_frxuc"]
 [ext_resource type="PackedScene" path="res://cenas/components/emotion_bubble_shared.tscn" id="15_lvdsk"]
 [ext_resource type="Texture2D" uid="uid://b46nvc0ukccid" path="res://Assets/emotions/spriteExc.png" id="16_ae4fc"]
@@ -21,6 +21,8 @@
 [ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="20_05h1s"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/attack_hitbox_component_node.tscn" id="20_vuvgp"]
 [ext_resource type="Script" uid="uid://cnyih1kegdel6" path="res://Scripts/combat/hitbox_component.gd" id="21_0i4mi"]
+[ext_resource type="PackedScene" uid="uid://cpqqeuy3ge470" path="res://cenas/components/ui/combat_orb_presenter.tscn" id="22_3wq1m"]
+[ext_resource type="Script" uid="uid://ckly2vu2kieg3" path="res://Scripts/ui/orb/combat_orb_presenter.gd" id="23_ufyfi"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijbr8"]
 atlas = ExtResource("3_vsdir")
@@ -3873,3 +3875,8 @@ collision_mask = 16
 monitoring = false
 monitorable = false
 script = ExtResource("21_0i4mi")
+
+[node name="CombatOrb" type="Node2D" parent="." unique_id=2024503709 instance=ExtResource("22_3wq1m")]
+script = ExtResource("23_ufyfi")
+display_mode = 1
+follow_offset = Vector2(-34, -44)

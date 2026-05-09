@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://cpqqeuy3ge470"]
+
+[ext_resource type="Script" uid="uid://ckly2vu2kieg3" path="res://Scripts/ui/orb/combat_orb_presenter.gd" id="1_i3kp6"]
+[ext_resource type="Shader" uid="uid://y1007q27vd0p" path="res://Scripts/ui/orb/orb_health_shader.gdshader" id="2_b58o2"]
+[ext_resource type="Texture2D" uid="uid://by40qmhlgrjag" path="res://icon.svg" id="2_gj0d4"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_imc63"]
+shader = ExtResource("2_b58o2")
+
+[node name="CombatOrbPresenter" type="Node2D" unique_id=2024503709]
+script = ExtResource("1_i3kp6")
+
+[node name="OrbSprite" type="Sprite2D" parent="." unique_id=1379162227]
+material = SubResource("ShaderMaterial_imc63")
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_gj0d4")
