@@ -1,7 +1,7 @@
 # Plano Final - Desacoplamento do Actor (Pre-escala de Conteudo)
 
 Data: 2026-05-09  
-Branch alvo: `feat/telemetry-hardening-next`
+Branch alvo: `feat/final-actor-decoupling-phase`
 
 ## Contexto
 - O projeto ja concluiu o desacoplamento **essencial** (BT decide, HSM executa, runtimes tipados, bridge tecnico).
@@ -46,11 +46,12 @@ Status (2026-05-09):
 - Corte 1: concluido.
 - Corte 2: concluido no essencial.
 - Corte 3: concluido (flag debug `boundary_guard_enabled` + evento `runtime_boundary_violation` no `ActorRuntimeBridge`).
-- Corte 4: pendente (consolidacao final de docs/checklist).
+- Corte 4: concluido (docs consolidados + checklist padrao de regressao para PR).
 
 ### Corte 4 - Doc + checklist final
 - Atualizar docs de auditoria e status com fronteira final.
 - Checklist de regressao padrao para PRs futuros.
+- Entregue em: `docs/checklist-regressao-pr-actor-bt-hsm.md`.
 
 ## Riscos e mitigacao
 1. Regressao de comportamento em ataque/chase.

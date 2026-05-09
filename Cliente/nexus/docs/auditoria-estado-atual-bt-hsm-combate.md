@@ -1,7 +1,7 @@
 # Auditoria Tecnica - Estado Atual BT/HSM/Combate
 
 Data: 2026-05-09  
-Branch de referencia: `feat/telemetry-hardening-next`
+Branch de referencia: `feat/final-actor-decoupling-phase`
 
 ## Escopo desta auditoria
 - Consolidar o estado real do combate/intencao contextual.
@@ -124,6 +124,12 @@ Regra de autoridade:
   - throttle por ator
   - transicoes-only + heartbeat.
 - persistencia local em `user://debug_telemetry.cfg`.
+28. Hardening de contrato com marcador opcional:
+- `ActorRuntimeBridge` emite `runtime_boundary_violation` quando `boundary_guard_enabled` estiver ativo e houver chamada fora da camada esperada.
+- controle global em `DebugTelemetrySettings` (`boundary_guard_enabled`, default OFF).
+29. Plano final de desacoplamento concluido:
+- cortes 1-4 concluídos.
+- checklist padrao de regressao para PR criado em `docs/checklist-regressao-pr-actor-bt-hsm.md`.
 
 ### Parcial
 1. Smart Objects avancados (Talk/Use/Trade com affordances completos) fora desta fase.
