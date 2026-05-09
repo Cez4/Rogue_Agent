@@ -142,16 +142,16 @@ static func set_interaction_target(actor: Node, target: Node2D, stop_range: floa
 	if target == null or not is_instance_valid(target) or target == actor:
 		clear_interaction_target(actor)
 		return
-	actor._interaction_target = target
+	var interaction_range: float = actor.interaction_stop_range
 	if stop_range < 0.0:
-		actor._interaction_target_range = actor.interaction_stop_range
+		interaction_range = actor.interaction_stop_range
 	else:
-		actor._interaction_target_range = maxf(8.0, stop_range)
+		interaction_range = maxf(8.0, stop_range)
+	actor.set_interaction_target_internal(target, interaction_range)
 
 
 static func clear_interaction_target(actor: Node) -> void:
-	actor._interaction_target = null
-	actor._interaction_target_range = 0.0
+	actor.clear_interaction_target_internal()
 
 
 static func cancel_all_intents(actor: Node) -> void:

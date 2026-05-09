@@ -25,12 +25,12 @@ static func ready(actor: Node) -> void:
 	actor.motor.config = actor.movement_config
 	actor.motor.setup(actor)
 	actor.controller.setup(actor)
-	actor._setup_stats()
+	actor.setup_stats_runtime()
 	_setup_interactable_component(actor)
 	_connect_health_signals(actor)
-	actor._reset_wander_timer()
-	actor._hide_emote_immediate()
-	actor._setup_hsm()
+	actor.reset_wander_timer_runtime()
+	actor.hide_emote_runtime()
+	actor.setup_hsm_runtime()
 
 
 static func setup_interactable_component(actor: Node) -> void:
@@ -66,5 +66,5 @@ static func _connect_health_signals(actor: Node) -> void:
 	var health := actor.get_node_or_null(^"Health")
 	if health == null:
 		return
-	if health.has_signal("death") and not health.death.is_connected(actor._on_health_death):
-		health.death.connect(actor._on_health_death)
+	if health.has_signal("death") and not health.death.is_connected(actor.on_health_death_runtime):
+		health.death.connect(actor.on_health_death_runtime)

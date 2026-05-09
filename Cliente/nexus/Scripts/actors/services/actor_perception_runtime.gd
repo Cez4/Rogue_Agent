@@ -5,7 +5,7 @@ const ActorSocialRuntimeRef = preload("res://Scripts/actors/services/actor_socia
 
 static func look_toward(actor: Node, target_position: Vector2) -> void:
 	var dir: Vector2 = target_position - actor.global_position
-	actor._play_directional_animation(actor.idle_prefix, dir)
+	actor.play_directional_runtime(actor.idle_prefix, dir)
 
 
 static func can_look_target(actor: Node, target: Node2D) -> bool:
@@ -23,4 +23,4 @@ static func stop_movement_for_look(actor: Node) -> void:
 
 
 static func play_look_emote(actor: Node) -> void:
-	actor._show_emote(actor.look_emote_name, false, maxf(0.2, actor.look_emote_hold_sec), 2)
+	await actor.show_emote_runtime(actor.look_emote_name, false, maxf(0.2, actor.look_emote_hold_sec), 2)

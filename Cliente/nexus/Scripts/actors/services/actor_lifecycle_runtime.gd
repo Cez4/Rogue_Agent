@@ -7,7 +7,7 @@ static func respawn_after_delay(actor: Node) -> void:
 	var health := actor.get_node_or_null(^"Health") as HealthComponent
 	if health != null:
 		health.reset_health()
-	actor._is_dead = false
+	actor.set_actor_dead(false)
 	actor.global_position = actor.get_spawn_position()
 	actor.velocity = Vector2.ZERO
 	ActorCombatRuntimeRef.reset_combat_memory(actor)
