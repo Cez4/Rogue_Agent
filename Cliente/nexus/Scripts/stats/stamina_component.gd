@@ -27,6 +27,13 @@ func _process(delta: float) -> void:
 				
 			if _is_exhausted and _current_stamina >= max_stamina * 0.5:
 				_is_exhausted = false
+				var owner_name: String = ""
+				if owner != null:
+					owner_name = owner.name
+				CombatTelemetry.emit_event(&"stamina_recovered", {
+					"actor": owner_name,
+					"current_stamina": _current_stamina
+				})
 				recovered.emit()
 
 func has_stamina(amount: float) -> bool:
@@ -40,8 +47,21 @@ func consume(amount: float) -> void:
 	_time_since_last_drain = 0.0
 	stamina_changed.emit(_current_stamina, max_stamina)
 	
+	var owner_name: String = ""
+	if owner != null:
+		owner_name = owner.name
+		
+	CombatTelemetry.emit_event(&"stamina_consumed", {
+		"actor": owner_name,
+		"amount": amount,
+		"remaining": _current_stamina
+	})
+	
 	if _current_stamina <= 0.0 and not _is_exhausted:
 		_is_exhausted = true
+		CombatTelemetry.emit_event(&"stamina_exhausted", {
+			"actor": owner_name
+		})
 		exhausted.emit()
 
 func get_current_stamina() -> float:

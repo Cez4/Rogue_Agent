@@ -112,7 +112,7 @@ func _update_position(weight: float) -> void:
 	if display_mode == DisplayMode.PLAYER_COMBAT_ONLY:
 		side_offset.x = -side_separation
 	elif display_mode == DisplayMode.HOSTILE_SELECTED_AND_IN_COMBAT:
-		side_offset.x = side_separation
+		side_offset.x = side_separation * 1.6 # Empurra mais para a direita para sair de cima da cabeça do inimigo
 		
 	var target_pos: Vector2 = _actor.global_position + follow_offset + side_offset
 	if weight >= 1.0:

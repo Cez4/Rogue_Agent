@@ -105,10 +105,10 @@ position = Vector2(264, -85)
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1882526807]
 stream = ExtResource("11_esbpk")
-volume_db = -31.987
+volume_db = -31.165
 
 [node name="Wildcat" parent="." unique_id=1867670523 instance=ExtResource("10_esbpk")]
-position = Vector2(717, -81)
+position = Vector2(714, 162)
 
 [node name="Villager1" parent="." unique_id=1207752769 instance=ExtResource("11_puycu")]
 position = Vector2(399, -140)
@@ -127,10 +127,10 @@ tile_set = SubResource("TileSet_hbp8a")
 [node name="DebugTelemetryPanel" parent="." unique_id=1958740719 instance=ExtResource("11_8iuxu")]
 
 [node name="HostileEnemyBase" parent="." unique_id=1801204926 instance=ExtResource("12_puycu")]
-position = Vector2(757, -109)
+position = Vector2(813, -99)
 
 [node name="HostileEnemyLight" parent="." unique_id=1559449004 instance=ExtResource("13_dww6m")]
-position = Vector2(678, -148)
+position = Vector2(266, -383)
 
 [node name="HostileEnemyBrute" parent="." unique_id=1083701903 instance=ExtResource("16_3aakq")]
-position = Vector2(-23, -196)
+position = Vector2(-227, -135)
