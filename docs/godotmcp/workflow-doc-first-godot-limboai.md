@@ -43,6 +43,9 @@ LimboAI:
 - Para multiplayer/co-op: cliente envia intencao, estado oficial vem do host.
 - Em combate melee, garantir paridade de composicao nas cenas (Health + Hurtbox + AttackHitbox) para todo ator combatente.
 - Padrão de Feedback Visual (Orb UI): Usar `CombatOrbPresenter` com suporte a trail (barra branca) e vibração para todo ator com `HealthComponent`.
+- Posicionamento de UI Flutuante: Utilizar `top_level = true` e interpolação global (`lerp`) para evitar artefatos de transform do pai e implementar separação lateral automática para evitar overlap.
+- Feedback de Impacto (Game Feel): Evitar Tweens isolados para tremores de UI. Implementar **Sistemas de Trauma** (Trauma-based shake) com movimento quadrático e decaimento temporal para suportar acúmulo de hits em combos. O trauma deve alimentar diretamente os shaders de distorção (Dampening Envelope).
+- Armadilha GDScript 2.0: Ao animar variáveis no `_process`, lembre-se que chamadas diretas a variáveis locais NÃO invocam suas funções `set(v):` automaticamente. Utilize `self.variavel` ou faça o update manual para garantir sincronia com os shaders.
 - Em bugs de morte/respawn, auditar primeiro overrides da cena instanciadora (ex.: `mundo.tscn`) antes de mexer no script base.
 
 ## Saida minima esperada por tarefa

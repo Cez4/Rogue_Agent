@@ -28,6 +28,7 @@ Checklist rapido:
 - [ ] Eixo de tuning registrado (quando aplicavel) e resultado anotado.
 - [ ] Paridade de componentes de combate validada nas cenas alteradas.
 - [ ] Em lifecycle, log confirma `target_died` -> `chase_canceled(reason=death)` -> `respawned` (se habilitado).
+- [ ] Modificou UI ou Camera em combate? Utilize sistema de Trauma (Trauma-based Shake) em vez de Tweens simples para garantir "Game Feel" cumulativo e fluido.
 - [ ] Prova data-driven registrada: mesma logica, perfis `.tres` diferentes e telemetria mostrando comportamento distinto.
 
 Fontes base:
