@@ -4,10 +4,12 @@ extends RefCounted
 static func set_combat_target(actor: Actor8DirLimbo, target: Node2D, manual_lock: bool = true) -> void:
 	if target == null or not is_instance_valid(target):
 		actor._bridge_reset_combat_target_runtime()
+		_sync_blackboard_target(actor, null)
 		return
 	var current_target: Node2D = actor.get_combat_target()
 	var changed_target: bool = current_target != target
 	actor._bridge_set_combat_target_internal(target, manual_lock)
+	_sync_blackboard_target(actor, target)
 	actor.clear_interaction_target()
 	actor.face_toward(target.global_position)
 	if changed_target:
@@ -25,6 +27,7 @@ static func clear_combat_target(actor: Actor8DirLimbo) -> void:
 	if had_target:
 		old_target_name = current_target.name
 	actor._bridge_reset_combat_target_runtime()
+	_sync_blackboard_target(actor, null)
 	if had_target:
 		CombatTelemetry.emit_event(&"target_lost", {
 			"actor": actor.name,
@@ -111,3 +114,18 @@ static func reset_combat_memory(actor: Actor8DirLimbo) -> void:
 		bb.erase_var(AIBlackboardKeys.COMBAT_NEXT_REACQUIRE_MS)
 		bb.erase_var(AIBlackboardKeys.ATTACK_TASK_STARTED)
 		bb.erase_var(AIBlackboardKeys.LAST_ATTACK_BLOCKED_REASON)
+
+
+static func _sync_blackboard_target(actor: Actor8DirLimbo, target: Node2D) -> void:
+	var bt_player: Node = actor.get_bt_player()
+	if bt_player == null:
+		return
+	var bb: Blackboard = bt_player.get("blackboard") as Blackboard
+	if bb == null:
+		return
+	if target == null or not is_instance_valid(target):
+		bb.erase_var(AIBlackboardKeys.COMBAT_TARGET)
+		bb.erase_var(AIBlackboardKeys.COMBAT_TARGET_LAST_SEEN_MS)
+		return
+	bb.set_var(AIBlackboardKeys.COMBAT_TARGET, target)
+	bb.set_var(AIBlackboardKeys.COMBAT_TARGET_LAST_SEEN_MS, Time.get_ticks_msec())

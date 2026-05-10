@@ -100,11 +100,11 @@ func _tick(_delta: float) -> Status:
 	if blackboard.has_var(blocked_latched_var):
 		blocked_latched = bool(blackboard.get_var(blocked_latched_var))
 	blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.REQUEST_ATTACK_NOT_STARTED)
-	CombatTelemetry.emit_event(&"attack_task_blocked", {
-		"actor": agent.name,
-		"reason": CombatBlockedReasonsRef.REQUEST_ATTACK_NOT_STARTED
-	})
 	if not blocked_latched:
+		CombatTelemetry.emit_event(&"attack_task_blocked", {
+			"actor": agent.name,
+			"reason": CombatBlockedReasonsRef.REQUEST_ATTACK_NOT_STARTED
+		})
 		_emit_blocked_started_if_needed(CombatBlockedReasonsRef.REQUEST_ATTACK_NOT_STARTED)
 		blackboard.set_var(blocked_latched_var, true)
 	blackboard.set_var(started_var, false)

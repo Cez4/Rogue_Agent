@@ -104,8 +104,6 @@ func _physics_process(delta: float) -> void:
 		return
 	motor.physics_update(delta)
 	_update_interaction_approach()
-	if not use_bt_brain:
-		_update_chase_attack()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -472,10 +470,6 @@ func cancel_all_intents(reason: StringName = &"unknown") -> void:
 
 func _update_interaction_approach() -> void:
 	ActorNavigationRuntimeRef.update_interaction_approach(self)
-
-
-func _update_chase_attack() -> void:
-	ActorNavigationRuntimeRef.update_chase_attack(self)
 
 
 func get_attack_range() -> float:

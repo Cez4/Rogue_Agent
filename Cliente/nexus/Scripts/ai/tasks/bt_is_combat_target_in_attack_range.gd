@@ -13,6 +13,10 @@ const BTDecisionTelemetryRef = preload("res://Scripts/ai/bt_decision_telemetry.g
 @export var in_range_latch_ms: int = 180
 @export var in_range_latch_extra_distance: float = 0.75
 @export var debug_decision_var: StringName = AIBlackboardKeys.DEBUG_BT_DECISION_TELEMETRY
+@export var success_emit_cooldown_sec: float = 0.35
+
+var _next_success_emit_ms: int = 0
+var _last_success_signature: String = ""
 
 
 func _generate_name() -> String:
@@ -41,7 +45,7 @@ func _tick(_delta: float) -> Status:
 	var now_ms: int = Time.get_ticks_msec()
 	if dist_sq <= attack_check_range * attack_check_range:
 		blackboard.set_var(in_range_latch_until_var, now_ms + max(0, in_range_latch_ms))
-		CombatTelemetry.emit_event(&"bt_inrange_check", {
+		_emit_inrange_success(now_ms, {
 			"actor": agent.name,
 			"target": target.name,
 			"status": "success",
@@ -59,7 +63,7 @@ func _tick(_delta: float) -> Status:
 		latched_until_ms = int(blackboard.get_var(in_range_latch_until_var))
 	var latched_limit: float = attack_check_range + maxf(0.0, in_range_latch_extra_distance)
 	if now_ms <= latched_until_ms and dist_sq <= latched_limit * latched_limit:
-		CombatTelemetry.emit_event(&"bt_inrange_check", {
+		_emit_inrange_success(now_ms, {
 			"actor": agent.name,
 			"target": target.name,
 			"status": "success",
@@ -105,3 +109,14 @@ func _tick(_delta: float) -> Status:
 		blackboard.set_var(blocked_reason_next_emit_ms_var, now_ms + cooldown_ms)
 	BTDecisionTelemetryRef.emit("IsCombatTargetInAttackRange", agent, blackboard, debug_decision_var, "FAILURE", "out_of_range")
 	return FAILURE
+
+
+func _emit_inrange_success(now_ms: int, payload: Dictionary) -> void:
+	var reason: String = str(payload.get("reason", "in_range"))
+	var signature: String = "%s|%s" % [str(payload.get("status", "success")), reason]
+	var emit_now: bool = signature != _last_success_signature or now_ms >= _next_success_emit_ms
+	if not emit_now:
+		return
+	CombatTelemetry.emit_event(&"bt_inrange_check", payload)
+	_last_success_signature = signature
+	_next_success_emit_ms = now_ms + int(maxf(0.05, success_emit_cooldown_sec) * 1000.0)

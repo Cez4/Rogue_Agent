@@ -12,11 +12,14 @@ const BTDecisionTelemetryRef = preload("res://Scripts/ai/bt_decision_telemetry.g
 @export var attack_range_hysteresis: float = 1.5
 @export var stuck_speed_threshold_px: float = 2.0
 @export var stuck_timeout_ms: int = 220
+@export var telemetry_emit_cooldown_sec: float = 0.35
 
 var _next_move_request_ms: int = 0
 var _last_move_target: Vector2 = Vector2.INF
 var _last_actor_pos: Vector2 = Vector2.INF
 var _stuck_since_ms: int = 0
+var _last_telemetry_signature: String = ""
+var _next_telemetry_emit_ms: int = 0
 
 
 func _generate_name() -> String:
@@ -44,6 +47,7 @@ func _tick(_delta: float) -> Status:
 	var dist_sq: float = agent.global_position.distance_squared_to(target.global_position)
 	var dist: float = sqrt(dist_sq)
 	var min_sep: float = float(agent.get_min_separation_distance_to(target))
+	var now_ms: int = Time.get_ticks_msec()
 	# Attack gating must respect physical separation floor; otherwise some archetypes can never enter attack range.
 	var effective_attack_range: float = maxf(attack_range, min_sep + 0.5)
 	# Only force separation when deeply overlapped; otherwise let chase close naturally.
@@ -57,7 +61,7 @@ func _tick(_delta: float) -> Status:
 			"distance": dist,
 			"min_separation": min_sep
 		})
-		CombatTelemetry.emit_event(&"bt_chase_state", {
+		_emit_chase_state(now_ms, {
 			"actor": agent.name,
 			"target": target.name,
 			"status": "running",
@@ -71,7 +75,7 @@ func _tick(_delta: float) -> Status:
 	var chase_check_range: float = effective_attack_range + maxf(0.0, attack_range_hysteresis)
 	if dist_sq <= chase_check_range * chase_check_range:
 		agent.stop_motor_movement()
-		CombatTelemetry.emit_event(&"bt_chase_state", {
+		_emit_chase_state(now_ms, {
 			"actor": agent.name,
 			"target": target.name,
 			"status": "success",
@@ -87,7 +91,6 @@ func _tick(_delta: float) -> Status:
 	# Chase to a ring near real attack engage range to avoid early stop/flip.
 	var approach_dist: float = maxf(4.0, chase_check_range - 0.75)
 	var approach_pos: Vector2 = agent.compute_approach_position(target, approach_dist)
-	var now_ms: int = Time.get_ticks_msec()
 	var should_refresh_move: bool = false
 	var stuck_refresh: bool = false
 	if _last_actor_pos == Vector2.INF:
@@ -131,7 +134,7 @@ func _tick(_delta: float) -> Status:
 			"min_separation_distance": min_sep
 		})
 	agent.play_walk_toward(target.global_position)
-	CombatTelemetry.emit_event(&"bt_chase_state", {
+	_emit_chase_state(now_ms, {
 		"actor": agent.name,
 		"target": target.name,
 		"status": "running",
@@ -153,3 +156,15 @@ func _exit() -> void:
 	_last_move_target = Vector2.INF
 	_last_actor_pos = Vector2.INF
 	_stuck_since_ms = 0
+
+
+func _emit_chase_state(now_ms: int, payload: Dictionary) -> void:
+	var status_label: String = str(payload.get("status", ""))
+	var reason: String = str(payload.get("reason", ""))
+	var signature: String = "%s|%s" % [status_label, reason]
+	var emit_now: bool = signature != _last_telemetry_signature or now_ms >= _next_telemetry_emit_ms
+	if not emit_now:
+		return
+	CombatTelemetry.emit_event(&"bt_chase_state", payload)
+	_last_telemetry_signature = signature
+	_next_telemetry_emit_ms = now_ms + int(maxf(0.05, telemetry_emit_cooldown_sec) * 1000.0)

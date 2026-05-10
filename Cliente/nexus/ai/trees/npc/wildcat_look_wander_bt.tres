@@ -106,7 +106,7 @@ children = [SubResource("BTAction_acquire_chase"), SubResource("BTAction_pull_ch
 [sub_resource type="BTAction" id="BTAction_idlewander"]
 script = ExtResource("10_idlewander")
 
-[sub_resource type="BTSelector" id="BTSelector_root"]
+[sub_resource type="BTDynamicSelector" id="BTSelector_root"]
 children = [SubResource("BTCooldown_attack_gate"), SubResource("BTSequence_chase"), SubResource("BTAction_idlewander")]
 
 [resource]

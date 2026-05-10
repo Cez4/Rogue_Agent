@@ -25,7 +25,9 @@ func _tick(_delta: float) -> Status:
 		BTDecisionTelemetryRef.emit("WaitStaminaRegen", agent, blackboard, debug_decision_var, "SUCCESS", "has_stamina")
 		return SUCCESS
 
-	var target := blackboard.get_var(target_var, null) as Node2D
+	var target: Node2D = null
+	if blackboard.has_var(target_var):
+		target = blackboard.get_var(target_var) as Node2D
 	if is_instance_valid(target):
 		var engage_distance: float = maxf(4.0, float(agent.get_attack_engage_distance()))
 		var distance_to_target: float = agent.global_position.distance_to(target.global_position)

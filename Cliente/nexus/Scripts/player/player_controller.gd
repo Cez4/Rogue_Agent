@@ -66,10 +66,8 @@ func _dispatch_intent(intent: Dictionary) -> void:
 			if attack_target is Node2D:
 				var target_node: Node2D = attack_target
 				_body.face_toward(target_node.global_position)
-				var attack_range: float = _body.get_attack_range()
-				var is_in_range: bool = _body.global_position.distance_to(target_node.global_position) <= maxf(1.0, attack_range)
-				if is_in_range:
-					_body.request_attack()
+				# Keep combat authority in BT/HSM: input sets intent/target only.
+				_body.set_combat_target(target_node)
 		&"chase_attack":
 			_clear_interaction_intent()
 			var chase_target: Variant = intent.get("target")
