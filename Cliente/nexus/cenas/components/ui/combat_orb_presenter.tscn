@@ -6,11 +6,28 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_imc63"]
 shader = ExtResource("2_b58o2")
+shader_parameter/fill_level = 1.0
+shader_parameter/trail_level = 1.0
+shader_parameter/fill_color = Color(0.9, 0.15, 0.18, 0.95)
+shader_parameter/trail_color = Color(1, 1, 1, 0.4)
+shader_parameter/border_color = Color(0.95, 0.95, 1, 0.95)
+shader_parameter/background_color = Color(0, 0, 0, 0.8)
+shader_parameter/glass_tint = Color(1, 1, 1, 0.12)
+shader_parameter/border_thickness = 0.12
+shader_parameter/wobble_strength = 0.035
+shader_parameter/wobble_speed = 2.2
+shader_parameter/vibration = 0.0
+shader_parameter/selected = false
+shader_parameter/selected_color = Color(1, 0.75, 0.15, 1)
+shader_parameter/selection_pulse_speed = 4.0
+shader_parameter/danger_alert = false
+shader_parameter/danger_color = Color(1, 0.1, 0.1, 1)
+shader_parameter/danger_pulse_speed = 8.0
 
 [node name="CombatOrbPresenter" type="Node2D" unique_id=2024503709]
 script = ExtResource("1_i3kp6")
 
 [node name="OrbSprite" type="Sprite2D" parent="." unique_id=1379162227]
 material = SubResource("ShaderMaterial_imc63")
-scale = Vector2(0.15, 0.15)
+scale = Vector2(0.22, 0.22)
 texture = ExtResource("2_gj0d4")
