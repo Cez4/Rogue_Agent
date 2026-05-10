@@ -4,12 +4,13 @@ Data: 2026-05-09
 Branch: `feat/combat-orb-ui-contextual`  
 Status: Finalizado, Polido e Consolidado (V2)
 
-## Resultados da Implementação Final (V2)
+## Resultados da Implementação Final (V2 -> V3 Congelada)
 1. **RPG Color Standard:** Líquido Verde (Saudável) e Fundo Vermelho (Dano/Vazio).
 2. **Contextual Shift:** Orb do player torna-se 100% vermelha e pulsante em vida baixa (< 25%).
 3. **Target Lock Tático:** Anel amarelo pulsante com mira no alvo selecionado.
 4. **Bordas Reforçadas:** `0.12` de espessura e fundo opaco para contraste máximo contra o terreno.
 5. **Correção de Engine:** Removidos bugs de rastro fantasma através de atualizações frame-a-frame no `_process`.
+6. **Sincronia de Respawn (Armadilha de UI):** Implementado um *Snap* da variável atrasada (`_current_trail`) em momentos de cura instantânea ou respawn para evitar dessincronização permanente e o travamento do Ghost Trail.
 
 ## Documentação Dedicada
 Consulte `docs/sistema-orb-ui-contextual.md` para especificações técnicas de integração.
