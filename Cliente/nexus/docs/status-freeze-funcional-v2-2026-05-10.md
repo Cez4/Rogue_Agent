@@ -63,6 +63,10 @@ Gate MCP usado para fechamento:
 ## Fonte oficial a partir deste ponto
 Este arquivo vira a fonte oficial de status funcional congelado da fase atual.
 
+Docs de consolidacao oficial:
+1. `docs/README.md` (mapa de leitura)
+2. `docs/arquitetura-contratos-estado-atual-2026-05-10.md` (contratos, decisoes, exemplos)
+
 ## Proximo passo (apos freeze)
 Somente tuning de game feel (sem mudar arquitetura):
 1. manter `stamina_orb_profile_v1.tres` como visual unico global (sem perfil de orb por archetype);
