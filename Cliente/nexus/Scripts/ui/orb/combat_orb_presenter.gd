@@ -34,6 +34,7 @@ var _current_trail: float = 1.0
 
 var _trail_delay_timer: float = 0.0
 var _trauma: float = 0.0
+var _slosh_energy: float = 0.0
 var _hide_timer: float = 0.0
 
 func _ready() -> void:
