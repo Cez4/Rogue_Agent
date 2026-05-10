@@ -53,6 +53,7 @@ class_name Actor8DirLimbo
 @onready var idle_state: LimboState = $LimboHSM/IdleState
 @onready var walk_state: LimboState = $LimboHSM/WalkState
 @onready var attack_state: LimboState = $LimboHSM/AttackState
+@onready var stagger_state: LimboState = get_node_or_null(^"LimboHSM/StaggerState") as LimboState
 @onready var bt_player: Node = get_node_or_null(^"BTPlayer")
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var emotion_bubble: AnimatedSprite2D = get_node_or_null(^"EmotionBubble") as AnimatedSprite2D
@@ -117,6 +118,15 @@ func _setup_hsm() -> void:
 	hsm.add_transition(idle_state, attack_state, &"attack!")
 	hsm.add_transition(walk_state, attack_state, &"attack!")
 	hsm.add_transition(attack_state, idle_state, attack_state.EVENT_FINISHED)
+	
+	if stagger_state != null:
+		hsm.add_transition(hsm.ANYSTATE, stagger_state, &"stagger!")
+		hsm.add_transition(stagger_state, idle_state, stagger_state.EVENT_FINISHED)
+		
+		var stamina := get_node_or_null(^"Stamina") as StaminaComponent
+		if stamina != null:
+			stamina.exhausted.connect(func(): hsm.dispatch(&"stagger!"))
+
 	hsm.initialize(self)
 	hsm.set_active(true)
 
@@ -130,6 +140,15 @@ func request_attack() -> void:
 		return
 	if _attack_pending:
 		return
+		
+	var stamina := get_node_or_null(^"Stamina") as StaminaComponent
+	if stamina != null:
+		var action_data := ActorCombatProfileRuntimeRef.get_combat_action_data(self)
+		if action_data != null and action_data.stamina_cost > 0.0:
+			if not stamina.has_stamina(action_data.stamina_cost):
+				return # Not enough stamina
+			stamina.consume(action_data.stamina_cost)
+			
 	_attack_pending = true
 	hsm.dispatch(&"attack!")
 

@@ -1,6 +1,11 @@
 class_name ActorCombatProfileRuntime
 extends RefCounted
 
+static func get_combat_action_data(actor: Actor8DirLimbo) -> CombatActionData:
+	if actor.equipment_loadout != null and actor.equipment_loadout.weapon != null:
+		return actor.equipment_loadout.weapon as CombatActionData
+	return null
+
 static func get_attack_range(actor: Actor8DirLimbo) -> float:
 	var range_bonus: float = actor.get_stat_value(&"attack_range_bonus", actor.base_attack_range_bonus)
 	var range_mul: float = actor.get_stat_value(&"attack_range_multiplier", actor.base_attack_range_multiplier)
