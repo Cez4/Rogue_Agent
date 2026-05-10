@@ -8,6 +8,7 @@ const BTDecisionTelemetryRef = preload("res://Scripts/ai/bt_decision_telemetry.g
 @export var blocked_reason_var: StringName = AIBlackboardKeys.LAST_ATTACK_BLOCKED_REASON
 @export var blocked_reason_next_emit_ms_var: StringName = AIBlackboardKeys.ATTACK_BLOCKED_NEXT_EMIT_MS
 @export var blocked_reason_emit_cooldown_sec: float = 0.65
+@export var attack_range_hysteresis: float = 8.0
 @export var debug_decision_var: StringName = AIBlackboardKeys.DEBUG_BT_DECISION_TELEMETRY
 
 
@@ -28,9 +29,12 @@ func _tick(_delta: float) -> Status:
 		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.MISSING_AGENT)
 		BTDecisionTelemetryRef.emit("IsCombatTargetInAttackRange", agent, blackboard, debug_decision_var, "FAILURE", "missing_agent")
 		return FAILURE
-	var attack_range: float = float(agent.get_attack_stop_distance())
+	var attack_range: float = float(agent.get_attack_engage_distance())
+	var min_sep: float = float(agent.get_min_separation_distance_to(target))
+	var effective_attack_range: float = maxf(attack_range, min_sep + 0.5)
 	var dist_sq: float = agent.global_position.distance_squared_to(target.global_position)
-	if dist_sq <= attack_range * attack_range:
+	var settle_attack_range: float = effective_attack_range + maxf(0.0, attack_range_hysteresis)
+	if dist_sq <= settle_attack_range * settle_attack_range:
 		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.NONE)
 		BTDecisionTelemetryRef.emit("IsCombatTargetInAttackRange", agent, blackboard, debug_decision_var, "SUCCESS", "in_range")
 		return SUCCESS
@@ -47,7 +51,9 @@ func _tick(_delta: float) -> Status:
 			"actor": agent.name,
 			"target": target.name,
 			"reason": CombatBlockedReasonsRef.OUT_OF_RANGE,
-			"attack_stop_distance": attack_range
+			"attack_stop_distance": attack_range,
+			"effective_attack_range": effective_attack_range,
+			"min_separation_distance": min_sep
 		})
 		var cooldown_ms: int = int(maxf(0.0, blocked_reason_emit_cooldown_sec) * 1000.0)
 		blackboard.set_var(blocked_reason_next_emit_ms_var, now_ms + cooldown_ms)

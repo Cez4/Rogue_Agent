@@ -180,6 +180,29 @@ func get_required_stamina_for_attack() -> float:
 	return required
 
 
+func get_attack_engage_distance() -> float:
+	var stop_distance: float = float(get_attack_stop_distance())
+	var hitbox_node := get_node_or_null(^"AttackHitbox") as Area2D
+	if hitbox_node == null:
+		return stop_distance
+	var shape_node := hitbox_node.get_node_or_null(^"CollisionShape2D") as CollisionShape2D
+	if shape_node == null or shape_node.shape == null:
+		return stop_distance
+	var shape: Shape2D = shape_node.shape
+	var shape_radius: float = 0.0
+	if shape is CircleShape2D:
+		shape_radius = (shape as CircleShape2D).radius
+	elif shape is CapsuleShape2D:
+		var capsule := shape as CapsuleShape2D
+		shape_radius = capsule.radius + (capsule.height * 0.5)
+	elif shape is RectangleShape2D:
+		var rect := shape as RectangleShape2D
+		shape_radius = maxf(rect.size.x, rect.size.y) * 0.5
+	var local_reach: float = hitbox_node.position.length() + shape_node.position.length() + shape_radius
+	# Keep engage distance conservative to avoid "air attacks" while preserving small tolerance for movement.
+	return minf(stop_distance, maxf(8.0, local_reach + 4.0))
+
+
 func get_low_stamina_kite_probability() -> float:
 	var action_data := ActorCombatProfileRuntimeRef.get_combat_action_data(self)
 	if action_data == null:
