@@ -3,7 +3,7 @@ extends RefCounted
 
 static func get_combat_action_data(actor: Actor8DirLimbo) -> CombatActionData:
 	if actor.equipment_loadout != null and actor.equipment_loadout.weapon != null:
-		return actor.equipment_loadout.weapon as CombatActionData
+		return actor.equipment_loadout.weapon.action_data
 	return null
 
 static func get_attack_range(actor: Actor8DirLimbo) -> float:
