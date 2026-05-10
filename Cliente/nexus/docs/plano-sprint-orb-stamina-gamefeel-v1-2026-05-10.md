@@ -1,7 +1,7 @@
 # Plano de Sprint - Orb de Stamina com Gamefeel (v1)
 
 Data: 2026-05-10  
-Status: aprovado para execucao  
+Status: concluido (implementado e validado no MCP)  
 Escopo: UI/UX de combate (sem alterar regra de gameplay)
 
 ## Objetivo
@@ -74,6 +74,19 @@ Nada hardcoded por ator.
 4. Aplicar no player.
 5. Validar no MCP + telemetria.
 6. Aplicar em hostis selecionados (mesma regra contextual da orb de vida).
+
+## Entrega realizada
+1. Presenter generico com `ResourceType.HEALTH/STAMINA` em `Scripts/ui/orb/combat_orb_presenter.gd`.
+2. Perfil data-driven de orb criado:
+- `Scripts/ui/orb/orb_resource_profile.gd`
+- `configs/ui/orbs/stamina_orb_profile_v1.tres`
+3. `StaminaOrb` aplicada em player e hostis:
+- `cenas/player.tscn`
+- `cenas/wildcat_1.tscn`
+- `cenas/enemies/hostile_enemy_base.tscn`
+- `cenas/enemies/hostile_enemy_light.tscn`
+- `cenas/enemies/hostile_enemy_brute.tscn`
+4. Gate MCP validado (`open_scene -> play_scene -> get_godot_errors`) sem erro novo.
 
 ## Criterios de aceite
 1. MCP gate sem erro novo:

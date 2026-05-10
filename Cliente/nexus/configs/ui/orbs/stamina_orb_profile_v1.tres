@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="OrbResourceProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/ui/orb/orb_resource_profile.gd" id="1_8x2h4"]
+
+[resource]
+script = ExtResource("1_8x2h4")
+healthy_fill_color = Color(0.93, 0.75, 0.1, 0.98)
+low_fill_color = Color(1, 0.45, 0.12, 1)
+alert_threshold = 0.2
+trail_delay = 0.5
+trail_drop_speed = 0.3
+base_hit_shake = 0.0
+trauma_decay = 1.2
+max_shake_offset = 65.0
+slosh_decay = 1.05
+stamina_shake_gain = 2.1
+stamina_min_react_ratio = 0.004

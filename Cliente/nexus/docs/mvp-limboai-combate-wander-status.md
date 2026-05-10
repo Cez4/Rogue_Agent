@@ -37,6 +37,10 @@ Atualizacao de estado:
 3. Telemetria de combate + decisao BT operavel (painel debug e filtros).
 4. Boundary/bridge do actor estabilizado (desacoplamento concluido na fase atual).
 5. Paridade de combate 8dir concluida (hostis com Health + Hurtbox + AttackHitbox).
+6. Orb de stamina integrada ao fluxo:
+   - presenter de recurso generico (vida/stamina),
+   - preset data-driven (`configs/ui/orbs/stamina_orb_profile_v1.tres`),
+   - aplicada em player + hostis.
 
 ## Correcoes criticas recentes (runtime/lifecycle)
 1. Hitbox seguro em callback de fisica:

@@ -29,7 +29,16 @@ Congelar o estado funcional atual do projeto para evitar drift entre docs antigo
 - Dreno de stamina no `_enter()` do estado de ataque (nao no request).
 - `StaggerState` ativo e sem limpar alvo de combate (mantem aggro/memoria de combate).
 
-5. Hardening recente confirmado
+5. Orb de Stamina (gamefeel) consolidada
+- `CombatOrbPresenter` operando em modo de recurso (`HEALTH`/`STAMINA`).
+- Reacao por consumo real de stamina (`stamina_changed` com delta negativo).
+- Telemetria de stamina orb ativa:
+  - `orb_stamina_react`
+  - `orb_stamina_exhausted_pulse`
+- Preset data-driven oficial:
+  - `configs/ui/orbs/stamina_orb_profile_v1.tres`
+- Orb aplicada em player e hostis principais.
+6. Hardening recente confirmado
 - Correcao do race de telemetria no frame de exaustao:
   - evita `attack_started` no mesmo frame de `stamina_exhausted`/`actor_staggered`.
   - arquivo: `Scripts/actors/state_attack_8dir.gd`.
@@ -42,6 +51,7 @@ Gate MCP usado para fechamento:
 4. Telemetria confirmando:
 - `orb_visibility`
 - `stamina_consumed`, `stamina_exhausted`, `actor_staggered`, `stamina_recovered`
+- `orb_stamina_react`, `orb_stamina_exhausted_pulse`
 - `target_died`, `chase_canceled(reason=death)`, `respawned`
 
 ## Ajustes de higiene concluidos nesta etapa
@@ -58,4 +68,3 @@ Somente tuning de game feel (sem mudar arquitetura):
 1. calibrar stamina cadence por archetype;
 2. calibrar impacto visual/ritmo de combate por telemetria;
 3. manter gate MCP por microciclo.
-
