@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://7ksr7chqpjfu" path="res://Scripts/player/player_controller.gd" id="4_r57bi"]
 [ext_resource type="Texture2D" uid="uid://ditanntheekme" path="res://Assets/Char/PlayerM/Dagger01/Dagger01_Die.png" id="4_s1iqd"]
 [ext_resource type="Script" uid="uid://bfelu52uftmru" path="res://Scripts/player/player_motor.gd" id="5_0gfyu"]
+[ext_resource type="Resource" path="res://configs/player/player_movement_combat_v1.tres" id="6_mvcombat"]
 [ext_resource type="Script" uid="uid://w6oyxr36dcgy" path="res://Scripts/actors/state_idle_8dir.gd" id="7_ogt8j"]
 [ext_resource type="Script" uid="uid://dwo1bk64b01w" path="res://Scripts/actors/state_walk_8dir.gd" id="8_ogt8j"]
 [ext_resource type="Script" uid="uid://d3iujpe3t8fla" path="res://Scripts/actors/state_attack_8dir.gd" id="9_rijvs"]
@@ -3601,6 +3602,7 @@ script = ExtResource("4_r57bi")
 
 [node name="PlayerMotor" type="Node" parent="." unique_id=1505580451]
 script = ExtResource("5_0gfyu")
+config = ExtResource("6_mvcombat")
 
 [node name="LimboHSM" type="LimboHSM" parent="." unique_id=1105914825]
 

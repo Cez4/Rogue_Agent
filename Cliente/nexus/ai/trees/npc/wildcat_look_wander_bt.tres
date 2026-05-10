@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://cvwjqd4ux02e4" path="res://Scripts/ai/tasks/bt_request_attack.gd" id="8_attack"]
 [ext_resource type="Script" uid="uid://b2xbwfbvabqli" path="res://Scripts/ai/tasks/bt_chase_combat_target.gd" id="9_chase"]
 [ext_resource type="Script" uid="uid://dk02xd2gjaytq" path="res://Scripts/ai/tasks/bt_idle_wander_loop.gd" id="10_idlewander"]
+[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_low_stamina_tactical.gd" id="11_low_stamina_tactical"]
 
 [sub_resource type="BlackboardPlan" id="BlackboardPlan_wildcat"]
 var/combat_target/name = &"combat_target"
@@ -103,11 +104,18 @@ children = [SubResource("BTAction_chase")]
 custom_name = "Wildcat Combat Chase"
 children = [SubResource("BTAction_acquire_chase"), SubResource("BTAction_pull_chase"), SubResource("BTCondition_validate_chase"), SubResource("BTCondition_perception_chase"), SubResource("BTTimeLimit_chase")]
 
+[sub_resource type="BTAction" id="BTAction_low_stamina_tactical"]
+script = ExtResource("11_low_stamina_tactical")
+
+[sub_resource type="BTSequence" id="BTSequence_low_stamina_tactical"]
+custom_name = "Wildcat Low Stamina Tactical"
+children = [SubResource("BTAction_acquire_attack"), SubResource("BTAction_pull_attack"), SubResource("BTCondition_validate_attack"), SubResource("BTCondition_perception_attack"), SubResource("BTAction_low_stamina_tactical")]
+
 [sub_resource type="BTAction" id="BTAction_idlewander"]
 script = ExtResource("10_idlewander")
 
 [sub_resource type="BTDynamicSelector" id="BTSelector_root"]
-children = [SubResource("BTCooldown_attack_gate"), SubResource("BTSequence_chase"), SubResource("BTAction_idlewander")]
+children = [SubResource("BTSequence_low_stamina_tactical"), SubResource("BTCooldown_attack_gate"), SubResource("BTSequence_chase"), SubResource("BTAction_idlewander")]
 
 [resource]
 blackboard_plan = SubResource("BlackboardPlan_wildcat")

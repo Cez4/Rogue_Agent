@@ -8,8 +8,8 @@ const BTDecisionTelemetryRef = preload("res://Scripts/ai/bt_decision_telemetry.g
 @export var min_reposition_interval_ms: int = 260
 @export var telemetry_dedupe_ms: int = 300
 @export var arrive_tolerance: float = 10.0
-@export var post_move_hold_ms: int = 180
-@export var disengage_distance_factor: float = 1.35
+@export var post_move_hold_ms: int = 300
+@export var disengage_distance_factor: float = 1.8
 
 var _next_reposition_ms: int = 0
 var _last_event_key: String = ""
@@ -42,6 +42,14 @@ func _tick(_delta: float) -> Status:
 		return FAILURE
 
 	_low_stamina_active = true
+
+	# Never issue tactical movement while an attack is committed/running.
+	if bool(agent.is_attack_pending_runtime()):
+		_is_committed_move = false
+		_hold_until_ms = 0
+		agent.stop_motor_movement()
+		BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "FAILURE", "attack_pending")
+		return FAILURE
 
 	var target: Node2D = null
 	if blackboard.has_var(target_var):
@@ -89,9 +97,15 @@ func _tick(_delta: float) -> Status:
 	var effective_cd_ms: int = max(min_reposition_interval_ms, dyn_cd_ms)
 	var separation_dist: float = _get_min_separation_distance(agent, target)
 	# Prevent giant stop distances (e.g. player=44) from triggering early micro-kite loops.
-	var tactical_stop_dist: float = minf(stop_dist, separation_dist + 6.0)
+	# Demo-like cadence: evaluate disengage using real stop distance so actors don't wait
+	# until body contact to reposition.
+	var tactical_stop_dist: float = maxf(4.0, maxf(stop_dist, separation_dist + 4.0))
 
 	if now_ms < _next_reposition_ms:
+		# Do not block chase while out of tactical zone; keep cooldown only for in-range micro-reposition.
+		if dist > (tactical_stop_dist + 1.5):
+			BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "FAILURE", "cooldown_outside_tactical_zone")
+			return FAILURE
 		agent.stop_motor_movement()
 		_emit_tactical_event("low_stamina_tactical_hold", {
 			"actor": agent.name,
@@ -112,11 +126,12 @@ func _tick(_delta: float) -> Status:
 		should_reposition = true
 		reason = "force_separation"
 		var forced_kite: float = maxf(dyn_dist, separation_dist * 1.2)
-		destination = agent.global_position + away_dir * forced_kite
+		destination = target.global_position + away_dir * maxf(separation_dist + 2.0, forced_kite)
 	elif dist <= tactical_stop_dist:
 		should_reposition = true
 		reason = "in_range_reposition"
-		destination = agent.global_position + away_dir * maxf(dyn_dist, separation_dist * 0.9)
+		var kite_dist: float = maxf(dyn_dist, separation_dist * 1.2)
+		destination = target.global_position + away_dir * maxf(separation_dist + 6.0, kite_dist)
 
 	if should_reposition:
 		_committed_destination = destination

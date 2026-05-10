@@ -10,5 +10,5 @@ display_name = "Starter Dagger"
 description = "Melee starter weapon."
 slot = 0
 weapon_kind = 0
-attack_range = 46.0
+attack_range = 36.0
 action_data = ExtResource("2_action")

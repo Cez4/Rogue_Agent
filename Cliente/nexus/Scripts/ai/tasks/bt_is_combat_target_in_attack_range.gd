@@ -8,10 +8,10 @@ const BTDecisionTelemetryRef = preload("res://Scripts/ai/bt_decision_telemetry.g
 @export var blocked_reason_var: StringName = AIBlackboardKeys.LAST_ATTACK_BLOCKED_REASON
 @export var blocked_reason_next_emit_ms_var: StringName = AIBlackboardKeys.ATTACK_BLOCKED_NEXT_EMIT_MS
 @export var blocked_reason_emit_cooldown_sec: float = 0.65
-@export var attack_range_hysteresis: float = 1.5
+@export var attack_range_hysteresis: float = 2.0
 @export var in_range_latch_until_var: StringName = &"combat_in_range_latched_until_ms"
 @export var in_range_latch_ms: int = 180
-@export var in_range_latch_extra_distance: float = 0.75
+@export var in_range_latch_extra_distance: float = 0.9
 @export var debug_decision_var: StringName = AIBlackboardKeys.DEBUG_BT_DECISION_TELEMETRY
 @export var success_emit_cooldown_sec: float = 0.9
 
@@ -38,7 +38,7 @@ func _tick(_delta: float) -> Status:
 		return FAILURE
 	var attack_range: float = float(agent.get_attack_engage_distance())
 	var min_sep: float = float(agent.get_min_separation_distance_to(target))
-	var effective_attack_range: float = maxf(attack_range, min_sep + 0.5)
+	var effective_attack_range: float = maxf(attack_range, min_sep + 2.0)
 	var dist_sq: float = agent.global_position.distance_squared_to(target.global_position)
 	var dist: float = sqrt(dist_sq)
 	var attack_check_range: float = effective_attack_range + maxf(0.0, attack_range_hysteresis)

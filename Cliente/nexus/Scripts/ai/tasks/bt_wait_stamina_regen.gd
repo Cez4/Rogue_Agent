@@ -25,26 +25,9 @@ func _tick(_delta: float) -> Status:
 		BTDecisionTelemetryRef.emit("WaitStaminaRegen", agent, blackboard, debug_decision_var, "SUCCESS", "has_stamina")
 		return SUCCESS
 
-	var target: Node2D = null
-	if blackboard.has_var(target_var):
-		target = blackboard.get_var(target_var) as Node2D
-	if is_instance_valid(target):
-		var engage_distance: float = maxf(4.0, float(agent.get_attack_engage_distance()))
-		var distance_to_target: float = agent.global_position.distance_to(target.global_position)
-		if distance_to_target > engage_distance * maxf(0.5, hold_distance_factor):
-			_waiting_since_ms = -1
-			BTDecisionTelemetryRef.emit("WaitStaminaRegen", agent, blackboard, debug_decision_var, "FAILURE", "no_stamina_reposition")
-			return FAILURE
-
-	agent.stop_motor_movement()
-	var now_ms: int = Time.get_ticks_msec()
-	if _waiting_since_ms < 0:
-		_waiting_since_ms = now_ms
-		BTDecisionTelemetryRef.emit("WaitStaminaRegen", agent, blackboard, debug_decision_var, "RUNNING", "wait_start")
-		return RUNNING
-	if now_ms - _waiting_since_ms < max(0, min_wait_ms):
-		BTDecisionTelemetryRef.emit("WaitStaminaRegen", agent, blackboard, debug_decision_var, "RUNNING", "waiting")
-		return RUNNING
-	_waiting_since_ms = now_ms
-	BTDecisionTelemetryRef.emit("WaitStaminaRegen", agent, blackboard, debug_decision_var, "RUNNING", "retry_window")
-	return RUNNING
+	# Important for demo-style cadence:
+	# never lock the selector in this node when stamina is low.
+	# Let low_stamina_tactical / chase branches decide reposition and spacing.
+	_waiting_since_ms = -1
+	BTDecisionTelemetryRef.emit("WaitStaminaRegen", agent, blackboard, debug_decision_var, "FAILURE", "insufficient_stamina")
+	return FAILURE

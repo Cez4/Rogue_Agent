@@ -44,6 +44,8 @@ func _enter() -> void:
 			"target": telemetry_target
 		})
 
+	# Lock animation/state to attack execution; avoid walk visual while hit windows run.
+	agent.stop_motor_movement()
 	agent.play_attack_animation()
 	agent.orient_attack_hitbox()
 

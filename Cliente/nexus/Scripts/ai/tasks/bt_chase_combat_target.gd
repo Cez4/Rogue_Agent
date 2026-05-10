@@ -50,7 +50,7 @@ func _tick(_delta: float) -> Status:
 	var min_sep: float = float(agent.get_min_separation_distance_to(target))
 	var now_ms: int = Time.get_ticks_msec()
 	# Attack gating must respect physical separation floor; otherwise some archetypes can never enter attack range.
-	var effective_attack_range: float = maxf(attack_range, min_sep + 0.5)
+	var effective_attack_range: float = maxf(attack_range, min_sep + 2.0)
 	# Only force separation when deeply overlapped; otherwise let chase close naturally.
 	if dist < (min_sep * 0.6):
 		var detach_pos: Vector2 = agent.compute_approach_position(target, min_sep + 4.0)
@@ -115,6 +115,11 @@ func _tick(_delta: float) -> Status:
 		should_refresh_move = true
 	if stuck_refresh:
 		should_refresh_move = true
+	# Guard rail: if we're still out of range but locomotion is effectively idle,
+	# force a repath refresh to avoid limbo loops near threshold distances.
+	if not should_refresh_move and dist > (chase_check_range + 0.5) and not bool(agent.is_actor_moving()):
+		should_refresh_move = true
+		stuck_refresh = true
 	if should_refresh_move:
 		if stuck_refresh:
 			agent.request_move_runtime(target.global_position)

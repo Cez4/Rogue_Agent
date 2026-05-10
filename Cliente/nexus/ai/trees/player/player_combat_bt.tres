@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://Scripts/ai/tasks/bt_wait_stamina_regen.gd" id="6_wait_stamina"]
 [ext_resource type="Script" uid="uid://cvwjqd4ux02e4" path="res://Scripts/ai/tasks/bt_request_attack.gd" id="7_attack"]
 [ext_resource type="Script" uid="uid://b2xbwfbvabqli" path="res://Scripts/ai/tasks/bt_chase_combat_target.gd" id="8_chase"]
+[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_low_stamina_tactical.gd" id="9_low_stamina_tactical"]
 
 [sub_resource type="BTAction" id="BTAction_pull_attack"]
 script = ExtResource("1_pull")
@@ -59,8 +60,15 @@ children = [SubResource("BTAction_chase")]
 custom_name = "Combat Chase"
 children = [SubResource("BTAction_pull_chase"), SubResource("BTCondition_validate_chase"), SubResource("BTCondition_perception_chase"), SubResource("BTTimeLimit_chase")]
 
-[sub_resource type="BTSelector" id="BTSelector_root"]
-children = [SubResource("BTCooldown_attack_gate"), SubResource("BTSequence_chase")]
+[sub_resource type="BTAction" id="BTAction_low_stamina_tactical"]
+script = ExtResource("9_low_stamina_tactical")
+
+[sub_resource type="BTSequence" id="BTSequence_low_stamina_tactical"]
+custom_name = "Low Stamina Tactical"
+children = [SubResource("BTAction_pull_attack"), SubResource("BTCondition_validate_attack"), SubResource("BTCondition_perception_attack"), SubResource("BTAction_low_stamina_tactical")]
+
+[sub_resource type="BTDynamicSelector" id="BTSelector_root"]
+children = [SubResource("BTSequence_low_stamina_tactical"), SubResource("BTCooldown_attack_gate"), SubResource("BTSequence_chase")]
 
 [resource]
 root_task = SubResource("BTSelector_root")
