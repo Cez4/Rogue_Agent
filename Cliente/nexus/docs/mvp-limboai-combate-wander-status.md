@@ -18,6 +18,12 @@ Atualizacao de estado:
   - `docs/plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md`
   - foco: estabilizar comportamento tatico BT (low stamina/chase/kite) via padrao da demo.
 
+Regra de leitura:
+- este arquivo e historico consolidado;
+- para estado operativo da sprint, prevalecem:
+  - `status-freeze-funcional-v2-2026-05-10.md`
+  - `plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md`.
+
 ## Objetivo atual
 - Base jogavel com:
   - Player controlado por clique.

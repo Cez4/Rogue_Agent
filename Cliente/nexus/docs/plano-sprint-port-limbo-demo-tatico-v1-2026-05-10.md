@@ -4,6 +4,12 @@ Data: 2026-05-10
 Status: ABERTA (prioridade maxima)  
 Objetivo: portar o padrao tatico da demo LimboAI para resolver travamento de chase/kite sem inflar arquitetura.
 
+## Estado atual da sprint (atualizado)
+1. Chase/attack de Player e Brute estao funcionais com ciclo completo.
+2. Falso positivo de `request_attack_not_started` foi removido.
+3. Telemetria de sucesso recebeu dedupe por `actor+target+status+reason`.
+4. Pendente: acabamento de fluidez tatico (reposition/hold) e limpeza final de ruído residual.
+
 ## 1) Problema atual (confirmado por logs)
 1. Loop de reposicionamento em baixa stamina (`force_separation`) entre player e hostil.
 2. Alternancia excessiva `hold/reposition` sem commit de chegada.
@@ -46,6 +52,7 @@ Objetivo: portar o padrao tatico da demo LimboAI para resolver travamento de cha
 3. Hostil volta a atacar apos janela tatico/stamina.
 4. Sem travamento visual de walk por starvation do BT.
 5. Zero erro novo em `get_godot_errors`.
+6. Telemetria de combate legivel sem spam critico de sucesso/bloqueio.
 
 ## 6) Fora de escopo nesta sprint
 1. Refactor grande de arquitetura.
