@@ -2,14 +2,17 @@
 
 Data: 2026-05-09  
 Branch: `feat/combat-orb-ui-contextual`  
-Status: implementado e validado (commit ef5b8fe)
+Status: Finalizado, Polido e Consolidado (V2)
 
-## Resultados da Implementação
-1. **Shader Avançado:** Integrado com suporte a `trail_level` e `vibration`.
-2. **Presenter Robusto:** Uso de Tweens para animações de impacto (vibration) e trail (ghost bar).
-3. **Feedback de Vida Baixa:** Alerta visual automático via shader quando HP < 25%.
-4. **Contexto:** Validado em Player e Hostiles (Light/Brute).
-5. **Anti-Overlap (Dynamic Side-Offset):** Orbs agora usam `top_level = true` e se separam lateralmente (Player -> Esquerda, Target -> Direita) para evitar sobreposição em combate próximo.
+## Resultados da Implementação Final (V2)
+1. **RPG Color Standard:** Líquido Verde (Saudável) e Fundo Vermelho (Dano/Vazio).
+2. **Contextual Shift:** Orb do player torna-se 100% vermelha e pulsante em vida baixa (< 25%).
+3. **Target Lock Tático:** Anel amarelo pulsante com mira no alvo selecionado.
+4. **Bordas Reforçadas:** `0.12` de espessura e fundo opaco para contraste máximo contra o terreno.
+5. **Correção de Engine:** Removidos bugs de rastro fantasma através de atualizações frame-a-frame no `_process`.
+
+## Documentação Dedicada
+Consulte `docs/sistema-orb-ui-contextual.md` para especificações técnicas de integração.
 
 ## Eixos de Tuning (Ajustados)
 - `trail_delay`: 0.4s.
