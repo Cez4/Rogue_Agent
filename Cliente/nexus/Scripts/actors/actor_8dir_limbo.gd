@@ -147,7 +147,6 @@ func request_attack() -> void:
 		if action_data != null and action_data.stamina_cost > 0.0:
 			if not stamina.has_stamina(action_data.stamina_cost):
 				return # Not enough stamina
-			stamina.consume(action_data.stamina_cost)
 			
 	_attack_pending = true
 	hsm.dispatch(&"attack!")

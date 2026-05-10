@@ -16,6 +16,14 @@ func _enter() -> void:
 		_finish_attack()
 		return
 
+	var stamina := agent.get_node_or_null(^"Stamina") as StaminaComponent
+	if stamina != null:
+		var resolved_action: Resource = _resolved_action_data()
+		if resolved_action != null and resolved_action.get("stamina_cost") != null:
+			var cost: float = float(resolved_action.get("stamina_cost"))
+			if cost > 0.0:
+				stamina.consume(cost)
+
 	var telemetry_target: String = ""
 	var has_valid_telemetry_target: bool = false
 	var current_target: Node2D = agent.get_combat_target() as Node2D
