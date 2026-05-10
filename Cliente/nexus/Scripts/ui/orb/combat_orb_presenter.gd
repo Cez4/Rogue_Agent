@@ -148,7 +148,7 @@ func _trigger_damage_visuals() -> void:
 	_current_fill = target_fill
 	
 	# Physical Shake and Liquid Slosh
-	_add_shake(1.0)
+	_add_shake(0.35)
 	
 	# Trail effect (processed in _process)
 	_trail_delay_timer = trail_delay
