@@ -141,10 +141,23 @@ func is_actor_moving() -> bool:
 
 func request_attack() -> void:
 	if _is_dead:
+		CombatTelemetry.emit_event(&"attack_request_rejected", {
+			"actor": name,
+			"reason": "actor_dead"
+		})
 		return
 	if _attack_pending:
+		CombatTelemetry.emit_event(&"attack_request_rejected", {
+			"actor": name,
+			"reason": "attack_pending"
+		})
 		return
 	if not has_stamina_for_attack():
+		CombatTelemetry.emit_event(&"attack_request_rejected", {
+			"actor": name,
+			"reason": "insufficient_stamina",
+			"required": get_required_stamina_for_attack()
+		})
 		return
 
 	_attack_pending = true
@@ -152,6 +165,11 @@ func request_attack() -> void:
 	if not consumed:
 		# Do not keep actor locked in pending state when no transition handled this event.
 		_attack_pending = false
+		CombatTelemetry.emit_event(&"attack_request_rejected", {
+			"actor": name,
+			"reason": "hsm_event_not_consumed",
+			"hsm_event": "attack!"
+		})
 
 
 func has_stamina_for_attack() -> bool:

@@ -54,6 +54,10 @@ func _tick(_delta: float) -> Status:
 	if blackboard.has_var(target_var):
 		target = blackboard.get_var(target_var) as Node2D
 	if not is_instance_valid(target):
+		CombatTelemetry.emit_event(&"attack_task_blocked", {
+			"actor": agent.name,
+			"reason": CombatBlockedReasonsRef.NO_VALID_TARGET
+		})
 		_emit_low_stamina_exited_if_needed()
 		_emit_blocked_ended_if_needed(CombatBlockedReasonsRef.NO_VALID_TARGET)
 		blackboard.set_var(started_var, false)
@@ -64,6 +68,10 @@ func _tick(_delta: float) -> Status:
 		agent.face_toward(target.global_position)
 	agent.stop_motor_movement()
 	if not bool(agent.has_stamina_for_attack()):
+		CombatTelemetry.emit_event(&"attack_task_blocked", {
+			"actor": agent.name,
+			"reason": CombatBlockedReasonsRef.INSUFFICIENT_STAMINA
+		})
 		_emit_low_stamina_entered_if_needed()
 		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.INSUFFICIENT_STAMINA)
 		blackboard.set_var(started_var, false)
@@ -92,6 +100,10 @@ func _tick(_delta: float) -> Status:
 	if blackboard.has_var(blocked_latched_var):
 		blocked_latched = bool(blackboard.get_var(blocked_latched_var))
 	blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.REQUEST_ATTACK_NOT_STARTED)
+	CombatTelemetry.emit_event(&"attack_task_blocked", {
+		"actor": agent.name,
+		"reason": CombatBlockedReasonsRef.REQUEST_ATTACK_NOT_STARTED
+	})
 	if not blocked_latched:
 		_emit_blocked_started_if_needed(CombatBlockedReasonsRef.REQUEST_ATTACK_NOT_STARTED)
 		blackboard.set_var(blocked_latched_var, true)

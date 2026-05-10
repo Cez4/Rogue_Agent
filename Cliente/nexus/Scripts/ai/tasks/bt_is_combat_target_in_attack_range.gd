@@ -8,7 +8,10 @@ const BTDecisionTelemetryRef = preload("res://Scripts/ai/bt_decision_telemetry.g
 @export var blocked_reason_var: StringName = AIBlackboardKeys.LAST_ATTACK_BLOCKED_REASON
 @export var blocked_reason_next_emit_ms_var: StringName = AIBlackboardKeys.ATTACK_BLOCKED_NEXT_EMIT_MS
 @export var blocked_reason_emit_cooldown_sec: float = 0.65
-@export var attack_range_hysteresis: float = 12.0
+@export var attack_range_hysteresis: float = 1.5
+@export var in_range_latch_until_var: StringName = &"combat_in_range_latched_until_ms"
+@export var in_range_latch_ms: int = 180
+@export var in_range_latch_extra_distance: float = 0.75
 @export var debug_decision_var: StringName = AIBlackboardKeys.DEBUG_BT_DECISION_TELEMETRY
 
 
@@ -33,16 +36,48 @@ func _tick(_delta: float) -> Status:
 	var min_sep: float = float(agent.get_min_separation_distance_to(target))
 	var effective_attack_range: float = maxf(attack_range, min_sep + 0.5)
 	var dist_sq: float = agent.global_position.distance_squared_to(target.global_position)
-	var settle_attack_range: float = effective_attack_range + maxf(0.0, attack_range_hysteresis)
-	if dist_sq <= settle_attack_range * settle_attack_range:
+	var dist: float = sqrt(dist_sq)
+	var attack_check_range: float = effective_attack_range + maxf(0.0, attack_range_hysteresis)
+	var now_ms: int = Time.get_ticks_msec()
+	if dist_sq <= attack_check_range * attack_check_range:
+		blackboard.set_var(in_range_latch_until_var, now_ms + max(0, in_range_latch_ms))
+		CombatTelemetry.emit_event(&"bt_inrange_check", {
+			"actor": agent.name,
+			"target": target.name,
+			"status": "success",
+			"distance": dist,
+			"attack_stop_distance": attack_range,
+			"effective_attack_range": effective_attack_range,
+			"attack_check_range": attack_check_range,
+			"min_separation_distance": min_sep
+		})
 		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.NONE)
 		BTDecisionTelemetryRef.emit("IsCombatTargetInAttackRange", agent, blackboard, debug_decision_var, "SUCCESS", "in_range")
+		return SUCCESS
+	var latched_until_ms: int = 0
+	if blackboard.has_var(in_range_latch_until_var):
+		latched_until_ms = int(blackboard.get_var(in_range_latch_until_var))
+	var latched_limit: float = attack_check_range + maxf(0.0, in_range_latch_extra_distance)
+	if now_ms <= latched_until_ms and dist_sq <= latched_limit * latched_limit:
+		CombatTelemetry.emit_event(&"bt_inrange_check", {
+			"actor": agent.name,
+			"target": target.name,
+			"status": "success",
+			"reason": "latched",
+			"distance": dist,
+			"attack_stop_distance": attack_range,
+			"effective_attack_range": effective_attack_range,
+			"attack_check_range": attack_check_range,
+			"latched_limit": latched_limit,
+			"min_separation_distance": min_sep
+		})
+		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.NONE)
+		BTDecisionTelemetryRef.emit("IsCombatTargetInAttackRange", agent, blackboard, debug_decision_var, "SUCCESS", "in_range_latched")
 		return SUCCESS
 	var previous_reason: String = ""
 	if blackboard.has_var(blocked_reason_var):
 		previous_reason = str(blackboard.get_var(blocked_reason_var))
 	blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.OUT_OF_RANGE)
-	var now_ms: int = Time.get_ticks_msec()
 	var next_emit_ms: int = 0
 	if blackboard.has_var(blocked_reason_next_emit_ms_var):
 		next_emit_ms = int(blackboard.get_var(blocked_reason_next_emit_ms_var))
@@ -53,6 +88,17 @@ func _tick(_delta: float) -> Status:
 			"reason": CombatBlockedReasonsRef.OUT_OF_RANGE,
 			"attack_stop_distance": attack_range,
 			"effective_attack_range": effective_attack_range,
+			"min_separation_distance": min_sep
+		})
+		CombatTelemetry.emit_event(&"bt_inrange_check", {
+			"actor": agent.name,
+			"target": target.name,
+			"status": "failure",
+			"reason": "out_of_range",
+			"distance": sqrt(dist_sq),
+			"attack_stop_distance": attack_range,
+			"effective_attack_range": effective_attack_range,
+			"attack_check_range": attack_check_range,
 			"min_separation_distance": min_sep
 		})
 		var cooldown_ms: int = int(maxf(0.0, blocked_reason_emit_cooldown_sec) * 1000.0)

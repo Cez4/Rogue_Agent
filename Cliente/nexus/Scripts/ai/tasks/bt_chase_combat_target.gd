@@ -9,10 +9,14 @@ const BTDecisionTelemetryRef = preload("res://Scripts/ai/bt_decision_telemetry.g
 @export var debug_decision_var: StringName = AIBlackboardKeys.DEBUG_BT_DECISION_TELEMETRY
 @export var move_repath_interval_sec: float = 0.2
 @export var move_retarget_threshold: float = 16.0
-@export var attack_range_hysteresis: float = 12.0
+@export var attack_range_hysteresis: float = 1.5
+@export var stuck_speed_threshold_px: float = 2.0
+@export var stuck_timeout_ms: int = 220
 
 var _next_move_request_ms: int = 0
 var _last_move_target: Vector2 = Vector2.INF
+var _last_actor_pos: Vector2 = Vector2.INF
+var _stuck_since_ms: int = 0
 
 
 func _generate_name() -> String:
@@ -53,27 +57,65 @@ func _tick(_delta: float) -> Status:
 			"distance": dist,
 			"min_separation": min_sep
 		})
+		CombatTelemetry.emit_event(&"bt_chase_state", {
+			"actor": agent.name,
+			"target": target.name,
+			"status": "running",
+			"reason": "force_separation",
+			"distance": dist,
+			"effective_attack_range": effective_attack_range,
+			"min_separation_distance": min_sep
+		})
 		BTDecisionTelemetryRef.emit("ChaseCombatTarget", agent, blackboard, debug_decision_var, "RUNNING", "force_separation")
 		return RUNNING
-	var settle_attack_range: float = effective_attack_range + maxf(0.0, attack_range_hysteresis)
-	if dist_sq <= settle_attack_range * settle_attack_range:
+	var chase_check_range: float = effective_attack_range + maxf(0.0, attack_range_hysteresis)
+	if dist_sq <= chase_check_range * chase_check_range:
 		agent.stop_motor_movement()
+		CombatTelemetry.emit_event(&"bt_chase_state", {
+			"actor": agent.name,
+			"target": target.name,
+			"status": "success",
+			"reason": "in_attack_range",
+			"distance": dist,
+			"effective_attack_range": effective_attack_range,
+			"chase_check_range": chase_check_range,
+			"min_separation_distance": min_sep
+		})
 		BTDecisionTelemetryRef.emit("ChaseCombatTarget", agent, blackboard, debug_decision_var, "SUCCESS", "in_attack_range")
 		return SUCCESS
 
-	# Demo-like pursue: chase to an approach ring (not target center) to avoid body overlap lock.
-	var approach_dist: float = maxf(4.0, effective_attack_range * 0.92)
+	# Chase to a ring near real attack engage range to avoid early stop/flip.
+	var approach_dist: float = maxf(4.0, chase_check_range - 0.75)
 	var approach_pos: Vector2 = agent.compute_approach_position(target, approach_dist)
 	var now_ms: int = Time.get_ticks_msec()
 	var should_refresh_move: bool = false
+	var stuck_refresh: bool = false
+	if _last_actor_pos == Vector2.INF:
+		_last_actor_pos = agent.global_position
+		_stuck_since_ms = now_ms
+	else:
+		var moved_px: float = _last_actor_pos.distance_to(agent.global_position)
+		if moved_px <= maxf(0.1, stuck_speed_threshold_px) and dist > (chase_check_range + 1.0):
+			if _stuck_since_ms == 0:
+				_stuck_since_ms = now_ms
+			elif (now_ms - _stuck_since_ms) >= max(50, stuck_timeout_ms):
+				stuck_refresh = true
+		else:
+			_stuck_since_ms = now_ms
+		_last_actor_pos = agent.global_position
 	if _last_move_target == Vector2.INF:
 		should_refresh_move = true
 	elif _last_move_target.distance_to(approach_pos) >= maxf(1.0, move_retarget_threshold):
 		should_refresh_move = true
 	elif now_ms >= _next_move_request_ms:
 		should_refresh_move = true
+	if stuck_refresh:
+		should_refresh_move = true
 	if should_refresh_move:
-		agent.request_move_runtime(approach_pos)
+		if stuck_refresh:
+			agent.request_move_runtime(target.global_position)
+		else:
+			agent.request_move_runtime(approach_pos)
 		_last_move_target = approach_pos
 		var repath_ms: int = int(maxf(0.05, move_repath_interval_sec) * 1000.0)
 		_next_move_request_ms = now_ms + repath_ms
@@ -89,6 +131,19 @@ func _tick(_delta: float) -> Status:
 			"min_separation_distance": min_sep
 		})
 	agent.play_walk_toward(target.global_position)
+	CombatTelemetry.emit_event(&"bt_chase_state", {
+		"actor": agent.name,
+		"target": target.name,
+		"status": "running",
+		"reason": "chasing",
+		"distance": dist,
+		"effective_attack_range": effective_attack_range,
+		"chase_check_range": chase_check_range,
+		"approach_distance": approach_dist,
+		"move_refresh": should_refresh_move,
+		"stuck_refresh": stuck_refresh,
+		"min_separation_distance": min_sep
+	})
 	BTDecisionTelemetryRef.emit("ChaseCombatTarget", agent, blackboard, debug_decision_var, "RUNNING", "chasing")
 	return RUNNING
 
@@ -96,3 +151,5 @@ func _tick(_delta: float) -> Status:
 func _exit() -> void:
 	_next_move_request_ms = 0
 	_last_move_target = Vector2.INF
+	_last_actor_pos = Vector2.INF
+	_stuck_since_ms = 0
