@@ -7,9 +7,9 @@ const BTDecisionTelemetryRef = preload("res://Scripts/ai/bt_decision_telemetry.g
 @export var next_reacquire_var: StringName = AIBlackboardKeys.COMBAT_NEXT_REACQUIRE_MS
 @export var default_reacquire_interval_sec: float = 0.12
 @export var debug_decision_var: StringName = AIBlackboardKeys.DEBUG_BT_DECISION_TELEMETRY
-@export var move_repath_interval_sec: float = 0.14
-@export var move_retarget_threshold: float = 10.0
-@export var attack_range_hysteresis: float = 8.0
+@export var move_repath_interval_sec: float = 0.2
+@export var move_retarget_threshold: float = 16.0
+@export var attack_range_hysteresis: float = 12.0
 
 var _next_move_request_ms: int = 0
 var _last_move_target: Vector2 = Vector2.INF

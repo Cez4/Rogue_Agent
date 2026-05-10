@@ -34,4 +34,5 @@ func _try_set_aggro_target(source: Node) -> void:
 	var attacker: Node2D = source_owner as Node2D
 	if attacker == null:
 		return
-	owner_actor.set_combat_target(attacker, false)
+	# Keep retaliation stable after taking damage.
+	owner_actor.set_combat_target(attacker, true)

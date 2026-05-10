@@ -12,14 +12,24 @@ var _navigation_agent: NavigationAgent2D
 var _has_target: bool = false
 var _safe_velocity: Vector2 = Vector2.ZERO
 var _avoidance_active: bool = false
+var _stuck_elapsed_sec: float = 0.0
+var _last_position: Vector2 = Vector2.ZERO
+
+const _STUCK_SPEED_EPS: float = 6.0
+const _STUCK_PROGRESS_EPS: float = 1.0
+const _STUCK_REPATH_AFTER_SEC: float = 0.33
 
 
 func setup(body: CharacterBody2D) -> void:
 	_body = body
+	_last_position = body.global_position
 	_navigation_agent = body.get_node_or_null(navigation_agent_path) as NavigationAgent2D
 	if _navigation_agent == null:
 		push_error("PlayerMotor requires a NavigationAgent2D at path: %s" % navigation_agent_path)
 		return
+
+	# Default to node setting so actors without config still run avoidance consistently.
+	_avoidance_active = _navigation_agent.avoidance_enabled
 
 	if config != null:
 		_navigation_agent.path_desired_distance = config.path_desired_distance
@@ -50,11 +60,14 @@ func request_move(target_position: Vector2) -> void:
 
 	_navigation_agent.target_position = resolved_target
 	_has_target = true
+	_stuck_elapsed_sec = 0.0
+	_last_position = _body.global_position
 	movement_started.emit()
 
 
 func stop() -> void:
 	_has_target = false
+	_stuck_elapsed_sec = 0.0
 	movement_finished.emit()
 
 
@@ -66,6 +79,7 @@ func physics_update(delta: float) -> void:
 		var decel: float = 1000.0 if config == null else config.deceleration
 		_body.velocity = _body.velocity.move_toward(Vector2.ZERO, decel * delta)
 		_body.move_and_slide()
+		_last_position = _body.global_position
 		return
 
 	if _navigation_agent.is_navigation_finished():
@@ -87,13 +101,28 @@ func physics_update(delta: float) -> void:
 	_body.velocity = _body.velocity.move_toward(steering_velocity, accel * delta)
 	_body.move_and_slide()
 
+	# Anti-stuck: when close-contact causes zero progress for a short window, refresh target path.
+	var moved_dist: float = _body.global_position.distance_to(_last_position)
+	if _body.velocity.length() <= _STUCK_SPEED_EPS and moved_dist <= _STUCK_PROGRESS_EPS:
+		_stuck_elapsed_sec += delta
+	else:
+		_stuck_elapsed_sec = 0.0
+	_last_position = _body.global_position
+
+	if _stuck_elapsed_sec >= _STUCK_REPATH_AFTER_SEC:
+		var t: Vector2 = _navigation_agent.target_position
+		_navigation_agent.target_position = t
+		_stuck_elapsed_sec = 0.0
+
 	if config != null and _body.global_position.distance_to(_navigation_agent.target_position) <= config.stop_epsilon:
 		_has_target = false
 		movement_finished.emit()
 
 
 func is_moving() -> bool:
-	return _has_target and _navigation_agent != null and not _navigation_agent.is_navigation_finished()
+	if not (_has_target and _navigation_agent != null and not _navigation_agent.is_navigation_finished()):
+		return false
+	return _body != null and _body.velocity.length() > 1.0
 
 
 func _on_navigation_velocity_computed(safe_velocity: Vector2) -> void:

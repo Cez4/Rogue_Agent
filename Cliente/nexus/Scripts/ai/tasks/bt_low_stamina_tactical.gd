@@ -5,14 +5,19 @@ const BTDecisionTelemetryRef = preload("res://Scripts/ai/bt_decision_telemetry.g
 
 @export var target_var: StringName = AIBlackboardKeys.COMBAT_TARGET
 @export var debug_decision_var: StringName = AIBlackboardKeys.DEBUG_BT_DECISION_TELEMETRY
-@export var reposition_probability: float = 0.45
-@export var min_reposition_interval_ms: int = 240
+@export var min_reposition_interval_ms: int = 260
 @export var telemetry_dedupe_ms: int = 300
+@export var arrive_tolerance: float = 10.0
+@export var post_move_hold_ms: int = 180
+@export var disengage_distance_factor: float = 1.35
 
 var _next_reposition_ms: int = 0
 var _last_event_key: String = ""
 var _last_event_ms: int = -1
 var _low_stamina_active: bool = false
+var _is_committed_move: bool = false
+var _committed_destination: Vector2 = Vector2.ZERO
+var _hold_until_ms: int = 0
 
 
 func _generate_name() -> String:
@@ -31,6 +36,8 @@ func _tick(_delta: float) -> Status:
 				"reason": "has_stamina"
 			}, "exit_has_stamina")
 			_low_stamina_active = false
+		_is_committed_move = false
+		_hold_until_ms = 0
 		BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "FAILURE", "has_stamina")
 		return FAILURE
 
@@ -45,101 +52,110 @@ func _tick(_delta: float) -> Status:
 			"actor": agent.name,
 			"reason": "no_target"
 		}, "hold_no_target")
-		BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "RUNNING", "low_stamina_hold_no_target")
+		BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "RUNNING", "hold_no_target")
 		return RUNNING
+
+	var now_ms: int = Time.get_ticks_msec()
+
+	# Demo-style commit movement: once chosen, finish it before rethinking.
+	if _is_committed_move:
+		var remaining: float = agent.global_position.distance_to(_committed_destination)
+		if remaining <= maxf(2.0, arrive_tolerance):
+			agent.stop_motor_movement()
+			_is_committed_move = false
+			_hold_until_ms = now_ms + max(0, post_move_hold_ms)
+			_emit_tactical_event("low_stamina_tactical_hold", {
+				"actor": agent.name,
+				"reason": "arrived_commit_point",
+				"remaining": remaining
+			}, "hold_after_arrive")
+			BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "RUNNING", "arrived_commit_point")
+			return RUNNING
+		agent.request_move_runtime(_committed_destination)
+		agent.play_walk_toward(_committed_destination)
+		BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "RUNNING", "committed_move")
+		return RUNNING
+
+	if now_ms < _hold_until_ms:
+		agent.stop_motor_movement()
+		# Do not hard-block tree while briefly holding; allow chase/face reevaluation.
+		BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "FAILURE", "post_move_hold")
+		return FAILURE
 
 	var dist: float = agent.global_position.distance_to(target.global_position)
 	var stop_dist: float = maxf(4.0, float(agent.get_attack_stop_distance()))
-	var now_ms: int = Time.get_ticks_msec()
-	var dyn_prob: float = clampf(float(agent.get_low_stamina_kite_probability()), 0.0, 1.0)
 	var dyn_dist: float = maxf(0.0, float(agent.get_low_stamina_kite_distance()))
 	var dyn_cd_ms: int = max(0, int(agent.get_low_stamina_kite_cooldown_ms()))
-	var effective_prob: float = clampf(maxf(reposition_probability, dyn_prob), 0.0, 1.0)
 	var effective_cd_ms: int = max(min_reposition_interval_ms, dyn_cd_ms)
 	var separation_dist: float = _get_min_separation_distance(agent, target)
+	# Prevent giant stop distances (e.g. player=44) from triggering early micro-kite loops.
+	var tactical_stop_dist: float = minf(stop_dist, separation_dist + 6.0)
 
-	# If physically overlapped/too close, force a stronger disengage to prevent body glue.
-	if dist < separation_dist:
-		if now_ms >= _next_reposition_ms:
-			var away_dir_sep: Vector2 = (agent.global_position - target.global_position).normalized()
-			if away_dir_sep.is_zero_approx():
-				away_dir_sep = Vector2.RIGHT.rotated(randf() * TAU)
-			var forced_kite: float = maxf(dyn_dist, separation_dist * 1.35)
-			var forced_pos: Vector2 = agent.global_position + away_dir_sep * forced_kite
-			agent.request_move_runtime(forced_pos)
-			agent.play_walk_toward(forced_pos)
-			_next_reposition_ms = now_ms + effective_cd_ms
-			_emit_tactical_event("low_stamina_tactical_reposition", {
-				"actor": agent.name,
-				"reason": "force_separation",
-				"distance": dist,
-				"separation_distance": separation_dist,
-				"forced_kite_distance": forced_kite
-			}, "reposition_force_separation")
-			BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "RUNNING", "low_stamina_force_separation")
-			return RUNNING
-
-	# In range: probabilistic micro-kite for emergent "back off -> think -> re-engage".
-	if dist <= stop_dist:
-		if now_ms >= _next_reposition_ms and dyn_dist > 0.0 and randf() <= effective_prob:
-			var away_dir: Vector2 = (agent.global_position - target.global_position).normalized()
-			if away_dir.is_zero_approx():
-				away_dir = Vector2.RIGHT.rotated(randf() * TAU)
-			var kite_pos: Vector2 = agent.global_position + away_dir * dyn_dist
-			agent.request_move_runtime(kite_pos)
-			agent.play_walk_toward(kite_pos)
-			_next_reposition_ms = now_ms + effective_cd_ms
-			_emit_tactical_event("low_stamina_tactical_reposition", {
-				"actor": agent.name,
-				"reason": "in_range_micro_kite",
-				"distance": dist,
-				"stop_distance": stop_dist,
-				"kite_distance": dyn_dist
-			}, "reposition_in_range")
-			BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "RUNNING", "low_stamina_reposition_in_range")
-			return RUNNING
-		agent.stop_motor_movement()
-		_emit_tactical_event("low_stamina_tactical_hold", {
-			"actor": agent.name,
-			"reason": "in_range",
-			"distance": dist,
-			"stop_distance": stop_dist
-		}, "hold_in_range")
-		BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "RUNNING", "low_stamina_hold_in_range")
-		return RUNNING
-
-	# Out of range: either hold or reposition/chase lightly based on probability.
 	if now_ms < _next_reposition_ms:
 		agent.stop_motor_movement()
 		_emit_tactical_event("low_stamina_tactical_hold", {
 			"actor": agent.name,
 			"reason": "reposition_cooldown"
 		}, "hold_reposition_cooldown")
-		BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "RUNNING", "low_stamina_hold_cooldown")
+		BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "RUNNING", "hold_reposition_cooldown")
 		return RUNNING
 
-	if randf() <= effective_prob:
-		agent.request_move_runtime(target.global_position)
-		agent.play_walk_toward(target.global_position)
+	var should_reposition: bool = false
+	var reason: String = "hold_regen"
+	var destination: Vector2 = agent.global_position
+	var away_dir: Vector2 = (agent.global_position - target.global_position).normalized()
+	if away_dir.is_zero_approx():
+		away_dir = Vector2.RIGHT.rotated(randf() * TAU)
+
+	# Forced separation only when deeply overlapped.
+	if dist < (separation_dist * 0.8):
+		should_reposition = true
+		reason = "force_separation"
+		var forced_kite: float = maxf(dyn_dist, separation_dist * 1.2)
+		destination = agent.global_position + away_dir * forced_kite
+	elif dist <= tactical_stop_dist:
+		should_reposition = true
+		reason = "in_range_reposition"
+		destination = agent.global_position + away_dir * maxf(dyn_dist, separation_dist * 0.9)
+
+	if should_reposition:
+		_committed_destination = destination
+		_is_committed_move = true
 		_next_reposition_ms = now_ms + effective_cd_ms
+		agent.request_move_runtime(_committed_destination)
+		agent.play_walk_toward(_committed_destination)
 		_emit_tactical_event("low_stamina_tactical_reposition", {
 			"actor": agent.name,
+			"reason": reason,
 			"distance": dist,
-			"stop_distance": stop_dist,
-			"roll_threshold": effective_prob
-		}, "reposition_out_of_range")
-		BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "RUNNING", "low_stamina_reposition")
+			"stop_distance": tactical_stop_dist,
+			"separation_distance": separation_dist
+		}, "reposition_%s" % reason)
+		BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "RUNNING", "reposition_commit")
 		return RUNNING
+
+	# Outside close tactical zone, do not lock the tree in RUNNING.
+	# Returning FAILURE lets chase/attack branches keep moving and prevents idle freeze loops.
+	if dist > separation_dist * disengage_distance_factor:
+		agent.stop_motor_movement()
+		BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "FAILURE", "outside_disengage_zone")
+		return FAILURE
 
 	agent.stop_motor_movement()
 	_next_reposition_ms = now_ms + effective_cd_ms
 	_emit_tactical_event("low_stamina_tactical_hold", {
 		"actor": agent.name,
-		"reason": "hold_roll",
-		"roll_threshold": effective_prob
-	}, "hold_roll")
-	BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "RUNNING", "low_stamina_hold_roll")
-	return RUNNING
+		"reason": "hold_regen"
+	}, "hold_regen")
+	BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "FAILURE", "hold_regen")
+	return FAILURE
+
+
+func _exit() -> void:
+	_is_committed_move = false
+	_hold_until_ms = 0
+	if agent != null:
+		agent.stop_motor_movement()
 
 
 func _emit_tactical_event(event_name: String, data: Dictionary, event_key: String) -> void:

@@ -57,6 +57,7 @@ class_name Actor8DirLimbo
 @onready var idle_state: LimboState = $LimboHSM/IdleState
 @onready var walk_state: LimboState = $LimboHSM/WalkState
 @onready var attack_state: LimboState = $LimboHSM/AttackState
+@onready var wander_state: LimboState = get_node_or_null(^"LimboHSM/WanderState") as LimboState
 @onready var stagger_state: LimboState = get_node_or_null(^"LimboHSM/StaggerState") as LimboState
 @onready var bt_player: Node = get_node_or_null(^"BTPlayer")
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -122,6 +123,8 @@ func _setup_hsm() -> void:
 
 	hsm.add_transition(idle_state, attack_state, &"attack!")
 	hsm.add_transition(walk_state, attack_state, &"attack!")
+	if wander_state != null:
+		hsm.add_transition(wander_state, attack_state, &"attack!")
 	hsm.add_transition(attack_state, idle_state, attack_state.EVENT_FINISHED)
 	
 	if stagger_state != null:
@@ -143,9 +146,12 @@ func request_attack() -> void:
 		return
 	if not has_stamina_for_attack():
 		return
-			
+
 	_attack_pending = true
-	hsm.dispatch(&"attack!")
+	var consumed: bool = hsm.dispatch(&"attack!")
+	if not consumed:
+		# Do not keep actor locked in pending state when no transition handled this event.
+		_attack_pending = false
 
 
 func has_stamina_for_attack() -> bool:

@@ -8,7 +8,7 @@ const BTDecisionTelemetryRef = preload("res://Scripts/ai/bt_decision_telemetry.g
 @export var blocked_reason_var: StringName = AIBlackboardKeys.LAST_ATTACK_BLOCKED_REASON
 @export var blocked_reason_next_emit_ms_var: StringName = AIBlackboardKeys.ATTACK_BLOCKED_NEXT_EMIT_MS
 @export var blocked_reason_emit_cooldown_sec: float = 0.65
-@export var attack_range_hysteresis: float = 8.0
+@export var attack_range_hysteresis: float = 12.0
 @export var debug_decision_var: StringName = AIBlackboardKeys.DEBUG_BT_DECISION_TELEMETRY
 
 

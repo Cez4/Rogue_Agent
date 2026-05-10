@@ -3,6 +3,8 @@ extends BTAction
 const BTDecisionTelemetryRef = preload("res://Scripts/ai/bt_decision_telemetry.gd")
 
 @export var min_wait_ms: int = 180
+@export var target_var: StringName = AIBlackboardKeys.COMBAT_TARGET
+@export var hold_distance_factor: float = 0.9
 @export var debug_decision_var: StringName = AIBlackboardKeys.DEBUG_BT_DECISION_TELEMETRY
 
 var _waiting_since_ms: int = -1
@@ -22,6 +24,15 @@ func _tick(_delta: float) -> Status:
 		_waiting_since_ms = -1
 		BTDecisionTelemetryRef.emit("WaitStaminaRegen", agent, blackboard, debug_decision_var, "SUCCESS", "has_stamina")
 		return SUCCESS
+
+	var target := blackboard.get_var(target_var, null) as Node2D
+	if is_instance_valid(target):
+		var engage_distance: float = maxf(4.0, float(agent.get_attack_engage_distance()))
+		var distance_to_target: float = agent.global_position.distance_to(target.global_position)
+		if distance_to_target > engage_distance * maxf(0.5, hold_distance_factor):
+			_waiting_since_ms = -1
+			BTDecisionTelemetryRef.emit("WaitStaminaRegen", agent, blackboard, debug_decision_var, "FAILURE", "no_stamina_reposition")
+			return FAILURE
 
 	agent.stop_motor_movement()
 	var now_ms: int = Time.get_ticks_msec()
