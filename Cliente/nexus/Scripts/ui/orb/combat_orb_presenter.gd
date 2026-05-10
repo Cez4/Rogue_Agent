@@ -26,8 +26,18 @@ var _orb_material: ShaderMaterial
 var _is_visible_orb: bool = false
 var _elapsed: float = 0.0
 
-var _current_fill: float = 1.0
-var _current_trail: float = 1.0
+var _current_fill: float = 1.0:
+	set(v):
+		_current_fill = v
+		if _orb_material:
+			_orb_material.set_shader_parameter(&"fill_level", v)
+
+var _current_trail: float = 1.0:
+	set(v):
+		_current_trail = v
+		if _orb_material:
+			_orb_material.set_shader_parameter(&"trail_level", v)
+
 var _trail_tween: Tween
 var _vib_tween: Tween
 
