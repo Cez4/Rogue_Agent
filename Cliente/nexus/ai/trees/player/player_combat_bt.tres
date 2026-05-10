@@ -7,7 +7,8 @@
 [ext_resource type="Script" uid="uid://cvwjqd4ux02e4" path="res://Scripts/ai/tasks/bt_request_attack.gd" id="5_attack"]
 [ext_resource type="Script" uid="uid://b2xbwfbvabqli" path="res://Scripts/ai/tasks/bt_chase_combat_target.gd" id="6_chase"]
 [ext_resource type="Script" uid="uid://b0orfy45ioia7" path="res://Scripts/ai/tasks/bt_validate_combat_target_perception.gd" id="7_perception"]
-[ext_resource type="Script" uid="uid://dq53k6xlov77b" path="res://Scripts/ai/tasks/bt_wait_stamina_regen.gd" id="8_wait_stamina"]
+[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_wait_stamina_regen.gd" id="8_wait_stamina"]
+[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_low_stamina_tactical.gd" id="9_low_stamina"]
 
 [sub_resource type="BTAction" id="BTAction_pull"]
 script = ExtResource("1_pull")
@@ -30,6 +31,18 @@ script = ExtResource("5_attack")
 [sub_resource type="BTSequence" id="BTSequence_attack"]
 children = [SubResource("BTAction_pull"), SubResource("BTCondition_validate"), SubResource("BTCondition_in_range"), SubResource("BTAction_face"), SubResource("BTAction_wait_stamina"), SubResource("BTAction_attack")]
 
+[sub_resource type="BTAction" id="BTAction_pull_low_stamina"]
+script = ExtResource("1_pull")
+
+[sub_resource type="BTCondition" id="BTCondition_validate_low_stamina"]
+script = ExtResource("2_validate")
+
+[sub_resource type="BTAction" id="BTAction_low_stamina_tactical"]
+script = ExtResource("9_low_stamina")
+
+[sub_resource type="BTSequence" id="BTSequence_low_stamina"]
+children = [SubResource("BTAction_pull_low_stamina"), SubResource("BTCondition_validate_low_stamina"), SubResource("BTAction_low_stamina_tactical")]
+
 [sub_resource type="BTAction" id="BTAction_t1gar"]
 script = ExtResource("1_pull")
 
@@ -46,7 +59,7 @@ script = ExtResource("6_chase")
 children = [SubResource("BTAction_t1gar"), SubResource("BTCondition_eltfe"), SubResource("BTCondition_perception_chase"), SubResource("BTAction_chase")]
 
 [sub_resource type="BTDynamicSelector" id="BTSelector_root"]
-children = [SubResource("BTSequence_attack"), SubResource("BTSequence_chase")]
+children = [SubResource("BTSequence_low_stamina"), SubResource("BTSequence_attack"), SubResource("BTSequence_chase")]
 
 [resource]
 root_task = SubResource("BTSelector_root")

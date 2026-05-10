@@ -22,7 +22,10 @@ func _enter() -> void:
 		if resolved_action != null and resolved_action.get("stamina_cost") != null:
 			var cost: float = float(resolved_action.get("stamina_cost"))
 			if cost > 0.0:
-				if not stamina.has_stamina(cost):
+				var required: float = float(agent.get_required_stamina_for_attack())
+				if required <= 0.0:
+					required = cost
+				if not stamina.has_stamina(required):
 					_finish_attack()
 					return
 				if not stamina.consume(cost):

@@ -16,7 +16,8 @@ static func update_interaction_approach(actor: Actor8DirLimbo) -> void:
 		actor.clear_interaction_target()
 		return
 	if actor.motor != null:
-		actor.motor.request_move(target.global_position)
+		var approach_pos: Vector2 = actor.compute_approach_position(target, actor._bridge_get_interaction_target_range())
+		actor.motor.request_move(approach_pos)
 
 
 static func update_chase_attack(actor: Actor8DirLimbo) -> void:
@@ -46,6 +47,7 @@ static func update_chase_attack(actor: Actor8DirLimbo) -> void:
 			actor.play_walk_toward(target.global_position)
 		return
 	actor._bridge_set_next_chase_repath_sec(now_sec + maxf(0.05, actor.chase_repath_interval_sec))
+	# Chase must close on real target; approach-ring movement was causing orbit/never-attack loops.
 	actor.request_move_runtime(target.global_position)
 	if not actor.is_attack_pending_runtime():
 		actor.play_walk_toward(target.global_position)

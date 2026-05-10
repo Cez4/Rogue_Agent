@@ -141,13 +141,8 @@ func request_attack() -> void:
 		return
 	if _attack_pending:
 		return
-		
-	var stamina := get_node_or_null(^"Stamina") as StaminaComponent
-	if stamina != null:
-		var action_data := ActorCombatProfileRuntimeRef.get_combat_action_data(self)
-		if action_data != null and action_data.stamina_cost > 0.0:
-			if not stamina.has_stamina(action_data.stamina_cost):
-				return # Not enough stamina
+	if not has_stamina_for_attack():
+		return
 			
 	_attack_pending = true
 	hsm.dispatch(&"attack!")
@@ -160,7 +155,75 @@ func has_stamina_for_attack() -> bool:
 	var action_data := ActorCombatProfileRuntimeRef.get_combat_action_data(self)
 	if action_data == null or action_data.stamina_cost <= 0.0:
 		return true
-	return stamina.has_stamina(action_data.stamina_cost)
+	return stamina.has_stamina(get_required_stamina_for_attack())
+
+
+func get_required_stamina_for_attack() -> float:
+	var action_data := ActorCombatProfileRuntimeRef.get_combat_action_data(self)
+	if action_data == null:
+		return 0.0
+	var cost: float = maxf(0.0, action_data.stamina_cost)
+	if cost <= 0.0:
+		return 0.0
+	var budget_hits: float = maxf(1.0, action_data.attack_stamina_budget_hits)
+	var required: float = cost * budget_hits
+	var stamina := get_node_or_null(^"Stamina") as StaminaComponent
+	if stamina != null and stamina.is_exhausted():
+		var exhausted_multiplier: float = maxf(1.0, action_data.attack_stamina_resume_multiplier_when_exhausted)
+		required = maxf(required, cost * exhausted_multiplier)
+	else:
+		var buffer_ratio: float = clampf(action_data.attack_stamina_buffer_ratio, 0.0, 2.0)
+		required = maxf(required, cost * (1.0 + buffer_ratio))
+	if stamina != null:
+		var min_after_ratio: float = clampf(action_data.attack_stamina_min_after_attack_ratio, 0.0, 1.0)
+		required = maxf(required, cost + (stamina.max_stamina * min_after_ratio))
+	return required
+
+
+func get_low_stamina_kite_probability() -> float:
+	var action_data := ActorCombatProfileRuntimeRef.get_combat_action_data(self)
+	if action_data == null:
+		return 0.35
+	return clampf(action_data.low_stamina_kite_probability, 0.0, 1.0)
+
+
+func get_low_stamina_kite_distance() -> float:
+	var action_data := ActorCombatProfileRuntimeRef.get_combat_action_data(self)
+	if action_data == null:
+		return 18.0
+	return maxf(0.0, action_data.low_stamina_kite_distance)
+
+
+func get_low_stamina_kite_cooldown_ms() -> int:
+	var action_data := ActorCombatProfileRuntimeRef.get_combat_action_data(self)
+	if action_data == null:
+		return 260
+	return max(0, int(action_data.low_stamina_kite_cooldown_ms))
+
+
+func get_min_separation_distance_to(other: Node2D) -> float:
+	if other == null or not is_instance_valid(other):
+		return 20.0
+	var self_nav := get_node_or_null(^"NavigationAgent2D") as NavigationAgent2D
+	var other_nav := other.get_node_or_null(^"NavigationAgent2D") as NavigationAgent2D
+	var self_r: float = 10.0
+	var other_r: float = 10.0
+	if self_nav != null:
+		self_r = maxf(2.0, self_nav.radius)
+	if other_nav != null:
+		other_r = maxf(2.0, other_nav.radius)
+	return self_r + other_r + 4.0
+
+
+func compute_approach_position(target: Node2D, desired_distance: float) -> Vector2:
+	if target == null or not is_instance_valid(target):
+		return global_position
+	var from_target: Vector2 = global_position - target.global_position
+	if from_target.is_zero_approx():
+		from_target = Vector2.RIGHT.rotated(randf() * TAU)
+	var dir: Vector2 = from_target.normalized()
+	var keep_dist: float = maxf(desired_distance, get_min_separation_distance_to(target))
+	return target.global_position + dir * keep_dist
 
 
 func clear_attack_pending() -> void:

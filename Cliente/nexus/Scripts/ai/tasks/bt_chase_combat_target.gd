@@ -32,6 +32,21 @@ func _tick(_delta: float) -> Status:
 		return RUNNING
 	var attack_range: float = float(agent.get_attack_stop_distance())
 	var dist_sq: float = agent.global_position.distance_squared_to(target.global_position)
+	var dist: float = sqrt(dist_sq)
+	var min_sep: float = float(agent.get_min_separation_distance_to(target))
+	# Only force separation when deeply overlapped; otherwise let chase close naturally.
+	if dist < (min_sep * 0.6):
+		var detach_pos: Vector2 = agent.compute_approach_position(target, min_sep + 4.0)
+		agent.request_move_runtime(detach_pos)
+		agent.play_walk_toward(detach_pos)
+		CombatTelemetry.emit_event(&"separation_forced", {
+			"actor": agent.name,
+			"target": target.name,
+			"distance": dist,
+			"min_separation": min_sep
+		})
+		BTDecisionTelemetryRef.emit("ChaseCombatTarget", agent, blackboard, debug_decision_var, "RUNNING", "force_separation")
+		return RUNNING
 	if dist_sq <= attack_range * attack_range:
 		agent.stop_motor_movement()
 		BTDecisionTelemetryRef.emit("ChaseCombatTarget", agent, blackboard, debug_decision_var, "SUCCESS", "in_attack_range")

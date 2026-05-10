@@ -4,9 +4,9 @@
 @export var acceleration: float = 1200.0
 @export var deceleration: float = 1400.0
 
-@export var path_desired_distance: float = 4.0
-@export var target_desired_distance: float = 6.0
-@export var stop_epsilon: float = 4.0
+@export var path_desired_distance: float = 6.0
+@export var target_desired_distance: float = 12.0
+@export var stop_epsilon: float = 6.0
 
 @export var project_target_to_navmesh: bool = true
 
