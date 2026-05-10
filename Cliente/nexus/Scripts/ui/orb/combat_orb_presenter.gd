@@ -80,7 +80,7 @@ func _process(delta: float) -> void:
 		_process_trail(delta)
 		_process_shake(delta)
 		if _orb_material:
-			_orb_material.set_shader_parameter(&"vibration", _trauma)
+			_orb_material.set_shader_parameter(&"vibration", _slosh_energy)
 
 func _process_trail(delta: float) -> void:
 	if _trail_delay_timer > 0.0:
