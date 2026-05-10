@@ -24,9 +24,12 @@ void fragment() {
     if (r > 1.2) {
         COLOR = vec4(0.0);
     } else {
-        float vib_wobble = sin(TIME * 45.0) * vibration * 0.05;
         float base_wobble = sin((uv.x * 8.0) + TIME * wobble_speed) * wobble_strength;
-        float total_wobble = base_wobble + vib_wobble;
+        
+        // Violent liquid slosh/tilt effect based on vibration
+        float slosh = uv.x * sin(TIME * 60.0) * vibration * 0.8;
+        float splash = sin(uv.x * 15.0 + TIME * 80.0) * vibration * 0.15;
+        float total_wobble = base_wobble + slosh + splash;
         
         float liquid_line = mix(1.0, -1.0, fill_level) + total_wobble;
         float trail_line = mix(1.0, -1.0, trail_level) + total_wobble;
