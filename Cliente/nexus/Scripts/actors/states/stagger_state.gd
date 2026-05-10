@@ -12,10 +12,6 @@ func _enter() -> void:
 	# Stop all movement
 	actor.stop_motor_movement()
 	
-	# Clear combat target to break BT loops (Chase)
-	actor.clear_combat_target()
-	actor.cancel_chase_attack(&"staggered")
-	
 	# Play exhausted/stagger animation or idle
 	actor.play_idle_animation()
 	
