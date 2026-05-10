@@ -79,6 +79,9 @@ Somente tuning de game feel (sem mudar arquitetura):
 
 Plano estrategico da proxima fase:
 1. `docs/plano-estrategico-gamefeel-stamina-actions-v1-2026-05-10.md`
+2. Sprint tecnica aberta de estabilizacao tatico-BT via padrao da demo:
+   - `docs/plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md`
+   - prioridade atual antes de novas features.
 
 ## Baseline stamina v1 (fechado)
 1. Regra oficial:
@@ -90,3 +93,10 @@ Plano estrategico da proxima fase:
 - `HostileEnemyBrute`: `stamina_cost = 28.0` (`orb_stamina_react.spent_ratio = 0.28`)
 3. Fluxo validado:
 - `stamina_consumed -> stamina_exhausted -> low_stamina_entered -> stamina_recovered -> low_stamina_exited`.
+
+## Sprint aberta (estado atual real)
+1. Existe regressao comportamental em baixa stamina (loop de reposicionamento/hold).
+2. Sprint ativa: portar padrao tatico do demo LimboAI (arrive/back_away/pursue/in_range).
+3. Regra de execucao:
+- primeiro estabilizar BT tatico 100%;
+- depois retomar evolucao de features.

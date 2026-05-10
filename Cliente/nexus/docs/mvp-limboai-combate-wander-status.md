@@ -14,6 +14,9 @@ Atualizacao de estado:
 - Plano final de desacoplamento do actor concluido (Cortes 1-4).
 - Checklist padrao de regressao para PR criado:
   - `docs/checklist-regressao-pr-actor-bt-hsm.md`
+- Sprint tecnica aberta (prioridade atual):
+  - `docs/plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md`
+  - foco: estabilizar comportamento tatico BT (low stamina/chase/kite) via padrao da demo.
 
 ## Objetivo atual
 - Base jogavel com:
@@ -84,12 +87,15 @@ Atualizacao de estado:
      - `damage=1.25`
 
 ## Proximos passos tecnicos
-1. Brute v1 congelado; iniciar proximo hostil por dados usando `enemy-profile-checklist-v1.md`.
-2. Seguir checklist unico por novo inimigo:
+1. Fechar sprint de port tatico da demo:
+   - eliminar loop de reposicionamento em baixa stamina;
+   - restaurar transicao fluida chase -> attack.
+2. Brute v1 congelado; apos estabilizacao, iniciar proximo hostil por dados usando `enemy-profile-checklist-v1.md`.
+3. Seguir checklist unico por novo inimigo:
    - `docs/enemy-profile-checklist-v1.md`
-3. Atualizar matriz de tuning por ciclo:
+4. Atualizar matriz de tuning por ciclo:
    - `docs/combat-tuning-matrix-v1.md`
-4. Evolucoes apos freeze do Brute:
+5. Evolucoes apos estabilizacao:
    - telemetria BT enter/exit opcional por task;
    - feedback visual de hit;
    - validacao multiplayer futura (range/LOS/cooldown no host).

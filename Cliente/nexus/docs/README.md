@@ -6,6 +6,8 @@ Branch de referencia: `feat/combat-orb-ui-contextual`
 ## 1) Fonte principal de estado
 1. `status-freeze-funcional-v2-2026-05-10.md`
 2. `mvp-limboai-combate-wander-status.md`
+3. Sprint ativa atual:
+   - `plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md`
 
 ## 2) Arquitetura e contratos
 1. `arquitetura-contratos-estado-atual-2026-05-10.md` (doc mestre)
@@ -45,3 +47,6 @@ Branch de referencia: `feat/combat-orb-ui-contextual`
    - `arquitetura-contratos-estado-atual-2026-05-10.md`
 3. Sempre validar com MCP:
    - `open_scene -> play_scene -> get_godot_errors`
+4. Ordem de prioridade atual:
+   - estabilizar sprint tatico BT ativa;
+   - so depois retomar novas features.
