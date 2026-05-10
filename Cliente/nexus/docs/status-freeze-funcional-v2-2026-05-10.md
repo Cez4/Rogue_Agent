@@ -74,6 +74,9 @@ Somente tuning de game feel (sem mudar arquitetura):
 3. validar por telemetria (`orb_stamina_react` / `orb_stamina_exhausted_pulse`);
 4. manter gate MCP por microciclo.
 
+Plano estrategico da proxima fase:
+1. `docs/plano-estrategico-gamefeel-stamina-actions-v1-2026-05-10.md`
+
 ## Baseline stamina v1 (fechado)
 1. Regra oficial:
 - orb visual unica global (`stamina_orb_profile_v1.tres`);

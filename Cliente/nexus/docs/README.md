@@ -21,6 +21,7 @@ Branch de referencia: `feat/combat-orb-ui-contextual`
 ## 4) UI de combate (orb)
 1. `plano-orb-ui-contextual-combate-v1-2026-05-09.md`
 2. `plano-sprint-orb-stamina-gamefeel-v1-2026-05-10.md`
+3. `plano-estrategico-gamefeel-stamina-actions-v1-2026-05-10.md` (proxima sprint consolidada)
 
 ## 5) Regras de processo (qualidade)
 1. `checklist-regressao-pr-actor-bt-hsm.md`
