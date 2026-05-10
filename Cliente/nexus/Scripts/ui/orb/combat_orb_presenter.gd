@@ -16,6 +16,9 @@ enum DisplayMode {
 @export var trail_duration: float = 0.4
 @export var vibration_duration: float = 0.3
 @export var alert_threshold: float = 0.25
+@export_group("Shake")
+@export var trauma_decay: float = 0.8
+@export var max_shake_offset: float = 4.0
 
 @onready var orb_sprite: Sprite2D = $OrbSprite
 
@@ -31,6 +34,7 @@ var _current_trail: float = 1.0
 
 var _vib_tween: Tween
 var _trail_delay_timer: float = 0.0
+var _trauma: float = 0.0
 
 func _ready() -> void:
 	top_level = true
@@ -70,15 +74,32 @@ func _process(delta: float) -> void:
 	if _is_visible_orb:
 		_check_fill_sync()
 		_update_position(delta * 12.0)
-		
-		# Process trail logic
-		if _trail_delay_timer > 0.0:
-			_trail_delay_timer -= delta
-		elif _current_trail > _current_fill:
-			var speed = 1.0 / maxf(0.1, trail_duration)
-			_current_trail = move_toward(_current_trail, _current_fill, delta * speed)
-			if _orb_material:
-				_orb_material.set_shader_parameter(&"trail_level", _current_trail)
+		_process_trail(delta)
+		_process_shake(delta)
+
+func _process_trail(delta: float) -> void:
+	if _trail_delay_timer > 0.0:
+		_trail_delay_timer -= delta
+	elif _current_trail > _current_fill:
+		var speed = 1.0 / maxf(0.1, trail_duration)
+		_current_trail = move_toward(_current_trail, _current_fill, delta * speed)
+		if _orb_material:
+			_orb_material.set_shader_parameter(&"trail_level", _current_trail)
+
+func _process_shake(delta: float) -> void:
+	if _trauma > 0.0:
+		_trauma = maxf(0.0, _trauma - delta * trauma_decay)
+		_apply_shake()
+	elif orb_sprite.offset != Vector2.ZERO:
+		orb_sprite.offset = Vector2.ZERO
+
+func _add_shake(amount: float) -> void:
+	_trauma = minf(1.0, _trauma + amount)
+
+func _apply_shake() -> void:
+	var shake_power: float = _trauma * _trauma # Quadratic for better feel
+	orb_sprite.offset.x = max_shake_offset * shake_power * randf_range(-1.0, 1.0)
+	orb_sprite.offset.y = max_shake_offset * shake_power * randf_range(-1.0, 1.0)
 
 func _update_position(weight: float) -> void:
 	if _actor == null: return
@@ -125,6 +146,9 @@ func _check_fill_sync() -> void:
 func _trigger_damage_visuals() -> void:
 	var target_fill = _get_health_ratio()
 	_current_fill = target_fill
+	
+	# Shake effect
+	_add_shake(0.5)
 	
 	# Vibration effect
 	if _vib_tween: _vib_tween.kill()
