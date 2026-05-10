@@ -23,6 +23,9 @@ func _enter() -> void:
 			var cost: float = float(resolved_action.get("stamina_cost"))
 			if cost > 0.0:
 				stamina.consume(cost)
+				if stamina.is_exhausted():
+					_finish_attack()
+					return
 
 	var telemetry_target: String = ""
 	var has_valid_telemetry_target: bool = false
