@@ -86,19 +86,19 @@ Regra de autoridade:
 - `combat_blocked_reasons.gd` como fonte unica de motivos.
 18. Runtime de action/animacao extraido:
 - `ActorActionRuntime` centraliza face/play/wait/orient/finalizacao de ataque.
-- `actor_8dir_limbo.gd` reduziu para 526 linhas mantendo contrato do BT/HSM.
+- `actor_8dir_limbo.gd` reduziu para 526 linhas mantendo contrato do BT/HSM. (historico)
 19. Consolidacao de contrato minimo (v5):
 - remocao de wrappers privados redundantes sem impacto no contrato publico.
-- `actor_8dir_limbo.gd` reduziu para 501 linhas.
+- `actor_8dir_limbo.gd` reduziu para 501 linhas. (historico)
 20. Consolidacao de contrato minimo (v6):
 - remocao de wrappers internos adicionais de lifecycle/combat.
-- `actor_8dir_limbo.gd` reduziu para 473 linhas.
+- `actor_8dir_limbo.gd` reduziu para 473 linhas. (historico)
 21. Integracao tecnica por bridge (v7):
 - `ActorRuntimeBridge` centraliza operacoes tecnicas de runtime sem expor novos metodos de gameplay no actor.
 - contrato do actor para BT/HSM permanece estavel.
 22. Bridge social/wander (v8):
 - estado social (idle/wander/look/emote request/priority) migrado para bridge tecnico.
-- `actor_8dir_limbo.gd` reduzido para 469 linhas mantendo comportamento.
+- `actor_8dir_limbo.gd` reduzido para 469 linhas mantendo comportamento. (historico)
 23. Boundary hardening adicional:
 - `ActorRuntimeBridge` tipado para `Actor8DirLimbo` (contrato tecnico explicito).
 - conexao de `Health.death` via API publica (`on_health_death`) sem dependencia de metodo privado.
@@ -202,3 +202,8 @@ https://limboai.readthedocs.io/en/latest/classes/class_btaction.html
 
 - LimboAI Blackboard:  
 https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
+> Nota de precedencia (2026-05-10): este documento contem historico de cortes de desacoplamento.
+> Para estado operativo atual, considerar primeiro:
+> 1. `docs/status-freeze-funcional-v2-2026-05-10.md`
+> 2. `docs/plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md`
+> 3. `docs/arquitetura-contratos-estado-atual-2026-05-10.md`
