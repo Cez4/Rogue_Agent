@@ -27,8 +27,9 @@ void fragment() {
         float base_wobble = sin((uv.x * 8.0) + TIME * wobble_speed) * wobble_strength;
         
         // Violent liquid slosh/tilt effect based on vibration
-        float slosh = uv.x * sin(TIME * 60.0) * vibration * 0.8;
-        float splash = sin(uv.x * 15.0 + TIME * 80.0) * vibration * 0.15;
+        // Using 'vibration' inside the sin() guarantees it settles perfectly at 0 when vibration hits 0.
+        float slosh = uv.x * sin(vibration * 25.0) * vibration * 1.5;
+        float splash = sin(uv.x * 12.0 + vibration * 40.0) * vibration * 0.25;
         float total_wobble = base_wobble + slosh + splash;
         
         float liquid_line = mix(1.0, -1.0, fill_level) + total_wobble;

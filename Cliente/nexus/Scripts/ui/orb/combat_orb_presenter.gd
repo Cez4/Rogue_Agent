@@ -14,7 +14,6 @@ enum DisplayMode {
 @export var side_separation: float = 35.0
 @export var trail_delay: float = 0.15
 @export var trail_duration: float = 0.4
-@export var vibration_duration: float = 0.3
 @export var alert_threshold: float = 0.25
 @export_group("Shake")
 @export var trauma_decay: float = 1.2
@@ -32,7 +31,6 @@ var _elapsed: float = 0.0
 var _current_fill: float = 1.0
 var _current_trail: float = 1.0
 
-var _vib_tween: Tween
 var _trail_delay_timer: float = 0.0
 var _trauma: float = 0.0
 
@@ -75,6 +73,9 @@ func _process(delta: float) -> void:
 		_check_fill_sync()
 		_update_position(delta * 12.0)
 		_process_trail(delta)
+		_process_shake(delta)
+		if _orb_material:
+			_orb_material.set_shader_parameter(&"vibration", _trauma)
 
 func _process_trail(delta: float) -> void:
 	if _trail_delay_timer > 0.0:
@@ -146,21 +147,13 @@ func _trigger_damage_visuals() -> void:
 	var target_fill = _get_health_ratio()
 	_current_fill = target_fill
 	
-	# Shake effect
-	_add_shake(0.5)
-	
-	# Vibration effect
-	if _vib_tween: _vib_tween.kill()
-	_vib_tween = create_tween()
-	_vib_tween.tween_property(self, "_vibration_value", 1.0, 0.05)
-	_vib_tween.tween_property(self, "_vibration_value", 0.0, vibration_duration).set_delay(0.05)
+	# Physical Shake and Liquid Slosh
+	_add_shake(1.0)
 	
 	# Trail effect (processed in _process)
 	_trail_delay_timer = trail_delay
 	
 	_update_shader_parameters()
-
-var _vibration_value: float = 0.0
 
 func _update_shader_parameters() -> void:
 	if _orb_material == null:
