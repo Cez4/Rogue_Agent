@@ -11,6 +11,7 @@ enum DisplayMode {
 @export var poll_interval_sec: float = 0.12
 @export var hide_when_dead: bool = true
 @export_group("Visuals")
+@export var hide_delay: float = 2.0
 @export var side_separation: float = 35.0
 @export var trail_delay: float = 0.15
 @export var trail_duration: float = 0.4
@@ -33,6 +34,7 @@ var _current_trail: float = 1.0
 
 var _trail_delay_timer: float = 0.0
 var _trauma: float = 0.0
+var _hide_timer: float = 0.0
 
 func _ready() -> void:
 	top_level = true
@@ -61,13 +63,16 @@ func _process(delta: float) -> void:
 	if _elapsed >= poll_interval_sec:
 		_elapsed = 0.0
 		var should_show: bool = _should_show_orb()
-		if should_show != _is_visible_orb:
-			var reason: StringName = &"state_change"
-			if not should_show:
-				reason = &"hidden"
-			_set_orb_visible(should_show, reason)
-			if should_show:
+		if should_show:
+			_hide_timer = hide_delay
+			if not _is_visible_orb:
+				_set_orb_visible(true, &"state_change")
 				_update_position(1.0)
+				
+	if _hide_timer > 0.0:
+		_hide_timer -= delta
+		if _hide_timer <= 0.0 and _is_visible_orb:
+			_set_orb_visible(false, &"hidden")
 	
 	if _is_visible_orb:
 		_check_fill_sync()
@@ -120,8 +125,7 @@ func _on_health_damaged(_amount: float, _knockback: Vector2) -> void:
 
 func _on_health_death() -> void:
 	_trigger_damage_visuals()
-	if hide_when_dead:
-		_set_orb_visible(false, &"death")
+	# Orb will hide automatically after hide_delay via _process
 
 func _ensure_unique_material() -> void:
 	if orb_sprite == null:
@@ -152,6 +156,8 @@ func _trigger_damage_visuals() -> void:
 	
 	# Trail effect (processed in _process)
 	_trail_delay_timer = trail_delay
+	
+	_hide_timer = hide_delay
 	
 	_update_shader_parameters()
 
