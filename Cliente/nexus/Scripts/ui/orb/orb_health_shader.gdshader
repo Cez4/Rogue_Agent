@@ -2,10 +2,10 @@ shader_type canvas_item;
 
 uniform float fill_level : hint_range(0.0, 1.0) = 1.0;
 uniform float trail_level : hint_range(0.0, 1.0) = 1.0;
-uniform vec4 fill_color : source_color = vec4(0.9, 0.15, 0.18, 0.95);
+uniform vec4 fill_color : source_color = vec4(0.15, 0.85, 0.2, 0.95);
 uniform vec4 trail_color : source_color = vec4(1.0, 1.0, 1.0, 0.4);
 uniform vec4 border_color : source_color = vec4(0.95, 0.95, 1.0, 0.95);
-uniform vec4 background_color : source_color = vec4(0.0, 0.0, 0.0, 0.8);
+uniform vec4 background_color : source_color = vec4(0.4, 0.02, 0.02, 0.85);
 uniform vec4 glass_tint : source_color = vec4(1.0, 1.0, 1.0, 0.12);
 uniform float border_thickness : hint_range(0.0, 0.2) = 0.12;
 uniform float wobble_strength : hint_range(0.0, 0.2) = 0.035;
@@ -32,20 +32,27 @@ void fragment() {
         float trail_line = mix(1.0, -1.0, trail_level) + total_wobble;
         
         float liquid_mask = step(liquid_line, uv.y) * step(r, 0.96);
-        float trail_mask = step(trail_line, uv.y) * step(r, 0.96);
+        float trail_mask = step(trail_line, uv.y) * (1.0 - step(liquid_line, uv.y)) * step(r, 0.96);
 
-        // Use opaque background inside the orb instead of fully transparent
+        // Start with background
         vec4 col = background_color * step(r, 0.96);
-        col = mix(col, trail_color, trail_mask);
-        col = mix(col, fill_color, liquid_mask);
+        
+        // Blend Trail (Ghost Bar)
+        col.rgb = mix(col.rgb, trail_color.rgb, trail_mask * trail_color.a);
+        col.a = max(col.a, trail_mask * trail_color.a);
+        
+        // Blend Liquid Fill
+        col.rgb = mix(col.rgb, fill_color.rgb, liquid_mask * fill_color.a);
+        col.a = max(col.a, liquid_mask * fill_color.a);
 
         float ring_border = smoothstep(0.96 - border_thickness, 0.96 - border_thickness * 0.25, r);
-        col = mix(col, border_color, ring_border * step(r, 0.96));
+        col.rgb = mix(col.rgb, border_color.rgb, ring_border * step(r, 0.96) * border_color.a);
+        col.a = max(col.a, ring_border * step(r, 0.96) * border_color.a);
 
         float highlight = smoothstep(0.0, 0.45, 1.0 - length(uv - vec2(-0.28, -0.36)));
         col.rgb += highlight * 0.18 * step(r, 0.96);
 
-        col += glass_tint * (1.0 - max(liquid_mask, trail_mask)) * 0.75 * step(r, 0.96);
+        col.rgb += glass_tint.rgb * (1.0 - max(liquid_mask, trail_mask)) * glass_tint.a * step(r, 0.96);
 
         // Danger Ring Logic
         if (danger_alert) {
@@ -56,7 +63,7 @@ void fragment() {
             float danger_ring = smoothstep(danger_inner, danger_inner + 0.01, r) * 
                                (1.0 - smoothstep(danger_outer, danger_outer + 0.01, r));
             
-            col = mix(col, danger_color, danger_ring);
+            col.rgb = mix(col.rgb, danger_color.rgb, danger_ring * danger_color.a);
             col.a = max(col.a, danger_ring * danger_color.a);
         }
 
@@ -75,7 +82,7 @@ void fragment() {
             float cut = smoothstep(0.15, 0.35, marks);
             target_ring *= cut;
             
-            col = mix(col, selected_color, target_ring);
+            col.rgb = mix(col.rgb, selected_color.rgb, target_ring * selected_color.a);
             col.a = max(col.a, target_ring * selected_color.a);
         }
 

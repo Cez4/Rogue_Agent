@@ -165,9 +165,9 @@ func _update_shader_parameters() -> void:
 	var is_player: bool = (display_mode == DisplayMode.PLAYER_COMBAT_ONLY)
 	
 	if is_danger:
-		_orb_material.set_shader_parameter(&"fill_color", Color(1.0, 0.1, 0.1, 1.0)) # Bright red
+		_orb_material.set_shader_parameter(&"fill_color", Color(1.0, 0.1, 0.1, 1.0)) # Bright red (Danger)
 	else:
-		_orb_material.set_shader_parameter(&"fill_color", Color(0.9, 0.15, 0.18, 0.95)) # Original red
+		_orb_material.set_shader_parameter(&"fill_color", Color(0.15, 0.85, 0.2, 0.95)) # Emerald Green (Healthy)
 		
 	_orb_material.set_shader_parameter(&"danger_alert", is_danger and is_player)
 
