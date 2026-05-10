@@ -69,3 +69,14 @@ Somente tuning de game feel (sem mudar arquitetura):
 2. calibrar diferenca por dados de combate (`stamina_cost` e cadencia em `CombatActionData`);
 3. validar por telemetria (`orb_stamina_react` / `orb_stamina_exhausted_pulse`);
 4. manter gate MCP por microciclo.
+
+## Baseline stamina v1 (fechado)
+1. Regra oficial:
+- orb visual unica global (`stamina_orb_profile_v1.tres`);
+- variacao entre archetypes por `CombatActionData.stamina_cost`.
+2. Valores aprovados por telemetria isolada:
+- `HostileEnemyLight`: `stamina_cost = 14.0` (`orb_stamina_react.spent_ratio = 0.14`)
+- `Wildcat`: `stamina_cost = 20.0` (`orb_stamina_react.spent_ratio = 0.20`)
+- `HostileEnemyBrute`: `stamina_cost = 28.0` (`orb_stamina_react.spent_ratio = 0.28`)
+3. Fluxo validado:
+- `stamina_consumed -> stamina_exhausted -> orb_stamina_exhausted_pulse -> actor_staggered -> stamina_recovered`.

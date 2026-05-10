@@ -318,3 +318,11 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
    - leitura final: archetype pesado mantido com cadencia mais controlada e letalidade ajustada.
 25. Proximo passo de producao:
    - criar proximo hostil por dados (sem tocar logica) usando `docs/enemy-profile-checklist-v1.md`.
+26. Baseline stamina v1 fechado (telemetria isolada):
+   - regra de fase: sem profile de orb por archetype (orb global unica).
+   - diferenciacao por `CombatActionData.stamina_cost`.
+   - valores aprovados:
+     - `hostile_light_attack_v1.stamina_cost = 14.0` (`spent_ratio=0.14`)
+     - `wildcat_claw_attack_v1.stamina_cost = 20.0` (`spent_ratio=0.20`)
+     - `hostile_brute_attack_v1.stamina_cost = 28.0` (`spent_ratio=0.28`)
+   - fluxo validado por logs: `consumed -> exhausted -> orb_pulse -> staggered -> recovered`.
