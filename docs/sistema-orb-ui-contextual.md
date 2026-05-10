@@ -16,23 +16,21 @@ Em vez de usar `Tweens` básicos que se anulam em combos rápidos, a Orb impleme
 - **Movimento Quadrático:** A potência do tremor é `_trauma * _trauma`.
 - **Independência Visual:** O tremor é aplicado exclusivamente na propriedade `offset` do `Sprite2D`. Isso permite que a Orb continue seu movimento suave de `lerp` pela tela enquanto vibra violentamente por dentro, garantindo que o shake seja perfeitamente visível independente da escala local.
 
-## 4. O Segredo do Shader: Dampening Envelope e Slosh
-O `orb_health_shader.gdshader` não apenas exibe cores, ele simula a física de um líquido confinado:
-- **Slosh (Espirro/Balanço):** Em vez de usar `TIME` para controlar a onda de impacto (o que causa aliasing e paradas bruscas), o shader usa a própria variável `vibration` (alimentada diretamente pelo `_trauma` do presenter).
-  ```glsl
-  // O "vibration" atua como Amplitude E Frequência, garantindo que a água pare horizontalmente.
-  float slosh = uv.x * sin(vibration * 25.0) * vibration * 1.5;
-  ```
-- Essa técnica garante sincronia 1:1 entre a tremedeira física da Sprite e a rebelião do líquido dentro do vidro.
+## 4. O Segredo do Shader: 3D Depth e Dampening Envelope
+O `orb_health_shader.gdshader` simula a física de um líquido em uma esfera 3D, indo além de um simples seno 2D:
+- **Depth Map Esférico:** Usa `cos(suv.x * PI)` para criar a ilusão de que o líquido curva para trás nas bordas do vidro, gerando ondas frontais e traseiras separadas por máscaras de opacidade.
+- **Slosh vs Trauma (Desacoplamento de Feedback):** O tremor físico do nodo na tela dura pouco (`_trauma`), mas o líquido continua balançando por mais tempo usando uma variável separada (`_slosh_energy`).
+- **Dampening Envelope:** Em vez de usar `TIME` puro (que causaria cortes bruscos), o shader usa a própria `_slosh_energy` (que injetamos no uniform `vibration`) para guiar a onda, garantindo que a água pare em uma linha horizontal perfeita quando a energia zera.
 
-## 5. Identidade Visual (RPG Standard)
-Para eliminar a confusão de "De quem é esse HP?", adotamos regras estritas de legibilidade:
+## 5. Identidade Visual (RPG Standard e Legibilidade)
+Para eliminar a confusão visual contra terrenos detalhados, adotamos regras estritas:
+- **Regra de Opaque-First:** Cores base (Fill, Background, Border, Trail) **nunca** usam transparência (Alpha = 1.0). Apenas o brilho do vidro (`glass_tint`) é translúcido.
 - **Saúde:** Líquido Verde Esmeralda (`#26d933`).
-- **Dano Perdidio (Fundo):** Fundo Vermelho Escuro/Opaco (`#660505` com alpha `0.85`) e bordas grossas (`0.12`).
+- **Dano Perdido (Fundo):** Fundo Vermelho Escuro (`#8c0c0c`).
 - **Target Lock (Mira):** Inimigos selecionados ganham um anel externo Dourado Pulsante com 4 marcas de mira (crosshair).
 - **Aggro Alert:** O anel do inimigo muda para Vermelho se ele estiver no estado `attack` do LimboHSM.
 - **Danger Alert (Player):** Se a vida do Player cair para < 25%, o líquido fica vermelho e um anel de vinheta vermelha pulsa por dentro.
-- **Damage Trail:** Rastro de perda de HP é em tom translúcido, caindo via `move_toward` para nunca "travar" com hits rápidos.
+- **Damage Trail:** Rastro de perda de HP cai via `move_toward` com velocidade constante (`trail_drop_speed = 0.3`), nunca usando Tweens isolados.
 
 ## 6. Lições Aprendidas (Armadilhas Evitadas)
 1. **O Bug do Setter no GDScript 2.0:** Modificar propriedades internas (`_current_trail = ...`) de dentro de um loop de `_process` **NÃO** aciona a função `set(v):` atrelada à variável. É mandatório chamar `set_shader_parameter` explicitamente no loop de animação, ou usar `self._current_trail = ...`.
