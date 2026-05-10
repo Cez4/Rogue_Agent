@@ -79,7 +79,11 @@ func _tick(_delta: float) -> Status:
 		BTDecisionTelemetryRef.emit("RequestAttack", agent, blackboard, debug_decision_var, "FAILURE", CombatBlockedReasonsRef.INSUFFICIENT_STAMINA)
 		return FAILURE
 	_emit_low_stamina_exited_if_needed()
-	agent.request_attack()
+	var request_accepted: bool = bool(agent.request_attack())
+	if not request_accepted:
+		blackboard.set_var(started_var, false)
+		BTDecisionTelemetryRef.emit("RequestAttack", agent, blackboard, debug_decision_var, "FAILURE", "request_rejected")
+		return FAILURE
 	attack_pending = false
 	attack_pending = bool(agent.is_attack_pending_runtime())
 	if attack_pending:
@@ -96,19 +100,13 @@ func _tick(_delta: float) -> Status:
 		blackboard.set_var(started_var, true)
 		BTDecisionTelemetryRef.emit("RequestAttack", agent, blackboard, debug_decision_var, "RUNNING", "attack_started")
 		return RUNNING
-	var blocked_latched: bool = false
-	if blackboard.has_var(blocked_latched_var):
-		blocked_latched = bool(blackboard.get_var(blocked_latched_var))
-	blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.REQUEST_ATTACK_NOT_STARTED)
-	if not blocked_latched:
-		CombatTelemetry.emit_event(&"attack_task_blocked", {
-			"actor": agent.name,
-			"reason": CombatBlockedReasonsRef.REQUEST_ATTACK_NOT_STARTED
-		})
-		_emit_blocked_started_if_needed(CombatBlockedReasonsRef.REQUEST_ATTACK_NOT_STARTED)
-		blackboard.set_var(blocked_latched_var, true)
+	# Transitional edge: attack request was accepted but pending didn't stay active.
+	# Treat as rejection edge instead of a hard blocked loop to avoid telemetry spam.
+	_emit_blocked_ended_if_needed(CombatBlockedReasonsRef.NONE)
+	blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.NONE)
+	blackboard.set_var(blocked_latched_var, false)
 	blackboard.set_var(started_var, false)
-	BTDecisionTelemetryRef.emit("RequestAttack", agent, blackboard, debug_decision_var, "FAILURE", CombatBlockedReasonsRef.REQUEST_ATTACK_NOT_STARTED)
+	BTDecisionTelemetryRef.emit("RequestAttack", agent, blackboard, debug_decision_var, "FAILURE", "request_transient_rejected")
 	return FAILURE
 
 

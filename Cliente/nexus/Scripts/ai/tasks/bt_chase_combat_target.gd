@@ -13,6 +13,7 @@ const BTDecisionTelemetryRef = preload("res://Scripts/ai/bt_decision_telemetry.g
 @export var stuck_speed_threshold_px: float = 2.0
 @export var stuck_timeout_ms: int = 220
 @export var telemetry_emit_cooldown_sec: float = 0.35
+@export var telemetry_success_emit_cooldown_sec: float = 0.9
 
 var _next_move_request_ms: int = 0
 var _last_move_target: Vector2 = Vector2.INF
@@ -161,10 +162,15 @@ func _exit() -> void:
 func _emit_chase_state(now_ms: int, payload: Dictionary) -> void:
 	var status_label: String = str(payload.get("status", ""))
 	var reason: String = str(payload.get("reason", ""))
-	var signature: String = "%s|%s" % [status_label, reason]
+	var actor_name: String = str(payload.get("actor", ""))
+	var target_name: String = str(payload.get("target", ""))
+	var signature: String = "%s|%s|%s|%s" % [actor_name, target_name, status_label, reason]
+	var cooldown_sec: float = telemetry_emit_cooldown_sec
+	if status_label == "success":
+		cooldown_sec = telemetry_success_emit_cooldown_sec
 	var emit_now: bool = signature != _last_telemetry_signature or now_ms >= _next_telemetry_emit_ms
 	if not emit_now:
 		return
 	CombatTelemetry.emit_event(&"bt_chase_state", payload)
 	_last_telemetry_signature = signature
-	_next_telemetry_emit_ms = now_ms + int(maxf(0.05, telemetry_emit_cooldown_sec) * 1000.0)
+	_next_telemetry_emit_ms = now_ms + int(maxf(0.05, cooldown_sec) * 1000.0)

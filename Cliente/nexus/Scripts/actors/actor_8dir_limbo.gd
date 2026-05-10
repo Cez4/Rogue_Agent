@@ -137,26 +137,26 @@ func is_actor_moving() -> bool:
 	return bool(motor.is_moving())
 
 
-func request_attack() -> void:
+func request_attack() -> bool:
 	if _is_dead:
 		CombatTelemetry.emit_event(&"attack_request_rejected", {
 			"actor": name,
 			"reason": "actor_dead"
 		})
-		return
+		return false
 	if _attack_pending:
 		CombatTelemetry.emit_event(&"attack_request_rejected", {
 			"actor": name,
 			"reason": "attack_pending"
 		})
-		return
+		return false
 	if not has_stamina_for_attack():
 		CombatTelemetry.emit_event(&"attack_request_rejected", {
 			"actor": name,
 			"reason": "insufficient_stamina",
 			"required": get_required_stamina_for_attack()
 		})
-		return
+		return false
 
 	_attack_pending = true
 	var consumed: bool = hsm.dispatch(&"attack!")
@@ -168,6 +168,8 @@ func request_attack() -> void:
 			"reason": "hsm_event_not_consumed",
 			"hsm_event": "attack!"
 		})
+		return false
+	return true
 
 
 func has_stamina_for_attack() -> bool:

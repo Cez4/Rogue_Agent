@@ -13,7 +13,7 @@ const BTDecisionTelemetryRef = preload("res://Scripts/ai/bt_decision_telemetry.g
 @export var in_range_latch_ms: int = 180
 @export var in_range_latch_extra_distance: float = 0.75
 @export var debug_decision_var: StringName = AIBlackboardKeys.DEBUG_BT_DECISION_TELEMETRY
-@export var success_emit_cooldown_sec: float = 0.35
+@export var success_emit_cooldown_sec: float = 0.9
 
 var _next_success_emit_ms: int = 0
 var _last_success_signature: String = ""
@@ -113,7 +113,9 @@ func _tick(_delta: float) -> Status:
 
 func _emit_inrange_success(now_ms: int, payload: Dictionary) -> void:
 	var reason: String = str(payload.get("reason", "in_range"))
-	var signature: String = "%s|%s" % [str(payload.get("status", "success")), reason]
+	var actor_name: String = str(payload.get("actor", ""))
+	var target_name: String = str(payload.get("target", ""))
+	var signature: String = "%s|%s|%s|%s" % [actor_name, target_name, str(payload.get("status", "success")), reason]
 	var emit_now: bool = signature != _last_success_signature or now_ms >= _next_success_emit_ms
 	if not emit_now:
 		return
