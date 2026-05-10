@@ -15,13 +15,14 @@
 [ext_resource type="Resource" uid="uid://brpygd3iih0ks" path="res://configs/combat/hostile_light_attack_v1.tres" id="13_texcc"]
 [ext_resource type="Script" uid="uid://cpo2dt0djpyes" path="res://Scripts/actors/state_wander_8dir.gd" id="14_frxuc"]
 [ext_resource type="PackedScene" path="res://cenas/components/emotion_bubble_shared.tscn" id="15_lvdsk"]
+[ext_resource type="Script" uid="uid://bi7hbd4ws5d33" path="res://Scripts/actors/states/stagger_state.gd" id="15_reepw"]
 [ext_resource type="Texture2D" uid="uid://b46nvc0ukccid" path="res://Assets/emotions/spriteExc.png" id="16_ae4fc"]
 [ext_resource type="Texture2D" uid="uid://dffhs4xccwdww" path="res://Assets/emotions/spriteHoe.png" id="17_m3isr"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/health_component_node.tscn" id="18_i5wkl"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="20_05h1s"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/attack_hitbox_component_node.tscn" id="20_wtst7"]
 [ext_resource type="PackedScene" uid="uid://cpqqeuy3ge470" path="res://cenas/components/ui/combat_orb_presenter.tscn" id="21_ygsh7"]
-[ext_resource type="Script" uid="uid://ckly2vu2kieg3" path="res://Scripts/ui/orb/combat_orb_presenter.gd" id="22_reepw"]
+[ext_resource type="Script" uid="uid://d087gw3m6nlpa" path="res://Scripts/stats/stamina_component.gd" id="22_ygsh7"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijbr8"]
 atlas = ExtResource("3_vsdir")
@@ -3859,6 +3860,9 @@ action_data = ExtResource("13_texcc")
 [node name="WanderState" type="LimboState" parent="LimboHSM" unique_id=1259319103]
 script = ExtResource("14_frxuc")
 
+[node name="StaggerState" type="LimboState" parent="LimboHSM" unique_id=434118241]
+script = ExtResource("15_reepw")
+
 [node name="EmotionBubble" parent="." unique_id=587887002 instance=ExtResource("15_lvdsk")]
 sprite_frames = SubResource("SpriteFrames_emotes")
 
@@ -3869,7 +3873,9 @@ max_health = 13.0
 
 [node name="AttackHitbox" parent="." unique_id=1741533143 instance=ExtResource("20_wtst7")]
 
-[node name="CombatOrb" type="Node2D" parent="." unique_id=2024503709 instance=ExtResource("21_ygsh7")]
-script = ExtResource("22_reepw")
+[node name="CombatOrb" parent="." unique_id=2024503709 instance=ExtResource("21_ygsh7")]
 display_mode = 1
 follow_offset = Vector2(-34, -44)
+
+[node name="Stamina" type="Node" parent="." unique_id=1365287454]
+script = ExtResource("22_ygsh7")
