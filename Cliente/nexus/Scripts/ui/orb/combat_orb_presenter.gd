@@ -12,8 +12,8 @@ enum DisplayMode {
 @export var hide_when_dead: bool = true
 @export_group("Visuals")
 @export var side_separation: float = 35.0
-@export var trail_delay: float = 0.4
-@export var trail_duration: float = 0.6
+@export var trail_delay: float = 0.15
+@export var trail_duration: float = 0.4
 @export var vibration_duration: float = 0.3
 @export var alert_threshold: float = 0.25
 
@@ -26,20 +26,11 @@ var _orb_material: ShaderMaterial
 var _is_visible_orb: bool = false
 var _elapsed: float = 0.0
 
-var _current_fill: float = 1.0:
-	set(v):
-		_current_fill = v
-		if _orb_material:
-			_orb_material.set_shader_parameter(&"fill_level", v)
+var _current_fill: float = 1.0
+var _current_trail: float = 1.0
 
-var _current_trail: float = 1.0:
-	set(v):
-		_current_trail = v
-		if _orb_material:
-			_orb_material.set_shader_parameter(&"trail_level", v)
-
-var _trail_tween: Tween
 var _vib_tween: Tween
+var _trail_delay_timer: float = 0.0
 
 func _ready() -> void:
 	top_level = true
@@ -79,6 +70,15 @@ func _process(delta: float) -> void:
 	if _is_visible_orb:
 		_check_fill_sync()
 		_update_position(delta * 12.0)
+		
+		# Process trail logic
+		if _trail_delay_timer > 0.0:
+			_trail_delay_timer -= delta
+		elif _current_trail > _current_fill:
+			var speed = 1.0 / maxf(0.1, trail_duration)
+			_current_trail = move_toward(_current_trail, _current_fill, delta * speed)
+			if _orb_material:
+				_orb_material.set_shader_parameter(&"trail_level", _current_trail)
 
 func _update_position(weight: float) -> void:
 	if _actor == null: return
@@ -132,12 +132,8 @@ func _trigger_damage_visuals() -> void:
 	_vib_tween.tween_property(self, "_vibration_value", 1.0, 0.05)
 	_vib_tween.tween_property(self, "_vibration_value", 0.0, vibration_duration).set_delay(0.05)
 	
-	# Trail effect
-	if _trail_tween: _trail_tween.kill()
-	_trail_tween = create_tween()
-	_trail_tween.set_parallel(false)
-	_trail_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	_trail_tween.tween_property(self, "_current_trail", target_fill, trail_duration).set_delay(trail_delay)
+	# Trail effect (processed in _process)
+	_trail_delay_timer = trail_delay
 	
 	_update_shader_parameters()
 
