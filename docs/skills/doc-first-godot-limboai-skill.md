@@ -29,6 +29,7 @@ Checklist rapido:
 - [ ] Paridade de componentes de combate validada nas cenas alteradas.
 - [ ] Em lifecycle, log confirma `target_died` -> `chase_canceled(reason=death)` -> `respawned` (se habilitado).
 - [ ] Modificou UI ou Camera em combate? Utilize sistema de Trauma (Trauma-based Shake) em vez de Tweens simples para garantir "Game Feel" cumulativo e fluido.
+- [ ] Implementou UI flutuante ou rastros (Trails)? Confirme que existe uma lógica de "Snap" para igualar as variáveis secundárias ao valor principal em casos de Respawn ou Cura instantânea, evitando desincronização.
 - [ ] Prova data-driven registrada: mesma logica, perfis `.tres` diferentes e telemetria mostrando comportamento distinto.
 
 Fontes base:

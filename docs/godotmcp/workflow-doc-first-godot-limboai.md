@@ -46,6 +46,7 @@ LimboAI:
 - Posicionamento de UI Flutuante: Utilizar `top_level = true` e interpolação global (`lerp`) para evitar artefatos de transform do pai e implementar separação lateral automática para evitar overlap.
 - Feedback de Impacto (Game Feel): Evitar Tweens isolados para tremores de UI. Implementar **Sistemas de Trauma** (Trauma-based shake) com movimento quadrático e decaimento temporal para suportar acúmulo de hits em combos. O trauma deve alimentar diretamente os shaders de distorção (Dampening Envelope).
 - Armadilha GDScript 2.0: Ao animar variáveis no `_process`, lembre-se que chamadas diretas a variáveis locais NÃO invocam suas funções `set(v):` automaticamente. Utilize `self.variavel` ou faça o update manual para garantir sincronia com os shaders.
+- Armadilha de Sincronia de UI (Respawn/Heal): Variáveis visuais atrasadas (como *Ghost Trails* ou barras secundárias) nunca devem ficar para trás de ganhos instantâneos de status. Em eventos de cura ou respawn (ex: HP vai de 0 a 100), obrigatoriamente faça o **Snap** (igualar instantaneamente) da variável atrasada para o valor atual, ou a lógica de decaimento ficará permanentemente travada no passado.
 - Em bugs de morte/respawn, auditar primeiro overrides da cena instanciadora (ex.: `mundo.tscn`) antes de mexer no script base.
 
 ## Saida minima esperada por tarefa
