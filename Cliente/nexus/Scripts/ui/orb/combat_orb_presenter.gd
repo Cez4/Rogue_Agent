@@ -143,11 +143,15 @@ func _get_health_ratio() -> float:
 func _check_fill_sync() -> void:
 	var target_fill = _get_health_ratio()
 	if absf(_current_fill - target_fill) > 0.001:
+		if target_fill > _current_fill:
+			_current_trail = target_fill # Snap trail up on heal/respawn
 		_current_fill = target_fill
 		_update_shader_parameters()
 
 func _trigger_damage_visuals() -> void:
 	var target_fill = _get_health_ratio()
+	if _current_trail < _current_fill:
+		_current_trail = _current_fill # Recover state if bugged
 	_current_fill = target_fill
 	
 	# Physical Shake and Liquid Slosh
