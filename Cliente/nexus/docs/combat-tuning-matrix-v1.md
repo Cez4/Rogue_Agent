@@ -28,6 +28,7 @@ Toda calibração deve usar apenas 3 camadas:
 - `active_sec`
 - `recover_sec`
 - `cooldown_sec`
+- `stamina_cost`
 - `damage`
 - `knockback_enabled`
 - `knockback_strength`
@@ -107,12 +108,14 @@ Sinais de problema:
 | ranged_skirmisher_v1 | TBD | TBD | TBD | TBD | TBD | TBD | futuro |
 
 ## 7) Tabela de armas (baseline atual + tuning por ciclo)
-| Weapon | Range | Windup | Active | Recover | Cooldown | Damage | Knockback |
-|---|---:|---:|---:|---:|---:|---:|---|
-| dagger_starter_current | 46.0 | 0.12 | 0.10 | 0.20 | 0.28 | 1.0 | false / 260 |
-| dagger_v1 | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
-| claw_v1 | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
-| sword_v1 | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
+| Weapon | Range | Windup | Active | Recover | Cooldown | Stamina Cost | Damage | Knockback |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| dagger_starter_current | 46.0 | 0.12 | 0.10 | 0.20 | 0.28 | 20.0 | 1.0 | false / 260 |
+| wildcat_claw_v1 | 48.0 | 0.14 | 0.09 | 0.24 | 0.36 | 20.0 | 1.0 | false / 260 |
+| hostile_light_attack_v1 | 42.0 | 0.12* | 0.08* | 0.22 | 0.32 | 14.0 | 0.85 | false / 220 |
+| hostile_brute_attack_v1 | 50.0 | 0.18 | 0.12 | 0.32 | 0.46 | 28.0 | 1.25 | false / 300 |
+
+`*` usa default do `CombatActionData` quando nao sobrescrito no `.tres`.
 
 ## 8) Checklist de regressão MCP
 Cena padrão: `res://cenas/mundo.tscn`

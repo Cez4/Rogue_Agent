@@ -9,5 +9,6 @@ windup_sec = 0.14
 active_sec = 0.09
 recover_sec = 0.24
 cooldown_sec = 0.36
+stamina_cost = 20.0
 knockback_enabled = false
 knockback_strength = 260.0
