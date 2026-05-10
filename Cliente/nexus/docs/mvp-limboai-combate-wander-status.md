@@ -7,6 +7,8 @@ Estado atual consolidado: `feat/combat-orb-ui-contextual`
 Freeze funcional oficial da fase atual:
 - `docs/status-freeze-funcional-v2-2026-05-10.md`
 - Este arquivo centraliza Orb V3 (congelada), Stamina/Stagger consolidado e hardenings recentes.
+- Plano master de exploracao total do LimboAI para agentes emergentes:
+  - `docs/plano-master-limboai-funcoes-emergentes-2026-05-10.md`
 
 Atualizacao de estado:
 - Plano final de desacoplamento do actor concluido (Cortes 1-4).
