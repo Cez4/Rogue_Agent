@@ -3,7 +3,7 @@ shader_type canvas_item;
 uniform float fill_level : hint_range(0.0, 1.0) = 1.0;
 uniform float trail_level : hint_range(0.0, 1.0) = 1.0;
 uniform vec4 fill_color : source_color = vec4(0.15, 0.85, 0.2, 0.95);
-uniform vec4 trail_color : source_color = vec4(1.0, 1.0, 1.0, 0.4);
+uniform vec4 trail_color : source_color = vec4(1.0, 1.0, 1.0, 0.85);
 uniform vec4 border_color : source_color = vec4(0.95, 0.95, 1.0, 0.95);
 uniform vec4 background_color : source_color = vec4(0.4, 0.02, 0.02, 0.85);
 uniform vec4 glass_tint : source_color = vec4(1.0, 1.0, 1.0, 0.12);

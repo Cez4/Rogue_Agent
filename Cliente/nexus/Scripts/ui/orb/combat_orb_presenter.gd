@@ -13,8 +13,8 @@ enum DisplayMode {
 @export_group("Visuals")
 @export var hide_delay: float = 2.0
 @export var side_separation: float = 35.0
-@export var trail_delay: float = 0.15
-@export var trail_duration: float = 0.4
+@export var trail_delay: float = 0.5
+@export var trail_drop_speed: float = 0.3
 @export var alert_threshold: float = 0.25
 @export_group("Shake")
 @export var trauma_decay: float = 1.2
@@ -86,8 +86,7 @@ func _process_trail(delta: float) -> void:
 	if _trail_delay_timer > 0.0:
 		_trail_delay_timer -= delta
 	elif _current_trail > _current_fill:
-		var speed = 1.0 / maxf(0.1, trail_duration)
-		_current_trail = move_toward(_current_trail, _current_fill, delta * speed)
+		_current_trail = move_toward(_current_trail, _current_fill, delta * trail_drop_speed)
 		if _orb_material:
 			_orb_material.set_shader_parameter(&"trail_level", _current_trail)
 
