@@ -1,4 +1,4 @@
-# Status Freeze Funcional v2 (Orb V3 + Stamina/Stagger)
+# Status Freeze Funcional v2 (Orb V3 + Stamina)
 
 Data: 2026-05-10  
 Branch de referencia: `feat/combat-orb-ui-contextual`
@@ -23,11 +23,12 @@ Congelar o estado funcional atual do projeto para evitar drift entre docs antigo
 - Shader com liquido, trail de dano, alerta de vida baixa, anel de selecao.
 - Correcao de sync em respawn/heal aplicada (snap do trail).
 
-4. Stamina + Stagger (consolidado)
+4. Stamina de combate (consolidado)
 - `StaminaComponent` ativo em player e hostis principais.
 - Custo de stamina data-driven via `CombatActionData.stamina_cost`.
 - Dreno de stamina no `_enter()` do estado de ataque (nao no request).
-- `StaggerState` ativo e sem limpar alvo de combate (mantem aggro/memoria de combate).
+- Sem hard-lock por exaustao: ataque falha limpo quando stamina insuficiente.
+- BT mantem chase/comportamento ativo em baixa stamina.
 
 5. Orb de Stamina (gamefeel) consolidada
 - `CombatOrbPresenter` operando em modo de recurso (`HEALTH`/`STAMINA`).
@@ -39,9 +40,10 @@ Congelar o estado funcional atual do projeto para evitar drift entre docs antigo
   - `configs/ui/orbs/stamina_orb_profile_v1.tres`
 - Orb aplicada em player e hostis principais.
 6. Hardening recente confirmado
-- Correcao do race de telemetria no frame de exaustao:
-  - evita `attack_started` no mesmo frame de `stamina_exhausted`/`actor_staggered`.
-  - arquivo: `Scripts/actors/state_attack_8dir.gd`.
+- Gate de stamina no `BTRequestAttack` para reduzir ruído e manter decisao explicita:
+  - motivo de bloqueio: `insufficient_stamina`.
+  - eventos: `low_stamina_entered` / `low_stamina_exited`.
+  - arquivo: `Scripts/ai/tasks/bt_request_attack.gd`.
 
 ## Validacao operacional
 Gate MCP usado para fechamento:
@@ -50,7 +52,8 @@ Gate MCP usado para fechamento:
 3. `get_godot_errors` sem erro novo de parse/runtime
 4. Telemetria confirmando:
 - `orb_visibility`
-- `stamina_consumed`, `stamina_exhausted`, `actor_staggered`, `stamina_recovered`
+- `stamina_consumed`, `stamina_exhausted`, `stamina_recovered`
+- `low_stamina_entered`, `low_stamina_exited`, `stamina_exhausted_emote`
 - `orb_stamina_react`, `orb_stamina_exhausted_pulse`
 - `target_died`, `chase_canceled(reason=death)`, `respawned`
 
@@ -86,4 +89,4 @@ Plano estrategico da proxima fase:
 - `Wildcat`: `stamina_cost = 20.0` (`orb_stamina_react.spent_ratio = 0.20`)
 - `HostileEnemyBrute`: `stamina_cost = 28.0` (`orb_stamina_react.spent_ratio = 0.28`)
 3. Fluxo validado:
-- `stamina_consumed -> stamina_exhausted -> orb_stamina_exhausted_pulse -> actor_staggered -> stamina_recovered`.
+- `stamina_consumed -> stamina_exhausted -> low_stamina_entered -> stamina_recovered -> low_stamina_exited`.

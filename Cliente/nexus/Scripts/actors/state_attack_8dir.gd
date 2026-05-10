@@ -22,8 +22,10 @@ func _enter() -> void:
 		if resolved_action != null and resolved_action.get("stamina_cost") != null:
 			var cost: float = float(resolved_action.get("stamina_cost"))
 			if cost > 0.0:
-				stamina.consume(cost)
-				if stamina.is_exhausted():
+				if not stamina.has_stamina(cost):
+					_finish_attack()
+					return
+				if not stamina.consume(cost):
 					_finish_attack()
 					return
 

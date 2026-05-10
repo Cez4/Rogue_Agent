@@ -112,6 +112,14 @@ static func set_next_wander_emote_allowed(actor: Actor8DirLimbo, value: float) -
 	actor._bridge_set_float_state(&"next_wander_emote_allowed", value)
 
 
+static func get_next_stamina_exhausted_emote_allowed(actor: Actor8DirLimbo) -> float:
+	return float(actor._bridge_get_float_state(&"next_stamina_exhausted_emote_allowed"))
+
+
+static func set_next_stamina_exhausted_emote_allowed(actor: Actor8DirLimbo, value: float) -> void:
+	actor._bridge_set_float_state(&"next_stamina_exhausted_emote_allowed", value)
+
+
 static func get_emote_request_id(actor: Actor8DirLimbo) -> int:
 	return int(actor._bridge_get_int_state(&"emote_request_id"))
 

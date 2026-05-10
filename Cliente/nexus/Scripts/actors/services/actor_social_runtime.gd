@@ -1,6 +1,7 @@
 class_name ActorSocialRuntime
 extends RefCounted
 const ActorRuntimeBridgeRef = preload("res://Scripts/actors/services/actor_runtime_bridge.gd")
+const CombatTelemetryRef = preload("res://Scripts/combat/combat_telemetry.gd")
 
 
 static func trigger_look_cooldown(actor: Actor8DirLimbo) -> void:
@@ -56,3 +57,23 @@ static func hide_emote_immediate(actor: Actor8DirLimbo) -> void:
 	bubble.stop()
 	bubble.visible = false
 	ActorRuntimeBridgeRef.set_current_emote_priority(actor, -1)
+
+
+static func try_play_stamina_exhausted_emote(actor: Actor8DirLimbo) -> void:
+	if actor.stamina_exhausted_emote_name == &"":
+		return
+	var now_sec: float = Time.get_ticks_msec() * 0.001
+	if now_sec < ActorRuntimeBridgeRef.get_next_stamina_exhausted_emote_allowed(actor):
+		return
+	var cooldown_sec: float = maxf(0.0, actor.stamina_exhausted_emote_cooldown_sec)
+	ActorRuntimeBridgeRef.set_next_stamina_exhausted_emote_allowed(actor, now_sec + cooldown_sec)
+	await show_emote(
+		actor,
+		actor.stamina_exhausted_emote_name,
+		false,
+		maxf(0.2, actor.stamina_exhausted_emote_hold_sec),
+		3
+	)
+	CombatTelemetryRef.emit_event(&"stamina_exhausted_emote", {
+		"actor": actor.name
+	})

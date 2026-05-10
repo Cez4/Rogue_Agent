@@ -29,6 +29,7 @@ static func ready(actor: Actor8DirLimbo) -> void:
 	ActorRuntimeBridgeRef.setup_stats(actor)
 	_setup_interactable_component(actor)
 	_connect_health_signals(actor)
+	_connect_stamina_signals(actor)
 	ActorRuntimeBridgeRef.reset_wander_timer(actor)
 	ActorRuntimeBridgeRef.hide_emote(actor)
 	ActorRuntimeBridgeRef.setup_hsm(actor)
@@ -69,3 +70,11 @@ static func _connect_health_signals(actor: Actor8DirLimbo) -> void:
 		return
 	if health.has_signal("death") and not health.death.is_connected(actor.on_health_death):
 		health.death.connect(actor.on_health_death)
+
+
+static func _connect_stamina_signals(actor: Actor8DirLimbo) -> void:
+	var stamina := actor.get_node_or_null(^"Stamina") as StaminaComponent
+	if stamina == null:
+		return
+	if not stamina.exhausted.is_connected(actor.on_stamina_exhausted):
+		stamina.exhausted.connect(actor.on_stamina_exhausted)

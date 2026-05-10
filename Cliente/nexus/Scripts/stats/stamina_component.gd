@@ -37,11 +37,21 @@ func _process(delta: float) -> void:
 				recovered.emit()
 
 func has_stamina(amount: float) -> bool:
-	return _current_stamina >= amount and not _is_exhausted
+	return _current_stamina >= amount
 
-func consume(amount: float) -> void:
+func consume(amount: float) -> bool:
 	if amount <= 0.0:
-		return
+		return false
+	if _current_stamina < amount:
+		var owner_name_denied: String = ""
+		if owner != null:
+			owner_name_denied = owner.name
+		CombatTelemetry.emit_event(&"stamina_consume_denied", {
+			"actor": owner_name_denied,
+			"amount": amount,
+			"remaining": _current_stamina
+		})
+		return false
 	
 	_current_stamina = maxf(0.0, _current_stamina - amount)
 	_time_since_last_drain = 0.0
@@ -63,6 +73,7 @@ func consume(amount: float) -> void:
 			"actor": owner_name
 		})
 		exhausted.emit()
+	return true
 
 func get_current_stamina() -> float:
 	return _current_stamina

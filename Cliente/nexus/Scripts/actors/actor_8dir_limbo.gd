@@ -36,6 +36,10 @@ class_name Actor8DirLimbo
 @export var wander_emote_min_cooldown_sec: float = 8.0
 @export var wander_emote_max_cooldown_sec: float = 14.0
 @export var wander_emote_hold_sec: float = 2.0
+@export_group("Stamina Feedback")
+@export var stamina_exhausted_emote_name: StringName = &""
+@export var stamina_exhausted_emote_hold_sec: float = 0.9
+@export var stamina_exhausted_emote_cooldown_sec: float = 1.6
 @export var chase_attack_range: float = 28.0
 @export var interaction_stop_range: float = 26.0
 @export var chase_repath_interval_sec: float = 0.2
@@ -64,6 +68,7 @@ var _idle_elapsed_sec: float = 0.0
 var _next_wander_delay_sec: float = 0.0
 var _next_look_allowed_sec: float = 0.0
 var _next_wander_emote_allowed_sec: float = 0.0
+var _next_stamina_exhausted_emote_allowed_sec: float = 0.0
 var _emote_request_id: int = 0
 var _current_emote_priority: int = -1
 var _combat_target: Node2D
@@ -122,10 +127,6 @@ func _setup_hsm() -> void:
 	if stagger_state != null:
 		hsm.add_transition(hsm.ANYSTATE, stagger_state, &"stagger!")
 		hsm.add_transition(stagger_state, idle_state, stagger_state.EVENT_FINISHED)
-		
-		var stamina := get_node_or_null(^"Stamina") as StaminaComponent
-		if stamina != null:
-			stamina.exhausted.connect(func(): hsm.dispatch(&"stagger!"))
 
 	hsm.initialize(self)
 	hsm.set_active(true)
@@ -150,6 +151,16 @@ func request_attack() -> void:
 			
 	_attack_pending = true
 	hsm.dispatch(&"attack!")
+
+
+func has_stamina_for_attack() -> bool:
+	var stamina := get_node_or_null(^"Stamina") as StaminaComponent
+	if stamina == null:
+		return true
+	var action_data := ActorCombatProfileRuntimeRef.get_combat_action_data(self)
+	if action_data == null or action_data.stamina_cost <= 0.0:
+		return true
+	return stamina.has_stamina(action_data.stamina_cost)
 
 
 func clear_attack_pending() -> void:
@@ -262,6 +273,8 @@ func _bridge_get_float_state(key: StringName) -> float:
 			return _next_look_allowed_sec
 		&"next_wander_emote_allowed":
 			return _next_wander_emote_allowed_sec
+		&"next_stamina_exhausted_emote_allowed":
+			return _next_stamina_exhausted_emote_allowed_sec
 		_:
 			return 0.0
 
@@ -276,6 +289,8 @@ func _bridge_set_float_state(key: StringName, value: float) -> void:
 			_next_look_allowed_sec = value
 		&"next_wander_emote_allowed":
 			_next_wander_emote_allowed_sec = value
+		&"next_stamina_exhausted_emote_allowed":
+			_next_stamina_exhausted_emote_allowed_sec = value
 
 
 func _bridge_get_int_state(key: StringName) -> int:
@@ -387,6 +402,10 @@ func get_combat_reacquire_interval_sec() -> float:
 
 func on_health_death() -> void:
 	ActorCombatRuntimeRef.on_health_death(self)
+
+
+func on_stamina_exhausted() -> void:
+	ActorSocialRuntimeRef.try_play_stamina_exhausted_emote(self)
 
 
 func face_toward(target_position: Vector2) -> void:

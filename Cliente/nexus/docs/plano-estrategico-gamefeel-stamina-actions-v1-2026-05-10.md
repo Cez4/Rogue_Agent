@@ -1,7 +1,7 @@
 # Plano Estrategico - Gamefeel de Stamina + Action Cast Universal (v1)
 
 Data: 2026-05-10  
-Status: proposto e consolidado para execucao  
+Status: em execucao (A concluido, B concluido em codigo, C iniciado)  
 Escopo: evolucao de gamefeel sem quebrar arquitetura BT/HSM/Motor
 
 ## 1) Resumo do contexto (estado real antes da fase)
@@ -120,6 +120,18 @@ Reuso planejado:
 ### Bloco C - BT low stamina
 1. inserir ramo low stamina para player e NPC;
 2. behavior inicial: wait/reposition + retry ataque quando houver stamina.
+
+## 7.1) Progresso real desta sprint
+1. Bloco A concluido:
+- removido lock por `stamina.exhausted` no HSM.
+- ataque permanece bloqueado apenas por `stamina_cost` vs stamina atual.
+2. Bloco B concluido em codigo:
+- sinal `Stamina.exhausted` conectado no setup runtime.
+- emote de exaustao data-driven adicionado no actor.
+- cooldown anti-spam por actor via runtime bridge.
+3. Bloco C iniciado:
+- `BTRequestAttack` agora valida stamina antes de tentar iniciar ataque.
+- novo motivo de bloqueio: `insufficient_stamina`.
 
 ### Bloco D - ActionCast foundation
 1. criar `ActionCastData` e `ActionCastComponent`;

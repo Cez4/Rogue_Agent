@@ -9,6 +9,7 @@ const BTDecisionTelemetryRef = preload("res://Scripts/ai/bt_decision_telemetry.g
 @export var blocked_latched_var: StringName = AIBlackboardKeys.ATTACK_BLOCKED_LATCHED
 @export var blocked_active_var: StringName = AIBlackboardKeys.ATTACK_BLOCKED_ACTIVE
 @export var blocked_pending_since_ms_var: StringName = AIBlackboardKeys.ATTACK_BLOCKED_PENDING_SINCE_MS
+@export var low_stamina_active_var: StringName = AIBlackboardKeys.LOW_STAMINA_ACTIVE
 @export var blocked_started_min_duration_sec: float = 0.25
 @export var debug_decision_var: StringName = AIBlackboardKeys.DEBUG_BT_DECISION_TELEMETRY
 
@@ -27,6 +28,7 @@ func _tick(_delta: float) -> Status:
 
 	# If an attack is currently executing, keep this task RUNNING until it completes.
 	if attack_pending:
+		_emit_low_stamina_exited_if_needed()
 		_emit_blocked_ended_if_needed(CombatBlockedReasonsRef.NONE)
 		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.NONE)
 		blackboard.set_var(blocked_latched_var, false)
@@ -39,6 +41,7 @@ func _tick(_delta: float) -> Status:
 	if blackboard.has_var(started_var):
 		started = bool(blackboard.get_var(started_var))
 	if started:
+		_emit_low_stamina_exited_if_needed()
 		_emit_blocked_ended_if_needed(CombatBlockedReasonsRef.NONE)
 		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.NONE)
 		blackboard.set_var(blocked_latched_var, false)
@@ -51,6 +54,7 @@ func _tick(_delta: float) -> Status:
 	if blackboard.has_var(target_var):
 		target = blackboard.get_var(target_var) as Node2D
 	if not is_instance_valid(target):
+		_emit_low_stamina_exited_if_needed()
 		_emit_blocked_ended_if_needed(CombatBlockedReasonsRef.NO_VALID_TARGET)
 		blackboard.set_var(started_var, false)
 		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.NO_VALID_TARGET)
@@ -59,6 +63,14 @@ func _tick(_delta: float) -> Status:
 	if is_instance_valid(target):
 		agent.face_toward(target.global_position)
 	agent.stop_motor_movement()
+	if not bool(agent.has_stamina_for_attack()):
+		_emit_low_stamina_entered_if_needed()
+		blackboard.set_var(blocked_reason_var, CombatBlockedReasonsRef.INSUFFICIENT_STAMINA)
+		blackboard.set_var(started_var, false)
+		_emit_blocked_started_if_needed(CombatBlockedReasonsRef.INSUFFICIENT_STAMINA)
+		BTDecisionTelemetryRef.emit("RequestAttack", agent, blackboard, debug_decision_var, "FAILURE", CombatBlockedReasonsRef.INSUFFICIENT_STAMINA)
+		return FAILURE
+	_emit_low_stamina_exited_if_needed()
 	agent.request_attack()
 	attack_pending = false
 	attack_pending = bool(agent.is_attack_pending_runtime())
@@ -86,6 +98,30 @@ func _tick(_delta: float) -> Status:
 	blackboard.set_var(started_var, false)
 	BTDecisionTelemetryRef.emit("RequestAttack", agent, blackboard, debug_decision_var, "FAILURE", CombatBlockedReasonsRef.REQUEST_ATTACK_NOT_STARTED)
 	return FAILURE
+
+
+func _emit_low_stamina_entered_if_needed() -> void:
+	var active: bool = false
+	if blackboard.has_var(low_stamina_active_var):
+		active = bool(blackboard.get_var(low_stamina_active_var))
+	if active:
+		return
+	CombatTelemetry.emit_event(&"low_stamina_entered", {
+		"actor": agent.name
+	})
+	blackboard.set_var(low_stamina_active_var, true)
+
+
+func _emit_low_stamina_exited_if_needed() -> void:
+	var active: bool = false
+	if blackboard.has_var(low_stamina_active_var):
+		active = bool(blackboard.get_var(low_stamina_active_var))
+	if not active:
+		return
+	CombatTelemetry.emit_event(&"low_stamina_exited", {
+		"actor": agent.name
+	})
+	blackboard.set_var(low_stamina_active_var, false)
 
 
 func _emit_blocked_started_if_needed(reason: String) -> void:
