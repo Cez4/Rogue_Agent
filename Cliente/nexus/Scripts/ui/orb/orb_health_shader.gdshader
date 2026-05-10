@@ -5,8 +5,9 @@ uniform float trail_level : hint_range(0.0, 1.0) = 1.0;
 uniform vec4 fill_color : source_color = vec4(0.9, 0.15, 0.18, 0.95);
 uniform vec4 trail_color : source_color = vec4(1.0, 1.0, 1.0, 0.4);
 uniform vec4 border_color : source_color = vec4(0.95, 0.95, 1.0, 0.95);
+uniform vec4 background_color : source_color = vec4(0.12, 0.12, 0.15, 0.85);
 uniform vec4 glass_tint : source_color = vec4(1.0, 1.0, 1.0, 0.12);
-uniform float border_thickness : hint_range(0.0, 0.2) = 0.06;
+uniform float border_thickness : hint_range(0.0, 0.2) = 0.09;
 uniform float wobble_strength : hint_range(0.0, 0.2) = 0.035;
 uniform float wobble_speed : hint_range(0.0, 8.0) = 2.2;
 uniform float vibration : hint_range(0.0, 1.0) = 0.0;
@@ -33,7 +34,8 @@ void fragment() {
         float liquid_mask = step(liquid_line, uv.y) * step(r, 0.96);
         float trail_mask = step(trail_line, uv.y) * step(r, 0.96);
 
-        vec4 col = vec4(0.0);
+        // Use opaque background inside the orb instead of fully transparent
+        vec4 col = background_color * step(r, 0.96);
         col = mix(col, trail_color, trail_mask);
         col = mix(col, fill_color, liquid_mask);
 
