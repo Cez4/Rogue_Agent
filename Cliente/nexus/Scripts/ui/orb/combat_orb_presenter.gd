@@ -163,9 +163,8 @@ func _update_shader_parameters() -> void:
 func _is_actor_attacking() -> bool:
 	if _actor == null: return false
 	# Check if actor is in attack state (HSM logic)
-	var hsm = _actor.get_node_or_null(^"LimboHSM")
-	if hsm:
-		return hsm.get_active_state_name() == &"attack"
+	if _actor.hsm:
+		return _actor.hsm.get_active_state() == _actor.attack_state
 	return false
 
 func _set_orb_visible(value: bool, reason: StringName) -> void:
