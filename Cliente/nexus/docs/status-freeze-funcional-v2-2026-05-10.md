@@ -65,6 +65,7 @@ Este arquivo vira a fonte oficial de status funcional congelado da fase atual.
 
 ## Proximo passo (apos freeze)
 Somente tuning de game feel (sem mudar arquitetura):
-1. calibrar stamina cadence por archetype;
-2. calibrar impacto visual/ritmo de combate por telemetria;
-3. manter gate MCP por microciclo.
+1. manter `stamina_orb_profile_v1.tres` como visual unico global (sem perfil de orb por archetype);
+2. calibrar diferenca por dados de combate (`stamina_cost` e cadencia em `CombatActionData`);
+3. validar por telemetria (`orb_stamina_react` / `orb_stamina_exhausted_pulse`);
+4. manter gate MCP por microciclo.

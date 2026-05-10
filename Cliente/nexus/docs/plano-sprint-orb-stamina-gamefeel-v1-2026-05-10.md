@@ -88,6 +88,14 @@ Nada hardcoded por ator.
 - `cenas/enemies/hostile_enemy_brute.tscn`
 4. Gate MCP validado (`open_scene -> play_scene -> get_godot_errors`) sem erro novo.
 
+## Decisao de tuning (freeze de escopo)
+1. Nao criar perfis de orb por archetype nesta fase.
+2. Manter `stamina_orb_profile_v1.tres` como perfil visual unico global.
+3. Diferenca entre inimigos/jogador vira somente por gameplay data-driven:
+- `CombatActionData.stamina_cost`
+- cadencia do ataque (windup/active/recover/cooldown)
+4. A orb reflete o consumo real (delta negativo de stamina), sem logica especifica por ator.
+
 ## Criterios de aceite
 1. MCP gate sem erro novo:
 - `open_scene -> play_scene -> get_godot_errors`
