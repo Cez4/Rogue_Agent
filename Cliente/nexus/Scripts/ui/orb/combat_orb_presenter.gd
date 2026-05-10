@@ -155,10 +155,15 @@ func _update_shader_parameters() -> void:
 		_orb_material.set_shader_parameter(&"selected_color", target_color)
 	
 	# Low health alert color adjustment
-	if _current_fill <= alert_threshold:
+	var is_danger: bool = (_current_fill <= alert_threshold)
+	var is_player: bool = (display_mode == DisplayMode.PLAYER_COMBAT_ONLY)
+	
+	if is_danger:
 		_orb_material.set_shader_parameter(&"fill_color", Color(1.0, 0.1, 0.1, 1.0)) # Bright red
 	else:
 		_orb_material.set_shader_parameter(&"fill_color", Color(0.9, 0.15, 0.18, 0.95)) # Original red
+		
+	_orb_material.set_shader_parameter(&"danger_alert", is_danger and is_player)
 
 func _is_actor_attacking() -> bool:
 	if _actor == null: return false

@@ -13,6 +13,9 @@ uniform float vibration : hint_range(0.0, 1.0) = 0.0;
 uniform bool selected = false;
 uniform vec4 selected_color : source_color = vec4(1.0, 0.75, 0.15, 1.0);
 uniform float selection_pulse_speed : hint_range(0.0, 10.0) = 4.0;
+uniform bool danger_alert = false;
+uniform vec4 danger_color : source_color = vec4(1.0, 0.1, 0.1, 1.0);
+uniform float danger_pulse_speed : hint_range(0.0, 15.0) = 8.0;
 
 void fragment() {
     vec2 uv = UV * 2.0 - vec2(1.0);
@@ -41,6 +44,19 @@ void fragment() {
         col.rgb += highlight * 0.18 * step(r, 0.96);
 
         col += glass_tint * (1.0 - max(liquid_mask, trail_mask)) * 0.75 * step(r, 0.96);
+
+        // Danger Ring Logic
+        if (danger_alert) {
+            float d_pulse = sin(TIME * danger_pulse_speed) * 0.5 + 0.5;
+            float danger_inner = 0.98 - d_pulse * 0.02;
+            float danger_outer = 1.04 + d_pulse * 0.02;
+            
+            float danger_ring = smoothstep(danger_inner, danger_inner + 0.01, r) * 
+                               (1.0 - smoothstep(danger_outer, danger_outer + 0.01, r));
+            
+            col = mix(col, danger_color, danger_ring);
+            col.a = max(col.a, danger_ring * danger_color.a);
+        }
 
         // Target Lock Ring Logic
         if (selected) {
