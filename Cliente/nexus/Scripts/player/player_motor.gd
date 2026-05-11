@@ -58,6 +58,10 @@ func request_move(target_position: Vector2) -> void:
 		if nav_map.is_valid():
 			resolved_target = NavigationServer2D.map_get_closest_point(nav_map, target_position)
 
+	# Evita spammar o NavAgent recalculando a mesma rota todo frame (quebra a velocidade)
+	if _has_target and _navigation_agent.target_position.distance_squared_to(resolved_target) < 1.0:
+		return
+
 	_navigation_agent.target_position = resolved_target
 	_has_target = true
 	_stuck_elapsed_sec = 0.0
