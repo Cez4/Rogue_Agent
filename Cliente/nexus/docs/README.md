@@ -6,10 +6,11 @@ Branch de referencia: `feat/combat-orb-ui-contextual`
 ## 1) Fonte principal de estado
 1. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado)
 2. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
-3. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
-4. `status-freeze-funcional-v2-2026-05-10.md` (baseline historico Orb/Stamina)
-5. `plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md` (sprint tatico fechada pelo freeze)
-6. `mvp-limboai-combate-wander-status.md` (historico consolidado + links atuais)
+3. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (proxima sprint planejada)
+4. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
+5. `status-freeze-funcional-v2-2026-05-10.md` (baseline historico Orb/Stamina)
+6. `plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md` (sprint tatico fechada pelo freeze)
+7. `mvp-limboai-combate-wander-status.md` (historico consolidado + links atuais)
 
 ## 1.1 Regra anti-drift (obrigatoria)
 1. Quando houver conflito entre docs antigos e estado atual:
