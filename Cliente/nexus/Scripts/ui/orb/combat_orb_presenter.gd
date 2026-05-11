@@ -149,12 +149,17 @@ func _on_health_death() -> void:
 func _on_health_healed(amount: float) -> void:
 	if resource_type != ResourceType.HEALTH:
 		return
+	if hide_when_dead and _health != null and not _health.is_alive():
+		return
 	var heal_ratio: float = clampf(amount / maxf(1.0, _health.max_health), 0.0, 1.0)
 	_current_fill = _get_resource_ratio()
 	_current_trail = _current_fill
 	_inject_reaction(clampf(heal_ratio * 0.75, 0.04, 0.45))
 	_hide_timer = hide_delay
 	_update_shader_parameters()
+	if not _is_visible_orb:
+		_set_orb_visible(true, &"healed")
+		_update_position(1.0)
 	CombatTelemetry.emit_event(&"orb_health_heal_react", {
 		"actor": _actor.name,
 		"amount": amount

@@ -16,7 +16,8 @@ Regra de design inicial:
 2. Em combate: nao regenera.
 3. Morto: nao regenera.
 4. Orb de vida deve refletir cura de forma visualmente rica, preservando liquido/trail/slosh.
-5. A regra deve ser data-driven e reutilizavel em qualquer entidade com `HealthComponent`.
+5. Orb de vida deve aparecer temporariamente durante regen/cura fora de combate, mesmo quando a regra normal de combate a deixaria escondida.
+6. A regra deve ser data-driven e reutilizavel em qualquer entidade com `HealthComponent`.
 
 ## 2) Principio tecnico
 O sistema deve seguir o padrao atual do projeto:
@@ -169,6 +170,7 @@ Atualizar para reagir a cura:
 - [x] HP subindo nao deixa trail visual atrasado para baixo.
 - [x] Liquido/slosh exibe cura sem parecer dano em intensidade menor que dano.
 - [x] Orb continua visivel conforme regra central de combate.
+- [x] Orb aparece temporariamente ao receber `healed`, incluindo regen fora de combate.
 
 ### Fase F - Validacao MCP
 - [x] `open_scene(res://cenas/mundo.tscn)`.
@@ -247,4 +249,4 @@ Implementado:
 Estado de QA:
 1. Smoke MCP abriu e rodou `res://cenas/mundo.tscn` sem erro novo.
 2. Runtime confirmou `HealthRegen` instanciado no Player e no Villager.
-3. Falta QA jogavel/manual de dano -> sair de combate -> observar `health_regen_tick` e Orb de cura.
+3. Falta QA jogavel/manual de dano -> sair de combate -> observar `health_regen_tick`, Orb aparecendo durante regen e Orb de cura.
