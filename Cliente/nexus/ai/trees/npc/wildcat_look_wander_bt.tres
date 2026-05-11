@@ -51,126 +51,126 @@ var/debug_bt_decision_dedupe_ms/value = 700
 var/debug_bt_decision_dedupe_ms/hint = 0
 var/debug_bt_decision_dedupe_ms/hint_string = ""
 
-[sub_resource type="BTAction" id="BTAction_5q2af"]
+[sub_resource type="BTAction" id="BTAction_i5fh4"]
 script = ExtResource("1_acquire")
 
-[sub_resource type="BTAction" id="BTAction_ywstk"]
+[sub_resource type="BTAction" id="BTAction_3xwmn"]
 script = ExtResource("2_pull")
 
-[sub_resource type="BTCondition" id="BTCondition_myruu"]
+[sub_resource type="BTCondition" id="BTCondition_ss7j6"]
 script = ExtResource("3_validate")
 
-[sub_resource type="BTCondition" id="BTCondition_kbavh"]
+[sub_resource type="BTCondition" id="BTCondition_iig43"]
 script = ExtResource("4_perception")
 
-[sub_resource type="BTCondition" id="BTCondition_4l8rh"]
+[sub_resource type="BTCondition" id="BTCondition_sxat8"]
 script = ExtResource("5_i5fh4")
 
-[sub_resource type="BTAction" id="BTAction_umiwm"]
+[sub_resource type="BTAction" id="BTAction_3mwhn"]
 script = ExtResource("6_3xwmn")
 event_name = &"kiting_started"
 
-[sub_resource type="BTAction" id="BTAction_77310"]
+[sub_resource type="BTAction" id="BTAction_5q2af"]
 script = ExtResource("7_ss7j6")
 
-[sub_resource type="BTAction" id="BTAction_qni2g"]
+[sub_resource type="BTAction" id="BTAction_ywstk"]
 script = ExtResource("8_iig43")
 
-[sub_resource type="BTTimeLimit" id="BTTimeLimit_tlgib"]
+[sub_resource type="BTTimeLimit" id="BTTimeLimit_myruu"]
 time_limit = 1.2
-children = [SubResource("BTAction_qni2g")]
+children = [SubResource("BTAction_ywstk")]
 
-[sub_resource type="BTAlwaysSucceed" id="BTAlwaysSucceed_pesxs"]
-children = [SubResource("BTTimeLimit_tlgib")]
+[sub_resource type="BTAlwaysSucceed" id="BTAlwaysSucceed_kbavh"]
+children = [SubResource("BTTimeLimit_myruu")]
 
-[sub_resource type="BTAction" id="BTAction_kk4ug"]
+[sub_resource type="BTAction" id="BTAction_4l8rh"]
 script = ExtResource("9_sxat8")
 
-[sub_resource type="BTAction" id="BTAction_chn4f"]
+[sub_resource type="BTAction" id="BTAction_umiwm"]
 script = ExtResource("6_face")
 
-[sub_resource type="BTAction" id="BTAction_gaws5"]
+[sub_resource type="BTAction" id="BTAction_77310"]
 script = ExtResource("6_3xwmn")
 event_name = &"kiting_holding"
 
-[sub_resource type="BTRandomWait" id="BTRandomWait_acmqa"]
+[sub_resource type="BTRandomWait" id="BTRandomWait_qni2g"]
 max_duration = 1.8
 
-[sub_resource type="BTAction" id="BTAction_mts7p"]
+[sub_resource type="BTAction" id="BTAction_tlgib"]
 script = ExtResource("6_3xwmn")
 event_name = &"kiting_ended"
 
-[sub_resource type="BTSequence" id="BTSequence_c4641"]
+[sub_resource type="BTSequence" id="BTSequence_pesxs"]
 custom_name = "Tactical Retreat"
-children = [SubResource("BTAction_5q2af"), SubResource("BTAction_ywstk"), SubResource("BTCondition_myruu"), SubResource("BTCondition_kbavh"), SubResource("BTCondition_4l8rh"), SubResource("BTAction_umiwm"), SubResource("BTAction_77310"), SubResource("BTAlwaysSucceed_pesxs"), SubResource("BTAction_kk4ug"), SubResource("BTAction_chn4f"), SubResource("BTAction_gaws5"), SubResource("BTRandomWait_acmqa"), SubResource("BTAction_mts7p")]
+children = [SubResource("BTAction_i5fh4"), SubResource("BTAction_3xwmn"), SubResource("BTCondition_ss7j6"), SubResource("BTCondition_iig43"), SubResource("BTCondition_sxat8"), SubResource("BTAction_3mwhn"), SubResource("BTAction_5q2af"), SubResource("BTAlwaysSucceed_kbavh"), SubResource("BTAction_4l8rh"), SubResource("BTAction_umiwm"), SubResource("BTAction_77310"), SubResource("BTRandomWait_qni2g"), SubResource("BTAction_tlgib")]
 
-[sub_resource type="BTAction" id="BTAction_fjq5o"]
+[sub_resource type="BTAction" id="BTAction_kk4ug"]
 script = ExtResource("1_acquire")
 
-[sub_resource type="BTAction" id="BTAction_ad2b8"]
+[sub_resource type="BTAction" id="BTAction_chn4f"]
 script = ExtResource("2_pull")
 
-[sub_resource type="BTCondition" id="BTCondition_voaqu"]
+[sub_resource type="BTCondition" id="BTCondition_gaws5"]
 script = ExtResource("3_validate")
 
-[sub_resource type="BTCondition" id="BTCondition_i5r0i"]
+[sub_resource type="BTCondition" id="BTCondition_acmqa"]
 script = ExtResource("4_perception")
 
-[sub_resource type="BTCondition" id="BTCondition_1o27o"]
+[sub_resource type="BTCondition" id="BTCondition_mts7p"]
 script = ExtResource("5_inrange")
 attack_range_hysteresis = 1.5
 in_range_latch_extra_distance = 0.75
 
-[sub_resource type="BTAction" id="BTAction_qj1sc"]
+[sub_resource type="BTAction" id="BTAction_c4641"]
 script = ExtResource("6_face")
 
-[sub_resource type="BTAction" id="BTAction_vm7es"]
+[sub_resource type="BTAction" id="BTAction_fjq5o"]
 script = ExtResource("8_attack")
 
-[sub_resource type="BTSequence" id="BTSequence_iwrdj"]
+[sub_resource type="BTSequence" id="BTSequence_ad2b8"]
 custom_name = "Combat Attack"
-children = [SubResource("BTAction_fjq5o"), SubResource("BTAction_ad2b8"), SubResource("BTCondition_voaqu"), SubResource("BTCondition_i5r0i"), SubResource("BTCondition_1o27o"), SubResource("BTAction_qj1sc"), SubResource("BTAction_vm7es")]
+children = [SubResource("BTAction_kk4ug"), SubResource("BTAction_chn4f"), SubResource("BTCondition_gaws5"), SubResource("BTCondition_acmqa"), SubResource("BTCondition_mts7p"), SubResource("BTAction_c4641"), SubResource("BTAction_fjq5o")]
 
-[sub_resource type="BTCooldown" id="BTCooldown_ucu86"]
+[sub_resource type="BTCooldown" id="BTCooldown_voaqu"]
 duration = 0.15
 custom_name = "Attack Gate"
-children = [SubResource("BTSequence_iwrdj")]
+children = [SubResource("BTSequence_ad2b8")]
 
-[sub_resource type="BTAction" id="BTAction_8seam"]
+[sub_resource type="BTAction" id="BTAction_i5r0i"]
 script = ExtResource("1_acquire")
 
-[sub_resource type="BTAction" id="BTAction_xuns8"]
+[sub_resource type="BTAction" id="BTAction_1o27o"]
 script = ExtResource("2_pull")
 
-[sub_resource type="BTCondition" id="BTCondition_miayb"]
+[sub_resource type="BTCondition" id="BTCondition_qj1sc"]
 script = ExtResource("3_validate")
 
-[sub_resource type="BTCondition" id="BTCondition_gkuk2"]
+[sub_resource type="BTCondition" id="BTCondition_vm7es"]
 script = ExtResource("4_perception")
 
-[sub_resource type="BTAction" id="BTAction_akh1i"]
+[sub_resource type="BTAction" id="BTAction_iwrdj"]
 script = ExtResource("13_3mwhn")
 
-[sub_resource type="BTAction" id="BTAction_26c8x"]
+[sub_resource type="BTAction" id="BTAction_ucu86"]
 script = ExtResource("8_iig43")
 
-[sub_resource type="BTTimeLimit" id="BTTimeLimit_m2dss"]
+[sub_resource type="BTTimeLimit" id="BTTimeLimit_8seam"]
 time_limit = 1.0
-children = [SubResource("BTAction_26c8x")]
+children = [SubResource("BTAction_ucu86")]
 
-[sub_resource type="BTSequence" id="BTSequence_v3aem"]
+[sub_resource type="BTSequence" id="BTSequence_xuns8"]
 custom_name = "Chase Move"
-children = [SubResource("BTAction_akh1i"), SubResource("BTTimeLimit_m2dss")]
+children = [SubResource("BTAction_iwrdj"), SubResource("BTTimeLimit_8seam")]
 
-[sub_resource type="BTSequence" id="BTSequence_ylser"]
+[sub_resource type="BTSequence" id="BTSequence_miayb"]
 custom_name = "Combat Chase"
-children = [SubResource("BTAction_8seam"), SubResource("BTAction_xuns8"), SubResource("BTCondition_miayb"), SubResource("BTCondition_gkuk2"), SubResource("BTSequence_v3aem")]
+children = [SubResource("BTAction_i5r0i"), SubResource("BTAction_1o27o"), SubResource("BTCondition_qj1sc"), SubResource("BTCondition_vm7es"), SubResource("BTSequence_xuns8")]
 
 [sub_resource type="BTAction" id="BTAction_idlewander"]
 script = ExtResource("10_idlewander")
 
 [sub_resource type="BTDynamicSelector" id="BTSelector_root"]
-children = [SubResource("BTSequence_c4641"), SubResource("BTCooldown_ucu86"), SubResource("BTSequence_ylser"), SubResource("BTAction_idlewander")]
+children = [SubResource("BTSequence_pesxs"), SubResource("BTCooldown_voaqu"), SubResource("BTSequence_miayb"), SubResource("BTAction_idlewander")]
 
 [resource]
 blackboard_plan = SubResource("BlackboardPlan_wildcat")
