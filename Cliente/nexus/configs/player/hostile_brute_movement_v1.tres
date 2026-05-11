@@ -1,20 +1,17 @@
-[gd_resource type="Resource" load_steps=2 format=3]
+[gd_resource type="Resource" format=3 uid="uid://dihltaswktrpm"]
 
-[ext_resource type="Script" path="res://Scripts/player/player_movement_config.gd" id="1_cfg"]
+[ext_resource type="Script" uid="uid://l7ldlp4aunft" path="res://Scripts/player/player_movement_config.gd" id="1_cfg"]
 
 [resource]
 script = ExtResource("1_cfg")
 max_speed = 148.0
 acceleration = 860.0
 deceleration = 1150.0
-path_desired_distance = 6.0
 target_desired_distance = 16.0
 stop_epsilon = 7.0
 project_target_to_navmesh = true
-avoidance_enabled = true
+avoidance_enabled = false
 avoidance_radius = 12.0
 avoidance_neighbor_distance = 44.0
 avoidance_max_neighbors = 10
 avoidance_time_horizon = 0.72
-avoidance_layers = 1
-avoidance_mask = 1
