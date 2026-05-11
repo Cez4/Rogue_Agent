@@ -18,6 +18,7 @@ Regra:
 11. Em fase de producao de inimigos, provar variacao por dados com pelo menos 2 inimigos reais antes de escalar conteudo.
 12. Em roadmap pos-freeze, considerar Health Regen Data-Driven v1 como congelado antes de iniciar Actor8Dir Facade Slimming v1.
 13. Durante Actor8Dir Facade Slimming v1, nao alterar Health Regen, Orb, BT/HSM, stamina ou kiting sem bug comprovado e novo QA.
+14. Depois do bloco 1 de Actor8Dir Slimming, tratar spam de `kiting_started` como ponto congelado de telemetria antes de nova extracao estrutural.
 
 Checklist rapido:
 - [ ] Doc interno lido.
@@ -37,6 +38,7 @@ Checklist rapido:
 - [ ] Necessita alterar um arquivo `.tres` estruturalmente? Utilize estritamente `mcp_godot-mcp_execute_editor_script` para evitar corrupção de serialização.
 - [ ] Prova data-driven registrada: mesma logica, perfis `.tres` diferentes e telemetria mostrando comportamento distinto.
 - [ ] A sprint atual permite mexer em `Actor8DirLimbo`? Na Actor8Dir Facade Slimming v1, manter wrappers publicos e validar cada bloco no MCP.
+- [ ] O log tem spam de `kiting_started`? Nao avancar para Fase C nem mexer em kiting/movimento antes de decidir se e ruido aceito ou ajuste de telemetria.
 
 Fontes base:
 - Godot: https://docs.godotengine.org/en/stable/

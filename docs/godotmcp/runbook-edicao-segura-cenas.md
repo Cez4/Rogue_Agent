@@ -125,3 +125,10 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 2. A sprint estrutural ativa e `Cliente/nexus/docs/plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md`.
 3. Refatorar `Scripts/actors/actor_8dir_limbo.gd` somente em blocos pequenos, preservando wrappers publicos usados por BT/HSM/Controller.
 4. Durante o slimming, nao alterar cena, BT/HSM, kiting, stamina, Orb ou Health Regen sem bug comprovado e novo QA.
+
+## Freeze intermediario Actor8Dir Slimming bloco 1
+1. `ActorCombatResourceRuntime` esta aceito como primeiro corte estrutural.
+2. `actor_8dir_limbo.gd` reduziu de 633 para 601 linhas sem alterar cenas.
+3. Logs confirmaram ataque, kiting, morte, respawn e regen preservados.
+4. Antes de nova edicao estrutural, revisar o ruido de telemetria `kiting_started` em spam.
+5. Nao abrir Fase C (`actor_spatial_runtime`) enquanto essa decisao estiver pendente.

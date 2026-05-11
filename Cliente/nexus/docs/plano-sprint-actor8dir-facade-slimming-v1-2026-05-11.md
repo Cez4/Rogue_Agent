@@ -1,7 +1,7 @@
 # Plano Sprint - Actor8Dir Facade Slimming v1
 
 Data: 2026-05-11
-Status: ATIVA - BASELINE LIMPO
+Status: BLOCO 1 CONGELADO - AGUARDANDO DECISAO SOBRE TELEMETRIA DE KITING
 Versao: v1
 Ordem obrigatoria cumprida: `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` esta implementado, validado em MCP, aprovado em QA, documentado e congelado.
 
@@ -96,6 +96,7 @@ Docs:
 - [ ] Validar kiting/attack no MCP.
 
 ### Fase C - Extrair spatial/combat geometry
+- [ ] Bloqueada ate decisao sobre spam de telemetria `kiting_started`.
 - [ ] Criar `actor_spatial_runtime.gd` ou equivalente.
 - [ ] Mover `get_min_separation_distance_to()`.
 - [ ] Mover `compute_approach_position()`.
@@ -118,12 +119,13 @@ Docs:
 ### Fase F - Validacao MCP e telemetria
 - [x] `open_scene(res://cenas/mundo.tscn)`.
 - [x] `play_scene(current)`.
-- [ ] Testar Player vs Brute com spam de ataque.
+- [x] Testar Player vs Brute com spam de ataque.
 - [ ] Testar clique no chao cancelando combate.
-- [ ] Testar baixa stamina/kiting.
-- [ ] Testar death/respawn.
+- [x] Testar baixa stamina/kiting.
+- [x] Testar death/respawn.
 - [x] `get_godot_errors` sem erro novo.
-- [ ] Logs esperados preservados: `attack_commit`, `hit_confirmed`, `kiting_started`, `kiting_ended`, `target_died`, `respawned`.
+- [x] Logs esperados preservados: `attack_commit`, `hit_confirmed`, `kiting_started`, `kiting_ended`, `target_died`, `respawned`.
+- [ ] Ruido conhecido: `kiting_started` emite em spam antes de `kiting_holding`.
 
 ### Fase G - Documentacao e Git
 - [ ] Atualizar docs de arquitetura.
@@ -171,6 +173,7 @@ Meta qualitativa: `Actor8DirLimbo` vira uma fachada fina e previsivel, nao um ar
 
 ## 13) Implementacao - bloco 1
 Data: 2026-05-11
+Status: congelado.
 
 Escopo:
 1. Criado `Scripts/actors/services/actor_combat_resource_runtime.gd`.
@@ -189,3 +192,20 @@ Contrato preservado:
 3. Kiting continua consumindo `CombatActionData`.
 4. Nenhuma cena, BT `.tres`, HSM, Orb ou Health Regen foi alterado.
 5. Smoke MCP abriu `mundo.tscn`, rodou a cena e nao apontou erro novo.
+
+QA/logs gerados pelo usuario:
+1. Sem parse/runtime error novo.
+2. Player e Brute continuam emitindo `attack_started`, `attack_commit` e `hit_confirmed`.
+3. Stamina continua consumida por dados: Player `20.0`, Brute `28.0`.
+4. Kiting continua funcional com `kiting_started`, `kiting_holding` e `kiting_ended`.
+5. Death/respawn preservados: `target_lost`, `chase_canceled(reason=death)`, `target_died`, `respawned`.
+6. Health Regen preservado: Orb aparece por `reason=\"healed\"` e Player regenera ate `20.0`.
+
+Ponto congelado:
+1. `kiting_started` aparece em spam quase por frame antes de `kiting_holding`.
+2. A origem provavel e a composicao da BT com `bt_emit_telemetry` no ramo de kiting, nao o runtime extraido.
+3. Nao avancar para Fase C ate decidir se o ajuste sera:
+   - apenas documentar como ruido aceito;
+   - filtrar/deduplicar telemetria;
+   - ajustar emissao via Godot/editor API sem editar `.tres` por texto.
+4. Nao alterar kiting, movimento, stamina, BT `.tres` ou Fase C enquanto essa decisao estiver aberta.

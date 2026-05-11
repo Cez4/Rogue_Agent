@@ -63,3 +63,10 @@ func run():
 1. Health Regen Data-Driven v1 esta congelado e nao alterou estrutura das arvores BT.
 2. Actor8Dir Facade Slimming v1 e a sprint ativa e deve preservar estrutura BT, salvo bug comprovado e editado via Godot/editor API.
 3. O refactor de `Actor8DirLimbo` deve manter wrappers publicos usados por BT/HSM/Controller ate haver migracao validada em MCP.
+
+## Congelamento Actor8Dir Slimming bloco 1
+1. O bloco 1 (`ActorCombatResourceRuntime`) esta congelado no commit `fb1e408`.
+2. Se logs mostrarem spam de `kiting_started`, tratar primeiro como ruido de telemetria/BT.
+3. Nao editar `.tres` por texto para corrigir esse ruido.
+4. Nao alterar kiting, stamina, movimento ou `bt_move_to_blackboard_pos.gd` por causa desse ruido sem bug visual reproduzido.
+5. Qualquer ajuste em emissao de telemetria de BT deve ser feito por task/script pequeno ou via Godot/editor API, com MCP e QA logo em seguida.

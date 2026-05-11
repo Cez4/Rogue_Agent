@@ -159,3 +159,24 @@ Validado:
 4. Regen nao revive morto; revive continua exclusivo do sistema de respawn.
 5. Health Orb aparece durante regen/cura fora de combate.
 6. Villager/NPC amigavel fica fora do criterio de fechamento desta sprint.
+
+## 13) Addendum - Actor8Dir Slimming bloco 1 congelado
+Data: 2026-05-11
+Branch: `feat/actor8dir-facade-slimming-v1`
+Commit-base: `fb1e408`
+Status: bloco 1 congelado.
+
+Mudanca estrutural aceita:
+1. Criado `ActorCombatResourceRuntime`.
+2. `Actor8DirLimbo` reduziu de 633 para 601 linhas.
+3. Wrappers publicos de stamina/kiting foram preservados.
+4. Nenhuma cena, BT `.tres`, HSM, Orb, Health Regen, stamina tuning ou kiting foi alterado.
+
+Logs aprovados:
+1. Ataque, dano, stamina, kiting, morte, respawn e regen continuam emitindo eventos esperados.
+2. Player regenera ate `Health.max_health = 20.0`.
+
+Ponto de atencao congelado:
+1. `kiting_started` aparece em spam quase por frame antes de `kiting_holding`.
+2. Isso deve ser tratado como ruido de telemetria/BT, nao como permissao para mexer no movimento ou kiting aprovado.
+3. Proxima fase estrutural (`actor_spatial_runtime`) fica bloqueada ate decidir a estrategia para esse ruido.
