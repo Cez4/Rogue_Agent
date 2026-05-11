@@ -3582,7 +3582,7 @@ animation = &"Walk_Unarmed_SO"
 position = Vector2(-1, 27)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1943196012]
-zoom = Vector2(2, 2)
+zoom = Vector2(3, 3)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=855513962]
 position = Vector2(0, 27)
