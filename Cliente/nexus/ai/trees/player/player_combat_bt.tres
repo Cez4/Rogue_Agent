@@ -1,74 +1,119 @@
 [gd_resource type="BehaviorTree" format=3 uid="uid://clxtjhojbk2dw"]
 
+[ext_resource type="Script" uid="uid://bcen2fdf8nyy8" path="res://Scripts/ai/tasks/bt_is_stamina_low.gd" id="1_cwaj8"]
 [ext_resource type="Script" uid="uid://dr4lmrr6lyur3" path="res://Scripts/ai/tasks/bt_pull_combat_target.gd" id="1_pull"]
+[ext_resource type="Script" uid="uid://dlb0mha1y2adf" path="res://Scripts/ai/tasks/bt_emit_telemetry.gd" id="2_fsu0e"]
 [ext_resource type="Script" uid="uid://ejey0wbvj4bq" path="res://Scripts/ai/tasks/bt_validate_combat_target_alive.gd" id="2_validate"]
+[ext_resource type="Script" uid="uid://xsd6igysmjxp" path="res://Scripts/ai/tasks/bt_get_kite_position.gd" id="3_4jn7f"]
 [ext_resource type="Script" uid="uid://b0orfy45ioia7" path="res://Scripts/ai/tasks/bt_validate_combat_target_perception.gd" id="3_perception"]
+[ext_resource type="Script" uid="uid://xa2pc0a82ndi" path="res://Scripts/ai/tasks/bt_move_to_blackboard_pos.gd" id="4_d1mht"]
 [ext_resource type="Script" uid="uid://dbpqu4jqdacsi" path="res://Scripts/ai/tasks/bt_is_combat_target_in_attack_range.gd" id="4_inrange"]
+[ext_resource type="Script" uid="uid://cdc2sojhv7wer" path="res://Scripts/ai/tasks/bt_stop_movement.gd" id="5_c8bli"]
 [ext_resource type="Script" uid="uid://d0880ogn0cija" path="res://Scripts/ai/tasks/bt_face_combat_target_8dir.gd" id="5_face"]
-[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_wait_stamina_regen.gd" id="6_wait_stamina"]
+[ext_resource type="Script" uid="uid://dq53k6xlov77b" path="res://Scripts/ai/tasks/bt_wait_stamina_regen.gd" id="6_wait_stamina"]
 [ext_resource type="Script" uid="uid://cvwjqd4ux02e4" path="res://Scripts/ai/tasks/bt_request_attack.gd" id="7_attack"]
-[ext_resource type="Script" uid="uid://b2xbwfbvabqli" path="res://Scripts/ai/tasks/bt_chase_combat_target.gd" id="8_chase"]
-[ext_resource type="Script" path="res://Scripts/ai/tasks/bt_low_stamina_tactical.gd" id="9_low_stamina_tactical"]
+[ext_resource type="Script" uid="uid://wypp2iclh8he" path="res://Scripts/ai/tasks/bt_get_approach_position.gd" id="10_py860"]
 
-[sub_resource type="BTAction" id="BTAction_pull_attack"]
+[sub_resource type="BTCondition" id="BTCondition_d1mht"]
+script = ExtResource("1_cwaj8")
+
+[sub_resource type="BTAction" id="BTAction_c8bli"]
+script = ExtResource("2_fsu0e")
+event_name = &"kiting_started"
+
+[sub_resource type="BTAction" id="BTAction_py860"]
+script = ExtResource("3_4jn7f")
+
+[sub_resource type="BTAction" id="BTAction_7rawv"]
+script = ExtResource("4_d1mht")
+
+[sub_resource type="BTTimeLimit" id="BTTimeLimit_odymc"]
+time_limit = 1.2
+children = [SubResource("BTAction_7rawv")]
+
+[sub_resource type="BTAlwaysSucceed" id="BTAlwaysSucceed_td2v7"]
+children = [SubResource("BTTimeLimit_odymc")]
+
+[sub_resource type="BTAction" id="BTAction_orssi"]
+script = ExtResource("5_c8bli")
+
+[sub_resource type="BTAction" id="BTAction_alntw"]
+script = ExtResource("2_fsu0e")
+event_name = &"kiting_holding"
+
+[sub_resource type="BTRandomWait" id="BTRandomWait_hxgm2"]
+max_duration = 1.8
+
+[sub_resource type="BTAction" id="BTAction_3rskr"]
+script = ExtResource("2_fsu0e")
+event_name = &"kiting_ended"
+
+[sub_resource type="BTSequence" id="BTSequence_oo4uo"]
+custom_name = "Tactical Retreat"
+children = [SubResource("BTCondition_d1mht"), SubResource("BTAction_c8bli"), SubResource("BTAction_py860"), SubResource("BTAlwaysSucceed_td2v7"), SubResource("BTAction_orssi"), SubResource("BTAction_alntw"), SubResource("BTRandomWait_hxgm2"), SubResource("BTAction_3rskr")]
+
+[sub_resource type="BTAction" id="BTAction_cjj6x"]
 script = ExtResource("1_pull")
 
-[sub_resource type="BTCondition" id="BTCondition_validate_attack"]
+[sub_resource type="BTCondition" id="BTCondition_p02jm"]
 script = ExtResource("2_validate")
 
-[sub_resource type="BTCondition" id="BTCondition_perception_attack"]
+[sub_resource type="BTCondition" id="BTCondition_oii5x"]
 script = ExtResource("3_perception")
 
-[sub_resource type="BTCondition" id="BTCondition_inrange_attack"]
+[sub_resource type="BTCondition" id="BTCondition_f43xw"]
 script = ExtResource("4_inrange")
+attack_range_hysteresis = 1.5
+in_range_latch_extra_distance = 0.75
 
-[sub_resource type="BTAction" id="BTAction_face_attack"]
+[sub_resource type="BTAction" id="BTAction_6cfqg"]
 script = ExtResource("5_face")
 
-[sub_resource type="BTAction" id="BTAction_wait_stamina_attack"]
+[sub_resource type="BTAction" id="BTAction_56rmu"]
 script = ExtResource("6_wait_stamina")
 min_wait_ms = 140
 
-[sub_resource type="BTAction" id="BTAction_request_attack"]
+[sub_resource type="BTAction" id="BTAction_jq6e8"]
 script = ExtResource("7_attack")
 
-[sub_resource type="BTSequence" id="BTSequence_attack"]
+[sub_resource type="BTSequence" id="BTSequence_e24f4"]
 custom_name = "Combat Attack"
-children = [SubResource("BTAction_pull_attack"), SubResource("BTCondition_validate_attack"), SubResource("BTCondition_perception_attack"), SubResource("BTCondition_inrange_attack"), SubResource("BTAction_face_attack"), SubResource("BTAction_wait_stamina_attack"), SubResource("BTAction_request_attack")]
+children = [SubResource("BTAction_cjj6x"), SubResource("BTCondition_p02jm"), SubResource("BTCondition_oii5x"), SubResource("BTCondition_f43xw"), SubResource("BTAction_6cfqg"), SubResource("BTAction_56rmu"), SubResource("BTAction_jq6e8")]
 
-[sub_resource type="BTCooldown" id="BTCooldown_attack_gate"]
+[sub_resource type="BTCooldown" id="BTCooldown_ocx8a"]
 duration = 0.12
-children = [SubResource("BTSequence_attack")]
+custom_name = "Attack Gate"
+children = [SubResource("BTSequence_e24f4")]
 
-[sub_resource type="BTAction" id="BTAction_pull_chase"]
+[sub_resource type="BTAction" id="BTAction_umm4s"]
 script = ExtResource("1_pull")
 
-[sub_resource type="BTCondition" id="BTCondition_validate_chase"]
+[sub_resource type="BTCondition" id="BTCondition_035e0"]
 script = ExtResource("2_validate")
 
-[sub_resource type="BTCondition" id="BTCondition_perception_chase"]
+[sub_resource type="BTCondition" id="BTCondition_8nhka"]
 script = ExtResource("3_perception")
 
-[sub_resource type="BTAction" id="BTAction_chase"]
-script = ExtResource("8_chase")
+[sub_resource type="BTAction" id="BTAction_5vhvn"]
+script = ExtResource("10_py860")
 
-[sub_resource type="BTTimeLimit" id="BTTimeLimit_chase"]
+[sub_resource type="BTAction" id="BTAction_3bq4m"]
+script = ExtResource("4_d1mht")
+
+[sub_resource type="BTTimeLimit" id="BTTimeLimit_avqj2"]
 time_limit = 1.0
-children = [SubResource("BTAction_chase")]
+children = [SubResource("BTAction_3bq4m")]
 
-[sub_resource type="BTSequence" id="BTSequence_chase"]
+[sub_resource type="BTSequence" id="BTSequence_sykrm"]
+custom_name = "Chase Move"
+children = [SubResource("BTAction_5vhvn"), SubResource("BTTimeLimit_avqj2")]
+
+[sub_resource type="BTSequence" id="BTSequence_u3252"]
 custom_name = "Combat Chase"
-children = [SubResource("BTAction_pull_chase"), SubResource("BTCondition_validate_chase"), SubResource("BTCondition_perception_chase"), SubResource("BTTimeLimit_chase")]
+children = [SubResource("BTAction_umm4s"), SubResource("BTCondition_035e0"), SubResource("BTCondition_8nhka"), SubResource("BTSequence_sykrm")]
 
-[sub_resource type="BTAction" id="BTAction_low_stamina_tactical"]
-script = ExtResource("9_low_stamina_tactical")
-
-[sub_resource type="BTSequence" id="BTSequence_low_stamina_tactical"]
-custom_name = "Low Stamina Tactical"
-children = [SubResource("BTAction_pull_attack"), SubResource("BTCondition_validate_attack"), SubResource("BTCondition_perception_attack"), SubResource("BTAction_low_stamina_tactical")]
-
-[sub_resource type="BTDynamicSelector" id="BTSelector_root"]
-children = [SubResource("BTSequence_low_stamina_tactical"), SubResource("BTCooldown_attack_gate"), SubResource("BTSequence_chase")]
+[sub_resource type="BTDynamicSelector" id="BTDynamicSelector_dt0u5"]
+children = [SubResource("BTSequence_oo4uo"), SubResource("BTCooldown_ocx8a"), SubResource("BTSequence_u3252")]
 
 [resource]
-root_task = SubResource("BTSelector_root")
+root_task = SubResource("BTDynamicSelector_dt0u5")
