@@ -1,18 +1,19 @@
 # Docs - Mapa Oficial (Estado Atual)
 
 Data de consolidacao: 2026-05-11
-Branch de referencia: `feat/actor8dir-facade-slimming-v1`
+Branch de referencia: `feat/actor-export-profile-organization-v1`
 
 ## 1) Fonte principal de estado
 1. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado)
 2. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
 3. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (freeze concluido)
-4. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (sprint ativa)
-5. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
-6. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
-7. `status-freeze-funcional-v2-2026-05-10.md` (baseline historico Orb/Stamina)
-8. `plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md` (sprint tatico fechada pelo freeze)
-9. `mvp-limboai-combate-wander-status.md` (historico consolidado + links atuais)
+4. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (fechamento parcial congelado)
+5. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint ativa)
+6. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
+7. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
+8. `status-freeze-funcional-v2-2026-05-10.md` (baseline historico Orb/Stamina)
+9. `plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md` (sprint tatico fechada pelo freeze)
+10. `mvp-limboai-combate-wander-status.md` (historico consolidado + links atuais)
 
 ## 1.1 Regra anti-drift (obrigatoria)
 1. Quando houver conflito entre docs antigos e estado atual:
@@ -21,8 +22,9 @@ Branch de referencia: `feat/actor8dir-facade-slimming-v1`
 2. Docs de tuning/congelamento antigos devem ser lidos como historico, nao como estado operativo da sprint atual.
 3. Ordem oficial atual:
    - `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` esta fechado;
-   - `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` esta liberado e ativo.
-4. O refactor do `Actor8DirLimbo` esta permitido nesta sprint, desde que preserve o freeze de combate e mantenha wrappers publicos usados por BT/HSM/Controller.
+   - `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` esta em fechamento parcial congelado;
+   - `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` esta ativa.
+4. A organizacao de exports/perfis deve iniciar por auditoria e profile social/wander com fallback; nao migrar dados de cena sem QA visual.
 
 ## 2) Arquitetura e contratos
 1. `arquitetura-contratos-estado-atual-2026-05-10.md` (doc mestre)
@@ -65,7 +67,9 @@ Branch de referencia: `feat/actor8dir-facade-slimming-v1`
 4. Ordem de prioridade atual:
    - preservar freeze total;
    - manter Health Regen Data-Driven v1 congelado;
-   - refatorar a fachada `Actor8DirLimbo` em blocos pequenos;
+   - manter `Actor8Dir Facade Slimming v1` congelado;
+   - organizar exports/perfis em blocos pequenos;
+   - nao migrar `.tscn`/`.tres` por texto;
    - validar cada bloco no Godot MCP antes de seguir.
 5. Sempre que ajustar BT/tarefas taticas, atualizar no mesmo PR:
    - `status-freeze-total-combate-tatico-2026-05-11.md` (estado funcional real),
