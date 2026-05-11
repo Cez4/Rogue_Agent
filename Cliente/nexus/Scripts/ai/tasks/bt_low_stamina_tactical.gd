@@ -149,12 +149,12 @@ func _tick(_delta: float) -> Status:
 		BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "RUNNING", "reposition_commit")
 		return RUNNING
 
-	# Outside close tactical zone, do not lock the tree in RUNNING.
-	# Returning FAILURE lets chase/attack branches keep moving and prevents idle freeze loops.
+	# Outside close tactical zone, hold the tree in RUNNING to allow breathing room
 	if dist > separation_dist * disengage_distance_factor:
 		agent.stop_motor_movement()
-		BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "FAILURE", "outside_disengage_zone")
-		return FAILURE
+		_hold_until_ms = now_ms + post_move_hold_ms
+		BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "RUNNING", "outside_disengage_zone_hold")
+		return RUNNING
 
 	agent.stop_motor_movement()
 	_next_reposition_ms = now_ms + effective_cd_ms
@@ -162,8 +162,8 @@ func _tick(_delta: float) -> Status:
 		"actor": agent.name,
 		"reason": "hold_regen"
 	}, "hold_regen")
-	BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "FAILURE", "hold_regen")
-	return FAILURE
+	BTDecisionTelemetryRef.emit("LowStaminaTactical", agent, blackboard, debug_decision_var, "RUNNING", "hold_regen")
+	return RUNNING
 
 
 func _exit() -> void:

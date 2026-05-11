@@ -41,6 +41,7 @@ static func cancel_chase_attack(actor: Actor8DirLimbo, reason: StringName = &"un
 	var was_manual_lock: bool = bool(actor.is_combat_target_manual_lock())
 	clear_combat_target(actor)
 	actor.stop_motor_movement()
+	actor.clear_attack_pending()
 	if had_target:
 		CombatTelemetry.emit_event(&"chase_canceled", {
 			"actor": actor.name,
