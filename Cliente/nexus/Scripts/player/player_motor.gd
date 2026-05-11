@@ -52,11 +52,8 @@ func request_move(target_position: Vector2) -> void:
 	if _navigation_agent == null:
 		return
 
+	# Godot 4 NavigationAgent2D lida perfeitamente com pontos fora da NavMesh. Clamps manuais quebravam o kiting.
 	var resolved_target := target_position
-	if config != null and config.project_target_to_navmesh:
-		var nav_map: RID = _navigation_agent.get_navigation_map()
-		if nav_map.is_valid():
-			resolved_target = NavigationServer2D.map_get_closest_point(nav_map, target_position)
 
 	# Evita spammar o NavAgent recalculando a mesma rota todo frame (quebra a velocidade)
 	if _has_target and _navigation_agent.target_position.distance_squared_to(resolved_target) < 25.0:
