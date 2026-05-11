@@ -7,6 +7,11 @@ static func respawn_after_delay(actor: Actor8DirLimbo) -> void:
 	var health := actor.get_node_or_null(^"Health") as HealthComponent
 	if health != null:
 		health.reset_health()
+		
+	var stamina := actor.get_node_or_null(^"Stamina") as StaminaComponent
+	if stamina != null:
+		stamina.reset_stamina()
+		
 	actor._bridge_set_actor_dead(false)
 	actor.global_position = actor.get_spawn_position()
 	actor.velocity = Vector2.ZERO
@@ -15,6 +20,7 @@ static func respawn_after_delay(actor: Actor8DirLimbo) -> void:
 	if actor.motor != null:
 		actor.motor.stop()
 	if actor.hsm != null:
+		actor.hsm.change_active_state(actor.idle_state)
 		actor.hsm.set_active(true)
 	actor.play_idle_animation()
 	await actor.get_tree().create_timer(maxf(0.0, actor.respawn_brain_delay_sec)).timeout

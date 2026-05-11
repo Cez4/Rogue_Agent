@@ -16,6 +16,19 @@ var _time_since_last_drain: float = 0.0
 func _ready() -> void:
 	_current_stamina = max_stamina
 
+func reset_stamina() -> void:
+	_current_stamina = max_stamina
+	_is_exhausted = false
+	_time_since_last_drain = 0.0
+	stamina_changed.emit(_current_stamina, max_stamina)
+	var owner_name: String = ""
+	if owner != null:
+		owner_name = owner.name
+	CombatTelemetry.emit_event(&"stamina_recovered", {
+		"actor": owner_name,
+		"current_stamina": _current_stamina
+	})
+
 func _process(delta: float) -> void:
 	if _current_stamina < max_stamina:
 		_time_since_last_drain += delta
