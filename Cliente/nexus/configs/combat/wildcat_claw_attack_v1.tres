@@ -8,7 +8,6 @@ windup_sec = 0.14
 active_sec = 0.09
 recover_sec = 0.24
 cooldown_sec = 0.36
-stamina_cost = 20.0
 attack_stamina_buffer_ratio = 0.25
 attack_stamina_resume_multiplier_when_exhausted = 1.8
 attack_stamina_budget_hits = 1.6
