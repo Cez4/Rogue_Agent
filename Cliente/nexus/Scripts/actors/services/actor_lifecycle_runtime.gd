@@ -20,8 +20,8 @@ static func respawn_after_delay(actor: Actor8DirLimbo) -> void:
 	if actor.motor != null:
 		actor.motor.stop()
 	if actor.hsm != null:
-		actor.hsm.change_active_state(actor.idle_state)
 		actor.hsm.set_active(true)
+		actor.hsm.change_active_state(actor.idle_state)
 	actor.play_idle_animation()
 	await actor.get_tree().create_timer(maxf(0.0, actor.respawn_brain_delay_sec)).timeout
 	actor.set_brain_active(true)
