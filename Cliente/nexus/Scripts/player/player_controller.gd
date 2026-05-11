@@ -68,13 +68,11 @@ func _dispatch_intent(intent: Dictionary) -> void:
 			var move_pos: Vector2 = intent.get("position", _body.global_position)
 			request_move(move_pos)
 		&"attack":
-			_cancel_combat_intent()
 			_clear_interaction_intent()
 			var attack_target: Variant = intent.get("target")
 			if attack_target is Node2D:
 				var target_node: Node2D = attack_target
-				_body.face_toward(target_node.global_position)
-				# Keep combat authority in BT/HSM: input sets intent/target only.
+				# Only update target, do not force stop the motor, to allow BT to handle kiting gracefully
 				_body.set_combat_target(target_node)
 		&"chase_attack":
 			_clear_interaction_intent()
