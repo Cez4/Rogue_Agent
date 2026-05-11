@@ -58,3 +58,8 @@ func run():
    - clique no chao cancela combate;
    - ator sem stamina para atacar reposiciona;
    - ator volta a atacar apos recuperar stamina suficiente.
+
+## Ordem de roadmap relacionada a BT/Actor
+1. Health Regen Data-Driven v1 nao deve alterar estrutura das arvores BT.
+2. Actor8Dir Facade Slimming v1 tambem deve preservar estrutura BT, salvo bug comprovado e editado via Godot/editor API.
+3. O refactor de `Actor8DirLimbo` so inicia depois do Health Regen fechado, para evitar retrabalho no contrato de combate.

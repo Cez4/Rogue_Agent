@@ -1,23 +1,28 @@
 # Docs - Mapa Oficial (Estado Atual)
 
-Data de consolidacao: 2026-05-10
-Branch de referencia: `feat/combat-orb-ui-contextual`
+Data de consolidacao: 2026-05-11
+Branch de referencia: `feat/kiting-data-driven-v1`
 
 ## 1) Fonte principal de estado
 1. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado)
 2. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
 3. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (proxima sprint planejada)
-4. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
-5. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
-6. `status-freeze-funcional-v2-2026-05-10.md` (baseline historico Orb/Stamina)
-7. `plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md` (sprint tatico fechada pelo freeze)
-8. `mvp-limboai-combate-wander-status.md` (historico consolidado + links atuais)
+4. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (sprint futura; executar somente depois do Health Regen)
+5. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
+6. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
+7. `status-freeze-funcional-v2-2026-05-10.md` (baseline historico Orb/Stamina)
+8. `plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md` (sprint tatico fechada pelo freeze)
+9. `mvp-limboai-combate-wander-status.md` (historico consolidado + links atuais)
 
 ## 1.1 Regra anti-drift (obrigatoria)
 1. Quando houver conflito entre docs antigos e estado atual:
    - o freeze total de 2026-05-11 vence;
    - os freezes anteriores viram historico tecnico.
 2. Docs de tuning/congelamento antigos devem ser lidos como historico, nao como estado operativo da sprint atual.
+3. Ordem oficial de proximas sprints:
+   - primeiro: `plano-sprint-health-regen-datadriven-v1-2026-05-11.md`;
+   - depois: `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md`.
+4. Nao iniciar refactor do `Actor8DirLimbo` antes do Health Regen estar implementado, validado em MCP, aprovado e documentado.
 
 ## 2) Arquitetura e contratos
 1. `arquitetura-contratos-estado-atual-2026-05-10.md` (doc mestre)
@@ -60,7 +65,8 @@ Branch de referencia: `feat/combat-orb-ui-contextual`
 4. Ordem de prioridade atual:
    - preservar freeze total;
    - fechar Git/docs do baseline;
-   - so depois retomar novas features.
+   - implementar Health Regen Data-Driven v1;
+   - so depois refatorar a fachada `Actor8DirLimbo`.
 5. Sempre que ajustar BT/tarefas taticas, atualizar no mesmo PR:
    - `status-freeze-total-combate-tatico-2026-05-11.md` (estado funcional real),
    - `plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md` (progresso de sprint).

@@ -127,3 +127,21 @@ Valores finais:
 2. Brute: `110.0`
 3. Light: `120.0`
 4. Wildcat: `130.0`
+
+## 11) Addendum - Roadmap pos-freeze
+Data: 2026-05-11
+
+Ordem oficial para evitar drift de arquitetura:
+
+1. Implementar `plano-sprint-health-regen-datadriven-v1-2026-05-11.md`.
+2. Somente depois executar `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md`.
+
+Motivo:
+1. Health Regen precisa centralizar o contrato de "ator em combate".
+2. Esse contrato provavelmente sera consumido por Orb, Regen e futuros sistemas.
+3. Refatorar `Actor8DirLimbo` antes disso aumenta risco de retrabalho.
+
+Divida aceita adicional:
+1. `Scripts/actors/actor_8dir_limbo.gd` esta com 633 linhas e atua como fachada grande sobre services.
+2. O arquivo nao deve receber novas regras de dominio se elas puderem viver em componente/runtime.
+3. A reducao desse arquivo fica planejada, mas bloqueada ate o Health Regen estar fechado.

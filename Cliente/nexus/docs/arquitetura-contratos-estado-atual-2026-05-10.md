@@ -22,6 +22,12 @@ Regra de ouro:
 ### 2.1 Actor base
 Arquivo: `Scripts/actors/actor_8dir_limbo.gd`
 
+Estado 2026-05-11:
+1. `Actor8DirLimbo` e a fachada central de cena e integracao.
+2. O arquivo esta grande (633 linhas), mas ja delega boa parte da logica para `Scripts/actors/services`.
+3. A reducao da fachada esta planejada em `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md`.
+4. Essa sprint so deve iniciar depois do Health Regen Data-Driven v1 estar fechado.
+
 Contrato publico (gameplay):
 1. `request_attack()`
 2. `set_combat_target(target, manual_lock)`
@@ -128,13 +134,17 @@ Guardrails:
 3. commit pequeno por ciclo e status limpo antes de push.
 
 ## 7) Proximo passo recomendado (apos consolidacao)
-1. Produzir novo hostil usando `enemy-profile-checklist-v1.md` (sem alterar logica).
-2. Manter baseline stamina v1 e validar apenas por telemetria.
-3. Evoluir observabilidade (dash/debug), sem mexer em contrato de gameplay.
+1. Executar `plano-sprint-health-regen-datadriven-v1-2026-05-11.md`.
+2. Depois executar `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md`.
+3. Produzir novo hostil usando `enemy-profile-checklist-v1.md` (sem alterar logica).
+4. Manter baseline stamina v1 e validar apenas por telemetria.
+5. Evoluir observabilidade (dash/debug), sem mexer em contrato de gameplay.
 
 ## 8) Referencias
 1. Status oficial: `status-freeze-funcional-v2-2026-05-10.md`
 2. Matriz de tuning: `combat-tuning-matrix-v1.md`
 3. Auditoria BT/HSM: `auditoria-estado-atual-bt-hsm-combate.md`
-4. LimboAI docs: https://limboai.readthedocs.io/en/latest/
-5. Godot Navigation guide: https://docs.godotengine.org/en/stable/tutorials/navigation/navigation_using_navigationagents.html
+4. Health Regen: `plano-sprint-health-regen-datadriven-v1-2026-05-11.md`
+5. Actor facade slimming: `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md`
+6. LimboAI docs: https://limboai.readthedocs.io/en/latest/
+7. Godot Navigation guide: https://docs.godotengine.org/en/stable/tutorials/navigation/navigation_using_navigationagents.html

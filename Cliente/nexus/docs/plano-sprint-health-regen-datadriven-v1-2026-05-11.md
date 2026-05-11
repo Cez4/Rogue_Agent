@@ -5,6 +5,8 @@ Status: PLANEJADA
 Versao: v1
 Escopo: criar regeneracao passiva de vida fora de combate, modular e data-driven, compartilhada por Player, NPCs e inimigos.
 
+Nota de sequenciamento: esta sprint deve ser executada antes de `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md`. O refactor do `Actor8DirLimbo` depende do contrato de combate/vida estabilizado por esta entrega.
+
 ## 1) Objetivo
 Implementar um sistema modular de regeneracao de vida por segundo fora de combate.
 
@@ -228,3 +230,4 @@ No futuro, regen deve ser validada pelo servidor:
 - [ ] QA aprovou feel visual da Orb de cura
 - [ ] Commit/push sincronizado
 - [ ] Freeze atualizado se necessario
+- [ ] Liberada a proxima sprint: `Actor8Dir Facade Slimming v1`

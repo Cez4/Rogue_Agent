@@ -8,6 +8,8 @@ Escopo: PRs que alteram actor, runtimes, BT tasks, HSM states, input de intencao
   - `Scripts/actors/services/actor_runtime_bridge.gd`
   - API publica de gameplay do `Actor8DirLimbo`
 - [ ] Novas regras de dominio ficam em runtime/task (nao no actor monolitico).
+- [ ] Refactor de `Actor8DirLimbo` so pode iniciar depois do Health Regen Data-Driven estar concluido e aprovado.
+- [ ] Se a sprint ativa for Health Regen, nao misturar com emagrecimento do actor no mesmo PR.
 - [ ] Sem `has_method/.call` na trilha critica de combate/chase.
 - [ ] Chaves de blackboard novas entram em `Scripts/ai/blackboard_keys.gd`.
 
@@ -51,6 +53,7 @@ Escopo: PRs que alteram actor, runtimes, BT tasks, HSM states, input de intencao
   - `docs/auditoria-estado-atual-bt-hsm-combate.md`
 - [ ] Registrar risco residual e prox. passo tecnico.
 - [ ] Se alterar baseline congelado, atualizar `docs/status-freeze-total-combate-tatico-2026-05-11.md`.
+- [ ] Se alterar `Actor8DirLimbo`, confirmar que a sprint `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` esta liberada pelo tick final do Health Regen.
 - [ ] Fluxo Git executado em modo serial (sem paralelismo) e sync confirmado:
   - `git status -sb`
   - `git rev-list --left-right --count origin/<branch>...HEAD` = `0 0`.

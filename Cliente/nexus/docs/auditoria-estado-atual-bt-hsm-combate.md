@@ -178,11 +178,17 @@ Regra de autoridade:
 - usar `get_attack_stop_distance()` (com buffer), nao range bruto.
 
 ## Checklist de fechamento do proximo ciclo
-1. Boundary 100% (acabamento final):
+1. Health Regen Data-Driven v1:
+   - proxima sprint de implementacao.
+   - deve centralizar contrato de "ator em combate" antes de qualquer refactor amplo do actor.
+2. Actor8Dir Facade Slimming v1:
+   - sprint futura, depois do Health Regen.
+   - objetivo: reduzir `actor_8dir_limbo.gd` sem alterar contrato BT/HSM/Controller.
+3. Boundary 100% (acabamento final):
    - concluido no essencial nesta fase.
-   - proximo ciclo: acabamento final pre-escala conforme:
-     - `docs/plano-final-desacoplamento-actor-2026-05-09.md`
-2. Telemetria BT v2:
+   - proximo ciclo tecnico de refactor conforme:
+     - `docs/plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md`
+4. Telemetria BT v2:
    - concluida no essencial (social/wander cobertos);
    - opcional: eventos enter/exit separados.
 5. Teste de regressao MCP (obrigatorio em cada bloco):
@@ -207,3 +213,4 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
 > 1. `docs/status-freeze-funcional-v2-2026-05-10.md`
 > 2. `docs/plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md`
 > 3. `docs/arquitetura-contratos-estado-atual-2026-05-10.md`
+> Nota de roadmap (2026-05-11): executar Health Regen antes de Actor8Dir Facade Slimming.

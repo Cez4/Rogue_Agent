@@ -16,6 +16,8 @@ Regra:
 9. Em qualquer ajuste de combate, validar paridade de composicao da cena (Health + Hurtbox + AttackHitbox) em todos os combatentes.
 10. Em bug de morte/respawn, verificar override no nodo instanciado da cena-mapa antes de alterar o script base.
 11. Em fase de producao de inimigos, provar variacao por dados com pelo menos 2 inimigos reais antes de escalar conteudo.
+12. Em roadmap pos-freeze, respeitar a ordem: Health Regen Data-Driven v1 antes de Actor8Dir Facade Slimming v1.
+13. Nao misturar feature de Health Regen com refactor amplo de `Actor8DirLimbo` no mesmo ciclo.
 
 Checklist rapido:
 - [ ] Doc interno lido.
@@ -34,6 +36,7 @@ Checklist rapido:
 - [ ] Implementou UI flutuante ou rastros (Trails)? Confirme que existe uma lógica de "Snap" para igualar as variáveis secundárias ao valor principal em casos de Respawn ou Cura instantânea, evitando desincronização.
 - [ ] Necessita alterar um arquivo `.tres` estruturalmente? Utilize estritamente `mcp_godot-mcp_execute_editor_script` para evitar corrupção de serialização.
 - [ ] Prova data-driven registrada: mesma logica, perfis `.tres` diferentes e telemetria mostrando comportamento distinto.
+- [ ] A sprint atual permite mexer em `Actor8DirLimbo`? Se Health Regen ainda nao fechou, limitar a mudancas minimas de contrato.
 
 Fontes base:
 - Godot: https://docs.godotengine.org/en/stable/

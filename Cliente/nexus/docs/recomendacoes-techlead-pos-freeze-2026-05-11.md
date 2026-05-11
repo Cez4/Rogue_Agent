@@ -21,6 +21,7 @@ Manter o baseline atual intacto e evoluir em ciclos controlados:
 3. Migrar somente dividas de baixo risco que nao alterem comportamento.
 4. Expandir inimigos por dados, nao por scripts novos.
 5. Comecar planejamento server-authoritative antes de adicionar sistemas grandes.
+6. Implementar Health Regen Data-Driven antes de refatorar a fachada `Actor8DirLimbo`.
 
 ## 4) Dividas tecnicas recomendadas
 ### 4.1 Kiting data-driven
@@ -97,9 +98,20 @@ Adicionar paineis/logs para:
 1. Commit do freeze atual.
 2. Smoke test manual documentado.
 3. Limpeza de docs antigos que contradizem o freeze.
-4. Migracao segura do kiting hardcoded para dado, preservando `160.0`.
-5. Novo inimigo data-driven usando checklist.
-6. Plano tecnico SpacetimeDB/server-authoritative para combate.
+4. Migracao segura do kiting hardcoded para dado.
+5. Health Regen Data-Driven v1.
+6. Actor8Dir Facade Slimming v1.
+7. Novo inimigo data-driven usando checklist.
+8. Plano tecnico SpacetimeDB/server-authoritative para combate.
+
+## 8.1) Sequenciamento obrigatorio: Health Regen antes de Actor8Dir
+O refactor de `Actor8DirLimbo` deve vir depois do Health Regen porque o Health Regen cria uma pressao real sobre o contrato de combate:
+
+1. Orb precisa saber se ator esta em combate.
+2. Regen precisa saber se ator esta fora de combate.
+3. Sistemas futuros de aggro/stealth/descanso tambem vao consumir essa regra.
+
+Portanto, primeiro estabilizar `ActorCombatRuntime.is_actor_in_combat(actor)`. Depois emagrecer `Actor8DirLimbo` com contratos ja conhecidos.
 
 ## 9) Criterio de sucesso
 O projeto deve conseguir adicionar um novo inimigo melee sem tocar em `Actor8DirLimbo`, sem alterar tasks BT, sem editar script de motor e sem quebrar o comportamento aprovado do Player.
