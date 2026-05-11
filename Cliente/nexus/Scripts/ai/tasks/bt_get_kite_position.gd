@@ -24,9 +24,9 @@ func _tick(_delta: float) -> Status:
 	if away_dir.is_zero_approx():
 		away_dir = Vector2.RIGHT.rotated(randf() * TAU)
 
-	# Fuga massiva de 160 pixels. Passamos o vetor puro e confiamos no NavigationAgent2D nativo.
+	# Fuga massiva de 120 pixels. Passamos o vetor puro e confiamos no NavigationAgent2D nativo.
 	# A tentativa de usar NavigationServer2D para clamp causava o bug do ator dar 1 passo e parar.
-	var destination: Vector2 = agent.global_position + away_dir * 160.0
+	var destination: Vector2 = agent.global_position + away_dir * 120.0
 	
 	blackboard.set_var(output_pos_var, destination)
 	BTDecisionTelemetryRef.emit("GetKitePosition", agent, blackboard, debug_decision_var, "SUCCESS", "calculated_kite_pos")
