@@ -1,7 +1,7 @@
 # Plano Sprint - Actor8Dir Facade Slimming v1
 
 Data: 2026-05-11
-Status: BLOCO 1 CONGELADO - TELEMETRIA DE KITING AJUSTADA
+Status: BLOCO 2 CONGELADO - RUNTIME ESPACIAL EXTRAIDO
 Versao: v1
 Ordem obrigatoria cumprida: `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` esta implementado, validado em MCP, aprovado em QA, documentado e congelado.
 
@@ -96,12 +96,12 @@ Docs:
 - [ ] Validar kiting/attack no MCP.
 
 ### Fase C - Extrair spatial/combat geometry
-- [ ] Liberada apos QA confirmar reducao do spam de telemetria `kiting_started`.
-- [ ] Criar `actor_spatial_runtime.gd` ou equivalente.
-- [ ] Mover `get_min_separation_distance_to()`.
-- [ ] Mover `compute_approach_position()`.
-- [ ] Mover `get_attack_engage_distance()`.
-- [ ] Validar chase, range e sem "air attack".
+- [x] Liberada apos QA confirmar reducao do spam de telemetria `kiting_started`.
+- [x] Criar `actor_spatial_runtime.gd` ou equivalente.
+- [x] Mover `get_min_separation_distance_to()`.
+- [x] Mover `compute_approach_position()`.
+- [x] Mover `get_attack_engage_distance()`.
+- [x] Validar chase, range e sem "air attack".
 
 ### Fase D - Reduzir bridge ruidoso
 - [ ] Auditar `_bridge_get_float_state/_set_float_state`.
@@ -230,3 +230,28 @@ Validacao final:
 2. `kiting_started` aparece por transicao de kiting, nao em spam por frame.
 3. `kiting_holding`, `kiting_ended`, `attack_commit`, `hit_confirmed`, `target_died`, `respawned` continuam aparecendo.
 4. Stamina, Health Regen e Orb continuam preservados.
+
+## 15) Implementacao - bloco 2
+Data: 2026-05-11
+Status: aplicado e aprovado em QA jogavel.
+
+Escopo:
+1. Criado `Scripts/actors/services/actor_spatial_runtime.gd`.
+2. Movida a geometria de combate para runtime dedicado:
+   - `get_attack_engage_distance()`
+   - `get_min_separation_distance_to()`
+   - `compute_approach_position()`
+3. Wrappers publicos preservados em `Actor8DirLimbo`.
+4. `actor_8dir_limbo.gd` reduziu de 601 para 566 linhas.
+
+Contrato preservado:
+1. `bt_is_combat_target_in_attack_range.gd` continua chamando `agent.get_attack_engage_distance()` e `agent.get_min_separation_distance_to(target)`.
+2. `actor_navigation_runtime.gd` continua chamando `actor.compute_approach_position(...)`.
+3. Nenhuma cena, BT `.tres`, HSM, Orb, Health Regen, stamina tuning ou kiting foi alterado.
+
+Validacao final:
+1. Smoke MCP sem parse/runtime error. [ok]
+2. QA jogavel de chase/range sem "air attack". [ok]
+3. Player vs Brute preservou `attack_commit`, `hit_confirmed`, `kiting_started`, `kiting_holding`, `kiting_ended`. [ok]
+4. Logs mostram checks de range falhando quando longe e confirmando ataque apenas no range esperado. [ok]
+5. Health Regen, Orb, death/respawn, stamina e kiting permaneceram preservados. [ok]
