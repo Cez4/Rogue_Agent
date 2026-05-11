@@ -16,8 +16,10 @@ func _tick(_delta: float) -> Status:
 	if stamina == null:
 		BTDecisionTelemetryRef.emit("IsStaminaLow", agent, blackboard, debug_decision_var, "FAILURE", "no_stamina_component")
 		return FAILURE
-	if stamina.is_exhausted() or stamina.get_stamina_ratio() <= threshold_ratio:
+	
+	if stamina.is_exhausted() or not bool(agent.has_stamina_for_attack()):
 		BTDecisionTelemetryRef.emit("IsStaminaLow", agent, blackboard, debug_decision_var, "SUCCESS", "stamina_low")
 		return SUCCESS
+		
 	BTDecisionTelemetryRef.emit("IsStaminaLow", agent, blackboard, debug_decision_var, "FAILURE", "stamina_ok")
 	return FAILURE
