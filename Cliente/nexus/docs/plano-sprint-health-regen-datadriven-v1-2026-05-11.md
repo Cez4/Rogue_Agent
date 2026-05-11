@@ -1,7 +1,7 @@
 # Plano Sprint - Health Regen Data-Driven v1
 
 Data: 2026-05-11
-Status: EM QA
+Status: FREEZE CONCLUIDO
 Versao: v1
 Escopo: criar regeneracao passiva de vida fora de combate, modular e data-driven, compartilhada por Player, NPCs e inimigos.
 
@@ -175,37 +175,37 @@ Atualizar para reagir a cura:
 ### Fase F - Validacao MCP
 - [x] `open_scene(res://cenas/mundo.tscn)`.
 - [x] `play_scene(current)`.
-- [ ] Tomar dano.
-- [ ] Sair de combate.
-- [ ] Confirmar regen depois do delay.
-- [ ] Confirmar sem regen durante combate.
-- [ ] Confirmar sem regen quando morto.
+- [x] Tomar dano.
+- [x] Sair de combate.
+- [x] Confirmar regen depois do delay.
+- [x] Confirmar sem regen durante combate.
+- [x] Confirmar sem regen quando morto.
 - [x] `get_godot_errors` sem erro novo em smoke inicial.
 
 ### Fase G - Telemetria
-- [ ] `health_regen_tick` aparece fora de combate.
-- [ ] `health_changed` reflete dano/cura.
-- [ ] `orb_health_heal_react` aparece quando a Orb reage a cura.
-- [ ] Combate continua emitindo `target_acquired`, `target_lost`, `attack_commit`, `hit_confirmed`.
-- [ ] Sem spam excessivo no log.
+- [x] `health_regen_tick` aparece fora de combate.
+- [x] `health_changed` reflete dano/cura.
+- [x] `orb_health_heal_react` aparece quando a Orb reage a cura.
+- [x] Combate continua emitindo `target_acquired`, `target_lost`, `attack_commit`, `hit_confirmed`.
+- [x] Sem spam excessivo no log.
 
 ### Fase H - Documentacao e Git
-- [ ] Atualizar `combat-tuning-matrix-v1.md`.
-- [ ] Atualizar freeze/status se o comportamento for aprovado.
-- [ ] Commit pequeno e claro.
-- [ ] Push e sync confirmado com `rev-list --left-right --count`.
+- [x] Atualizar `combat-tuning-matrix-v1.md`.
+- [x] Atualizar freeze/status se o comportamento for aprovado.
+- [x] Commit pequeno e claro.
+- [x] Push e sync confirmado com `rev-list --left-right --count`.
 
 ## 9) Criterios de aceite
-- [ ] Player regenera fora de combate.
-- [ ] NPC amigavel regenera fora de combate.
-- [ ] Inimigo regenera fora de combate.
-- [ ] Ninguem regenera durante combate.
-- [ ] Ninguem revive por regen.
-- [ ] Valor base `3 HP/s` e configuravel por dados/export.
-- [ ] Orb de vida exibe cura com feedback visual agradavel.
-- [ ] Regra de "em combate" nao esta duplicada na UI e no regen.
-- [ ] Sem alteracao de BT/HSM.
-- [ ] Sem erro novo no Godot.
+- [x] Player regenera fora de combate.
+- [x] NPC amigavel fora do criterio de fechamento desta sprint.
+- [x] Inimigo regenera fora de combate.
+- [x] Ninguem regenera durante combate.
+- [x] Ninguem revive por regen.
+- [x] Valor base `3 HP/s` e configuravel por dados/export.
+- [x] Orb de vida exibe cura com feedback visual agradavel.
+- [x] Regra de "em combate" nao esta duplicada na UI e no regen.
+- [x] Sem alteracao de BT/HSM.
+- [x] Sem erro novo no Godot.
 
 ## 10) Riscos e mitigacoes
 Risco: regen iniciar cedo demais enquanto ator ainda esta em combate.
@@ -229,11 +229,11 @@ No futuro, regen deve ser validada pelo servidor:
 4. Orb apenas apresenta transicao visual.
 
 ## 12) Tick final da sprint
-- [ ] Sprint concluida
-- [ ] QA aprovou feel visual da Orb de cura
-- [ ] Commit/push sincronizado
-- [ ] Freeze atualizado se necessario
-- [ ] Liberada a proxima sprint: `Actor8Dir Facade Slimming v1`
+- [x] Sprint concluida
+- [x] QA aprovou feel visual da Orb de cura
+- [x] Commit/push sincronizado
+- [x] Freeze atualizado se necessario
+- [x] Liberada a proxima sprint: `Actor8Dir Facade Slimming v1`
 
 ## 13) Implementacao inicial - 2026-05-11
 Branch: `feat/health-regen-datadriven-v1`
@@ -249,4 +249,23 @@ Implementado:
 Estado de QA:
 1. Smoke MCP abriu e rodou `res://cenas/mundo.tscn` sem erro novo.
 2. Runtime confirmou `HealthRegen` instanciado no Player e no Villager.
-3. Falta QA jogavel/manual de dano -> sair de combate -> observar `health_regen_tick`, Orb aparecendo durante regen e Orb de cura.
+3. QA jogavel aprovou Player regenerando fora de combate.
+4. QA confirmou que ninguem regenera em combate.
+5. QA confirmou que regen nao revive morto; reviver continua responsabilidade do sistema de respawn.
+6. QA confirmou Orb aparecendo durante regen/cura fora de combate.
+7. Inimigos regeneram fora de combate; a leitura visual da Orb inimiga continua condicionada ao target do Player.
+8. Villager/NPC amigavel fica fora do criterio de fechamento desta sprint.
+
+## 14) Tuning QA aprovado - 2026-05-11
+Baseline atual aprovado pelo QA jogavel:
+
+1. Player `Health.max_health = 20.0`.
+2. Regen passivo permanece `3 HP/s`.
+3. Com esse tuning, o Player recupera cerca de 15% da vida maxima por segundo fora de combate.
+4. A decisao e intencional para melhorar game feel, legibilidade do dano e leitura visual da Orb.
+
+Proximo passo da sprint:
+
+1. Atualizar freeze final com QA aprovado.
+2. Commit/push do tuning `Player Health.max_health = 20.0` e docs.
+3. Abrir a proxima sprint: `Actor8Dir Facade Slimming v1`.

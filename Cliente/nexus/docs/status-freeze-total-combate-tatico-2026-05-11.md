@@ -39,6 +39,7 @@ As seguintes alteracoes locais fazem parte do baseline atual e nao devem ser rev
 3. Animacoes `Walk_Unarmed_*` do Player com loop desativado conforme validacao visual atual.
 4. Ajustes de stamina/health/collision em cenas usados para deixar a batalha mais performatica e testavel.
 5. Tuning atual do Brute deve ser preservado enquanto o QA estiver aprovando o ritmo da luta.
+6. Player com `Health.max_health = 20.0` aprovado como baseline de game feel da sprint de regen.
 
 ## 5) Arquivos-chave do baseline
 Scripts:
@@ -133,8 +134,9 @@ Data: 2026-05-11
 
 Ordem oficial para evitar drift de arquitetura:
 
-1. Implementar `plano-sprint-health-regen-datadriven-v1-2026-05-11.md`.
-2. Somente depois executar `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md`.
+1. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` aprovado em QA jogavel.
+2. Proxima frente autorizada: `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md`.
+3. Manter freeze de combate tatico: sem alterar BT/HSM, stamina, kiting ou regras de target durante o slimming.
 
 Motivo:
 1. Health Regen precisa centralizar o contrato de "ator em combate".
@@ -145,3 +147,15 @@ Divida aceita adicional:
 1. `Scripts/actors/actor_8dir_limbo.gd` esta com 633 linhas e atua como fachada grande sobre services.
 2. O arquivo nao deve receber novas regras de dominio se elas puderem viver em componente/runtime.
 3. A reducao desse arquivo fica planejada, mas bloqueada ate o Health Regen estar fechado.
+
+## 12) Addendum - Health Regen QA aprovado
+Data: 2026-05-11
+Status: aprovado em QA jogavel.
+
+Validado:
+1. Player regenera fora de combate.
+2. Inimigos regeneram fora de combate.
+3. Ninguem regenera durante combate.
+4. Regen nao revive morto; revive continua exclusivo do sistema de respawn.
+5. Health Orb aparece durante regen/cura fora de combate.
+6. Villager/NPC amigavel fica fora do criterio de fechamento desta sprint.
