@@ -9,7 +9,6 @@ static func play_directional_animation(animated_sprite: AnimatedSprite2D, prefix
 	if animated_sprite.sprite_frames.has_animation(animation_name):
 		if animated_sprite.animation != animation_name or not animated_sprite.is_playing():
 			animated_sprite.play(animation_name)
-			animated_sprite.set_frame_and_progress(0, 0.0)
 		return {"played": true, "suffix": suffix, "animation": animation_name}
 	return {"played": false, "suffix": last_suffix}
 
