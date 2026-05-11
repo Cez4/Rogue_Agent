@@ -1,7 +1,7 @@
 # Plano Sprint - Actor8Dir Facade Slimming v1
 
 Data: 2026-05-11
-Status: BLOCO 3 CONGELADO - RUNTIME STATE TIPADO
+Status: FECHAMENTO PARCIAL CONGELADO - FASE E DIFERIDA
 Versao: v1
 Ordem obrigatoria cumprida: `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` esta implementado, validado em MCP, aprovado em QA, documentado e congelado.
 
@@ -93,7 +93,7 @@ Docs:
 - [x] Mover `get_low_stamina_kite_distance()`.
 - [x] Mover `get_low_stamina_kite_cooldown_ms()`.
 - [x] Manter wrappers publicos no actor, se BT/tasks ainda dependem deles.
-- [ ] Validar kiting/attack no MCP.
+- [x] Validar kiting/attack no MCP.
 
 ### Fase C - Extrair spatial/combat geometry
 - [x] Liberada apos QA confirmar reducao do spam de telemetria `kiting_started`.
@@ -116,11 +116,13 @@ Docs:
 - [ ] Nao migrar dados de cena sem QA visual.
 - [ ] Criar plano separado se a migracao de dados for grande.
 
+Decisao: Fase E diferida para sprint/branch separada. Motivo: migracao de exports pode alterar dados de cena/tuning visual e nao deve ser misturada ao slimming ja aprovado.
+
 ### Fase F - Validacao MCP e telemetria
 - [x] `open_scene(res://cenas/mundo.tscn)`.
 - [x] `play_scene(current)`.
 - [x] Testar Player vs Brute com spam de ataque.
-- [ ] Testar clique no chao cancelando combate.
+- [x] Testar clique no chao cancelando combate.
 - [x] Testar baixa stamina/kiting.
 - [x] Testar death/respawn.
 - [x] `get_godot_errors` sem erro novo.
@@ -131,19 +133,19 @@ Docs:
 - [ ] Atualizar docs de arquitetura.
 - [ ] Atualizar checklist se algum contrato mudar.
 - [ ] Atualizar freeze somente se baseline funcional mudar.
-- [ ] Commit pequeno por bloco.
-- [ ] Push e sync confirmado.
+- [x] Commit pequeno por bloco.
+- [x] Push e sync confirmado.
 
 ## 9) Criterios de aceite
 - [x] Health Regen ja esta concluido antes desta sprint iniciar.
 - [x] `actor_8dir_limbo.gd` ficou menor sem perder contrato publico usado por BT/HSM/Controller.
-- [ ] Nenhum comportamento aprovado do combate mudou.
-- [ ] Nenhuma arvore `.tres` foi editada por texto.
-- [ ] Player, Brute, Light e Wildcat continuam compartilhando core.
-- [ ] Kiting data-driven continua consumindo `CombatActionData`.
-- [ ] Orb continua funcional.
-- [ ] Sem parse/runtime error novo no Godot.
-- [ ] Docs atualizados na mesma entrega.
+- [x] Nenhum comportamento aprovado do combate mudou.
+- [x] Nenhuma arvore `.tres` foi editada por texto.
+- [x] Player, Brute, Light e Wildcat continuam compartilhando core.
+- [x] Kiting data-driven continua consumindo `CombatActionData`.
+- [x] Orb continua funcional.
+- [x] Sem parse/runtime error novo no Godot.
+- [x] Docs atualizados na mesma entrega.
 
 ## 10) Riscos e mitigacoes
 Risco: quebrar contrato de BT/tasks por remover wrapper publico cedo demais.
@@ -165,11 +167,11 @@ Meta qualitativa: `Actor8DirLimbo` vira uma fachada fina e previsivel, nao um ar
 
 ## 12) Tick final da sprint
 - [x] Sprint iniciada somente apos Health Regen
-- [ ] Sprint concluida
-- [ ] QA aprovou sem regressao visual
-- [ ] MCP limpo
-- [ ] Docs atualizados
-- [ ] Commit/push sincronizado
+- [x] Sprint concluida em fechamento parcial
+- [x] QA aprovou sem regressao visual
+- [x] MCP limpo
+- [x] Docs atualizados
+- [x] Commit/push sincronizado
 
 ## 13) Implementacao - bloco 1
 Data: 2026-05-11
@@ -284,3 +286,27 @@ Validacao inicial:
 2. Smoke MCP abriu `mundo.tscn`, rodou a cena e nao apontou runtime error novo. [ok]
 3. Logs de QA preservaram ataque, range, kiting, stamina, death/respawn, Health Regen, Orb, move e inspect. [ok]
 4. QA visual confirmou emotion de assobio e emotion de exclamacao aparecendo corretamente. [ok]
+
+## 17) Fechamento parcial da sprint
+Data: 2026-05-11
+Status: congelado.
+
+Resumo:
+1. `actor_8dir_limbo.gd` reduziu de 633 para 516 linhas sem remover API publica usada por BT/HSM/Controller/Orb.
+2. Bloco de stamina/attack resource extraido.
+3. Bloco espacial/range extraido.
+4. Bloco social/wander/emote state tipado.
+5. Telemetria de kiting ajustada sem editar BT `.tres`.
+6. Camera do Player ajustada para `Camera2D.zoom = Vector2(3, 3)` em commit separado de tuning visual.
+
+Validacao:
+1. Logs de QA confirmaram ataque, range, kiting, stamina, death/respawn, Health Regen, Orb, move e inspect.
+2. Clique no chao preservado: `InteractionResolver.resolve_primary()` retorna `move` quando nao ha alvo, `PlayerController` chama `_cancel_all_intents()`, e `ActorTargetingRuntime.cancel_all_intents()` limpa interacao e chama `cancel_chase_attack(reason)`.
+3. QA visual confirmou sem regressao, incluindo emotions de assobio e exclamacao.
+4. Smoke final MCP abriu e rodou `res://cenas/mundo.tscn` sem parse/runtime error novo. [ok]
+5. Branch estava limpa e sincronizada antes deste fechamento.
+
+Proxima sprint recomendada:
+1. Abrir branch nova para `Actor Export/Profile Organization v1`.
+2. Antes de migrar qualquer export, classificar tuning visual/design versus runtime state.
+3. Nao mover dados de cena sem QA visual e sem plano de rollback.
