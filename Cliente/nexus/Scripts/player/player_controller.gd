@@ -54,6 +54,14 @@ func _handle_secondary_interaction(click_position: Vector2) -> void:
 
 func _dispatch_intent(intent: Dictionary) -> void:
 	var intent_name: StringName = intent.get("intent", &"")
+	
+	CombatTelemetry.emit_event(&"intent_dispatched", {
+		"actor": _body.name,
+		"intent_name": intent_name,
+		"position": str(intent.get("position", Vector2.ZERO)),
+		"target": str(intent.get("target", ""))
+	})
+	
 	match intent_name:
 		&"move":
 			_cancel_all_intents()
