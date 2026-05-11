@@ -59,6 +59,15 @@ static func is_target_alive(target: Node2D) -> bool:
 	return true
 
 
+static func is_actor_in_combat(actor: Actor8DirLimbo) -> bool:
+	if actor == null or not is_instance_valid(actor):
+		return false
+	var target: Node2D = actor.get_combat_target()
+	if target != null and is_instance_valid(target) and is_target_alive(target):
+		return true
+	return _is_targeted_by_hostile(actor)
+
+
 static func on_health_death(actor: Actor8DirLimbo) -> void:
 	actor._bridge_set_actor_dead(true)
 	actor.clear_attack_pending()
@@ -130,3 +139,19 @@ static func _sync_blackboard_target(actor: Actor8DirLimbo, target: Node2D) -> vo
 		return
 	bb.set_var(AIBlackboardKeys.COMBAT_TARGET, target)
 	bb.set_var(AIBlackboardKeys.COMBAT_TARGET_LAST_SEEN_MS, Time.get_ticks_msec())
+
+
+static func _is_targeted_by_hostile(actor: Actor8DirLimbo) -> bool:
+	var tree := actor.get_tree()
+	if tree == null:
+		return false
+	for node in tree.get_nodes_in_group(&"hostile"):
+		var hostile := node as Actor8DirLimbo
+		if hostile == null or hostile == actor:
+			continue
+		if not is_target_alive(hostile):
+			continue
+		var target: Node2D = hostile.get_combat_target()
+		if target == actor:
+			return true
+	return false

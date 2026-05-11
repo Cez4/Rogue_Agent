@@ -24,6 +24,7 @@
 [ext_resource type="PackedScene" path="res://cenas/components/combat/attack_hitbox_component_node.tscn" id="20_vuvgp"]
 [ext_resource type="Script" uid="uid://d087gw3m6nlpa" path="res://Scripts/stats/stamina_component.gd" id="22_0i4mi"]
 [ext_resource type="PackedScene" uid="uid://cpqqeuy3ge470" path="res://cenas/components/ui/combat_orb_presenter.tscn" id="22_3wq1m"]
+[ext_resource type="PackedScene" path="res://cenas/components/combat/health_regen_component_node.tscn" id="30_eg4iq"]
 [ext_resource type="Resource" path="res://configs/ui/orbs/stamina_orb_profile_v1.tres" id="30_orbpf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijbr8"]
@@ -3889,3 +3890,5 @@ follow_offset = Vector2(-34, -14)
 [node name="Stamina" type="Node" parent="." unique_id=1342416240]
 script = ExtResource("22_0i4mi")
 regen_rate = 8.0
+
+[node name="HealthRegen" parent="." unique_id=993076356 instance=ExtResource("30_eg4iq")]

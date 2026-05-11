@@ -117,6 +117,21 @@ Sinais de problema:
 
 `*` usa default do `CombatActionData` quando nao sobrescrito no `.tres`.
 
+## 7.1) Health Regen v1
+Sprint: `plano-sprint-health-regen-datadriven-v1-2026-05-11.md`
+
+| Sistema | Valor | Fonte | Notes |
+|---|---:|---|---|
+| health_regen_per_sec | 3.0 | `HealthRegenComponent.regen_per_sec` | regen passiva fora de combate |
+| out_of_combat_delay_sec | 2.0 | `HealthRegenComponent.out_of_combat_delay_sec` | evita cura imediata ao perder alvo |
+| tick_interval_sec | 0.2 | `HealthRegenComponent.tick_interval_sec` | reduz ruido de processamento/log |
+| regen_when_dead | false | `HealthRegenComponent.regen_when_dead` | heal nao revive entidade nesta sprint |
+
+Contrato:
+1. Regen consulta `ActorCombatRuntime.is_actor_in_combat(actor)`.
+2. Orb tambem consulta o mesmo contrato.
+3. Nao duplicar regra de combate em UI/Regen.
+
 ## 8) Checklist de regressão MCP
 Cena padrão: `res://cenas/mundo.tscn`
 

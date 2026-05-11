@@ -146,6 +146,20 @@ func _on_health_death() -> void:
 	_trigger_resource_visuals(base_hit_shake)
 	# Orb will hide automatically after hide_delay via _process
 
+func _on_health_healed(amount: float) -> void:
+	if resource_type != ResourceType.HEALTH:
+		return
+	var heal_ratio: float = clampf(amount / maxf(1.0, _health.max_health), 0.0, 1.0)
+	_current_fill = _get_resource_ratio()
+	_current_trail = _current_fill
+	_inject_reaction(clampf(heal_ratio * 0.75, 0.04, 0.45))
+	_hide_timer = hide_delay
+	_update_shader_parameters()
+	CombatTelemetry.emit_event(&"orb_health_heal_react", {
+		"actor": _actor.name,
+		"amount": amount
+	})
+
 func _on_stamina_changed(current: float, max_stamina: float) -> void:
 	if resource_type != ResourceType.STAMINA:
 		return
@@ -221,6 +235,8 @@ func _bind_sources() -> void:
 			_health.damaged.connect(_on_health_damaged)
 		if not _health.death.is_connected(_on_health_death):
 			_health.death.connect(_on_health_death)
+		if not _health.healed.is_connected(_on_health_healed):
+			_health.healed.connect(_on_health_healed)
 
 func _check_fill_sync() -> void:
 	var target_fill = _get_resource_ratio()
@@ -329,11 +345,11 @@ func _should_show_orb() -> bool:
 		DisplayMode.PLAYER_COMBAT_ONLY:
 			if not _actor.player_controlled:
 				return false
-			return _is_actor_in_combat(_actor)
+			return ActorCombatRuntime.is_actor_in_combat(_actor)
 		DisplayMode.HOSTILE_SELECTED_AND_IN_COMBAT:
 			if _actor.player_controlled:
 				return false
-			if not _is_actor_in_combat(_actor):
+			if not ActorCombatRuntime.is_actor_in_combat(_actor):
 				return false
 			var player := _get_player_ref()
 			if player == null:
@@ -342,25 +358,6 @@ func _should_show_orb() -> bool:
 			return selected_target == _actor
 		_:
 			return false
-
-func _is_actor_in_combat(actor: Actor8DirLimbo) -> bool:
-	var target: Node2D = actor.get_combat_target()
-	if target != null and is_instance_valid(target):
-		return true
-	return _is_targeted_by_hostile(actor)
-
-func _is_targeted_by_hostile(actor: Actor8DirLimbo) -> bool:
-	var tree := get_tree()
-	if tree == null:
-		return false
-	for node in tree.get_nodes_in_group(&"hostile"):
-		var hostile := node as Actor8DirLimbo
-		if hostile == null:
-			continue
-		var target: Node2D = hostile.get_combat_target()
-		if target == actor:
-			return true
-	return false
 
 func _get_player_ref() -> Actor8DirLimbo:
 	if _player_ref != null and is_instance_valid(_player_ref):

@@ -11,6 +11,8 @@
 [ext_resource type="Script" uid="uid://dwo1bk64b01w" path="res://Scripts/actors/state_walk_8dir.gd" id="7_3qyj8"]
 [ext_resource type="Script" uid="uid://d3iujpe3t8fla" path="res://Scripts/actors/state_attack_8dir.gd" id="8_kei3w"]
 [ext_resource type="BehaviorTree" uid="uid://bhy15e1jeto7y" path="res://ai/trees/npc/villager_look_wander_bt.tres" id="9_bt0"]
+[ext_resource type="PackedScene" path="res://cenas/components/combat/health_component_node.tscn" id="10_health"]
+[ext_resource type="PackedScene" path="res://cenas/components/combat/health_regen_component_node.tscn" id="11_regen"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_572vr"]
 atlas = ExtResource("2_5p5bd")
@@ -2066,6 +2068,10 @@ script = ExtResource("4_57edb")
 
 [node name="PlayerMotor" type="Node" parent="." unique_id=1791894238]
 script = ExtResource("5_3wq7v")
+
+[node name="Health" parent="." unique_id=1276342521 instance=ExtResource("10_health")]
+
+[node name="HealthRegen" parent="." unique_id=1349247719 instance=ExtResource("11_regen")]
 
 [node name="BTPlayer" type="BTPlayer" parent="." unique_id=1990091102]
 behavior_tree = ExtResource("9_bt0")

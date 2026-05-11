@@ -6,7 +6,7 @@ Branch de referencia: `feat/kiting-data-driven-v1`
 ## 1) Fonte principal de estado
 1. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado)
 2. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
-3. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (proxima sprint planejada)
+3. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (sprint ativa em QA)
 4. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (sprint futura; executar somente depois do Health Regen)
 5. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
 6. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
@@ -65,7 +65,7 @@ Branch de referencia: `feat/kiting-data-driven-v1`
 4. Ordem de prioridade atual:
    - preservar freeze total;
    - fechar Git/docs do baseline;
-   - implementar Health Regen Data-Driven v1;
+   - validar Health Regen Data-Driven v1;
    - so depois refatorar a fachada `Actor8DirLimbo`.
 5. Sempre que ajustar BT/tarefas taticas, atualizar no mesmo PR:
    - `status-freeze-total-combate-tatico-2026-05-11.md` (estado funcional real),

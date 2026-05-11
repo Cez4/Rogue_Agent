@@ -1,7 +1,7 @@
 # Plano Sprint - Health Regen Data-Driven v1
 
 Data: 2026-05-11
-Status: PLANEJADA
+Status: EM QA
 Versao: v1
 Escopo: criar regeneracao passiva de vida fora de combate, modular e data-driven, compartilhada por Player, NPCs e inimigos.
 
@@ -135,49 +135,50 @@ Atualizar para reagir a cura:
 
 ## 8) Plano de execucao
 ### Fase A - Contrato de combate
-- [ ] Extrair regra de combate para `ActorCombatRuntime.is_actor_in_combat(actor)`.
-- [ ] Atualizar `CombatOrbPresenter` para usar esse contrato.
-- [ ] Validar que comportamento visual da Orb nao mudou.
+- [x] Extrair regra de combate para `ActorCombatRuntime.is_actor_in_combat(actor)`.
+- [x] Atualizar `CombatOrbPresenter` para usar esse contrato.
+- [x] Validar que comportamento visual da Orb nao mudou em smoke MCP inicial.
 
 ### Fase B - HealthComponent
-- [ ] Adicionar `health_changed`.
-- [ ] Adicionar `healed`.
-- [ ] Adicionar `heal(amount)`.
-- [ ] Adicionar `get_health_ratio()`.
-- [ ] Garantir que `take_damage()` e `reset_health()` emitem `health_changed`.
-- [ ] Nao permitir revive por heal nesta sprint.
+- [x] Adicionar `health_changed`.
+- [x] Adicionar `healed`.
+- [x] Adicionar `heal(amount)`.
+- [x] Adicionar `get_health_ratio()`.
+- [x] Garantir que `take_damage()` e `reset_health()` emitem `health_changed`.
+- [x] Nao permitir revive por heal nesta sprint.
 
 ### Fase C - HealthRegenComponent
-- [ ] Criar componente modular.
-- [ ] Usar `regen_per_sec = 3.0`.
-- [ ] Regenerar somente fora de combate.
-- [ ] Respeitar delay fora de combate.
-- [ ] Usar tick interval para evitar processamento ruidoso.
-- [ ] Emitir telemetria `health_regen_tick`.
+- [x] Criar componente modular.
+- [x] Usar `regen_per_sec = 3.0`.
+- [x] Regenerar somente fora de combate.
+- [x] Respeitar delay fora de combate.
+- [x] Usar tick interval para evitar processamento ruidoso.
+- [x] Emitir telemetria `health_regen_tick`.
 
 ### Fase D - Integracao em cenas
-- [ ] Adicionar componente ao Player.
-- [ ] Adicionar componente ao Wildcat.
-- [ ] Adicionar componente ao Hostile Base.
-- [ ] Adicionar componente ao Hostile Light.
-- [ ] Adicionar componente ao Hostile Brute.
-- [ ] Conferir overrides em `mundo.tscn`.
+- [x] Adicionar componente ao Player.
+- [x] Adicionar componente ao Wildcat.
+- [x] Adicionar componente ao Hostile Base.
+- [x] Adicionar componente ao Hostile Light.
+- [x] Adicionar componente ao Hostile Brute.
+- [x] Adicionar componente ao Villager amigavel sem transformar o NPC social em combatente.
+- [x] Conferir runtime em `mundo.tscn`.
 
 ### Fase E - Orb de vida
-- [ ] Orb reage a `healed`.
-- [ ] HP subindo nao deixa trail visual atrasado para baixo.
-- [ ] Liquido/slosh exibe cura sem parecer dano.
-- [ ] Orb continua visivel conforme regra de combate atual.
+- [x] Orb reage a `healed`.
+- [x] HP subindo nao deixa trail visual atrasado para baixo.
+- [x] Liquido/slosh exibe cura sem parecer dano em intensidade menor que dano.
+- [x] Orb continua visivel conforme regra central de combate.
 
 ### Fase F - Validacao MCP
-- [ ] `open_scene(res://cenas/mundo.tscn)`.
-- [ ] `play_scene(current)`.
+- [x] `open_scene(res://cenas/mundo.tscn)`.
+- [x] `play_scene(current)`.
 - [ ] Tomar dano.
 - [ ] Sair de combate.
 - [ ] Confirmar regen depois do delay.
 - [ ] Confirmar sem regen durante combate.
 - [ ] Confirmar sem regen quando morto.
-- [ ] `get_godot_errors` sem erro novo.
+- [x] `get_godot_errors` sem erro novo em smoke inicial.
 
 ### Fase G - Telemetria
 - [ ] `health_regen_tick` aparece fora de combate.
@@ -231,3 +232,19 @@ No futuro, regen deve ser validada pelo servidor:
 - [ ] Commit/push sincronizado
 - [ ] Freeze atualizado se necessario
 - [ ] Liberada a proxima sprint: `Actor8Dir Facade Slimming v1`
+
+## 13) Implementacao inicial - 2026-05-11
+Branch: `feat/health-regen-datadriven-v1`
+
+Implementado:
+1. `ActorCombatRuntime.is_actor_in_combat(actor)` como contrato central.
+2. `CombatOrbPresenter` consumindo o contrato central em vez de duplicar regra.
+3. `HealthComponent` com `health_changed`, `healed`, `heal(amount)` e `get_health_ratio()`.
+4. `HealthRegenComponent` modular por entidade.
+5. `HealthRegen` adicionado a Player, Villager, Wildcat, Hostile Base, Hostile Light e Hostile Brute.
+6. Orb de vida reage a cura com intensidade menor que dano.
+
+Estado de QA:
+1. Smoke MCP abriu e rodou `res://cenas/mundo.tscn` sem erro novo.
+2. Runtime confirmou `HealthRegen` instanciado no Player e no Villager.
+3. Falta QA jogavel/manual de dano -> sair de combate -> observar `health_regen_tick` e Orb de cura.
