@@ -68,6 +68,8 @@ func request_move(target_position: Vector2) -> void:
 func stop() -> void:
 	_has_target = false
 	_stuck_elapsed_sec = 0.0
+	if _body != null:
+		_body.velocity = Vector2.ZERO
 	movement_finished.emit()
 
 

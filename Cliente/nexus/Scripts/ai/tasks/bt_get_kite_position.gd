@@ -20,8 +20,15 @@ func _tick(_delta: float) -> Status:
 	if away_dir.is_zero_approx():
 		away_dir = Vector2.RIGHT.rotated(randf() * TAU)
 
-	# Fuga massiva garantida de 60 pixels + raio
-	var destination: Vector2 = target.global_position + away_dir * 85.0
+	# Fuga massiva garantida de 85 pixels a partir do ator
+	var destination: Vector2 = agent.global_position + away_dir * 85.0
+	
+	# Clamp to valid NavMesh to prevent wall-stucking
+	var nav_agent := agent.get_node_or_null(^"NavigationAgent2D") as NavigationAgent2D
+	if nav_agent != null:
+		var nav_map: RID = nav_agent.get_navigation_map()
+		if nav_map.is_valid():
+			destination = NavigationServer2D.map_get_closest_point(nav_map, destination)
 	
 	blackboard.set_var(output_pos_var, destination)
 	return SUCCESS

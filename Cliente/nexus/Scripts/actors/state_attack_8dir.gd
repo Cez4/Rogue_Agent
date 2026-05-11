@@ -55,15 +55,19 @@ func _enter() -> void:
 		hitbox.set_hitbox_enabled(false)
 
 	await get_tree().create_timer(_windup()).timeout
+	if not is_active(): return
 	if hitbox != null:
 		hitbox.set_hitbox_enabled(true)
 
 	await get_tree().create_timer(_active()).timeout
+	if not is_active(): return
 	if hitbox != null:
 		hitbox.set_hitbox_enabled(false)
 
 	await get_tree().create_timer(_recover()).timeout
+	if not is_active(): return
 	await agent.wait_for_attack_animation_end(_windup() + _active() + _recover())
+	if not is_active(): return
 	_cooldown_until_sec = Time.get_ticks_msec() * 0.001 + _cooldown()
 	_finish_attack()
 
