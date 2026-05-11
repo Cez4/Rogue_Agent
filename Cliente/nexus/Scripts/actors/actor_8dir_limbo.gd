@@ -84,6 +84,7 @@ var _is_dead: bool = false
 const ActorAnimationRuntimeRef = preload("res://Scripts/actors/services/actor_animation_runtime.gd")
 const ActorActionRuntimeRef = preload("res://Scripts/actors/services/actor_action_runtime.gd")
 const ActorCombatProfileRuntimeRef = preload("res://Scripts/actors/services/actor_combat_profile_runtime.gd")
+const ActorCombatResourceRuntimeRef = preload("res://Scripts/actors/services/actor_combat_resource_runtime.gd")
 const ActorCombatRuntimeRef = preload("res://Scripts/actors/services/actor_combat_runtime.gd")
 const ActorLifecycleRuntimeRef = preload("res://Scripts/actors/services/actor_lifecycle_runtime.gd")
 const ActorNavigationRuntimeRef = preload("res://Scripts/actors/services/actor_navigation_runtime.gd")
@@ -173,35 +174,11 @@ func request_attack() -> bool:
 
 
 func has_stamina_for_attack() -> bool:
-	var stamina := get_node_or_null(^"Stamina") as StaminaComponent
-	if stamina == null:
-		return true
-	var action_data := ActorCombatProfileRuntimeRef.get_combat_action_data(self)
-	if action_data == null or action_data.stamina_cost <= 0.0:
-		return true
-	return stamina.has_stamina(get_required_stamina_for_attack())
+	return ActorCombatResourceRuntimeRef.has_stamina_for_attack(self)
 
 
 func get_required_stamina_for_attack() -> float:
-	var action_data := ActorCombatProfileRuntimeRef.get_combat_action_data(self)
-	if action_data == null:
-		return 0.0
-	var cost: float = maxf(0.0, action_data.stamina_cost)
-	if cost <= 0.0:
-		return 0.0
-	var budget_hits: float = maxf(1.0, action_data.attack_stamina_budget_hits)
-	var required: float = cost * budget_hits
-	var stamina := get_node_or_null(^"Stamina") as StaminaComponent
-	if stamina != null and stamina.is_exhausted():
-		var exhausted_multiplier: float = maxf(1.0, action_data.attack_stamina_resume_multiplier_when_exhausted)
-		required = maxf(required, cost * exhausted_multiplier)
-	else:
-		var buffer_ratio: float = clampf(action_data.attack_stamina_buffer_ratio, 0.0, 2.0)
-		required = maxf(required, cost * (1.0 + buffer_ratio))
-	if stamina != null:
-		var min_after_ratio: float = clampf(action_data.attack_stamina_min_after_attack_ratio, 0.0, 1.0)
-		required = maxf(required, cost + (stamina.max_stamina * min_after_ratio))
-	return required
+	return ActorCombatResourceRuntimeRef.get_required_stamina_for_attack(self)
 
 
 func get_attack_engage_distance() -> float:
@@ -228,24 +205,15 @@ func get_attack_engage_distance() -> float:
 
 
 func get_low_stamina_kite_probability() -> float:
-	var action_data := ActorCombatProfileRuntimeRef.get_combat_action_data(self)
-	if action_data == null:
-		return 0.35
-	return clampf(action_data.low_stamina_kite_probability, 0.0, 1.0)
+	return ActorCombatResourceRuntimeRef.get_low_stamina_kite_probability(self)
 
 
 func get_low_stamina_kite_distance() -> float:
-	var action_data := ActorCombatProfileRuntimeRef.get_combat_action_data(self)
-	if action_data == null:
-		return 18.0
-	return maxf(0.0, action_data.low_stamina_kite_distance)
+	return ActorCombatResourceRuntimeRef.get_low_stamina_kite_distance(self)
 
 
 func get_low_stamina_kite_cooldown_ms() -> int:
-	var action_data := ActorCombatProfileRuntimeRef.get_combat_action_data(self)
-	if action_data == null:
-		return 260
-	return max(0, int(action_data.low_stamina_kite_cooldown_ms))
+	return ActorCombatResourceRuntimeRef.get_low_stamina_kite_cooldown_ms(self)
 
 
 func get_min_separation_distance_to(other: Node2D) -> float:

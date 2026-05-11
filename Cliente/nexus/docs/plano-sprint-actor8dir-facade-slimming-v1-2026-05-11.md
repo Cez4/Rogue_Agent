@@ -79,20 +79,20 @@ Docs:
 
 ## 8) Plano de execucao
 ### Fase A - Baseline e contrato
-- [ ] Medir linhas/metodos atuais de `actor_8dir_limbo.gd`.
-- [ ] Listar consumidores reais da API publica.
-- [ ] Classificar metodos em: gameplay API, bridge tecnico, lifecycle, combat resource, spatial, animation/social.
-- [ ] Marcar o que nao pode mudar por contrato BT/HSM/Controller.
-- [ ] Rodar MCP baseline antes de qualquer patch.
+- [x] Medir linhas/metodos atuais de `actor_8dir_limbo.gd`.
+- [x] Listar consumidores reais da API publica.
+- [x] Classificar metodos em: gameplay API, bridge tecnico, lifecycle, combat resource, spatial, animation/social.
+- [x] Marcar o que nao pode mudar por contrato BT/HSM/Controller.
+- [x] Rodar MCP baseline antes de qualquer patch.
 
 ### Fase B - Extrair stamina/attack resource
-- [ ] Criar ou ampliar runtime dedicado para custo/viabilidade de ataque.
-- [ ] Mover `has_stamina_for_attack()`.
-- [ ] Mover `get_required_stamina_for_attack()`.
-- [ ] Mover `get_low_stamina_kite_probability()`.
-- [ ] Mover `get_low_stamina_kite_distance()`.
-- [ ] Mover `get_low_stamina_kite_cooldown_ms()`.
-- [ ] Manter wrappers publicos no actor, se BT/tasks ainda dependem deles.
+- [x] Criar ou ampliar runtime dedicado para custo/viabilidade de ataque.
+- [x] Mover `has_stamina_for_attack()`.
+- [x] Mover `get_required_stamina_for_attack()`.
+- [x] Mover `get_low_stamina_kite_probability()`.
+- [x] Mover `get_low_stamina_kite_distance()`.
+- [x] Mover `get_low_stamina_kite_cooldown_ms()`.
+- [x] Manter wrappers publicos no actor, se BT/tasks ainda dependem deles.
 - [ ] Validar kiting/attack no MCP.
 
 ### Fase C - Extrair spatial/combat geometry
@@ -116,13 +116,13 @@ Docs:
 - [ ] Criar plano separado se a migracao de dados for grande.
 
 ### Fase F - Validacao MCP e telemetria
-- [ ] `open_scene(res://cenas/mundo.tscn)`.
-- [ ] `play_scene(current)`.
+- [x] `open_scene(res://cenas/mundo.tscn)`.
+- [x] `play_scene(current)`.
 - [ ] Testar Player vs Brute com spam de ataque.
 - [ ] Testar clique no chao cancelando combate.
 - [ ] Testar baixa stamina/kiting.
 - [ ] Testar death/respawn.
-- [ ] `get_godot_errors` sem erro novo.
+- [x] `get_godot_errors` sem erro novo.
 - [ ] Logs esperados preservados: `attack_commit`, `hit_confirmed`, `kiting_started`, `kiting_ended`, `target_died`, `respawned`.
 
 ### Fase G - Documentacao e Git
@@ -134,7 +134,7 @@ Docs:
 
 ## 9) Criterios de aceite
 - [x] Health Regen ja esta concluido antes desta sprint iniciar.
-- [ ] `actor_8dir_limbo.gd` ficou menor sem perder contrato publico usado por BT/HSM/Controller.
+- [x] `actor_8dir_limbo.gd` ficou menor sem perder contrato publico usado por BT/HSM/Controller.
 - [ ] Nenhum comportamento aprovado do combate mudou.
 - [ ] Nenhuma arvore `.tres` foi editada por texto.
 - [ ] Player, Brute, Light e Wildcat continuam compartilhando core.
@@ -168,3 +168,24 @@ Meta qualitativa: `Actor8DirLimbo` vira uma fachada fina e previsivel, nao um ar
 - [ ] MCP limpo
 - [ ] Docs atualizados
 - [ ] Commit/push sincronizado
+
+## 13) Implementacao - bloco 1
+Data: 2026-05-11
+
+Escopo:
+1. Criado `Scripts/actors/services/actor_combat_resource_runtime.gd`.
+2. Movida a regra de stamina/attack resource para runtime dedicado.
+3. Wrappers publicos preservados em `Actor8DirLimbo`:
+   - `has_stamina_for_attack()`
+   - `get_required_stamina_for_attack()`
+   - `get_low_stamina_kite_probability()`
+   - `get_low_stamina_kite_distance()`
+   - `get_low_stamina_kite_cooldown_ms()`
+4. `actor_8dir_limbo.gd` reduziu de 633 para 601 linhas.
+
+Contrato preservado:
+1. BT tasks continuam chamando os mesmos metodos publicos.
+2. HSM de ataque continua chamando `get_required_stamina_for_attack()`.
+3. Kiting continua consumindo `CombatActionData`.
+4. Nenhuma cena, BT `.tres`, HSM, Orb ou Health Regen foi alterado.
+5. Smoke MCP abriu `mundo.tscn`, rodou a cena e nao apontou erro novo.
