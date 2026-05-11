@@ -72,6 +72,10 @@ Range por perfil de arma (data-driven):
 - HSM: execucao de baixo nivel (como fazer).
 - Blackboard: contexto operacional.
 
+### Regra de Ouro V3 (Modularidade Atômica e Composição Visual)
+É estritamente proibido criar "God Scripts" estendendo `BTAction` que acumulem funções matemáticas, temporizadores manuais (`now_ms < limit`) e chamadas de motor de locomoção em um só arquivo. 
+Scripts `.gd` do LimboAI devem ser **Ações Atômicas** (ex: `bt_get_kite_position.gd`, que apenas calcula o vetor e encerra). Para gerenciamento de cadência, tempo de locomoção e pausas orgânicas (Breathing Room), deve-se obrigatoriamente utilizar a composição visual de decorators nativos da engine (`BTTimeLimit`, `BTRandomWait`, `BTAlwaysSucceed`).
+
 Chaves recomendadas no blackboard:
 - `current_target`
 - `target_kind`

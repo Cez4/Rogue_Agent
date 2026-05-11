@@ -30,7 +30,9 @@ Checklist rapido:
 - [ ] Em lifecycle, log confirma `target_died` -> `chase_canceled(reason=death)` -> `respawned` (se habilitado).
 - [ ] Modificou UI ou Camera em combate? Utilize sistema de Trauma (Trauma-based Shake) em vez de Tweens simples para garantir "Game Feel" cumulativo e fluido.
 - [ ] Implementou um estado de Crowd Control (Stun/Stagger/Exhaustion) no HSM? Confirme que ele paralisa o ator, mas **NÃO** executa `clear_combat_target()`, preservando a memória da BT para retomada de combate.
+- [ ] A Task customizada do LimboAI é Atômica? (Ela faz apenas UMA coisa?). NUNCA crie lógica de timer ou loop de repetição dentro de um arquivo `.gd` de BTAction. Utilize os decorators visuais nativos (`BTTimeLimit`, `BTRandomWait`).
 - [ ] Implementou UI flutuante ou rastros (Trails)? Confirme que existe uma lógica de "Snap" para igualar as variáveis secundárias ao valor principal em casos de Respawn ou Cura instantânea, evitando desincronização.
+- [ ] Necessita alterar um arquivo `.tres` estruturalmente? Utilize estritamente `mcp_godot-mcp_execute_editor_script` para evitar corrupção de serialização.
 - [ ] Prova data-driven registrada: mesma logica, perfis `.tres` diferentes e telemetria mostrando comportamento distinto.
 
 Fontes base:

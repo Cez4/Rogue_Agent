@@ -2,7 +2,7 @@
 
 **Data:** 11-05-2026
 **Autor:** Tech Lead (Gemini Agent)
-**Status:** [AGUARDANDO INÍCIO]
+**Status:** [FASE 2 CONCLUÍDA - VALIDADA NO PLAYER]
 
 ## Visão Geral
 Este documento define o roteiro cirúrgico para refatorar o sistema de Inteligência Artificial e Combate do Rogue Agent. O objetivo é abandonar a "Síndrome de God Script" (scripts massivos e rígidos) e adotar 100% a arquitetura modular baseada em composição visual e *Decorators* nativos, idêntica à Demo Original do LimboAI (`04_agent_skirmisher.tres`).

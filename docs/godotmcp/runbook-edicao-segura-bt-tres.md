@@ -1,0 +1,49 @@
+# Runbook: Edição Segura de Árvores de Comportamento (.tres) no LimboAI
+
+## Contexto e Risco Crítico
+Arquivos `.tres` de árvores de comportamento do LimboAI (`BehaviorTree`) contêm serialização profunda, arrays indexados estritamente e UUIDs internos gerados pela engine do Godot.
+**Tentar editar ou fazer refatoração (Replace Text) manual em arquivos `.tres` via ferramentas de texto/regex causará a corrupção irreversível da árvore**, apagando ramos inteiros (como os nós de Ataque).
+
+## A Única Metodologia Segura para Agentes IA
+Quando houver necessidade de inserir, reorganizar ou deletar nós de uma árvore `BT` de forma autônoma pelo console, **é estritamente obrigatório** utilizar a ferramenta `mcp_godot-mcp_execute_editor_script`.
+
+### Passo a Passo (Editor Scripting)
+Em vez de manipular o texto, você ordenará que a própria engine do Godot monte a árvore e salve o arquivo via API nativa:
+
+1. Use o método `ResourceLoader.load()` para carregar a árvore base, ou crie uma do zero com `BehaviorTree.new()`.
+2. Instancie nós atômicos via GDScript (ex: `var limit = BTTimeLimit.new()`).
+3. Instancie e acople tasks customizadas (ex: `var my_task = load("res://Scripts/ai/tasks/minha_task.gd").new()`).
+4. Monte a hierarquia perfeitamente usando `.add_child()`.
+5. Salve o arquivo na disco usando `ResourceSaver.save(bt, path)`.
+
+### Exemplo Prático de Script de Editor Seguro
+```gdscript
+func run():
+	var bt_path = "res://ai/trees/player/player_combat_bt.tres"
+	var bt = BehaviorTree.new()
+	var root = BTDynamicSelector.new()
+	bt.root_task = root
+	
+	# Criando um ramo modular seguro
+	var seq = BTSequence.new()
+	seq.custom_name = "Meu Ramo Tatico"
+	
+	var time_limit = BTTimeLimit.new()
+	time_limit.time_limit = 1.5
+	time_limit.add_child(load("res://Scripts/ai/tasks/bt_move_to_blackboard_pos.gd").new())
+	
+	seq.add_child(time_limit)
+	seq.add_child(load("res://Scripts/ai/tasks/bt_stop_movement.gd").new())
+	
+	var wait = BTRandomWait.new()
+	wait.min_duration = 1.0
+	wait.max_duration = 1.8
+	seq.add_child(wait)
+	
+	root.add_child(seq)
+	ResourceSaver.save(bt, bt_path)
+	return "Sucesso"
+```
+
+### Regra de Ouro
+**Nunca substitua pedaços de um arquivo `.tres` como se fosse um `.gd` ou `.txt`. Use o motor do Godot a seu favor.**
