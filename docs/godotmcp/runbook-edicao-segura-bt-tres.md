@@ -47,3 +47,14 @@ func run():
 
 ### Regra de Ouro
 **Nunca substitua pedaços de um arquivo `.tres` como se fosse um `.gd` ou `.txt`. Use o motor do Godot a seu favor.**
+
+## Contrato pos-freeze do combate tatico (2026-05-11)
+1. `player_combat_bt.tres` e a arvore dourada de homologacao.
+2. Tasks customizadas devem continuar atomicas.
+3. Tempo, repeticao e cadencia devem ficar em decorators nativos (`BTTimeLimit`, `BTRandomWait`, cooldowns), nao em loops internos de task.
+4. Nao reintroduzir task monolitica de baixa stamina que calcula, move, espera e decide tudo no mesmo script.
+5. Alteracao em ramo de kiting deve provar:
+   - spam de clique de ataque nao cancela recuo;
+   - clique no chao cancela combate;
+   - ator sem stamina para atacar reposiciona;
+   - ator volta a atacar apos recuperar stamina suficiente.

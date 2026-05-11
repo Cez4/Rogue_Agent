@@ -18,12 +18,14 @@ Escopo: PRs que alteram actor, runtimes, BT tasks, HSM states, input de intencao
 - [ ] Telemetria observada sem ruído anormal.
 
 ## 3) Regressao funcional (obrigatorio)
-- [ ] Esquerdo no chao: move.
-- [ ] Esquerdo em hostile: nao inicia chase/ataque.
-- [ ] Direito em hostile: inicia `chase_attack`.
+- [ ] Clique no chao: move e cancela intencao de combate.
+- [ ] Clique de ataque em hostile: atualiza alvo sem parar o motor durante kiting automatico.
+- [ ] Spam de clique de ataque em hostile: nao quebra reposicionamento por baixa stamina.
+- [ ] Clique manual no chao durante combate: cancela combate e permite fuga manual imediata.
 - [ ] Chase para em `get_attack_stop_distance()` (sem empurrar alvo).
 - [ ] Ataque compromissado: nao cancela no meio da animacao.
 - [ ] Sequencia de combate preservada: `InRange -> Face -> RequestAttack`.
+- [ ] Baixa stamina usa custo real do ataque equipado, nao threshold percentual fixo.
 - [ ] Death/respawn preservados (desativa hurtbox/collision e reativa no respawn).
 
 ## 4) Telemetria (obrigatorio)
@@ -40,6 +42,7 @@ Escopo: PRs que alteram actor, runtimes, BT tasks, HSM states, input de intencao
 ## 5) Qualidade de codigo (obrigatorio)
 - [ ] Sem duplicacao de regra entre task e runtime.
 - [ ] Sem hardcode novo de valores de percepcao/range/cadencia fora de perfil/stats.
+- [ ] Hardcodes legados aceitos no freeze estao documentados antes de qualquer migracao.
 - [ ] Assinaturas tipadas preservadas (especialmente `actor: Actor8DirLimbo` nos runtimes).
 
 ## 6) Saida do PR (obrigatorio)
@@ -47,6 +50,7 @@ Escopo: PRs que alteram actor, runtimes, BT tasks, HSM states, input de intencao
   - `docs/mvp-limboai-combate-wander-status.md`
   - `docs/auditoria-estado-atual-bt-hsm-combate.md`
 - [ ] Registrar risco residual e prox. passo tecnico.
+- [ ] Se alterar baseline congelado, atualizar `docs/status-freeze-total-combate-tatico-2026-05-11.md`.
 - [ ] Fluxo Git executado em modo serial (sem paralelismo) e sync confirmado:
   - `git status -sb`
   - `git rev-list --left-right --count origin/<branch>...HEAD` = `0 0`.

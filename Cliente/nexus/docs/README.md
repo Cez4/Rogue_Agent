@@ -4,16 +4,17 @@ Data de consolidacao: 2026-05-10
 Branch de referencia: `feat/combat-orb-ui-contextual`
 
 ## 1) Fonte principal de estado
-1. `status-freeze-funcional-v2-2026-05-10.md` (freeze funcional da base)
-2. `plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md` (sprint ativa e prioridade maxima)
-3. `mvp-limboai-combate-wander-status.md` (historico consolidado + links atuais)
-4. Sprint ativa atual:
-   - `plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md`
+1. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado)
+2. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
+3. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
+4. `status-freeze-funcional-v2-2026-05-10.md` (baseline historico Orb/Stamina)
+5. `plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md` (sprint tatico fechada pelo freeze)
+6. `mvp-limboai-combate-wander-status.md` (historico consolidado + links atuais)
 
 ## 1.1 Regra anti-drift (obrigatoria)
 1. Quando houver conflito entre docs antigos e estado atual:
-   - a sprint ativa vence (`plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md`);
-   - o freeze funcional define o baseline estavel.
+   - o freeze total de 2026-05-11 vence;
+   - os freezes anteriores viram historico tecnico.
 2. Docs de tuning/congelamento antigos devem ser lidos como historico, nao como estado operativo da sprint atual.
 
 ## 2) Arquitetura e contratos
@@ -55,8 +56,9 @@ Branch de referencia: `feat/combat-orb-ui-contextual`
 3. Sempre validar com MCP:
    - `open_scene -> play_scene -> get_godot_errors`
 4. Ordem de prioridade atual:
-   - estabilizar sprint tatico BT ativa;
+   - preservar freeze total;
+   - fechar Git/docs do baseline;
    - so depois retomar novas features.
 5. Sempre que ajustar BT/tarefas taticas, atualizar no mesmo PR:
-   - `status-freeze-funcional-v2-2026-05-10.md` (estado funcional real),
+   - `status-freeze-total-combate-tatico-2026-05-11.md` (estado funcional real),
    - `plano-sprint-port-limbo-demo-tatico-v1-2026-05-10.md` (progresso de sprint).

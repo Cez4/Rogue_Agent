@@ -83,9 +83,9 @@ sources/4 = SubResource("TileSetAtlasSource_tqoxo")
 sources/5 = SubResource("TileSetAtlasSource_wo13f")
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_8iuxu"]
-vertices = PackedVector2Array(337.78125, 179.74219, -281.46875, -125.0625, 272.9375, -401.78906, 386.0703, 153.59375, 876.25, -92.890625, 470.03906, 119.92969, 706.2031, 133.42188, 770.35156, 167.38281, 593.89844, 269.4922, 593.14844, 198.45313, 469.96094, 131.95313)
-polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(2, 4, 5, 3), PackedInt32Array(6, 7, 8, 9), PackedInt32Array(9, 8, 3, 10), PackedInt32Array(3, 5, 10)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(898, -93, 480, 126, 593, 187, 706, 122, 791, 167, 594, 281, 386, 165, 338, 191, -304, -125, 273, -413)])
+vertices = PackedVector2Array(270.03906, -396.78125, 875.6406, -93.02344, 447.1328, 120.75, 401.85938, 137.53125, 337.6328, 174.64844, -262.79688, -124.11719, 708.2969, 146.46094, 743.4297, 164.95313, 594.1094, 242.65625, 594.1797, 214.53906, 446.8672, 132.82031)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(4, 5, 0, 3), PackedInt32Array(6, 7, 8, 9), PackedInt32Array(9, 8, 3, 10), PackedInt32Array(3, 2, 10)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(898, -93, 457, 127, 594, 203, 708, 135, 765, 165, 594, 254, 402, 149, 338, 186, -285, -124, 270, -408)])
 
 [node name="Mundo" type="Node2D" unique_id=1671518819]
 y_sort_enabled = true

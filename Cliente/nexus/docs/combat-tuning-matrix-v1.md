@@ -326,3 +326,14 @@ https://limboai.readthedocs.io/en/latest/behavior-trees/using-blackboard.html
      - `wildcat_claw_attack_v1.stamina_cost = 20.0` (`spent_ratio=0.20`)
      - `hostile_brute_attack_v1.stamina_cost = 28.0` (`spent_ratio=0.28`)
    - fluxo validado por logs: `consumed -> exhausted -> orb_pulse -> staggered -> recovered`.
+
+## Freeze total de tuning tatico (2026-05-11)
+O baseline aprovado pelo QA inclui ajustes manuais recentes de cena e tuning:
+
+1. NavMesh/NavPolygon da arena de teste ajustado para a batalha atual.
+2. Regen de stamina ajustado para favorecer ciclos de reposicionamento.
+3. Walk do Player sem loop no estado visual atual aprovado.
+4. Brute/Light/Player mantidos como referencia de ritmo tatico.
+5. Distancia atual de kiting visualmente aprovada, embora ainda exista divida tecnica para migrar o valor hardcoded para dado.
+
+Regra: qualquer alteracao futura nesses pontos deve registrar eixo de tuning, resultado observado e telemetria antes/depois.

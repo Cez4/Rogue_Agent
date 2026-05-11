@@ -12,7 +12,7 @@
 [ext_resource type="Script" uid="uid://w6oyxr36dcgy" path="res://Scripts/actors/state_idle_8dir.gd" id="10_5v8ye"]
 [ext_resource type="Script" uid="uid://dwo1bk64b01w" path="res://Scripts/actors/state_walk_8dir.gd" id="11_tacm5"]
 [ext_resource type="Script" uid="uid://d3iujpe3t8fla" path="res://Scripts/actors/state_attack_8dir.gd" id="12_60t1r"]
-[ext_resource type="Resource" path="res://configs/combat/wildcat_claw_attack_v1.tres" id="13_texcc"]
+[ext_resource type="Resource" uid="uid://bbi5b1l06posj" path="res://configs/combat/wildcat_claw_attack_v1.tres" id="13_texcc"]
 [ext_resource type="Script" uid="uid://cpo2dt0djpyes" path="res://Scripts/actors/state_wander_8dir.gd" id="14_frxuc"]
 [ext_resource type="PackedScene" path="res://cenas/components/emotion_bubble_shared.tscn" id="15_lvdsk"]
 [ext_resource type="Script" uid="uid://bi7hbd4ws5d33" path="res://Scripts/actors/states/stagger_state.gd" id="15_vsdir"]
@@ -22,8 +22,8 @@
 [ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="20_05h1s"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/attack_hitbox_component_node.tscn" id="20_l8egd"]
 [ext_resource type="Script" uid="uid://d087gw3m6nlpa" path="res://Scripts/stats/stamina_component.gd" id="22_cq7xd"]
-[ext_resource type="Resource" path="res://configs/ui/orbs/stamina_orb_profile_v1.tres" id="30_orbpf"]
 [ext_resource type="PackedScene" uid="uid://cpqqeuy3ge470" path="res://cenas/components/ui/combat_orb_presenter.tscn" id="22_vsdir"]
+[ext_resource type="Resource" path="res://configs/ui/orbs/stamina_orb_profile_v1.tres" id="30_orbpf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijbr8"]
 atlas = ExtResource("3_vsdir")
@@ -3814,9 +3814,7 @@ texture_filter = 1
 position = Vector2(-4, -2)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_icon")
-animation = &"Die_NE"
-frame = 13
-frame_progress = 0.25125742
+animation = &"Idle_NE"
 
 [node name="Foot" type="Marker2D" parent="." unique_id=1944236950]
 position = Vector2(-3, 12)
@@ -3878,11 +3876,12 @@ max_health = 14.0
 display_mode = 1
 follow_offset = Vector2(-34, -44)
 
-[node name="StaminaOrb" parent="." instance=ExtResource("22_vsdir")]
+[node name="StaminaOrb" parent="." unique_id=413021666 instance=ExtResource("22_vsdir")]
 resource_type = 1
+resource_profile = ExtResource("30_orbpf")
 display_mode = 1
 follow_offset = Vector2(-34, -14)
-resource_profile = ExtResource("30_orbpf")
 
 [node name="Stamina" type="Node" parent="." unique_id=2116952372]
 script = ExtResource("22_cq7xd")
+regen_rate = 8.0

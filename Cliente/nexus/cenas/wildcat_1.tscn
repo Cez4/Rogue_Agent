@@ -19,11 +19,11 @@
 [ext_resource type="Script" uid="uid://bi7hbd4ws5d33" path="res://Scripts/actors/states/stagger_state.gd" id="15_oawiv"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/health_component_node.tscn" id="16_tntqu"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="18_dkk0s"]
-[ext_resource type="Resource" path="res://configs/combat/wildcat_claw_attack_v1.tres" id="19_wcatatk"]
+[ext_resource type="Resource" uid="uid://bbi5b1l06posj" path="res://configs/combat/wildcat_claw_attack_v1.tres" id="19_wcatatk"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/attack_hitbox_component_node.tscn" id="20_igu0s"]
 [ext_resource type="Script" uid="uid://d087gw3m6nlpa" path="res://Scripts/stats/stamina_component.gd" id="22_ligv6"]
-[ext_resource type="Resource" path="res://configs/ui/orbs/stamina_orb_profile_v1.tres" id="30_orbpf"]
 [ext_resource type="PackedScene" uid="uid://cpqqeuy3ge470" path="res://cenas/components/ui/combat_orb_presenter.tscn" id="22_oawiv"]
+[ext_resource type="Resource" path="res://configs/ui/orbs/stamina_orb_profile_v1.tres" id="30_orbpf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijbr8"]
 atlas = ExtResource("1_5uhpa")
@@ -3878,11 +3878,11 @@ max_health = 14.0
 display_mode = 1
 follow_offset = Vector2(-34, -44)
 
-[node name="StaminaOrb" parent="." instance=ExtResource("22_oawiv")]
+[node name="StaminaOrb" parent="." unique_id=1969224005 instance=ExtResource("22_oawiv")]
 resource_type = 1
+resource_profile = ExtResource("30_orbpf")
 display_mode = 1
 follow_offset = Vector2(-34, -14)
-resource_profile = ExtResource("30_orbpf")
 
 [node name="Stamina" type="Node" parent="." unique_id=1157558544]
 script = ExtResource("22_ligv6")

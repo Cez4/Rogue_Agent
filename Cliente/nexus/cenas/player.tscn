@@ -3189,7 +3189,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_xhusc")
 }],
-"loop": true,
+"loop": false,
 "name": &"Walk_Unarmed_L",
 "speed": 15.0
 }, {
@@ -3239,7 +3239,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_0eb7a")
 }],
-"loop": true,
+"loop": false,
 "name": &"Walk_Unarmed_N",
 "speed": 15.0
 }, {
@@ -3289,7 +3289,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_5jr8d")
 }],
-"loop": true,
+"loop": false,
 "name": &"Walk_Unarmed_NE",
 "speed": 15.0
 }, {
@@ -3339,7 +3339,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_mka6y")
 }],
-"loop": true,
+"loop": false,
 "name": &"Walk_Unarmed_NO",
 "speed": 15.0
 }, {
@@ -3389,7 +3389,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_oie68")
 }],
-"loop": true,
+"loop": false,
 "name": &"Walk_Unarmed_O",
 "speed": 15.0
 }, {
@@ -3439,7 +3439,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_mwbkg")
 }],
-"loop": true,
+"loop": false,
 "name": &"Walk_Unarmed_S",
 "speed": 15.0
 }, {
@@ -3489,7 +3489,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ss060")
 }],
-"loop": true,
+"loop": false,
 "name": &"Walk_Unarmed_SE",
 "speed": 15.0
 }, {
@@ -3539,7 +3539,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ocu7d")
 }],
-"loop": true,
+"loop": false,
 "name": &"Walk_Unarmed_SO",
 "speed": 15.0
 }]
@@ -3575,7 +3575,7 @@ metadata/logic_bricks_frames = []
 position = Vector2(-4, -2)
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_rdm2e")
-animation = &"Idle_Unarmed_S"
+animation = &"Walk_Unarmed_SO"
 
 [node name="Foot" type="Marker2D" parent="." unique_id=721945345]
 position = Vector2(-1, 27)
@@ -3585,6 +3585,7 @@ zoom = Vector2(2, 2)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=855513962]
 position = Vector2(0, 27)
+scale = Vector2(1.0102676, 1)
 shape = SubResource("CapsuleShape2D_rdm2e")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=626690443]
@@ -3619,6 +3620,7 @@ script = ExtResource("9_rijvs")
 script = ExtResource("12_gonb2")
 
 [node name="Health" parent="." unique_id=2099938439 instance=ExtResource("13_vtxll")]
+max_health = 100.0
 
 [node name="AttackHitbox" parent="." unique_id=198982442 instance=ExtResource("15_6ptbh")]
 
@@ -3631,10 +3633,11 @@ blackboard_plan = SubResource("BlackboardPlan_tckef")
 [node name="CombatOrb" parent="." unique_id=2024503709 instance=ExtResource("16_uk4ck")]
 follow_offset = Vector2(-34, -44)
 
-[node name="StaminaOrb" parent="." instance=ExtResource("16_uk4ck")]
+[node name="StaminaOrb" parent="." unique_id=1884239196 instance=ExtResource("16_uk4ck")]
 resource_type = 1
-follow_offset = Vector2(-34, -14)
 resource_profile = ExtResource("30_orbpf")
+follow_offset = Vector2(-34, -14)
 
 [node name="Stamina" type="Node" parent="." unique_id=215182919]
 script = ExtResource("17_uk4ck")
+regen_rate = 8.0

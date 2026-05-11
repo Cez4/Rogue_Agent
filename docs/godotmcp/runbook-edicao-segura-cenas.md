@@ -108,3 +108,14 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 4. Critério de aceite:
    - telemetria confirma variacao por dados (`attack_stop_distance`, `damage`, cadence),
    - sem erro novo em `get_godot_errors`.
+
+## Freeze total de combate tatico (2026-05-11)
+1. Antes de alterar `mundo.tscn`, `player.tscn`, `hostile_enemy_*` ou NavPolygon, ler:
+   - `Cliente/nexus/docs/status-freeze-total-combate-tatico-2026-05-11.md`
+2. Ajustes atuais aprovados nao sao drift:
+   - NavMesh/NavPolygon da arena de teste;
+   - regen de stamina para forcar reposicionamento;
+   - `Walk_Unarmed_*` do Player sem loop;
+   - tuning atual do Brute/Light/Player.
+3. Nao reverter esses pontos sem reproduzir regressao em MCP e registrar telemetria.
+4. Se uma cena instancia outra cena, auditar override local antes de concluir que o script base esta errado.

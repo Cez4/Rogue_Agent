@@ -1,8 +1,21 @@
 # Plano Sprint - Port Tatico Limbo Demo v1
 
 Data: 2026-05-10  
-Status: ABERTA (prioridade maxima)  
+Status: FECHADA PELO FREEZE TOTAL DE 2026-05-11  
 Objetivo: portar o padrao tatico da demo LimboAI para resolver travamento de chase/kite sem inflar arquitetura.
+
+## Encerramento
+Esta sprint foi encerrada pelo documento:
+
+`status-freeze-total-combate-tatico-2026-05-11.md`
+
+O comportamento atual foi aprovado pelo QA:
+
+1. spam de clique de ataque nao interrompe o kiting automatico;
+2. clique no chao cancela combate e permite fuga manual;
+3. baixa stamina usa custo real do ataque equipado;
+4. Player e NPCs executam reposicionamento tatico de forma aceitavel;
+5. ajustes locais de NavMesh, stamina regen e walk sem loop fazem parte do baseline atual.
 
 ## Estado atual da sprint (atualizado)
 1. Chase/attack de Player e Brute estao funcionais com ciclo completo.

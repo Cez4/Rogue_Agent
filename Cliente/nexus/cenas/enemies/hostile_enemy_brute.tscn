@@ -7,8 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://c3drwa4p3b2si" path="res://Assets/Char/WildCat/Idle.png" id="5_mqb08"]
 [ext_resource type="Texture2D" uid="uid://dlnaruff1dhyc" path="res://Assets/Char/WildCat/Walk.png" id="6_r1p78"]
 [ext_resource type="Script" uid="uid://7ksr7chqpjfu" path="res://Scripts/player/player_controller.gd" id="7_b1235"]
+[ext_resource type="Resource" uid="uid://dihltaswktrpm" path="res://configs/player/hostile_brute_movement_v1.tres" id="8_mvbrute"]
 [ext_resource type="Script" uid="uid://bfelu52uftmru" path="res://Scripts/player/player_motor.gd" id="8_n5jx1"]
-[ext_resource type="Resource" path="res://configs/player/hostile_brute_movement_v1.tres" id="8_mvbrute"]
 [ext_resource type="BehaviorTree" uid="uid://bnaa8i7xnsml0" path="res://ai/trees/npc/wildcat_look_wander_bt.tres" id="9_iml6l"]
 [ext_resource type="Script" uid="uid://w6oyxr36dcgy" path="res://Scripts/actors/state_idle_8dir.gd" id="10_5v8ye"]
 [ext_resource type="Script" uid="uid://dwo1bk64b01w" path="res://Scripts/actors/state_walk_8dir.gd" id="11_tacm5"]
@@ -23,8 +23,8 @@
 [ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="20_05h1s"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/attack_hitbox_component_node.tscn" id="20_vuvgp"]
 [ext_resource type="Script" uid="uid://d087gw3m6nlpa" path="res://Scripts/stats/stamina_component.gd" id="22_0i4mi"]
-[ext_resource type="Resource" path="res://configs/ui/orbs/stamina_orb_profile_v1.tres" id="30_orbpf"]
 [ext_resource type="PackedScene" uid="uid://cpqqeuy3ge470" path="res://cenas/components/ui/combat_orb_presenter.tscn" id="22_3wq1m"]
+[ext_resource type="Resource" path="res://configs/ui/orbs/stamina_orb_profile_v1.tres" id="30_orbpf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijbr8"]
 atlas = ExtResource("3_vsdir")
@@ -3880,11 +3880,12 @@ max_health = 14.0
 display_mode = 1
 follow_offset = Vector2(-34, -44)
 
-[node name="StaminaOrb" parent="." instance=ExtResource("22_3wq1m")]
+[node name="StaminaOrb" parent="." unique_id=1368534136 instance=ExtResource("22_3wq1m")]
 resource_type = 1
+resource_profile = ExtResource("30_orbpf")
 display_mode = 1
 follow_offset = Vector2(-34, -14)
-resource_profile = ExtResource("30_orbpf")
 
 [node name="Stamina" type="Node" parent="." unique_id=1342416240]
 script = ExtResource("22_0i4mi")
+regen_rate = 8.0

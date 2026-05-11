@@ -3878,11 +3878,12 @@ max_health = 13.0
 display_mode = 1
 follow_offset = Vector2(-34, -44)
 
-[node name="StaminaOrb" parent="." instance=ExtResource("21_ygsh7")]
+[node name="StaminaOrb" parent="." unique_id=1720972146 instance=ExtResource("21_ygsh7")]
 resource_type = 1
+resource_profile = ExtResource("30_orbpf")
 display_mode = 1
 follow_offset = Vector2(-34, -14)
-resource_profile = ExtResource("30_orbpf")
 
 [node name="Stamina" type="Node" parent="." unique_id=1365287454]
 script = ExtResource("22_ygsh7")
+regen_rate = 8.0
