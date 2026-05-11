@@ -18,7 +18,9 @@ func _ready() -> void:
 
 	motor.config = movement_config
 	motor.setup(self)
-	controller.setup(self)
+	var actor_body := self as Actor8DirLimbo
+	if actor_body != null:
+		controller.setup(actor_body)
 	_setup_hsm()
 
 
