@@ -356,6 +356,11 @@ func set_brain_active(active: bool) -> void:
 		bt_player.set("active", active)
 
 
+func restart_brain() -> void:
+	if bt_player != null and bt_player.has_method("restart"):
+		bt_player.restart()
+
+
 func _bridge_play_die_animation_runtime() -> void:
 	ActorAnimationRuntimeRef.play_die_animation(animated_sprite, die_prefix, _last_direction_suffix)
 

@@ -23,6 +23,7 @@ static func respawn_after_delay(actor: Actor8DirLimbo) -> void:
 		actor.hsm.set_active(true)
 		actor.hsm.change_active_state(actor.idle_state)
 	actor.play_idle_animation()
+	actor.restart_brain()
 	await actor.get_tree().create_timer(maxf(0.0, actor.respawn_brain_delay_sec)).timeout
 	actor.set_brain_active(true)
 	CombatTelemetry.emit_event(&"respawned", {"actor": actor.name})
