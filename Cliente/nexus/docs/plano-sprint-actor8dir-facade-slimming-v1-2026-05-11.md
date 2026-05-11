@@ -1,7 +1,7 @@
 # Plano Sprint - Actor8Dir Facade Slimming v1
 
 Data: 2026-05-11
-Status: BLOCO 1 CONGELADO - AGUARDANDO DECISAO SOBRE TELEMETRIA DE KITING
+Status: BLOCO 1 CONGELADO - TELEMETRIA DE KITING AJUSTADA
 Versao: v1
 Ordem obrigatoria cumprida: `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` esta implementado, validado em MCP, aprovado em QA, documentado e congelado.
 
@@ -96,7 +96,7 @@ Docs:
 - [ ] Validar kiting/attack no MCP.
 
 ### Fase C - Extrair spatial/combat geometry
-- [ ] Bloqueada ate decisao sobre spam de telemetria `kiting_started`.
+- [ ] Liberada apos QA confirmar reducao do spam de telemetria `kiting_started`.
 - [ ] Criar `actor_spatial_runtime.gd` ou equivalente.
 - [ ] Mover `get_min_separation_distance_to()`.
 - [ ] Mover `compute_approach_position()`.
@@ -125,7 +125,7 @@ Docs:
 - [x] Testar death/respawn.
 - [x] `get_godot_errors` sem erro novo.
 - [x] Logs esperados preservados: `attack_commit`, `hit_confirmed`, `kiting_started`, `kiting_ended`, `target_died`, `respawned`.
-- [ ] Ruido conhecido: `kiting_started` emite em spam antes de `kiting_holding`.
+- [x] QA confirmou que `kiting_started` nao emite mais em spam antes de `kiting_holding`.
 
 ### Fase G - Documentacao e Git
 - [ ] Atualizar docs de arquitetura.
@@ -204,8 +204,29 @@ QA/logs gerados pelo usuario:
 Ponto congelado:
 1. `kiting_started` aparece em spam quase por frame antes de `kiting_holding`.
 2. A origem provavel e a composicao da BT com `bt_emit_telemetry` no ramo de kiting, nao o runtime extraido.
-3. Nao avancar para Fase C ate decidir se o ajuste sera:
-   - apenas documentar como ruido aceito;
-   - filtrar/deduplicar telemetria;
-   - ajustar emissao via Godot/editor API sem editar `.tres` por texto.
-4. Nao alterar kiting, movimento, stamina, BT `.tres` ou Fase C enquanto essa decisao estiver aberta.
+3. Decisao aplicada: filtrar eventos repetidos consecutivos no script atomico `bt_emit_telemetry.gd`, sem editar `.tres`.
+4. QA aprovou o ajuste: Fase C pode seguir, mantendo guardrails de nao alterar kiting, movimento, stamina ou BT `.tres`.
+
+## 14) Ajuste de telemetria - kiting spam
+Data: 2026-05-11
+Status: aplicado e aprovado em QA jogavel.
+
+Mudanca:
+1. `bt_emit_telemetry.gd` agora guarda o ultimo evento emitido por ator.
+2. Se o mesmo ator tentar emitir o mesmo evento consecutivo, a task retorna `SUCCESS` sem reenviar telemetria.
+3. Quando o evento muda (`kiting_started` -> `kiting_holding` -> `kiting_ended`), a telemetria volta a emitir normalmente.
+
+Motivo:
+1. O log mostrava `kiting_started` quase por frame.
+2. A BT nao foi alterada.
+3. O comportamento de kiting/movimento nao foi alterado.
+
+Validacao feita:
+1. Script abriu no Godot sem parse error.
+2. Smoke `mundo.tscn` rodou sem runtime error novo.
+
+Validacao final:
+1. QA jogavel Player vs Brute aprovado.
+2. `kiting_started` aparece por transicao de kiting, nao em spam por frame.
+3. `kiting_holding`, `kiting_ended`, `attack_commit`, `hit_confirmed`, `target_died`, `respawned` continuam aparecendo.
+4. Stamina, Health Regen e Orb continuam preservados.
