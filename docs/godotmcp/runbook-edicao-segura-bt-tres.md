@@ -60,6 +60,6 @@ func run():
    - ator volta a atacar apos recuperar stamina suficiente.
 
 ## Ordem de roadmap relacionada a BT/Actor
-1. Health Regen Data-Driven v1 nao deve alterar estrutura das arvores BT.
-2. Actor8Dir Facade Slimming v1 tambem deve preservar estrutura BT, salvo bug comprovado e editado via Godot/editor API.
-3. O refactor de `Actor8DirLimbo` so inicia depois do Health Regen fechado, para evitar retrabalho no contrato de combate.
+1. Health Regen Data-Driven v1 esta congelado e nao alterou estrutura das arvores BT.
+2. Actor8Dir Facade Slimming v1 e a sprint ativa e deve preservar estrutura BT, salvo bug comprovado e editado via Godot/editor API.
+3. O refactor de `Actor8DirLimbo` deve manter wrappers publicos usados por BT/HSM/Controller ate haver migracao validada em MCP.

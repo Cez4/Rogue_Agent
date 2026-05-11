@@ -146,7 +146,7 @@ Motivo:
 Divida aceita adicional:
 1. `Scripts/actors/actor_8dir_limbo.gd` esta com 633 linhas e atua como fachada grande sobre services.
 2. O arquivo nao deve receber novas regras de dominio se elas puderem viver em componente/runtime.
-3. A reducao desse arquivo fica planejada, mas bloqueada ate o Health Regen estar fechado.
+3. A reducao desse arquivo esta liberada na sprint `Actor8Dir Facade Slimming v1`, mantendo o comportamento congelado.
 
 ## 12) Addendum - Health Regen QA aprovado
 Data: 2026-05-11

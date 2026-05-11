@@ -121,7 +121,7 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 4. Se uma cena instancia outra cena, auditar override local antes de concluir que o script base esta errado.
 
 ## Sequenciamento de sprints pos-freeze (obrigatorio)
-1. A proxima sprint estrutural e `Cliente/nexus/docs/plano-sprint-health-regen-datadriven-v1-2026-05-11.md`.
-2. A sprint `Cliente/nexus/docs/plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` vem depois.
-3. Nao refatorar `Scripts/actors/actor_8dir_limbo.gd` durante Health Regen, exceto ajuste minimo exigido pelo contrato de combate/vida.
-4. Se um ajuste em cena/ator for necessario durante Health Regen, manter o patch pequeno e documentar que nao e a sprint de emagrecimento do actor.
+1. `Cliente/nexus/docs/plano-sprint-health-regen-datadriven-v1-2026-05-11.md` esta congelado.
+2. A sprint estrutural ativa e `Cliente/nexus/docs/plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md`.
+3. Refatorar `Scripts/actors/actor_8dir_limbo.gd` somente em blocos pequenos, preservando wrappers publicos usados por BT/HSM/Controller.
+4. Durante o slimming, nao alterar cena, BT/HSM, kiting, stamina, Orb ou Health Regen sem bug comprovado e novo QA.

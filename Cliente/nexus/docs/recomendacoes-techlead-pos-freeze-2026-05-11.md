@@ -99,19 +99,19 @@ Adicionar paineis/logs para:
 2. Smoke test manual documentado.
 3. Limpeza de docs antigos que contradizem o freeze.
 4. Migracao segura do kiting hardcoded para dado.
-5. Health Regen Data-Driven v1.
-6. Actor8Dir Facade Slimming v1.
+5. Health Regen Data-Driven v1 - concluido/congelado.
+6. Actor8Dir Facade Slimming v1 - sprint ativa.
 7. Novo inimigo data-driven usando checklist.
 8. Plano tecnico SpacetimeDB/server-authoritative para combate.
 
-## 8.1) Sequenciamento obrigatorio: Health Regen antes de Actor8Dir
-O refactor de `Actor8DirLimbo` deve vir depois do Health Regen porque o Health Regen cria uma pressao real sobre o contrato de combate:
+## 8.1) Sequenciamento obrigatorio cumprido: Health Regen antes de Actor8Dir
+O refactor de `Actor8DirLimbo` vem depois do Health Regen porque o Health Regen criou uma pressao real sobre o contrato de combate:
 
 1. Orb precisa saber se ator esta em combate.
 2. Regen precisa saber se ator esta fora de combate.
 3. Sistemas futuros de aggro/stealth/descanso tambem vao consumir essa regra.
 
-Portanto, primeiro estabilizar `ActorCombatRuntime.is_actor_in_combat(actor)`. Depois emagrecer `Actor8DirLimbo` com contratos ja conhecidos.
+`ActorCombatRuntime.is_actor_in_combat(actor)` ja foi estabilizado e consumido por Orb/Regen. A frente atual e emagrecer `Actor8DirLimbo` com contratos conhecidos, sem nova feature.
 
 ## 9) Criterio de sucesso
 O projeto deve conseguir adicionar um novo inimigo melee sem tocar em `Actor8DirLimbo`, sem alterar tasks BT, sem editar script de motor e sem quebrar o comportamento aprovado do Player.

@@ -1,19 +1,19 @@
 # Plano Sprint - Actor8Dir Facade Slimming v1
 
 Data: 2026-05-11
-Status: PLANEJADA - AGUARDANDO HEALTH REGEN
+Status: ATIVA - BASELINE LIMPO
 Versao: v1
-Ordem obrigatoria: executar somente depois de `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` estar implementado, validado em MCP, aprovado em QA e documentado.
+Ordem obrigatoria cumprida: `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` esta implementado, validado em MCP, aprovado em QA, documentado e congelado.
 
 ## 1) Decisao de sequenciamento
-Esta sprint nao e a proxima sprint de implementacao.
+Esta sprint e a frente estrutural ativa.
 
 A ordem oficial e:
 
-1. `Health Regen Data-Driven v1`
-2. `Actor8Dir Facade Slimming v1`
+1. `Health Regen Data-Driven v1` - concluida/congelada.
+2. `Actor8Dir Facade Slimming v1` - ativa.
 
-Motivo: o Health Regen vai criar ou consolidar contratos importantes de combate/vida, especialmente `ActorCombatRuntime.is_actor_in_combat(actor)`. Refatorar `Actor8DirLimbo` antes disso aumentaria risco de retrabalho e regressao no comportamento aprovado.
+Motivo: o Health Regen consolidou contratos importantes de combate/vida, especialmente `ActorCombatRuntime.is_actor_in_combat(actor)`. O slimming agora deve preservar esses contratos e nao introduzir feature nova.
 
 ## 2) Objetivo
 Reduzir `Scripts/actors/actor_8dir_limbo.gd` de fachada inchada para ator fino, mantendo API publica estavel para BT, HSM, Controller, Orb e cenas.
@@ -50,14 +50,14 @@ Regras:
 7. Trocar arquitetura de cena do Player/NPCs.
 
 ## 6) Dependencias obrigatorias
-Antes de iniciar esta sprint:
+Estado antes de iniciar esta sprint:
 
-- [ ] Health Regen Data-Driven v1 concluida.
-- [ ] `ActorCombatRuntime.is_actor_in_combat(actor)` implementado e usado por Orb/Regen.
-- [ ] `HealthComponent` com contrato de cura/dano estabilizado.
-- [ ] Godot MCP limpo depois do Health Regen.
-- [ ] Freeze/status atualizado se o baseline visual mudar.
-- [ ] Branch sincronizada antes de abrir refactor.
+- [x] Health Regen Data-Driven v1 concluida.
+- [x] `ActorCombatRuntime.is_actor_in_combat(actor)` implementado e usado por Orb/Regen.
+- [x] `HealthComponent` com contrato de cura/dano estabilizado.
+- [x] Godot MCP limpo depois do Health Regen.
+- [x] Freeze/status atualizado com baseline visual aprovado.
+- [x] Branch sincronizada antes de abrir refactor.
 
 ## 7) Arquivos provaveis
 Scripts:
@@ -133,7 +133,7 @@ Docs:
 - [ ] Push e sync confirmado.
 
 ## 9) Criterios de aceite
-- [ ] Health Regen ja esta concluido antes desta sprint iniciar.
+- [x] Health Regen ja esta concluido antes desta sprint iniciar.
 - [ ] `actor_8dir_limbo.gd` ficou menor sem perder contrato publico usado por BT/HSM/Controller.
 - [ ] Nenhum comportamento aprovado do combate mudou.
 - [ ] Nenhuma arvore `.tres` foi editada por texto.
@@ -162,7 +162,7 @@ O ator deve continuar sendo o ponto de integracao de cena do Godot, mas nao deve
 Meta qualitativa: `Actor8DirLimbo` vira uma fachada fina e previsivel, nao um arquivo onde toda feature nova tende a ser encaixada.
 
 ## 12) Tick final da sprint
-- [ ] Sprint iniciada somente apos Health Regen
+- [x] Sprint iniciada somente apos Health Regen
 - [ ] Sprint concluida
 - [ ] QA aprovou sem regressao visual
 - [ ] MCP limpo
