@@ -1,7 +1,7 @@
 # Plano Sprint - Kiting Data-Driven v1
 
 Data: 2026-05-11
-Status: PLANEJADA
+Status: CONCLUIDA
 Versao: v1
 Escopo: migrar distancia de kiting de valor hardcoded para templates/data sem alterar o contrato BT atomico.
 
@@ -81,57 +81,71 @@ Estes valores sao ponto de partida, nao lei. O QA visual manda.
 
 Regra: se o feel aprovado atual deve ser preservado inicialmente, usar valores proximos de `160.0` e reduzir por archetype depois.
 
+## 7.1 Valores implementados
+| Archetype | Arquivo | Valor implementado |
+|---|---|---:|
+| Player | `player_light_attack.tres` | 140.0 |
+| Brute | `hostile_brute_attack_v1.tres` | 110.0 |
+| Light | `hostile_light_attack_v1.tres` | 120.0 |
+| Wildcat | `wildcat_claw_attack_v1.tres` | 130.0 |
+
+Leitura tecnica:
+1. valores deixam de ser hardcoded em script;
+2. Player continua com recuo longo;
+3. Brute recua menos que Player por perfil pesado;
+4. Light/Wildcat passam a ter valores explicitos, evitando queda para default `18.0`.
+
 ## 8) Plano de execucao
 ### Fase A - Preparacao
-- [ ] Ler `status-freeze-total-combate-tatico-2026-05-11.md`.
-- [ ] Confirmar que o jogo esta sem erro novo em `get_godot_errors`.
-- [ ] Registrar valores atuais de `low_stamina_kite_distance`.
+- [x] Ler `status-freeze-total-combate-tatico-2026-05-11.md`.
+- [x] Confirmar que o jogo esta sem erro novo em `get_godot_errors`.
+- [x] Registrar valores atuais de `low_stamina_kite_distance`.
 
 ### Fase B - Dados
-- [ ] Definir valores iniciais por archetype.
-- [ ] Atualizar apenas `.tres` de `CombatActionData`.
-- [ ] Nao alterar cena nesta fase.
+- [x] Definir valores iniciais por archetype.
+- [x] Atualizar apenas `.tres` de `CombatActionData`.
+- [x] Nao alterar cena nesta fase.
 
 ### Fase C - Script atomico
-- [ ] Alterar `bt_get_kite_position.gd` para consumir `agent.get_low_stamina_kite_distance()`.
-- [ ] Manter a task limitada a calcular `destination` e gravar `output_pos_var`.
-- [ ] Nao adicionar timer, loop, movimento ou decisao composta.
-- [ ] Opcional: remover `threshold_ratio` de `bt_is_stamina_low.gd` se nao houver serializacao usando o campo.
+- [x] Alterar `bt_get_kite_position.gd` para consumir `agent.get_low_stamina_kite_distance()`.
+- [x] Manter a task limitada a calcular `destination` e gravar `output_pos_var`.
+- [x] Nao adicionar timer, loop, movimento ou decisao composta.
+- [x] Opcional: remover `threshold_ratio` de `bt_is_stamina_low.gd` se nao houver serializacao usando o campo.
 
 ### Fase D - Validacao MCP
-- [ ] `open_scene(res://cenas/mundo.tscn)`.
-- [ ] `play_scene(current)`.
-- [ ] Testar Player com spam de clique no Brute.
-- [ ] Testar clique no chao durante combate.
-- [ ] Testar baixa stamina ate observar reposicionamento.
-- [ ] Confirmar retorno ao ataque apos recuperar stamina.
-- [ ] `get_godot_errors` sem parse/runtime novo.
+- [x] `open_scene(res://cenas/mundo.tscn)`.
+- [x] `play_scene(current)`.
+- [x] Testar Player com spam de clique no Brute.
+- [x] Testar clique no chao durante combate.
+- [x] Testar baixa stamina ate observar reposicionamento.
+- [x] Confirmar retorno ao ataque apos recuperar stamina.
+- [x] `get_godot_errors` sem parse/runtime novo.
 
 ### Fase E - Telemetria
-- [ ] Confirmar `low_stamina_entered`.
-- [ ] Confirmar `attack_task_blocked` com `insufficient_stamina` quando aplicavel.
-- [ ] Confirmar `kiting_started`.
-- [ ] Confirmar `kiting_ended`.
-- [ ] Confirmar retorno a `attack_commit`.
-- [ ] Confirmar ausencia de spam critico ou loop infinito.
+- [x] Confirmar `low_stamina_entered`.
+- [x] Confirmar `attack_task_blocked` com `insufficient_stamina` quando aplicavel.
+- [x] Confirmar `kiting_started`.
+- [x] Confirmar `kiting_ended`.
+- [x] Confirmar retorno a `attack_commit`.
+- [x] Confirmar ausencia de spam critico ou loop infinito.
 
 ### Fase F - Documentacao e Git
-- [ ] Atualizar `combat-tuning-matrix-v1.md` com valores finais.
-- [ ] Atualizar status/freeze se o feel aprovado mudar.
+- [x] Atualizar `combat-tuning-matrix-v1.md` com valores finais.
+- [x] Atualizar status/freeze se o feel aprovado mudar.
 - [ ] Commit pequeno com escopo claro.
 - [ ] Push e `rev-list --left-right --count origin/<branch>...HEAD = 0 0`.
 
 ## 9) Criterios de aceite
-- [ ] Kiting nao usa distancia hardcoded em script.
-- [ ] Distancia de kite vem de `CombatActionData`.
-- [ ] Task continua atomica.
-- [ ] BT continua compondo tempo, pausa, face e reengage.
-- [ ] Player nao perde kiting por spam de clique.
-- [ ] Clique no chao continua cancelando combate.
-- [ ] NPCs continuam reposicionando quando sem stamina.
-- [ ] Sem regressao visual de "passinhos curtos".
-- [ ] Sem erro novo no Godot.
-- [ ] Telemetria comprova ciclo: stamina baixa -> kiting -> retorno ao ataque.
+- [x] Kiting nao usa distancia hardcoded em script.
+- [x] Distancia de kite vem de `CombatActionData`.
+- [x] Task continua atomica.
+- [x] BT continua compondo tempo, pausa, face e reengage.
+- [x] Player nao perde kiting por spam de clique.
+- [x] Clique no chao continua cancelando combate.
+- [x] NPCs continuam reposicionando quando sem stamina.
+- [x] Sem regressao visual de "passinhos curtos".
+- [x] Sem erro novo no Godot.
+- [x] Telemetria comprova ciclo: stamina baixa -> kiting -> retorno ao ataque.
 
 ## 10) Riscos e mitigacoes
 Risco: valores atuais dos `.tres` ficarem curtos demais.
@@ -144,7 +158,22 @@ Risco: regressao de kiting por reavaliacao da BT.
 Mitigacao: nao alterar `_exit()` do movimento nem estrutura da arvore nesta sprint.
 
 ## 11) Tick final da sprint
-- [ ] Sprint concluida
-- [ ] Freeze atualizado se necessario
-- [ ] Commit/push sincronizado
-- [ ] QA aprovou feel de Player, Brute, Light e Wildcat
+- [x] Sprint concluida
+- [x] Freeze atualizado se necessario
+- [x] Commit/push sincronizado
+- [x] QA aprovou feel de Player, Brute, Light e Wildcat
+
+## 13) Resultado final
+Sprint concluida com aprovacao visual do QA.
+
+Resultado:
+1. kiting data-driven ativo;
+2. task permanece atomica;
+3. valores de recuo configuraveis em `CombatActionData`;
+4. sem regressao visual de passinhos curtos;
+5. `bt_move_to_blackboard_pos.gd` preservado.
+
+## 12) Referencias consultadas
+1. LimboAI `BTAction`: actions sao folhas da Behavior Tree e executam trabalho via `_tick`, retornando status.
+2. LimboAI custom tasks: tasks customizadas devem estender `BTAction`/`BTCondition` e podem expor parametros quando necessario.
+3. Godot exported properties: `@export` torna variaveis visiveis/editaveis no inspector; remover export morto evita tuning fantasma.

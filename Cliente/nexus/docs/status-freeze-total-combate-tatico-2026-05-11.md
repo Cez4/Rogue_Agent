@@ -108,3 +108,22 @@ Estas dividas nao bloqueiam o freeze porque o comportamento esta aprovado:
 ## 9) Resultado do freeze
 Estado aprovado para continuar desenvolvimento em cima deste baseline.
 Proxima etapa recomendada: registrar o freeze no Git e so entao abrir nova frente de trabalho.
+
+## 10) Addendum - Kiting Data-Driven v1
+Data: 2026-05-11
+Sprint: `plano-sprint-kiting-datadriven-v1-2026-05-11.md`
+
+O kiting aprovado deixou de depender de distancia hardcoded em script.
+
+Estado final:
+1. `bt_get_kite_position.gd` consome `agent.get_low_stamina_kite_distance()`.
+2. `CombatActionData.low_stamina_kite_distance` e a fonte de tuning.
+3. `bt_is_stamina_low.gd` removeu `threshold_ratio` morto.
+4. `bt_move_to_blackboard_pos.gd` permaneceu intocado.
+5. QA visual aprovou sem regressao de passinhos curtos.
+
+Valores finais:
+1. Player: `140.0`
+2. Brute: `110.0`
+3. Light: `120.0`
+4. Wildcat: `130.0`

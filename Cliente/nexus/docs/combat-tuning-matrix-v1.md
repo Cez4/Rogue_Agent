@@ -337,3 +337,32 @@ O baseline aprovado pelo QA inclui ajustes manuais recentes de cena e tuning:
 5. Distancia atual de kiting visualmente aprovada, embora ainda exista divida tecnica para migrar o valor hardcoded para dado.
 
 Regra: qualquer alteracao futura nesses pontos deve registrar eixo de tuning, resultado observado e telemetria antes/depois.
+
+## Kiting Data-Driven v1 (2026-05-11)
+Sprint: `plano-sprint-kiting-datadriven-v1-2026-05-11.md`
+
+Mudanca:
+1. `bt_get_kite_position.gd` deixou de usar distancia hardcoded.
+2. Distancia de kite passa a vir de `CombatActionData.low_stamina_kite_distance`.
+3. `bt_is_stamina_low.gd` removeu o export morto `threshold_ratio`.
+4. `bt_move_to_blackboard_pos.gd` permaneceu intocado.
+
+Valores implementados:
+
+| Archetype | Action data | Kite Distance |
+|---|---|---:|
+| Player | `player_light_attack.tres` | 140.0 |
+| Brute | `hostile_brute_attack_v1.tres` | 110.0 |
+| Light | `hostile_light_attack_v1.tres` | 120.0 |
+| Wildcat | `wildcat_claw_attack_v1.tres` | 130.0 |
+
+Validacao tecnica:
+1. `open_scene(res://cenas/mundo.tscn)` executado.
+2. `play_scene(current)` executado.
+3. `get_godot_errors` sem erro novo de parse/runtime.
+
+QA final:
+1. spam de clique no Brute aprovado sem quebra de kiting;
+2. clique no chao continua cancelando combate;
+3. telemetria confirmou ciclo `low_stamina_entered -> kiting_started -> kiting_ended -> attack_commit`;
+4. sem regressao visual de passinhos curtos.

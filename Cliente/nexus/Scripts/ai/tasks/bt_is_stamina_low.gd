@@ -3,7 +3,6 @@ extends BTCondition
 
 const BTDecisionTelemetryRef = preload("res://Scripts/ai/bt_decision_telemetry.gd")
 
-@export var threshold_ratio: float = 0.2
 @export var debug_decision_var: StringName = AIBlackboardKeys.DEBUG_BT_DECISION_TELEMETRY
 
 func _generate_name() -> String:

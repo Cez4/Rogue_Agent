@@ -24,8 +24,8 @@ func _tick(_delta: float) -> Status:
 	if away_dir.is_zero_approx():
 		away_dir = Vector2.RIGHT.rotated(randf() * TAU)
 
-	# Fuga massiva garantida. Passamos o vetor puro e confiamos 100% no NavigationAgent2D.
-	var destination: Vector2 = agent.global_position + away_dir * 160.0
+	var kite_distance: float = maxf(0.0, agent.get_low_stamina_kite_distance())
+	var destination: Vector2 = agent.global_position + away_dir * kite_distance
 	
 	blackboard.set_var(output_pos_var, destination)
 	BTDecisionTelemetryRef.emit("GetKitePosition", agent, blackboard, debug_decision_var, "SUCCESS", "calculated_kite_pos")
