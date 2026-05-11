@@ -65,13 +65,7 @@ class_name Actor8DirLimbo
 
 var _last_direction_suffix: StringName = &"S"
 var _attack_pending: bool = false
-var _idle_elapsed_sec: float = 0.0
-var _next_wander_delay_sec: float = 0.0
-var _next_look_allowed_sec: float = 0.0
-var _next_wander_emote_allowed_sec: float = 0.0
-var _next_stamina_exhausted_emote_allowed_sec: float = 0.0
-var _emote_request_id: int = 0
-var _current_emote_priority: int = -1
+var _runtime_state: ActorRuntimeState = ActorRuntimeState.new()
 var _combat_target: Node2D
 var _combat_target_manual_lock: bool = false
 var _interaction_target: Node2D
@@ -311,52 +305,8 @@ func _bridge_set_stats_component(stats: StatsComponent) -> void:
 
 
 # Bridge-only API (integracao tecnica de runtimes)
-func _bridge_get_float_state(key: StringName) -> float:
-	match key:
-		&"idle_elapsed":
-			return _idle_elapsed_sec
-		&"next_wander_delay":
-			return _next_wander_delay_sec
-		&"next_look_allowed":
-			return _next_look_allowed_sec
-		&"next_wander_emote_allowed":
-			return _next_wander_emote_allowed_sec
-		&"next_stamina_exhausted_emote_allowed":
-			return _next_stamina_exhausted_emote_allowed_sec
-		_:
-			return 0.0
-
-
-func _bridge_set_float_state(key: StringName, value: float) -> void:
-	match key:
-		&"idle_elapsed":
-			_idle_elapsed_sec = value
-		&"next_wander_delay":
-			_next_wander_delay_sec = value
-		&"next_look_allowed":
-			_next_look_allowed_sec = value
-		&"next_wander_emote_allowed":
-			_next_wander_emote_allowed_sec = value
-		&"next_stamina_exhausted_emote_allowed":
-			_next_stamina_exhausted_emote_allowed_sec = value
-
-
-func _bridge_get_int_state(key: StringName) -> int:
-	match key:
-		&"emote_request_id":
-			return _emote_request_id
-		&"current_emote_priority":
-			return _current_emote_priority
-		_:
-			return 0
-
-
-func _bridge_set_int_state(key: StringName, value: int) -> void:
-	match key:
-		&"emote_request_id":
-			_emote_request_id = value
-		&"current_emote_priority":
-			_current_emote_priority = value
+func _bridge_get_runtime_state() -> ActorRuntimeState:
+	return _runtime_state
 
 
 func _bridge_get_emotion_bubble() -> AnimatedSprite2D:

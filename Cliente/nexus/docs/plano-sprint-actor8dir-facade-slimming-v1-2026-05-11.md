@@ -1,7 +1,7 @@
 # Plano Sprint - Actor8Dir Facade Slimming v1
 
 Data: 2026-05-11
-Status: BLOCO 2 CONGELADO - RUNTIME ESPACIAL EXTRAIDO
+Status: BLOCO 3 CONGELADO - RUNTIME STATE TIPADO
 Versao: v1
 Ordem obrigatoria cumprida: `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` esta implementado, validado em MCP, aprovado em QA, documentado e congelado.
 
@@ -104,11 +104,11 @@ Docs:
 - [x] Validar chase, range e sem "air attack".
 
 ### Fase D - Reduzir bridge ruidoso
-- [ ] Auditar `_bridge_get_float_state/_set_float_state`.
-- [ ] Auditar `_bridge_get_int_state/_set_int_state`.
-- [ ] Avaliar `ActorRuntimeState` como Resource/RefCounted interno.
-- [ ] Migrar somente se reduzir acoplamento sem quebrar assinatura dos runtimes.
-- [ ] Nao trocar tudo de uma vez.
+- [x] Auditar `_bridge_get_float_state/_set_float_state`.
+- [x] Auditar `_bridge_get_int_state/_set_int_state`.
+- [x] Avaliar `ActorRuntimeState` como Resource/RefCounted interno.
+- [x] Migrar somente se reduzir acoplamento sem quebrar assinatura dos runtimes.
+- [x] Nao trocar tudo de uma vez.
 
 ### Fase E - Organizar exports por perfil
 - [ ] Identificar exports que sao tuning de design.
@@ -255,3 +255,32 @@ Validacao final:
 3. Player vs Brute preservou `attack_commit`, `hit_confirmed`, `kiting_started`, `kiting_holding`, `kiting_ended`. [ok]
 4. Logs mostram checks de range falhando quando longe e confirmando ataque apenas no range esperado. [ok]
 5. Health Regen, Orb, death/respawn, stamina e kiting permaneceram preservados. [ok]
+
+## 16) Implementacao - bloco 3
+Data: 2026-05-11
+Status: aplicado e aprovado em QA jogavel.
+
+Escopo:
+1. Criado `Scripts/actors/services/actor_runtime_state.gd`.
+2. Movido para estado tipado somente o bloco social/wander/emote:
+   - `idle_elapsed_sec`
+   - `next_wander_delay_sec`
+   - `next_look_allowed_sec`
+   - `next_wander_emote_allowed_sec`
+   - `next_stamina_exhausted_emote_allowed_sec`
+   - `emote_request_id`
+   - `current_emote_priority`
+3. Removidos `_bridge_get_float_state/_bridge_set_float_state`.
+4. Removidos `_bridge_get_int_state/_bridge_set_int_state`.
+5. `actor_8dir_limbo.gd` reduziu de 566 para 516 linhas.
+
+Contrato preservado:
+1. `ActorRuntimeBridge` manteve os mesmos metodos publicos usados por `ActorWanderRuntime`, `ActorSocialRuntime` e `ActorPerceptionRuntime`.
+2. Nenhuma cena, BT `.tres`, HSM, Orb, Health Regen, stamina, kiting, targeting, combat target ou navigation foi alterado.
+3. `_combat_target`, `_interaction_target`, `_is_dead`, `_stats` e `_next_chase_repath_sec` ficaram fora deste bloco por serem estado sensivel de combate/lifecycle/navegacao.
+
+Validacao inicial:
+1. Scripts abriram no Godot sem parse error. [ok]
+2. Smoke MCP abriu `mundo.tscn`, rodou a cena e nao apontou runtime error novo. [ok]
+3. Logs de QA preservaram ataque, range, kiting, stamina, death/respawn, Health Regen, Orb, move e inspect. [ok]
+4. QA visual confirmou emotion de assobio e emotion de exclamacao aparecendo corretamente. [ok]

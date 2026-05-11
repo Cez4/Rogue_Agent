@@ -81,60 +81,60 @@ static func on_health_death(actor: Actor8DirLimbo) -> void:
 
 
 static func get_idle_elapsed(actor: Actor8DirLimbo) -> float:
-	return float(actor._bridge_get_float_state(&"idle_elapsed"))
+	return actor._bridge_get_runtime_state().idle_elapsed_sec
 
 
 static func set_idle_elapsed(actor: Actor8DirLimbo, value: float) -> void:
-	actor._bridge_set_float_state(&"idle_elapsed", value)
+	actor._bridge_get_runtime_state().idle_elapsed_sec = value
 
 
 static func get_next_wander_delay(actor: Actor8DirLimbo) -> float:
-	return float(actor._bridge_get_float_state(&"next_wander_delay"))
+	return actor._bridge_get_runtime_state().next_wander_delay_sec
 
 
 static func set_next_wander_delay(actor: Actor8DirLimbo, value: float) -> void:
-	actor._bridge_set_float_state(&"next_wander_delay", value)
+	actor._bridge_get_runtime_state().next_wander_delay_sec = value
 
 
 static func get_next_look_allowed(actor: Actor8DirLimbo) -> float:
-	return float(actor._bridge_get_float_state(&"next_look_allowed"))
+	return actor._bridge_get_runtime_state().next_look_allowed_sec
 
 
 static func set_next_look_allowed(actor: Actor8DirLimbo, value: float) -> void:
-	actor._bridge_set_float_state(&"next_look_allowed", value)
+	actor._bridge_get_runtime_state().next_look_allowed_sec = value
 
 
 static func get_next_wander_emote_allowed(actor: Actor8DirLimbo) -> float:
-	return float(actor._bridge_get_float_state(&"next_wander_emote_allowed"))
+	return actor._bridge_get_runtime_state().next_wander_emote_allowed_sec
 
 
 static func set_next_wander_emote_allowed(actor: Actor8DirLimbo, value: float) -> void:
-	actor._bridge_set_float_state(&"next_wander_emote_allowed", value)
+	actor._bridge_get_runtime_state().next_wander_emote_allowed_sec = value
 
 
 static func get_next_stamina_exhausted_emote_allowed(actor: Actor8DirLimbo) -> float:
-	return float(actor._bridge_get_float_state(&"next_stamina_exhausted_emote_allowed"))
+	return actor._bridge_get_runtime_state().next_stamina_exhausted_emote_allowed_sec
 
 
 static func set_next_stamina_exhausted_emote_allowed(actor: Actor8DirLimbo, value: float) -> void:
-	actor._bridge_set_float_state(&"next_stamina_exhausted_emote_allowed", value)
+	actor._bridge_get_runtime_state().next_stamina_exhausted_emote_allowed_sec = value
 
 
 static func get_emote_request_id(actor: Actor8DirLimbo) -> int:
-	return int(actor._bridge_get_int_state(&"emote_request_id"))
+	return actor._bridge_get_runtime_state().emote_request_id
 
 
 static func increment_emote_request_id(actor: Actor8DirLimbo) -> void:
 	var next_id: int = get_emote_request_id(actor) + 1
-	actor._bridge_set_int_state(&"emote_request_id", next_id)
+	actor._bridge_get_runtime_state().emote_request_id = next_id
 
 
 static func get_current_emote_priority(actor: Actor8DirLimbo) -> int:
-	return int(actor._bridge_get_int_state(&"current_emote_priority"))
+	return actor._bridge_get_runtime_state().current_emote_priority
 
 
 static func set_current_emote_priority(actor: Actor8DirLimbo, value: int) -> void:
-	actor._bridge_set_int_state(&"current_emote_priority", value)
+	actor._bridge_get_runtime_state().current_emote_priority = value
 
 
 static func get_emotion_bubble(actor: Actor8DirLimbo) -> AnimatedSprite2D:
