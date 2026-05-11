@@ -13,6 +13,10 @@ func _generate_name() -> String:
 func _tick(_delta: float) -> Status:
 	if agent == null:
 		return FAILURE
+	if bool(agent.is_attack_pending_runtime()):
+		BTDecisionTelemetryRef.emit("GetApproachPosition", agent, blackboard, debug_decision_var, "FAILURE", "attack_in_progress")
+		return FAILURE
+		
 	var target: Node2D = null
 	if blackboard.has_var(target_var):
 		target = blackboard.get_var(target_var) as Node2D

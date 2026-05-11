@@ -13,6 +13,10 @@ func _generate_name() -> String:
 func _tick(_delta: float) -> Status:
 	if agent == null:
 		return FAILURE
+	if bool(agent.is_attack_pending_runtime()):
+		BTDecisionTelemetryRef.emit("MoveToBBPosition", agent, blackboard, debug_decision_var, "FAILURE", "attack_in_progress")
+		return FAILURE
+		
 	if not blackboard.has_var(target_pos_var):
 		BTDecisionTelemetryRef.emit("MoveToBBPosition", agent, blackboard, debug_decision_var, "FAILURE", "missing_pos_var")
 		return FAILURE
