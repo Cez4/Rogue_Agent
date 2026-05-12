@@ -152,6 +152,23 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
    - Player com `Dagger01_TakeDamage_*` tocando inteiro e orientado para a origem do golpe.
 5. Novas propagacoes para NPCs/hostis devem preservar o contrato plug-and-play e validar telemetria.
 
+## Sequenciamento Combat Clash / Parry Window v1
+1. `Cliente/nexus/docs/plano-sprint-combat-clash-parry-v1-2026-05-12.md` e a proxima sprint planejada apos V9.
+2. Nao implementar Parry direto: a Fase A e somente telemetria, sem mudanca de gameplay.
+3. O custo de stamina do ataque interrompido ja e o primeiro "stamina damage" aprovado; nao duplicar punicao antes de QA.
+4. Eventos minimos da Fase A:
+   - `attack_phase_started`;
+   - `attack_window_opened`;
+   - `attack_window_closed`;
+   - `attack_interrupted`;
+   - `combat_clash_candidate` somente quando houver dados suficientes.
+5. Toda correlacao deve usar `attack_sequence_id` para ligar stamina, fase, hit confirm e interrupcao.
+6. Se criar `CombatClashComponent`/`ParryComponent`, ele deve ser plug-and-play como `KnockbackComponent` e `HitReactionComponent`.
+7. Nao adicionar exports de Parry/Clash em `Actor8DirLimbo`.
+8. Nao editar `.tscn`/`.tres` por texto; qualquer componente/profile em cena deve ser aplicado via Godot/editor API.
+9. Validacao MCP obrigatoria antes de commit: `open_scene -> play_scene -> get_godot_errors -> conferir telemetria`.
+10. Se houver mudanca funcional aprovada, criar freeze V10.
+
 ## Contrato Universal Hit Reaction Component v1
 1. A decisao arquitetural obrigatoria e componente plug-and-play:
    - `HitReactionComponent` copiavel para Player, NPC amigavel ou inimigo;

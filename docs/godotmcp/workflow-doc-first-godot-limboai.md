@@ -70,6 +70,16 @@ LimboAI:
 - Nao adicionar exports/tuning de Hit Reaction no actor.
 - Apos os freezes V7/V8/V9, preservar o contrato visual aprovado: Player, Wildcat e hostis tocam animacoes de dano inteiras, orientadas para a origem do golpe, com `hit_reaction_animation played=true duration=1.0`.
 
+## Regra - Combat Clash / Parry Window v1
+- Sprint planejada em `Cliente/nexus/docs/plano-sprint-combat-clash-parry-v1-2026-05-12.md`.
+- O comportamento atual e Attack Interrupt natural, nao Parry formal.
+- O custo de stamina ja gasto pelo ataque interrompido e a punicao base do v1.
+- Nao adicionar dano extra de stamina antes da Fase A provar, por telemetria, a fase exata do ataque interrompido.
+- A primeira entrega deve ser observabilidade: `attack_phase_started`, `attack_window_opened`, `attack_window_closed`, `attack_interrupted` e correlacao por `attack_sequence_id`.
+- Se virar gameplay, deve ser componente plug-and-play + profile `.tres`, sem regra exclusiva de Player e sem tuning/export em `Actor8DirLimbo`.
+- A BT continua decidindo intencao; HSM/Componentes resolvem janelas corporais e reacoes.
+- Preservar Hit Reaction V9, Knockback V6, stamina/kiting/orb e `combat_target`.
+
 ## Saida minima esperada por tarefa
 - Contexto consultado (links usados).
 - Mudanca aplicada.

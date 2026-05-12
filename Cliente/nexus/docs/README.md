@@ -5,20 +5,21 @@ Branch de referencia: `feat/universal-hit-reaction-component-v1`
 
 ## 1) Fonte principal de estado
 1. `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md` (freeze atual: Hostile Hit Reaction Coverage aprovado)
-2. `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` (Wildcat Hit Reaction aprovado)
-3. `plano-sprint-wildcat-hit-reaction-v1-2026-05-12.md` (Wildcat + hostis concluidos)
-4. `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` (Player Hit Reaction/Hit Stun universal aprovado)
-5. `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` (sprint concluida)
-6. `status-freeze-funcional-v6-knockback-2026-05-12.md` (knockback modular/Data-Driven com baseline `200.0`)
-7. `plano-sprint-combat-knockback-component-v1-2026-05-12.md` (sprint concluida)
-8. `status-freeze-funcional-v5-actor-profiles-2026-05-12.md` (actor profiles concluido)
-9. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado historico)
-10. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
-11. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (freeze concluido)
-12. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (fechamento parcial congelado)
-13. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint concluida ate E3; ver V5)
-14. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
-15. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
+2. `plano-sprint-combat-clash-parry-v1-2026-05-12.md` (proxima sprint planejada: telemetria de Attack Interrupt / Clash antes de gameplay)
+3. `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` (Wildcat Hit Reaction aprovado)
+4. `plano-sprint-wildcat-hit-reaction-v1-2026-05-12.md` (Wildcat + hostis concluidos)
+5. `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` (Player Hit Reaction/Hit Stun universal aprovado)
+6. `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` (sprint concluida)
+7. `status-freeze-funcional-v6-knockback-2026-05-12.md` (knockback modular/Data-Driven com baseline `200.0`)
+8. `plano-sprint-combat-knockback-component-v1-2026-05-12.md` (sprint concluida)
+9. `status-freeze-funcional-v5-actor-profiles-2026-05-12.md` (actor profiles concluido)
+10. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado historico)
+11. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
+12. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (freeze concluido)
+13. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (fechamento parcial congelado)
+14. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint concluida ate E3; ver V5)
+15. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
+16. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
 
 ## 1.1 Regra anti-drift (obrigatoria)
 1. Quando houver conflito entre docs antigos e estado atual:
@@ -66,6 +67,12 @@ Branch de referencia: `feat/universal-hit-reaction-component-v1`
    - Brute usa `hostile_brute_hit_reaction_profile_v1.tres`;
    - animacoes `TakeDamage_*` tocam com `played=true` e duracao de 1.0s;
    - morte final nao dispara nova hit reaction, preservando death/target lost/respawn.
+10. Combat Clash / Parry Window v1:
+   - ainda nao implementado;
+   - deve iniciar por telemetria sem alterar gameplay;
+   - o custo de stamina do ataque interrompido ja e a punicao base;
+   - dano extra de stamina/parry perfeito so pode entrar depois de prova por logs, profile `.tres` e QA;
+   - nao reengordar `Actor8DirLimbo` e nao criar regra exclusiva de Player.
 
 ## 2) Arquitetura e contratos
 1. `arquitetura-contratos-estado-atual-2026-05-10.md` (doc mestre)

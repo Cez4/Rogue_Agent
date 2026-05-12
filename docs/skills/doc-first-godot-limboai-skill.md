@@ -23,6 +23,7 @@ Regra:
 16. Antes de limpar tuning antigo, classificar cada valor como `fallback_real`, `override_aprovado`, `tuning_fantasma` ou `remover_depois`.
 17. Se uma cena/ator ainda nao tiver `social_profile`, preservar os exports antigos como fallback real ate migracao/default aprovado.
 18. Universal Hit Reaction / Hit Stun v1 esta congelado em camadas: V7 Player, V8 Wildcat e V9 Hostile Coverage. Preservar `HitReactionComponent` + profile `.tres` + estado HSM; nao criar logica exclusiva do Player, nao mover regra de dano para BT e nao reengordar `Actor8DirLimbo`.
+19. Combat Clash / Parry Window v1 deve comecar por telemetria, nao por gameplay. O custo de stamina do ataque interrompido ja e a punicao base; dano extra de stamina/parry perfeito so entra depois de logs com fase do ataque e `attack_sequence_id`.
 
 Checklist rapido:
 - [ ] Doc interno lido.
@@ -50,6 +51,8 @@ Checklist rapido:
 
 - [ ] Implementou Hit Reaction/Hit Stun? Confirme que e componente copiavel para templates, usa profile `.tres`, entra pela HSM, preserva `combat_target`, tem telemetria e nao adiciona tuning/export no `Actor8DirLimbo`.
 - [ ] Alterou Hit Reaction/Hit Stun apos os freezes V7/V8/V9? Confirme Player, Wildcat e hostis aprovados continuam tocando animacoes `TakeDamage_*`/`Dagger01_TakeDamage_*` inteiras, orientadas para a origem do golpe, com logs `hit_reaction_animation played=true duration=1.0`.
+- [ ] Iniciou Combat Clash/Parry? Primeiro entregue telemetria `attack_phase_started`, `attack_window_opened`, `attack_window_closed`, `attack_interrupted` e correlacao por `attack_sequence_id`, sem alterar balance.
+- [ ] Adicionou punicao de stamina em Clash/Parry? Confirme que ela nao duplica o custo ja pago pelo ataque interrompido e que veio de profile `.tres`, com QA aprovado.
 
 Fontes base:
 - Godot: https://docs.godotengine.org/en/stable/
