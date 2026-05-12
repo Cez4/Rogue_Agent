@@ -8,7 +8,7 @@ Branch de referencia: `feat/actor-export-profile-organization-v1`
 2. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
 3. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (freeze concluido)
 4. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (fechamento parcial congelado)
-5. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint ativa; Fase E deve iniciar por auditoria E0, sem remover exports direto)
+5. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint ativa; Fase E0 concluida, E1 so pode limpar duplicacao migrada via Godot/editor API)
 6. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
 7. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
 8. `status-freeze-funcional-v2-2026-05-10.md` (baseline historico Orb/Stamina)
@@ -26,7 +26,7 @@ Branch de referencia: `feat/actor-export-profile-organization-v1`
    - `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` esta ativa.
 4. A organizacao de exports/perfis deve iniciar por auditoria e profile social/wander com fallback; nao migrar dados de cena sem QA visual.
 5. A limpeza de exports sociais/wander/emote deve seguir E0/E1/E2/E3:
-   - E0: auditar cobertura e classificar fallback real, override aprovado e tuning fantasma;
+   - E0: auditar cobertura e classificar fallback real, override aprovado e tuning fantasma; concluida em 2026-05-11;
    - E1: limpar somente overrides antigos de entidades ja migradas;
    - E2: decidir Player/restantes com profile proprio, profile default ou fallback tecnico;
    - E3: remover exports do actor somente com cobertura total comprovada.

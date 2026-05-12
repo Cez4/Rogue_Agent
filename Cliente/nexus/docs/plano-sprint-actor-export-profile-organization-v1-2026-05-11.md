@@ -1,7 +1,7 @@
 # Plano Sprint - Actor Export/Profile Organization v1
 
 Data: 2026-05-11
-Status: FASE E PLANEJADA - LIMPEZA SO APOS AUDITORIA DE COBERTURA
+Status: FASE E0 CONCLUIDA - COBERTURA AUDITADA, SEM LIMPEZA APLICADA
 Branch: `feat/actor-export-profile-organization-v1`
 Base obrigatoria: `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` fechado parcialmente e congelado.
 
@@ -133,12 +133,12 @@ O objetivo nao e remover todos os exports. O objetivo e separar:
 - [x] QA combate: attack, kiting, death/respawn, Orb e Health Regen.
 
 ### Fase E0 - Auditoria de cobertura antes de limpar
-- [ ] Auditar todos os `Actor8DirLimbo` que ainda tem `social_profile == null`.
-- [ ] Auditar overrides sociais/wander/emote ainda serializados em cenas base.
-- [ ] Auditar overrides sociais/wander/emote em cenas instanciadoras, especialmente `mundo.tscn`.
-- [ ] Classificar cada valor antigo como `fallback_real`, `override_aprovado`, `tuning_fantasma` ou `remover_depois`.
-- [ ] Registrar no plano quais atores ainda dependem dos exports antigos como fallback.
-- [ ] Nao remover export nenhum nesta fase.
+- [x] Auditar todos os `Actor8DirLimbo` que ainda tem `social_profile == null`.
+- [x] Auditar overrides sociais/wander/emote ainda serializados em cenas base.
+- [x] Auditar overrides sociais/wander/emote em cenas instanciadoras, especialmente `mundo.tscn`.
+- [x] Classificar cada valor antigo como `fallback_real`, `override_aprovado`, `tuning_fantasma` ou `remover_depois`.
+- [x] Registrar no plano quais atores ainda dependem dos exports antigos como fallback.
+- [x] Nao remover export nenhum nesta fase.
 
 ### Fase E1 - Limpeza de overrides migrados
 - [ ] Limpar somente overrides antigos de entidades que ja consomem `ActorSocialProfile`.
@@ -166,11 +166,11 @@ O objetivo nao e remover todos os exports. O objetivo e separar:
 - [x] Nenhuma arvore BT `.tres` editada por texto nas Fases A-D.
 - [x] Nenhuma cena `.tscn` editada por texto nas Fases A-D.
 - [x] Social/wander/emote data-driven por Resource para Villager e hostis migrados.
-- [ ] Todas as cenas/atores relevantes com cobertura de profile ou fallback documentado.
+- [x] Todas as cenas/atores relevantes com cobertura de profile ou fallback documentado.
 - [ ] Actor continua sendo fachada de cena, nao deposito de tuning duplicado.
-- [ ] Smoke MCP limpo.
+- [x] Smoke MCP limpo para E0.
 - [ ] QA jogavel aprovado.
-- [ ] Docs atualizados.
+- [x] Docs atualizados com E0.
 - [ ] Branch sincronizada.
 
 ## 8) Riscos e mitigacoes
@@ -193,7 +193,7 @@ Risco: confundir valores antigos no Inspector com tuning ativo.
 Mitigacao: marcar valores antigos como `tuning_fantasma` quando a entidade ja usa `social_profile`, e limpar somente via Godot/editor API com QA visual antes/depois.
 
 ## 9) Proximo passo imediato
-Fases A-D congeladas. O proximo passo e iniciar a Fase E0 como auditoria sem remocao, classificando cobertura de `social_profile`, overrides herdados e possiveis tunings fantasma antes de qualquer limpeza de export ou cena.
+Fase E0 concluida sem remocao. O proximo passo permitido e iniciar E1 somente para limpar duplicacao de entidades ja migradas, via Godot/editor API, com smoke MCP e QA visual antes/depois.
 
 ## 10) Implementacao - bloco 1
 Data: 2026-05-11
@@ -316,3 +316,41 @@ Guardrail:
 1. Nenhum BT/HSM sera alterado nesta limpeza.
 2. Nenhum `.tscn` ou `.tres` sera editado por texto.
 3. Nenhuma mudanca visual sera aceita sem QA jogavel.
+
+## 14) Implementacao - bloco 4 auditoria E0
+Data: 2026-05-11
+Status: concluida, sem alteracao de cena/script/resource.
+
+Escopo:
+1. Auditada cobertura de `social_profile` no mapa principal `res://cenas/mundo.tscn`.
+2. Auditadas cenas base de Player, Villager, Wildcat, HostileEnemyBase, HostileEnemyLight e HostileEnemyBrute.
+3. Auditados valores antigos de look/wander/emote ainda serializados.
+4. Nenhum `.tscn`, `.tres`, script, BT/HSM, kiting, stamina, Orb, Health Regen ou camera foi alterado.
+
+Resultado de cobertura:
+1. `Player`: `social_profile = null`. Classificacao: `fallback_real` ate E2 decidir profile proprio, profile default ou fallback tecnico. `enable_wander=false`; nao limpar exports do actor por causa dele.
+2. `Villager1`: consome `res://configs/actors/social/villager_social_profile_v1.tres`. Classificacao: migrado. Valores antigos na cena base e overrides no `mundo.tscn` sao candidatos a `tuning_fantasma`, mas so podem ser limpos em E1 via Godot/editor API com QA visual.
+3. `Wildcat`, `HostileEnemyBase`, `HostileEnemyLight`, `HostileEnemyBrute`: consomem `res://configs/actors/social/hostile_social_profile_v1.tres`. Classificacao: migrados. Valores antigos serializados nas cenas base duplicam o profile hostil e sao candidatos a limpeza E1.
+
+Achado especifico de `mundo.tscn`:
+1. O mapa instancia `Player`, `Wildcat`, `Villager1`, `HostileEnemyBase`, `HostileEnemyLight` e `HostileEnemyBrute`.
+2. `mundo.tscn` preserva overrides sociais/wander no `Villager1` (`look_interest_min_distance=28.0`, `look_interest_max_distance=148.0`, `wander_emote_chance=0.2`) enquanto o profile do Villager define valores aprovados diferentes (`52.0`, `84.0`, `0.35`).
+3. Como `Villager1` tem `social_profile`, esses overrides devem ser tratados como `tuning_fantasma` candidato, nao como fonte de tuning ativa, ate E1 validar antes/depois.
+
+Validacao MCP:
+1. Cena aberta: `res://cenas/mundo.tscn`.
+2. Cena rodada apos limpar ruido de uma chamada editorial invalida de placeholder.
+3. `get_scene_tree(running_scene)` confirmou os atores esperados no mapa.
+4. `get_node_properties(running_scene)` confirmou:
+   - Player sem profile;
+   - Villager com `villager_social_profile_v1.tres`;
+   - Wildcat/hostis com `hostile_social_profile_v1.tres`.
+5. `get_godot_errors` apos smoke nao apresentou parse/runtime error novo do projeto.
+6. Cena foi parada antes de atualizar docs.
+
+Proximo passo:
+1. Iniciar E1 somente se autorizado.
+2. E1 deve limpar apenas duplicacao de entidades migradas, nunca o Player.
+3. E1 deve usar Godot/editor API para alterar `.tscn`/`.tres`.
+4. E1 deve validar Villager e hostis antes/depois com MCP e QA visual.
+5. Remocao de exports do `Actor8DirLimbo` continua proibida ate E3.
