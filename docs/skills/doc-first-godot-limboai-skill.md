@@ -22,6 +22,7 @@ Regra:
 15. Durante Actor Export/Profile Organization v1, nao remover exports sociais/wander/emote do `Actor8DirLimbo` antes da Fase E0 de auditoria de cobertura.
 16. Antes de limpar tuning antigo, classificar cada valor como `fallback_real`, `override_aprovado`, `tuning_fantasma` ou `remover_depois`.
 17. Se uma cena/ator ainda nao tiver `social_profile`, preservar os exports antigos como fallback real ate migracao/default aprovado.
+18. Para Universal Hit Reaction / Hit Stun v1, implementar como componente plug-and-play + profile `.tres` + estado HSM; nao criar logica exclusiva do Player, nao mover regra de dano para BT e nao reengordar `Actor8DirLimbo`.
 
 Checklist rapido:
 - [ ] Doc interno lido.
@@ -46,6 +47,8 @@ Checklist rapido:
 - [ ] Valores sociais/wander antigos em cenas migradas foram tratados como tuning fantasma e limpos somente via Godot/editor API?
 - [ ] Implementou fuga (Kiting) ou navegação autônoma? Garanta que você NÃO está "spammando" o NavAgent com recalculações por frame (adicione threshold de distância) e NÃO está clampando coordenadas com `map_get_closest_point`.
 - [ ] O Player continua compartilhando a mesma fundação biológica e social (Paridade The Sims-like) dos NPCs através de arquivos `.tres` idênticos?
+
+- [ ] Implementou Hit Reaction/Hit Stun? Confirme que e componente copiavel para templates, usa profile `.tres`, entra pela HSM, preserva `combat_target`, tem telemetria e nao adiciona tuning/export no `Actor8DirLimbo`.
 
 Fontes base:
 - Godot: https://docs.godotengine.org/en/stable/

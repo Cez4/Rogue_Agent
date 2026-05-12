@@ -56,6 +56,14 @@ LimboAI:
 - **Raw Nav Vectors (Sem Clamp Manual):** Nunca tente "ajudar" o `NavigationAgent2D` grampeando vetores de fuga matemáticos em quinas de mapa com `NavigationServer2D.map_get_closest_point()`. Passe o vetor de distância pura e confie na engine, evitando bugs de "Passo Único".
 - **LimboHSM Lifecycle:** Nunca execute `hsm.initialize()` em uma máquina de estados que já foi ligada anteriormente (ex: no Respawn). Utilize transições puras (para o `Idle`) e um `bt_player.restart()` na BT.
 
+## Regra - Universal Hit Reaction / Hit Stun
+- Implementar reacao a dano como componente plug-and-play (`HitReactionComponent`) + profile `.tres` + estado HSM.
+- Nao criar logica exclusiva de Player.
+- Nao colocar regra de dano dentro da BT; a BT decide intencao, a HSM executa reacao corporal.
+- Nao limpar `combat_target` durante Hit Reaction/Hit Stun.
+- Nao reengordar `Actor8DirLimbo`; wrappers no actor so podem ser fachada minima e delegada.
+- Nao adicionar exports/tuning de Hit Reaction no actor.
+
 ## Saida minima esperada por tarefa
 - Contexto consultado (links usados).
 - Mudanca aplicada.

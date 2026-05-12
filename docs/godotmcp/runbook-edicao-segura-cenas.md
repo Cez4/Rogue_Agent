@@ -138,6 +138,19 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 5. Qualquer limpeza em `.tscn`/`.tres` deve ser feita via Godot/editor API, nunca por texto.
 6. Se uma entidade ainda nao tiver `social_profile`, os exports antigos devem ser tratados como fallback real ate prova contraria.
 
+## Sequenciamento Universal Hit Reaction Component v1
+1. `Cliente/nexus/docs/plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` e a proxima sprint planejada para game feel de dano.
+2. A decisao arquitetural obrigatoria e componente plug-and-play:
+   - `HitReactionComponent` copiavel para Player, NPC amigavel ou inimigo;
+   - `HitReactionProfile` em `.tres` para tuning;
+   - estado HSM para executar a reacao corporal;
+   - BT preservada como decisora de intencao, nao como dona da regra de dano.
+3. Nao reengordar `Actor8DirLimbo`: o actor foi reduzido para cerca de 308 linhas apos slimming e deve continuar como fachada fina.
+4. Nao adicionar exports/tuning de Hit Reaction no actor.
+5. Wrappers no actor so sao permitidos se forem contrato minimo para BT/HSM/Controller e devem delegar imediatamente para componente/service/state.
+6. Cenas e resources devem ser alterados via Godot/editor API; nao editar `.tscn`/`.tres` estruturalmente por texto.
+7. Validacao obrigatoria: MCP limpo + telemetria `hit_reaction_requested`, `hit_reaction_started` e `hit_reaction_finished`, alem de confirmar que `combat_target` nao foi limpo.
+
 ## Freeze intermediario Actor8Dir Slimming bloco 1
 1. `ActorCombatResourceRuntime` esta aceito como primeiro corte estrutural.
 2. `actor_8dir_limbo.gd` reduziu de 633 para 601 linhas sem alterar cenas.
