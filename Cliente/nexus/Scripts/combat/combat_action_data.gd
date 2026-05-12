@@ -15,7 +15,10 @@ extends Resource
 @export var low_stamina_kite_distance: float = 18.0
 @export var low_stamina_kite_cooldown_ms: int = 260
 @export var damage: float = 1.0
-@export var knockback_enabled: bool = false
-@export var knockback_strength: float = 280.0
+@export_group("Knockback")
+@export var knockback_force: float = 0.0
+@export var knockback_duration_sec: float = 0.1
+
+@export_group("Hit Rules")
 @export var one_hit_per_target_per_attack: bool = true
 @export var max_targets_per_attack: int = 0
