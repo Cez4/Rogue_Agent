@@ -1,7 +1,7 @@
 # Plano Sprint - Actor Export/Profile Organization v1
 
 Data: 2026-05-11
-Status: FASE C PILOTO CONGELADA - VILLAGER SOCIAL PROFILE
+Status: FASE D APLICADA - HOSTILE SOCIAL PROFILE PENDENTE QA COMBATE
 Branch: `feat/actor-export-profile-organization-v1`
 Base obrigatoria: `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` fechado parcialmente e congelado.
 
@@ -127,9 +127,9 @@ O objetivo nao e remover todos os exports. O objetivo e separar:
 - [x] Se regressao visual, reverter somente o bloco piloto.
 
 ### Fase D - Migrar hostis somente apos piloto aprovado
-- [ ] Criar perfil hostil/wildcat compartilhado.
-- [ ] Aplicar em `hostile_enemy_base`, `hostile_enemy_light`, `hostile_enemy_brute`, `wildcat_1` somente via Godot/editor.
-- [ ] Confirmar que Player, Brute, Light e Wildcat continuam compartilhando core.
+- [x] Criar perfil hostil/wildcat compartilhado.
+- [x] Aplicar em `hostile_enemy_base`, `hostile_enemy_light`, `hostile_enemy_brute`, `wildcat_1` somente via Godot/editor.
+- [x] Confirmar que Player, Brute, Light e Wildcat continuam compartilhando core.
 - [ ] QA combate: attack, kiting, death/respawn, Orb e Health Regen.
 
 ### Fase E - Limpar exports redundantes
@@ -229,3 +229,35 @@ Proximo passo:
 1. Fase C congelada.
 2. Proxima etapa autorizada: Fase D, migrar hostis somente apos criar perfil compartilhado e validar em QA de combate.
 3. Manter guardrail: nenhum hostile deve ser migrado sem smoke MCP e teste de attack/kiting/death/respawn/Orb/Health Regen.
+
+## 12) Implementacao - bloco 3 profile social hostil
+Data: 2026-05-11
+Status: aplicado tecnicamente; pendente de QA combate jogavel.
+
+Decisao tecnica:
+1. Auditoria via Godot/editor mostrou que `wildcat_1`, `hostile_enemy_base`, `hostile_enemy_light` e `hostile_enemy_brute` tinham o mesmo pacote social/wander.
+2. Por isso, foi criado um unico profile compartilhado: `res://configs/actors/social/hostile_social_profile_v1.tres`.
+3. `mundo.tscn` nao tinha overrides sociais dos hostis; os overrides sociais encontrados no mapa eram de Player/Villager e ficaram fora deste bloco.
+
+Escopo:
+1. Criado `hostile_social_profile_v1.tres` via Godot/editor API.
+2. Atribuido `social_profile` em:
+   - `res://cenas/wildcat_1.tscn`
+   - `res://cenas/enemies/hostile_enemy_base.tscn`
+   - `res://cenas/enemies/hostile_enemy_light.tscn`
+   - `res://cenas/enemies/hostile_enemy_brute.tscn`
+3. Nenhum BT, HSM, combate, kiting, stamina, Orb, Health Regen ou camera foi alterado.
+
+Valores migrados:
+1. Look: `radius=72.0`, `min=22.0`, `max=44.0`, `hold=0.65`, `cooldown=9.0`, `jitter=4.0`, emote `Exc`, hold `1.55`.
+2. Wander: enabled, delay `0.7..3.5`, radius `56.0..116.0`, attempts `8`, emote `Hoe`, chance `0.17`, cooldown `11.0..18.0`, hold `2.6`.
+3. Stamina feedback visual: sem emote configurado, preservando baseline hostil.
+
+Validacao tecnica:
+1. Smoke MCP abriu e rodou `res://cenas/mundo.tscn` sem parse/runtime error novo. [ok]
+2. Runtime confirmou `social_profile = res://configs/actors/social/hostile_social_profile_v1.tres` em Wildcat, HostileEnemyBase, HostileEnemyLight e HostileEnemyBrute. [ok]
+3. Runtime confirmou valores sociais/wander preservados nos quatro hostis. [ok]
+
+Proximo passo:
+1. QA jogavel de combate completo: attack, kiting, death/respawn, Orb e Health Regen.
+2. Se aprovado, congelar Fase D antes de qualquer limpeza de exports redundantes.

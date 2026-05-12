@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://dlnaruff1dhyc" path="res://Assets/Char/WildCat/Walk.png" id="2_5uhpa"]
 [ext_resource type="Resource" path="res://configs/combat/profiles/hostile_melee_baseline_v1.tres" id="2_6y1vs"]
 [ext_resource type="Texture2D" uid="uid://s1otrtbxrc7n" path="res://Assets/Char/WildCat/Die.png" id="2_o5al4"]
+[ext_resource type="Resource" uid="uid://b3jcjivt88wx7" path="res://configs/actors/social/hostile_social_profile_v1.tres" id="3_dln4d"]
 [ext_resource type="Script" uid="uid://7ksr7chqpjfu" path="res://Scripts/player/player_controller.gd" id="6_khuiu"]
 [ext_resource type="Script" uid="uid://bfelu52uftmru" path="res://Scripts/player/player_motor.gd" id="7_ddbat"]
 [ext_resource type="Script" uid="uid://w6oyxr36dcgy" path="res://Scripts/actors/state_idle_8dir.gd" id="8_yc17h"]
@@ -3786,6 +3787,7 @@ y_sort_enabled = true
 collision_layer = 2
 script = ExtResource("1_bxw7m")
 combat_perception_profile = ExtResource("2_6y1vs")
+social_profile = ExtResource("3_dln4d")
 player_controlled = false
 is_hostile = true
 use_bt_brain = true

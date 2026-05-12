@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ActorSocialProfile" format=3 uid="uid://b3jcjivt88wx7"]
+
+[ext_resource type="Script" uid="uid://jkdwlg6aritr" path="res://Scripts/actors/profiles/actor_social_profile.gd" id="1_i28as"]
+
+[resource]
+script = ExtResource("1_i28as")
+look_interest_radius = 72.0
+look_interest_min_distance = 22.0
+look_interest_max_distance = 44.0
+look_hold_sec = 0.65
+look_cooldown_sec = 9.0
+look_cooldown_jitter_sec = 4.0
+look_emote_hold_sec = 1.55
+enable_wander = true
+wander_delay_min_sec = 0.7
+wander_delay_max_sec = 3.5
+wander_radius_min = 56.0
+wander_radius_max = 116.0
+wander_emote_chance = 0.17
+wander_emote_min_cooldown_sec = 11.0
+wander_emote_max_cooldown_sec = 18.0
+wander_emote_hold_sec = 2.6
