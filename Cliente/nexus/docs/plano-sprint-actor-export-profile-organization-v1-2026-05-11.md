@@ -1,7 +1,7 @@
 # Plano Sprint - Actor Export/Profile Organization v1
 
 Data: 2026-05-11
-Status: BLOCO 1 CONGELADO - SOCIAL PROFILE COM FALLBACK
+Status: FASE C PILOTO CONGELADA - VILLAGER SOCIAL PROFILE
 Branch: `feat/actor-export-profile-organization-v1`
 Base obrigatoria: `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` fechado parcialmente e congelado.
 
@@ -123,8 +123,8 @@ O objetivo nao e remover todos os exports. O objetivo e separar:
 - [x] Escolher entidade piloto, preferencia `Villager1` ou cena isolada.
 - [x] Criar `.tres` via Godot/editor, nao por texto.
 - [x] Migrar valores apenas pelo editor/API segura.
-- [ ] QA visual: assobio, exclamacao, wander, inspect.
-- [ ] Se regressao visual, reverter somente o bloco piloto.
+- [x] QA visual: assobio, exclamacao, wander, inspect.
+- [x] Se regressao visual, reverter somente o bloco piloto.
 
 ### Fase D - Migrar hostis somente apos piloto aprovado
 - [ ] Criar perfil hostil/wildcat compartilhado.
@@ -198,7 +198,7 @@ Proximo passo:
 
 ## 11) Implementacao - bloco 2 piloto Villager1
 Data: 2026-05-11
-Status: aplicado; pendente de QA visual jogavel.
+Status: aprovado em QA visual jogavel e congelado.
 
 Referencias oficiais consultadas:
 1. Godot 4.6 `ResourceSaver`: salvar `Resource` em disco via `ResourceSaver.save()`.
@@ -222,7 +222,10 @@ Validacao tecnica:
 2. Primeiro smoke detectou UID de resource ainda nao registrado; corrigido via `ResourceSaver.set_uid()` e revalidado. [ok]
 3. Smoke MCP abriu e rodou `res://cenas/mundo.tscn` sem parse/runtime error novo. [ok]
 4. `Villager1` em runtime carregou `social_profile = res://configs/actors/social/villager_social_profile_v1.tres`. [ok]
+5. QA visual confirmou `Hoe`/assobio, `Exc`/exclamacao, wander e inspect preservados. [ok]
+6. Logs de QA registraram `inspect` no `Villager1` e comandos `move`, sem parse/runtime error novo. [ok]
 
 Proximo passo:
-1. QA visual jogavel focado em `Villager1`: assobio/`Hoe`, exclamacao/`Exc`, wander e inspect.
-2. Se aprovado, congelar Fase C antes de migrar qualquer hostile.
+1. Fase C congelada.
+2. Proxima etapa autorizada: Fase D, migrar hostis somente apos criar perfil compartilhado e validar em QA de combate.
+3. Manter guardrail: nenhum hostile deve ser migrado sem smoke MCP e teste de attack/kiting/death/respawn/Orb/Health Regen.
