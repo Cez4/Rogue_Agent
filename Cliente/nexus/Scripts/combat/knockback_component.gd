@@ -28,7 +28,7 @@ func apply_knockback(force_vector: Vector2, duration: float) -> void:
 	set_physics_process(true)
 	
 	CombatTelemetry.emit_event(&"knockback_applied", {
-		"actor": target_body.name if target_body else "Unknown",
+		"actor": String(target_body.name) if target_body else "Unknown",
 		"force": force_vector.length(),
 		"duration": duration
 	})

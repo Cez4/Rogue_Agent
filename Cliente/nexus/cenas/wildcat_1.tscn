@@ -22,10 +22,16 @@
 [ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="18_dkk0s"]
 [ext_resource type="Resource" uid="uid://bbi5b1l06posj" path="res://configs/combat/wildcat_claw_attack_v1.tres" id="19_wcatatk"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/attack_hitbox_component_node.tscn" id="20_igu0s"]
+[ext_resource type="Script" uid="uid://c4albnh7g2uh2" path="res://Scripts/combat/health_component.gd" id="21_7bilb"]
 [ext_resource type="Script" uid="uid://d087gw3m6nlpa" path="res://Scripts/stats/stamina_component.gd" id="22_ligv6"]
 [ext_resource type="PackedScene" uid="uid://cpqqeuy3ge470" path="res://cenas/components/ui/combat_orb_presenter.tscn" id="22_oawiv"]
+[ext_resource type="Script" uid="uid://dgemf4hu2eypk" path="res://Scripts/combat/hurtbox_component.gd" id="23_74is0"]
+[ext_resource type="Script" uid="uid://cnyih1kegdel6" path="res://Scripts/combat/hitbox_component.gd" id="25_xgcpa"]
+[ext_resource type="Script" uid="uid://ckly2vu2kieg3" path="res://Scripts/ui/orb/combat_orb_presenter.gd" id="27_ncj22"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/health_regen_component_node.tscn" id="29_xgcpa"]
 [ext_resource type="Resource" path="res://configs/ui/orbs/stamina_orb_profile_v1.tres" id="30_orbpf"]
+[ext_resource type="Script" uid="uid://w7rnp2vrc4b2" path="res://Scripts/combat/health_regen_component.gd" id="31_hohll"]
+[ext_resource type="Script" uid="uid://diwfcith2c22c" path="res://Scripts/combat/knockback_component.gd" id="32_hto2f"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijbr8"]
 atlas = ExtResource("1_5uhpa")
@@ -3851,21 +3857,37 @@ script = ExtResource("11_xusch")
 [node name="StaggerState" type="LimboState" parent="LimboHSM" unique_id=657328311]
 script = ExtResource("15_oawiv")
 
-[node name="EmotionBubble" parent="." unique_id=587887002 instance=ExtResource("13_emote")]
+[node name="EmotionBubble" type="AnimatedSprite2D" parent="." unique_id=587887002 instance=ExtResource("13_emote")]
+visible = false
+position = Vector2(-8, -40)
 sprite_frames = SubResource("SpriteFrames_emotes")
+animation = &"Hoe"
 
-[node name="Health" parent="." unique_id=905350051 instance=ExtResource("16_tntqu")]
+[node name="Health" type="Node" parent="." unique_id=905350051 instance=ExtResource("16_tntqu")]
+script = ExtResource("21_7bilb")
 max_health = 14.0
 
-[node name="Hurtbox" parent="." unique_id=987265784 instance=ExtResource("18_dkk0s")]
+[node name="Hurtbox" type="Area2D" parent="." unique_id=987265784 instance=ExtResource("18_dkk0s")]
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+script = ExtResource("23_74is0")
 
-[node name="AttackHitbox" parent="." unique_id=1142482952 instance=ExtResource("20_igu0s")]
+[node name="AttackHitbox" type="Area2D" parent="." unique_id=1142482952 instance=ExtResource("20_igu0s")]
+position = Vector2(20, 0)
+collision_layer = 8
+collision_mask = 16
+monitoring = false
+monitorable = false
+script = ExtResource("25_xgcpa")
 
-[node name="CombatOrb" parent="." unique_id=2024503709 instance=ExtResource("22_oawiv")]
+[node name="CombatOrb" type="Node2D" parent="." unique_id=2024503709 instance=ExtResource("22_oawiv")]
+script = ExtResource("27_ncj22")
 display_mode = 1
 follow_offset = Vector2(-34, -44)
 
-[node name="StaminaOrb" parent="." unique_id=1969224005 instance=ExtResource("22_oawiv")]
+[node name="StaminaOrb" type="Node2D" parent="." unique_id=1969224005 instance=ExtResource("22_oawiv")]
+script = ExtResource("27_ncj22")
 resource_type = 1
 resource_profile = ExtResource("30_orbpf")
 display_mode = 1
@@ -3874,4 +3896,8 @@ follow_offset = Vector2(-34, -14)
 [node name="Stamina" type="Node" parent="." unique_id=1157558544]
 script = ExtResource("22_ligv6")
 
-[node name="HealthRegen" parent="." unique_id=1696201837 instance=ExtResource("29_xgcpa")]
+[node name="HealthRegen" type="Node" parent="." unique_id=1696201837 instance=ExtResource("29_xgcpa")]
+script = ExtResource("31_hohll")
+
+[node name="KnockbackComponent" type="Node" parent="." unique_id=1969197188]
+script = ExtResource("32_hto2f")

@@ -26,6 +26,7 @@
 [ext_resource type="Script" uid="uid://ckly2vu2kieg3" path="res://Scripts/ui/orb/combat_orb_presenter.gd" id="23_yrlys"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/health_regen_component_node.tscn" id="25_4coxd"]
 [ext_resource type="Script" uid="uid://w7rnp2vrc4b2" path="res://Scripts/combat/health_regen_component.gd" id="27_0qyyh"]
+[ext_resource type="Script" uid="uid://diwfcith2c22c" path="res://Scripts/combat/knockback_component.gd" id="28_qwrs5"]
 [ext_resource type="Resource" path="res://configs/ui/orbs/stamina_orb_profile_v1.tres" id="30_orbpf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5qvh4"]
@@ -3665,3 +3666,6 @@ regen_rate = 8.0
 
 [node name="HealthRegen" type="Node" parent="." unique_id=1498362683 instance=ExtResource("25_4coxd")]
 script = ExtResource("27_0qyyh")
+
+[node name="KnockbackComponent" type="Node" parent="." unique_id=618726870]
+script = ExtResource("28_qwrs5")
