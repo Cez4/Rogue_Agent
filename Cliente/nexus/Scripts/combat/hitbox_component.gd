@@ -7,27 +7,48 @@ extends Area2D
 @export var one_hit_per_target_per_attack: bool = true
 @export var max_targets_per_attack: int = 0
 
+var attack_sequence_id: int = 0
 var _attack_seq: int = 0
 var _hit_target_ids: Dictionary = {}
 var _hits_count: int = 0
+var _window_open: bool = false
 
 
 func _ready() -> void:
 	area_entered.connect(_on_area_entered)
 
 
-func set_hitbox_enabled(enabled: bool) -> void:
+func set_hitbox_enabled(enabled: bool, reason: StringName = &"manual") -> void:
 	# Physics-safe toggling: this can be called during in/out signals.
 	set_deferred("monitoring", enabled)
 	set_deferred("monitorable", enabled)
 	if enabled:
 		_begin_attack_window()
+	elif _window_open:
+		_close_attack_window(reason)
 
 
 func _begin_attack_window() -> void:
 	_attack_seq += 1
 	_hit_target_ids.clear()
 	_hits_count = 0
+	_window_open = true
+	CombatTelemetry.emit_event(&"attack_window_opened", {
+		"actor": _owner_name(),
+		"attack_sequence_id": attack_sequence_id,
+		"hitbox_sequence_id": _attack_seq
+	})
+
+
+func _close_attack_window(reason: StringName) -> void:
+	_window_open = false
+	CombatTelemetry.emit_event(&"attack_window_closed", {
+		"actor": _owner_name(),
+		"attack_sequence_id": attack_sequence_id,
+		"hitbox_sequence_id": _attack_seq,
+		"reason": String(reason),
+		"hits_count": _hits_count
+	})
 
 
 func _on_area_entered(area: Area2D) -> void:
@@ -64,6 +85,14 @@ func _on_area_entered(area: Area2D) -> void:
 		source_owner = str(owner.name)
 	CombatTelemetry.emit_event(&"hit_confirmed", {
 		"source_owner": source_owner,
+		"attack_sequence_id": attack_sequence_id,
+		"hitbox_sequence_id": _attack_seq,
 		"target_area": area.name,
 		"damage": damage
 	})
+
+
+func _owner_name() -> String:
+	if owner == null:
+		return ""
+	return str(owner.name)

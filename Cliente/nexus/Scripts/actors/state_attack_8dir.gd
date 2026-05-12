@@ -4,9 +4,15 @@ extends LimboState
 @export var hitbox_path: NodePath = ^"AttackHitbox"
 
 var _cooldown_until_sec: float = 0.0
+var _attack_sequence_counter: int = 0
+var _attack_sequence_id: int = 0
+var _attack_phase: StringName = &"idle"
+var _attack_started_runtime: bool = false
+var _finished_normally: bool = false
 
 
 func _enter() -> void:
+	_reset_attack_telemetry()
 	if agent == null:
 		_finish_attack()
 		return
@@ -31,6 +37,12 @@ func _enter() -> void:
 				if not stamina.consume(cost):
 					_finish_attack()
 					return
+				CombatTelemetry.emit_event(&"attack_stamina_cost", {
+					"actor": str(agent.name),
+					"attack_sequence_id": _attack_sequence_id,
+					"amount": cost,
+					"required": required
+				})
 
 	var telemetry_target: String = ""
 	var has_valid_telemetry_target: bool = false
@@ -41,8 +53,11 @@ func _enter() -> void:
 	if has_valid_telemetry_target:
 		CombatTelemetry.emit_event(&"attack_started", {
 			"actor": str(agent.name),
+			"attack_sequence_id": _attack_sequence_id,
 			"target": telemetry_target
 		})
+	_attack_started_runtime = true
+	_emit_attack_phase(&"windup", telemetry_target)
 
 	# Lock animation/state to attack execution; avoid walk visual while hit windows run.
 	agent.stop_motor_movement()
@@ -52,17 +67,21 @@ func _enter() -> void:
 	var hitbox := agent.get_node_or_null(hitbox_path) as HitboxComponent
 	if hitbox != null:
 		_apply_action_to_hitbox(hitbox)
-		hitbox.set_hitbox_enabled(false)
+		hitbox.attack_sequence_id = _attack_sequence_id
+		hitbox.set_hitbox_enabled(false, &"prepare")
 
 	await get_tree().create_timer(_windup()).timeout
 	if not is_active(): return
+	_emit_attack_phase(&"active", telemetry_target)
 	if hitbox != null:
+		hitbox.attack_sequence_id = _attack_sequence_id
 		hitbox.set_hitbox_enabled(true)
 
 	await get_tree().create_timer(_active()).timeout
 	if not is_active(): return
 	if hitbox != null:
-		hitbox.set_hitbox_enabled(false)
+		hitbox.set_hitbox_enabled(false, &"active_elapsed")
+	_emit_attack_phase(&"recover", telemetry_target)
 
 	await get_tree().create_timer(_recover()).timeout
 	if not is_active(): return
@@ -77,7 +96,14 @@ func _exit() -> void:
 	if agent != null:
 		var hitbox := agent.get_node_or_null(hitbox_path) as HitboxComponent
 		if hitbox != null:
-			hitbox.set_hitbox_enabled(false)
+			hitbox.set_hitbox_enabled(false, &"interrupted")
+		if _attack_started_runtime and not _finished_normally:
+			CombatTelemetry.emit_event(&"attack_interrupted", {
+				"actor": str(agent.name),
+				"attack_sequence_id": _attack_sequence_id,
+				"phase": String(_attack_phase),
+				"reason": String(_resolve_interrupt_reason())
+			})
 		agent.clear_attack_pending()
 
 
@@ -119,6 +145,8 @@ func _cooldown() -> float:
 
 
 func _finish_attack() -> void:
+	_finished_normally = true
+	_attack_phase = &"finished"
 	if agent != null:
 		agent.clear_attack_pending()
 	get_root().dispatch(EVENT_FINISHED)
@@ -130,3 +158,38 @@ func _resolved_action_data() -> Resource:
 		if loadout != null and loadout.weapon != null and loadout.weapon.action_data != null:
 			return loadout.weapon.action_data
 	return action_data
+
+
+func _reset_attack_telemetry() -> void:
+	_attack_sequence_counter += 1
+	_attack_sequence_id = _attack_sequence_counter
+	_attack_phase = &"idle"
+	_attack_started_runtime = false
+	_finished_normally = false
+
+
+func _emit_attack_phase(phase: StringName, target: String = "") -> void:
+	_attack_phase = phase
+	var payload := {
+		"actor": str(agent.name),
+		"attack_sequence_id": _attack_sequence_id,
+		"phase": String(phase)
+	}
+	if not target.is_empty():
+		payload["target"] = target
+	CombatTelemetry.emit_event(&"attack_phase_started", payload)
+
+
+func _resolve_interrupt_reason() -> StringName:
+	if agent == null:
+		return &"missing_agent"
+	var health := agent.get_node_or_null(^"Health") as HealthComponent
+	if health != null and not health.is_alive():
+		if agent.has_meta(&"attack_interrupt_reason"):
+			agent.remove_meta(&"attack_interrupt_reason")
+		return &"death"
+	if agent.has_meta(&"attack_interrupt_reason"):
+		var reason: StringName = StringName(str(agent.get_meta(&"attack_interrupt_reason")))
+		agent.remove_meta(&"attack_interrupt_reason")
+		return reason
+	return &"state_exit"

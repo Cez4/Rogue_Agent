@@ -1,8 +1,8 @@
 # Plano Sprint - Data-Driven Combat Clash / Parry Window v1
 
 Data: 2026-05-12
-Status: PLANEJADA - NAO IMPLEMENTADA
-Branch de referencia inicial: `feat/universal-hit-reaction-component-v1`
+Status: EM EXECUCAO - FASE A TELEMETRIA IMPLEMENTADA
+Branch de implementacao: `feat/combat-clash-parry-telemetry-v1`
 Baseline obrigatorio: `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md`
 
 ## 1) Objetivo
@@ -141,14 +141,16 @@ Preferencia:
 ## 9) Plano de Execucao
 
 ### Fase A - Telemetria Sem Mudanca de Gameplay
-- [ ] Revisar freeze V9 e docs de Hit Reaction/Knockback.
-- [ ] Ler docs oficiais Godot sobre `Area2D`, `Node` signals e `AnimatedSprite2D` se tocar animacao.
-- [ ] Ler docs oficiais LimboAI sobre `LimboState`/`LimboHSM` se tocar HSM.
-- [ ] Adicionar eventos de fase em `state_attack_8dir.gd` sem alterar timing.
-- [ ] Adicionar `attack_sequence_id` local para correlacionar stamina, janela ativa, hit confirm e interrupcao.
-- [ ] Emitir `attack_interrupted` quando `_exit()` ocorrer antes de `_finish_attack()`.
-- [ ] Validar em MCP: `open_scene -> play_scene -> get_godot_errors`.
-- [ ] Confirmar no log pelo menos um caso de ataque consumindo stamina e sendo interrompido antes de `hit_confirmed`.
+- [x] Revisar freeze V9 e docs de Hit Reaction/Knockback.
+- [x] Ler docs oficiais Godot sobre `Area2D`, `Node` signals e `AnimatedSprite2D` se tocar animacao.
+- [x] Ler docs oficiais LimboAI sobre `LimboState`/`LimboHSM` se tocar HSM.
+- [x] Adicionar eventos de fase em `state_attack_8dir.gd` sem alterar timing.
+- [x] Adicionar `attack_sequence_id` local para correlacionar stamina, janela ativa, hit confirm e interrupcao.
+- [x] Emitir `attack_interrupted` quando `_exit()` ocorrer antes de `_finish_attack()`.
+- [x] Adicionar `reason` em `attack_interrupted` para separar hit reaction, morte e saida generica de estado.
+- [x] Validar em MCP: `open_scene -> play_scene -> get_godot_errors`.
+- [x] Confirmar no log pelo menos um caso de ataque consumindo stamina e sendo interrompido antes de `hit_confirmed`.
+- [ ] Persistir freeze/status apos QA visual do diretor, se aprovado.
 
 ### Fase B - Resource e Componente em Modo Observador
 - [ ] Criar `CombatClashProfile`.
@@ -230,3 +232,152 @@ Sprint completa so fica pronta quando:
 5. MCP validado.
 6. Telemetria registrada.
 7. Freeze novo criado somente apos QA funcional aprovado.
+
+## 14) Registro de Implementacao - Fase A
+Data: 2026-05-12
+Status: implementada e validada por MCP, sem mudanca de gameplay.
+
+Arquivos alterados:
+
+1. `res://Scripts/actors/state_attack_8dir.gd`
+2. `res://Scripts/combat/hitbox_component.gd`
+
+Eventos adicionados:
+
+1. `attack_stamina_cost`
+2. `attack_phase_started`
+3. `attack_window_opened`
+4. `attack_window_closed`
+5. `attack_interrupted`
+
+Campos de correlacao adicionados:
+
+1. `attack_sequence_id`
+2. `hitbox_sequence_id`
+3. `phase`
+4. `hits_count`
+5. `reason`
+
+Evidencia MCP:
+
+1. `res://cenas/mundo.tscn` abriu e rodou.
+2. `get_godot_errors` nao registrou parse/runtime error novo.
+3. Logs confirmaram `attack_stamina_cost` com `attack_sequence_id`.
+4. Logs confirmaram fases `windup`, `active` e `recover`.
+5. Logs confirmaram `attack_window_opened` e `attack_window_closed`.
+6. Logs confirmaram `hit_confirmed` com `attack_sequence_id` e `hitbox_sequence_id`.
+7. Logs confirmaram caso central da sprint com multiplos atores:
+   - o ator interrompido consome stamina;
+   - fica em `windup`;
+   - o oponente abre janela ativa e confirma hit;
+   - o ator interrompido emite `attack_interrupted`;
+   - Hit Reaction assume a HSM depois da interrupcao.
+
+Decisao preservada:
+
+1. Nenhum dano extra de stamina foi implementado.
+2. Nenhum parry perfeito foi implementado.
+3. Nenhum `CombatClashComponent` foi criado ainda.
+4. Nenhuma cena ou `.tres` foi alterada.
+5. Hit Reaction V9, Knockback V6, kiting, stamina e orb permanecem como baseline funcional.
+
+## 15) Evidencias de QA por Ator - Fase A
+
+### Brute
+Status: valido como primeira prova forte de interrupcao.
+
+Evidencias:
+
+1. `HostileEnemyBrute` pagou stamina antes de concluir o ataque.
+2. O ataque estava em `windup`.
+3. O Player confirmou hit antes da janela ativa do Brute.
+4. `HostileEnemyBrute` emitiu `attack_interrupted`.
+5. Alguns casos vieram junto de morte, entao devem ser classificados como `death` e nao como Parry/Clash puro.
+
+Leitura tecnica:
+
+1. Brute prova o conceito de ataque pago e interrompido.
+2. Brute tambem prova a necessidade de `interrupt_reason`, porque morte e Hit Reaction normal aparecem proximas no log.
+
+### HostileEnemyLight
+Status: valido como prova de whiff/custo pago e janela ativa limpa.
+
+Evidencias:
+
+1. `HostileEnemyLight` pagou `14` stamina com `required = 25.2`.
+2. Ataques confirmados exibiram `attack_window_opened`, `hit_confirmed` e `attack_window_closed`.
+3. `attack_sequence_id = 7` abriu janela ativa e fechou com `hits_count = 0` e `reason = active_elapsed`.
+
+Leitura tecnica:
+
+1. Light prova o caso de `Whiff Paid Cost`: golpe saiu, nao acertou, stamina foi gasta.
+2. Light e bom para calibrar diferenca entre erro normal e interrupcao.
+
+### HostileEnemyBase
+Status: valido como prova completa de whiff, hit e Player interrompido.
+
+Evidencias:
+
+1. `HostileEnemyBase` pagou `20` stamina com `required = 32.0`.
+2. `attack_sequence_id = 8` abriu janela ativa e fechou com `hits_count = 0`, provando whiff pago.
+3. `HostileEnemyBase attack_sequence_id = 43` confirmou hit.
+4. O Player tinha `attack_sequence_id = 55`, havia pago stamina e estava em `windup`.
+5. O Player emitiu `attack_interrupted` em `windup`.
+6. `HostileEnemyBase attack_sequence_id = 44` tambem foi interrompido no golpe de morte, junto de `target_died`.
+
+Leitura tecnica:
+
+1. Base prova que Player e NPC usam o mesmo pipeline.
+2. Base prova que precisamos separar `hit_reaction` de `death`.
+
+### Wildcat
+Status: melhor prova bidirecional de arquitetura universal.
+
+Evidencias:
+
+1. `Wildcat attack_sequence_id = 8` confirmou hit no Player.
+2. O Player tinha `attack_sequence_id = 10`, pagou stamina e estava em `windup`.
+3. O Player emitiu `attack_interrupted` e entrou em Hit Reaction.
+4. Depois, `Player attack_sequence_id = 11` confirmou hit.
+5. O Wildcat tinha `attack_sequence_id = 18`, pagou stamina e estava em `windup`.
+6. O Wildcat emitiu `attack_interrupted` e entrou em Hit Reaction.
+7. O padrao se repetiu em `Wildcat attack_sequence_id = 19` e em `Player attack_sequence_id = 32`.
+
+Leitura tecnica:
+
+1. Wildcat prova simetria: Player interrompe NPC e NPC interrompe Player.
+2. A mecanica nao depende de tipo de inimigo.
+3. O futuro componente deve ser global/plug-and-play, nao exclusivo de Player.
+
+## 16) Refinamento de Telemetria - Interrupt Reason
+Status: implementado e validado no Godot MCP apos analise dos logs Brute/Light/Base/Wildcat.
+
+Motivo:
+
+1. Os logs mostraram interrupcoes por Hit Reaction normal.
+2. Os logs tambem mostraram interrupcoes junto de `target_died`.
+3. Sem `reason`, a Fase B poderia confundir Parry/Clash real com morte ou saida generica de estado.
+
+Decisao:
+
+1. `attack_interrupted` passa a emitir `reason`.
+2. `reason = hit_reaction` quando a interrupcao vem do `HitReactionComponent`.
+3. `reason = death` quando a Health do ator ja esta morta no `_exit()` do ataque.
+4. `reason = state_exit` fica como fallback para saidas nao classificadas.
+5. A marcacao de `hit_reaction` usa metadata transitoria no ator, sem export, sem wrapper e sem inflar `Actor8DirLimbo`.
+
+Validacao MCP:
+
+1. `res://Scripts/actors/state_attack_8dir.gd` abriu sem parse error.
+2. `res://Scripts/combat/hit_reaction_component.gd` abriu sem parse error.
+3. `res://cenas/mundo.tscn` abriu e rodou.
+4. `get_godot_errors` nao registrou runtime/parse error novo.
+5. Logs confirmaram:
+   - `HostileEnemyBrute attack_sequence_id = 1`, `phase = windup`, `reason = hit_reaction`;
+   - `HostileEnemyBrute attack_sequence_id = 2`, `phase = windup`, `reason = hit_reaction`;
+   - `HostileEnemyBrute attack_sequence_id = 3`, `phase = windup`, `reason = hit_reaction`.
+
+Observacao:
+
+1. O teste validou `hit_reaction`.
+2. `death` ja foi observado nos logs anteriores como classe necessaria, mas deve ser reamostrado depois com o campo `reason` novo se quisermos congelar a taxonomia final antes da Fase B.

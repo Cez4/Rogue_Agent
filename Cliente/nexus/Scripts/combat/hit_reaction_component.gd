@@ -42,6 +42,8 @@ func request_hit_reaction(amount: float, knockback: Vector2) -> bool:
 		_emit_skipped("missing_hsm", amount)
 		return false
 
+	if _target_actor != null and bool(profile.get("interrupt_attack")):
+		_target_actor.set_meta(&"attack_interrupt_reason", &"hit_reaction")
 	_pending_request = {
 		"profile": profile,
 		"damage": amount,

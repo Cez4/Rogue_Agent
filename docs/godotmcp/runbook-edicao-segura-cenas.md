@@ -153,7 +153,7 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 5. Novas propagacoes para NPCs/hostis devem preservar o contrato plug-and-play e validar telemetria.
 
 ## Sequenciamento Combat Clash / Parry Window v1
-1. `Cliente/nexus/docs/plano-sprint-combat-clash-parry-v1-2026-05-12.md` e a proxima sprint planejada apos V9.
+1. `Cliente/nexus/docs/plano-sprint-combat-clash-parry-v1-2026-05-12.md` e a sprint atual apos V9.
 2. Nao implementar Parry direto: a Fase A e somente telemetria, sem mudanca de gameplay.
 3. O custo de stamina do ataque interrompido ja e o primeiro "stamina damage" aprovado; nao duplicar punicao antes de QA.
 4. Eventos minimos da Fase A:

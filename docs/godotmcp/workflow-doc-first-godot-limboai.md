@@ -71,7 +71,7 @@ LimboAI:
 - Apos os freezes V7/V8/V9, preservar o contrato visual aprovado: Player, Wildcat e hostis tocam animacoes de dano inteiras, orientadas para a origem do golpe, com `hit_reaction_animation played=true duration=1.0`.
 
 ## Regra - Combat Clash / Parry Window v1
-- Sprint planejada em `Cliente/nexus/docs/plano-sprint-combat-clash-parry-v1-2026-05-12.md`.
+- Sprint atual em `Cliente/nexus/docs/plano-sprint-combat-clash-parry-v1-2026-05-12.md`.
 - O comportamento atual e Attack Interrupt natural, nao Parry formal.
 - O custo de stamina ja gasto pelo ataque interrompido e a punicao base do v1.
 - Nao adicionar dano extra de stamina antes da Fase A provar, por telemetria, a fase exata do ataque interrompido.

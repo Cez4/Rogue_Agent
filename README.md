@@ -26,10 +26,10 @@ Esse documento manda no estado da fase atual e consolida:
 8. Hit Reaction V8 esta aprovado no Wildcat.
 9. Hit Reaction V9 esta aprovado nos hostis `HostileEnemyBase`, `HostileEnemyLight` e `HostileEnemyBrute`.
 
-## Proxima sprint planejada
+## Sprint atual em execucao
 - `Cliente/nexus/docs/plano-sprint-combat-clash-parry-v1-2026-05-12.md`
 
-Escopo: formalizar, primeiro por telemetria, o Attack Interrupt natural observado no combate. O custo de stamina do ataque interrompido ja e a punicao base; dano extra de stamina/parry perfeito so entra depois de prova por logs e QA.
+Escopo atual: Fase A implementada com telemetria de Attack Interrupt / Clash, sem mudanca de gameplay. O custo de stamina do ataque interrompido ja e a punicao base; dano extra de stamina/parry perfeito so entra depois de prova por logs e QA.
 
 ## Regra de operacao
 1. Antes de nova feature, revisar o freeze atual.
