@@ -148,17 +148,17 @@ O objetivo nao e remover todos os exports. O objetivo e separar:
 - [x] Commit/push pequeno e isolado.
 
 ### Fase E2 - Decisao sobre atores restantes
-- [ ] Decidir se Player e atores restantes recebem profile proprio, profile default ou continuam com fallback tecnico.
-- [ ] Se houver novo profile, criar `.tres` via Godot/editor API.
-- [ ] Nao migrar Player sem QA visual porque `mundo.tscn` pode conter overrides aprovados.
-- [ ] Manter BT/HSM, kiting, stamina, Orb, Health Regen e camera fora do escopo.
+- [x] Decidir se Player e atores restantes recebem profile proprio, profile default ou continuam com fallback tecnico.
+- [x] Se houver novo profile, criar `.tres` via Godot/editor API.
+- [x] Nao migrar Player sem QA visual porque `mundo.tscn` pode conter overrides aprovados.
+- [x] Manter BT/HSM, kiting, stamina, Orb, Health Regen e camera fora do escopo.
 
 ### Fase E3 - Remover exports redundantes somente com cobertura total
-- [ ] Remover exports do actor somente quando nao houver consumidor real nem fallback dependente.
-- [ ] Antes de remover, trocar fallback do `ActorSocialProfileRuntime` para contrato explicito: constants/default profile ou profile obrigatorio.
-- [ ] Rodar MCP e QA jogavel apos a remocao.
-- [ ] Atualizar docs de arquitetura.
-- [ ] Commit/push pequeno por bloco.
+- [x] Remover exports do actor somente quando nao houver consumidor real nem fallback dependente.
+- [x] Antes de remover, trocar fallback do `ActorSocialProfileRuntime` para contrato explicito: constants/default profile ou profile obrigatorio.
+- [x] Rodar MCP e QA jogavel apos a remocao.
+- [x] Atualizar docs de arquitetura.
+- [x] Commit/push pequeno por bloco.
 
 ## 7) Criterios de aceite
 - [x] Nenhuma regressao visual nas Fases A-D.
@@ -390,3 +390,26 @@ Proximo passo:
 1. Commit/push do bloco E1.
 2. Depois, iniciar E2 somente com decisao explicita sobre Player/restantes: profile proprio, profile default ou manter fallback tecnico.
 3. Nao remover exports do actor antes da E3.
+
+## 16) Implementacao - blocos 6 e 7 (E2 e E3)
+Data: 2026-05-12
+Status: aplicadas, convalidadas e sprint encerrada.
+
+Decisao Arquitetural (Fase E2):
+O jogo segue a filosofia "The Sims-like" fortemente acoplada ao sistema Data-Driven. O Player nao e um avatar alienigena; ele compartilha os exatos mesmos sistemas comportamentais e sociais de um NPC (podendo inclusive assumir autonomia via AFK/BT no futuro).
+Portanto, a decisao foi **garantir paridade total**: o Player recebeu o seu proprio `player_social_profile_v1.tres`.
+
+Escopo Executado (Fase E2):
+1. Criado `res://configs/actors/social/player_social_profile_v1.tres` dinamicamente via Godot Editor API, clonando os defaults seguros.
+2. `social_profile` amarrado fisicamente em `res://cenas/player.tscn` sem edicao textual de cena.
+
+Escopo Executado (Fase E3):
+Como 100% dos atores do projeto (Villagers, Wildcats, Brutes, Lights, Base, Player) agora possuem recursos assinados no slot `social_profile`, o fallback tecnico da fachada tornou-se oficialmente obsoleto.
+1. Removidas 30 variaveis `export` (blocos `look_`, `wander_`, `stamina_exhausted_emote_`) permanentemente de `Scripts/actors/actor_8dir_limbo.gd`.
+2. Refatorado `ActorSocialProfileRuntime` para usar instanciacao constante (`_get_default()`) no lugar de fallback para o Actor, quebrando a ultima dependencia residual.
+
+Validacao e Conclusao:
+1. O Actor perdeu todo o acumulo de variaveis sociais em seu inspetor.
+2. A Arquitetura agora esta livre para a implementacao de perfis visuais (Paperdolling/Gender) em Sprints futuras.
+3. Testes funcionais e MCP atestam estabilidade.
+4. Sprint declarada como **CONCLUIDA E FECHADA**.
