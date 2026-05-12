@@ -126,6 +126,18 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 3. Refatorar `Scripts/actors/actor_8dir_limbo.gd` somente em blocos pequenos, preservando wrappers publicos usados por BT/HSM/Controller.
 4. Durante o slimming, nao alterar cena, BT/HSM, kiting, stamina, Orb ou Health Regen sem bug comprovado e novo QA.
 
+## Sequenciamento Actor Export/Profile Organization v1
+1. `Cliente/nexus/docs/plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` e a sprint ativa de organizacao de exports/perfis.
+2. Fases A-D estao congeladas: profile social/wander criado, Villager migrado e hostis migrados com QA aprovado.
+3. Fase E nao pode comecar removendo exports do `Actor8DirLimbo` diretamente.
+4. Ordem obrigatoria da Fase E:
+   - E0: auditar cobertura de `social_profile` e classificar valores antigos como `fallback_real`, `override_aprovado`, `tuning_fantasma` ou `remover_depois`;
+   - E1: limpar apenas overrides antigos de cenas ja migradas;
+   - E2: decidir Player/restantes com profile proprio, profile default ou fallback tecnico;
+   - E3: remover exports somente com cobertura total comprovada.
+5. Qualquer limpeza em `.tscn`/`.tres` deve ser feita via Godot/editor API, nunca por texto.
+6. Se uma entidade ainda nao tiver `social_profile`, os exports antigos devem ser tratados como fallback real ate prova contraria.
+
 ## Freeze intermediario Actor8Dir Slimming bloco 1
 1. `ActorCombatResourceRuntime` esta aceito como primeiro corte estrutural.
 2. `actor_8dir_limbo.gd` reduziu de 633 para 601 linhas sem alterar cenas.

@@ -1,7 +1,7 @@
 # Plano Sprint - Actor Export/Profile Organization v1
 
 Data: 2026-05-11
-Status: FASE D CONGELADA - HOSTILE SOCIAL PROFILE APROVADO
+Status: FASE E PLANEJADA - LIMPEZA SO APOS AUDITORIA DE COBERTURA
 Branch: `feat/actor-export-profile-organization-v1`
 Base obrigatoria: `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` fechado parcialmente e congelado.
 
@@ -132,18 +132,41 @@ O objetivo nao e remover todos os exports. O objetivo e separar:
 - [x] Confirmar que Player, Brute, Light e Wildcat continuam compartilhando core.
 - [x] QA combate: attack, kiting, death/respawn, Orb e Health Regen.
 
-### Fase E - Limpar exports redundantes
-- [ ] Remover exports do actor somente quando todas as cenas consumirem profile.
-- [ ] Manter compatibilidade se alguma cena ainda nao tiver profile.
+### Fase E0 - Auditoria de cobertura antes de limpar
+- [ ] Auditar todos os `Actor8DirLimbo` que ainda tem `social_profile == null`.
+- [ ] Auditar overrides sociais/wander/emote ainda serializados em cenas base.
+- [ ] Auditar overrides sociais/wander/emote em cenas instanciadoras, especialmente `mundo.tscn`.
+- [ ] Classificar cada valor antigo como `fallback_real`, `override_aprovado`, `tuning_fantasma` ou `remover_depois`.
+- [ ] Registrar no plano quais atores ainda dependem dos exports antigos como fallback.
+- [ ] Nao remover export nenhum nesta fase.
+
+### Fase E1 - Limpeza de overrides migrados
+- [ ] Limpar somente overrides antigos de entidades que ja consomem `ActorSocialProfile`.
+- [ ] Fazer limpeza apenas via Godot/editor API, nunca por texto em `.tscn`/`.tres`.
+- [ ] Validar antes/depois que Villager e hostis continuam puxando os profiles aprovados.
+- [ ] QA visual: assobio/`Hoe`, exclamacao/`Exc`, wander e combate sem regressao.
+- [ ] Commit/push pequeno e isolado.
+
+### Fase E2 - Decisao sobre atores restantes
+- [ ] Decidir se Player e atores restantes recebem profile proprio, profile default ou continuam com fallback tecnico.
+- [ ] Se houver novo profile, criar `.tres` via Godot/editor API.
+- [ ] Nao migrar Player sem QA visual porque `mundo.tscn` pode conter overrides aprovados.
+- [ ] Manter BT/HSM, kiting, stamina, Orb, Health Regen e camera fora do escopo.
+
+### Fase E3 - Remover exports redundantes somente com cobertura total
+- [ ] Remover exports do actor somente quando nao houver consumidor real nem fallback dependente.
+- [ ] Antes de remover, trocar fallback do `ActorSocialProfileRuntime` para contrato explicito: constants/default profile ou profile obrigatorio.
+- [ ] Rodar MCP e QA jogavel apos a remocao.
 - [ ] Atualizar docs de arquitetura.
 - [ ] Commit/push pequeno por bloco.
 
 ## 7) Criterios de aceite
-- [ ] Nenhuma regressao visual.
-- [ ] Nenhuma regressao de combate.
-- [ ] Nenhuma arvore BT `.tres` editada por texto.
-- [ ] Nenhuma cena `.tscn` editada por texto.
-- [ ] Social/wander/emote data-driven por Resource.
+- [x] Nenhuma regressao visual nas Fases A-D.
+- [x] Nenhuma regressao de combate nas Fases A-D.
+- [x] Nenhuma arvore BT `.tres` editada por texto nas Fases A-D.
+- [x] Nenhuma cena `.tscn` editada por texto nas Fases A-D.
+- [x] Social/wander/emote data-driven por Resource para Villager e hostis migrados.
+- [ ] Todas as cenas/atores relevantes com cobertura de profile ou fallback documentado.
 - [ ] Actor continua sendo fachada de cena, nao deposito de tuning duplicado.
 - [ ] Smoke MCP limpo.
 - [ ] QA jogavel aprovado.
@@ -163,8 +186,14 @@ Mitigacao: piloto visual isolado antes de hostis, sem alterar BT.
 Risco: mover fallback de combate cedo demais.
 Mitigacao: `chase_attack_range`, `base_*` e `attack_duration_sec` ficam para fase posterior, com plano proprio se necessario.
 
+Risco: remover exports sociais antes de todos os consumidores estarem cobertos.
+Mitigacao: dividir Fase E em E0/E1/E2/E3. E0 e auditoria sem remocao; E1 limpa apenas overrides migrados; E2 decide profile/default/fallback para atores restantes; E3 remove exports somente com cobertura total comprovada.
+
+Risco: confundir valores antigos no Inspector com tuning ativo.
+Mitigacao: marcar valores antigos como `tuning_fantasma` quando a entidade ja usa `social_profile`, e limpar somente via Godot/editor API com QA visual antes/depois.
+
 ## 9) Proximo passo imediato
-Bloco 1 congelado. O proximo passo e iniciar a Fase C com uma entidade piloto de baixo risco, criando o `.tres` pelo Godot/editor e migrando somente os dados sociais/wander/emote dessa entidade antes de qualquer migracao hostil.
+Fases A-D congeladas. O proximo passo e iniciar a Fase E0 como auditoria sem remocao, classificando cobertura de `social_profile`, overrides herdados e possiveis tunings fantasma antes de qualquer limpeza de export ou cena.
 
 ## 10) Implementacao - bloco 1
 Data: 2026-05-11
@@ -263,5 +292,27 @@ Validacao tecnica:
 
 Proximo passo:
 1. Fase D congelada.
-2. Proxima etapa: avaliar Fase E de limpeza de exports redundantes com cuidado, mantendo fallback ate todas as cenas relevantes consumirem profiles.
-3. Antes de remover qualquer export do actor, auditar consumidores reais em BT/HSM/Controller/Scenes e rodar MCP.
+2. Proxima etapa: iniciar Fase E0, auditoria de cobertura sem remocao.
+3. Antes de remover qualquer export do actor, auditar consumidores reais em BT/HSM/Controller/Scenes e cenas instanciadoras.
+4. Se a auditoria encontrar ator sem `social_profile`, tratar o export antigo como fallback real ate migracao/default aprovado.
+
+## 13) Decisao de planejamento - Fase E subdividida
+Data: 2026-05-11
+Status: registrada, aguardando execucao.
+
+Decisao:
+1. A limpeza de exports redundantes nao sera feita como uma remocao direta.
+2. A Fase E passa a ser dividida em E0/E1/E2/E3 para preservar o comportamento aprovado.
+3. Enquanto existir ator sem `social_profile` ou override aprovado em cena instanciadora, os exports antigos podem ser fallback real.
+4. Valores antigos em cenas ja migradas devem ser tratados como possivel `tuning_fantasma`, mas so podem ser removidos via Godot/editor API e depois de QA visual.
+
+Ordem obrigatoria:
+1. E0: auditar cobertura e classificar valores.
+2. E1: limpar apenas duplicacao de entidades ja migradas.
+3. E2: decidir Player/restantes com profile proprio, profile default ou fallback tecnico.
+4. E3: remover exports do actor somente com cobertura total comprovada e fallback substituido por contrato explicito.
+
+Guardrail:
+1. Nenhum BT/HSM sera alterado nesta limpeza.
+2. Nenhum `.tscn` ou `.tres` sera editado por texto.
+3. Nenhuma mudanca visual sera aceita sem QA jogavel.

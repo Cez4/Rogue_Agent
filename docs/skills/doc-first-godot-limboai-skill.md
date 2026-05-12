@@ -19,6 +19,9 @@ Regra:
 12. Em roadmap pos-freeze, considerar Health Regen Data-Driven v1 como congelado antes de iniciar Actor8Dir Facade Slimming v1.
 13. Durante Actor8Dir Facade Slimming v1, nao alterar Health Regen, Orb, BT/HSM, stamina ou kiting sem bug comprovado e novo QA.
 14. Depois do bloco 1 de Actor8Dir Slimming, tratar spam de `kiting_started` como ponto congelado de telemetria antes de nova extracao estrutural.
+15. Durante Actor Export/Profile Organization v1, nao remover exports sociais/wander/emote do `Actor8DirLimbo` antes da Fase E0 de auditoria de cobertura.
+16. Antes de limpar tuning antigo, classificar cada valor como `fallback_real`, `override_aprovado`, `tuning_fantasma` ou `remover_depois`.
+17. Se uma cena/ator ainda nao tiver `social_profile`, preservar os exports antigos como fallback real ate migracao/default aprovado.
 
 Checklist rapido:
 - [ ] Doc interno lido.
@@ -39,6 +42,8 @@ Checklist rapido:
 - [ ] Prova data-driven registrada: mesma logica, perfis `.tres` diferentes e telemetria mostrando comportamento distinto.
 - [ ] A sprint atual permite mexer em `Actor8DirLimbo`? Na Actor8Dir Facade Slimming v1, manter wrappers publicos e validar cada bloco no MCP.
 - [ ] O log tem spam de `kiting_started`? Nao avancar para Fase C nem mexer em kiting/movimento antes de decidir se e ruido aceito ou ajuste de telemetria.
+- [ ] Na sprint Actor Export/Profile Organization v1, a Fase E comecou por E0/auditoria antes de qualquer remocao de export?
+- [ ] Valores sociais/wander antigos em cenas migradas foram tratados como tuning fantasma e limpos somente via Godot/editor API?
 
 Fontes base:
 - Godot: https://docs.godotengine.org/en/stable/

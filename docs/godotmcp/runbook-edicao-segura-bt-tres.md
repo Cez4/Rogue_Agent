@@ -63,6 +63,8 @@ func run():
 1. Health Regen Data-Driven v1 esta congelado e nao alterou estrutura das arvores BT.
 2. Actor8Dir Facade Slimming v1 e a sprint ativa e deve preservar estrutura BT, salvo bug comprovado e editado via Godot/editor API.
 3. O refactor de `Actor8DirLimbo` deve manter wrappers publicos usados por BT/HSM/Controller ate haver migracao validada em MCP.
+4. Actor Export/Profile Organization v1 nao deve alterar BT/HSM para limpar exports sociais/wander/emote.
+5. A Fase E dessa sprint deve comecar por auditoria E0; remocao de exports so depois de cobertura total de `social_profile` ou fallback documentado.
 
 ## Congelamento Actor8Dir Slimming bloco 1
 1. O bloco 1 (`ActorCombatResourceRuntime`) esta congelado no commit `fb1e408`.
