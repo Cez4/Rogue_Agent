@@ -25,6 +25,9 @@ func _tick(_delta: float) -> Status:
 
 	var attack_pending: bool = false
 	attack_pending = bool(agent.is_attack_pending_runtime())
+	if _is_agent_hit_reacting():
+		BTDecisionTelemetryRef.emit("RequestAttack", agent, blackboard, debug_decision_var, "RUNNING", "hit_reaction")
+		return RUNNING
 
 	# If an attack is currently executing, keep this task RUNNING until it completes.
 	if attack_pending:
@@ -171,3 +174,10 @@ func _emit_blocked_ended_if_needed(next_reason: String) -> void:
 	})
 	blackboard.set_var(blocked_active_var, false)
 	blackboard.set_var(blocked_pending_since_ms_var, -1)
+
+
+func _is_agent_hit_reacting() -> bool:
+	if agent == null:
+		return false
+	var hit_reaction := agent.get_node_or_null(^"HitReactionComponent")
+	return hit_reaction != null and hit_reaction.has_method("is_reacting") and bool(hit_reaction.call("is_reacting"))

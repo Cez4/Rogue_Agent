@@ -23,6 +23,8 @@ func handle_unhandled_input(event: InputEvent) -> void:
 		return
 	if not _is_player_controlled_body():
 		return
+	if _is_body_hit_reacting():
+		return
 	if event.is_echo():
 		return
 
@@ -108,3 +110,10 @@ func _cancel_all_intents() -> void:
 	if _body == null:
 		return
 	_body.cancel_all_intents(&"input_move")
+
+
+func _is_body_hit_reacting() -> bool:
+	if _body == null:
+		return false
+	var hit_reaction := _body.get_node_or_null(^"HitReactionComponent")
+	return hit_reaction != null and hit_reaction.has_method("is_reacting") and bool(hit_reaction.call("is_reacting"))

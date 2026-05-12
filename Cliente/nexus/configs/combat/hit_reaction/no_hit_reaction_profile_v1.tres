@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="HitReactionProfile" format=3 uid="uid://biuw8wjr7up3l"]
+
+[ext_resource type="Script" path="res://Scripts/combat/hit_reaction_profile.gd" id="1_ljs6u"]
+
+[resource]
+script = ExtResource("1_ljs6u")
+enabled = false

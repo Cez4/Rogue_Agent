@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="HitReactionProfile" format=3 uid="uid://dhn8pv7gu6ntm"]
+
+[ext_resource type="Script" path="res://Scripts/combat/hit_reaction_profile.gd" id="1_i4dx3"]
+
+[resource]
+script = ExtResource("1_i4dx3")
+animation_prefix = &"Dagger01_TakeDamage"
+max_hit_stun_sec = 0.28

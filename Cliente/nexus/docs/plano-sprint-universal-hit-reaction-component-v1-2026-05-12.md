@@ -1,7 +1,7 @@
 # Plano Sprint - Universal Hit Reaction Component v1
 
 Data: 2026-05-12
-Status: PLANEJADO - NAO IMPLEMENTADO
+Status: IMPLEMENTACAO TECNICA V1 EM QA VISUAL
 Branch recomendada: criar nova branch antes de executar
 
 ## 1) Objetivo
@@ -200,48 +200,48 @@ Mudancas provaveis em tasks/scripts:
 ## 12) Plano de Execucao
 
 ### Fase A - Auditoria Sem Alteracao
-- [ ] Confirmar worktree e branch.
-- [ ] Confirmar cenas/templates com `Health`, `Hurtbox`, `AttackHitbox`, `KnockbackComponent` e `LimboHSM`.
-- [ ] Confirmar animacoes `Dagger01_TakeDamage_*` no Player e se estao sem loop.
-- [ ] Confirmar se hostis possuem sprites de dano ou se entram no v1 com fallback/desabilitado.
-- [ ] Registrar resultado no plano antes de codar.
+- [x] Confirmar worktree e branch.
+- [x] Confirmar cenas/templates com `Health`, `Hurtbox`, `AttackHitbox`, `KnockbackComponent` e `LimboHSM`.
+- [x] Confirmar animacoes `Dagger01_TakeDamage_*` no Player e se estao sem loop.
+- [x] Confirmar se hostis possuem sprites de dano ou se entram no v1 com fallback/desabilitado.
+- [x] Registrar resultado no plano antes de codar.
 
 ### Fase B - Dados
-- [ ] Criar `HitReactionProfile`.
-- [ ] Criar profiles `.tres` via Godot/editor API.
-- [ ] Definir baseline inicial seguro:
+- [x] Criar `HitReactionProfile`.
+- [x] Criar profiles `.tres` via Godot/editor API.
+- [x] Definir baseline inicial seguro:
   - Player: `0.16s` a `0.22s`;
   - Hostile Light/Wildcat: `0.12s` a `0.18s`;
   - Brute: `0.08s` a `0.14s` ou resistencia maior.
 
 ### Fase C - Componente Plug-and-Play
-- [ ] Criar `HitReactionComponent`.
-- [ ] Conectar no `HealthComponent.damaged`.
-- [ ] Implementar cooldown anti-hitlock.
-- [ ] Emitir telemetria.
-- [ ] Testar componente isolado em cena sem alterar BT.
+- [x] Criar `HitReactionComponent`.
+- [x] Conectar no `HealthComponent.damaged`.
+- [x] Implementar cooldown anti-hitlock.
+- [x] Emitir telemetria.
+- [x] Testar componente isolado em cena sem alterar BT.
 
 ### Fase D - HSM e Actor Contract
-- [ ] Criar `hit_reaction_state.gd`.
-- [ ] Primeiro tentar integrar sem novo wrapper no `Actor8DirLimbo`.
-- [ ] Se inevitavel, adicionar apenas wrappers pequenos em `Actor8DirLimbo`, com delegacao imediata e sem tuning/export.
-- [ ] Medir linhas do actor antes/depois; nao aceitar re-inflar a fachada.
-- [ ] Adicionar transicao HSM `hit_reaction!`.
-- [ ] Garantir interrupcao limpa de ataque e movimento.
-- [ ] Garantir que `combat_target` permanece.
+- [x] Criar `hit_reaction_state.gd`.
+- [x] Primeiro tentar integrar sem novo wrapper no `Actor8DirLimbo`.
+- [x] Se inevitavel, adicionar apenas wrappers pequenos em `Actor8DirLimbo`, com delegacao imediata e sem tuning/export.
+- [x] Medir linhas do actor antes/depois; nao aceitar re-inflar a fachada.
+- [x] Adicionar transicao HSM `hit_reaction!`.
+- [x] Garantir interrupcao limpa de ataque e movimento.
+- [x] Garantir que `combat_target` permanece.
 
 ### Fase E - Integracao em Templates
-- [ ] Adicionar `HitReactionComponent` no Player via Godot/editor API.
-- [ ] Adicionar `HitReactionState` no HSM do Player via Godot/editor API.
-- [ ] Decidir hostis v1: com profile real, fallback curto ou desabilitado.
-- [ ] Nao propagar para todos os templates antes de QA visual do Player.
+- [x] Adicionar `HitReactionComponent` no Player via Godot/editor API.
+- [x] Adicionar `HitReactionState` no HSM do Player via Godot/editor API.
+- [x] Decidir hostis v1: com profile real, fallback curto ou desabilitado.
+- [x] Nao propagar para todos os templates antes de QA visual do Player.
 
 ### Fase F - QA Godot/MCP
-- [ ] Parar cena antes de editar.
-- [ ] `open_scene res://cenas/mundo.tscn`
-- [ ] `play_scene current`
-- [ ] `get_godot_errors`
-- [ ] Confirmar logs:
+- [x] Parar cena antes de editar.
+- [x] `open_scene res://cenas/mundo.tscn`
+- [x] `play_scene current`
+- [x] `get_godot_errors`
+- [x] Confirmar logs:
   - `hit_confirmed`
   - `damaged`
   - `hit_reaction_requested`
@@ -249,13 +249,74 @@ Mudancas provaveis em tasks/scripts:
   - `hit_reaction_finished`
   - combate retomando depois.
 - [ ] Confirmar visualmente Player recebendo hit e tocando `Dagger01_TakeDamage_*`.
-- [ ] Confirmar que spam de hits nao gera hitlock permanente.
-- [ ] Confirmar que kiting/stamina/knockback/orb continuam funcionais.
+- [x] Confirmar que spam de hits nao gera hitlock permanente.
+- [x] Confirmar que kiting/stamina/knockback/orb continuam funcionais.
 
 ### Fase G - Freeze
 - [ ] Atualizar docs/status.
 - [ ] Registrar valores finais de tuning.
 - [ ] Commit e push somente apos QA aprovado.
+
+## 12.1) Implementacao tecnica v1 - 2026-05-12
+Status: pronta para QA visual do diretor.
+
+O que foi implementado:
+
+1. `HitReactionProfile` em `res://Scripts/combat/hit_reaction_profile.gd`.
+2. `HitReactionComponent` em `res://Scripts/combat/hit_reaction_component.gd`.
+3. `HitReactionState` em `res://Scripts/actors/states/hit_reaction_state.gd`.
+4. Profiles criados via Godot/editor API:
+   - `res://configs/combat/hit_reaction/player_hit_reaction_profile_v1.tres`;
+   - `res://configs/combat/hit_reaction/hostile_light_hit_reaction_profile_v1.tres`;
+   - `res://configs/combat/hit_reaction/hostile_brute_hit_reaction_profile_v1.tres`;
+   - `res://configs/combat/hit_reaction/no_hit_reaction_profile_v1.tres`.
+5. `res://cenas/player.tscn` recebeu:
+   - `HitReactionComponent`;
+   - `LimboHSM/HitReactionState`;
+   - loops `Dagger01_TakeDamage_*` desligados.
+
+Decisoes tecnicas:
+
+1. Hostis ainda nao receberam o componente no v1 visual; eles ficam com profiles prontos para proxima propagacao apos QA do Player.
+2. `Actor8DirLimbo` nao recebeu exports nem tuning novo.
+3. `Actor8DirLimbo` ficou com cerca de 323 linhas apos o wiring minimo, preservando a fachada fina.
+4. A BT nao recebeu regra de dano; apenas respeita `HitReactionComponent.is_reacting()` para nao iniciar ataque/movimento durante hit stun.
+
+Validacao MCP:
+
+1. `res://cenas/mundo.tscn` abriu e rodou.
+2. `get_godot_errors` nao registrou parse/runtime error novo apos limpar logs e registrar UID do profile.
+3. Logs confirmaram:
+   - `hit_confirmed`;
+   - `knockback_applied`;
+   - `hit_reaction_requested`;
+   - `hit_reaction_started`;
+   - `hit_reaction_finished`;
+   - retomada de ataque/kiting/stamina depois da reacao.
+
+QA visual apos teste do diretor:
+
+1. O teste visual inicial nao exibiu claramente a animacao de dano.
+2. A auditoria de logs comprovou que a logica estava entrando:
+   - `hit_reaction_requested`;
+   - `hit_reaction_started`;
+   - `hit_reaction_animation` com `played=true`;
+   - animacoes reais como `Dagger01_TakeDamage_S`, `Dagger01_TakeDamage_N`, `Dagger01_TakeDamage_SO`, `Dagger01_TakeDamage_NE`, `Dagger01_TakeDamage_O` e `Dagger01_TakeDamage_L`;
+   - duracao visual calculada em `0.28s`.
+3. O problema encontrado foi disputa visual: eventos de BT/kiting ainda podiam chamar animacoes genericas dentro da janela de hit stun e sobrescrever o sprite.
+4. Correcao aplicada sem inflar o `Actor8DirLimbo`: `ActorRuntimeBridge.play_directional()` agora respeita `HitReactionComponent.is_reacting()` e bloqueia idle/walk/attack/look genericos durante a reacao.
+5. `HitReactionState` continua sendo a unica fonte autorizada para tocar a animacao de dano durante o hit stun.
+
+QA de duracao apos novo teste do diretor:
+
+1. Logs novos mostraram que o fluxo estava correto, mas o game feel ainda ficava curto:
+   - `hit_reaction_animation` tocava `played=true`;
+   - `duration` ficava em `0.28s`;
+   - `hit_reaction_finished` liberava logo depois.
+2. Auditoria da cena mostrou que cada `Dagger01_TakeDamage_*` tem 15 frames a 15 FPS, ou seja, cerca de `1.0s`.
+3. Causa: `HitReactionState` estava usando `use_animation_length=true`, mas ainda clampava a duracao pelo `max_hit_stun_sec` do profile.
+4. Decisao corrigida: quando `use_animation_length=true`, a animacao e autoritativa e deve tocar inteira antes de liberar a HSM, igual ao fluxo aprovado do ataque.
+5. `max_hit_stun_sec` continua relevante para duracao base/fallback; nao deve cortar animacao real quando o profile pede para usar o comprimento da animacao.
 
 ## 13) Criterios de Aceite
 1. O Player toca animacao direcional de dano ao receber hit.

@@ -13,6 +13,9 @@ func _generate_name() -> String:
 func _tick(_delta: float) -> Status:
 	if agent == null:
 		return FAILURE
+	if _is_agent_hit_reacting():
+		BTDecisionTelemetryRef.emit("MoveToBBPosition", agent, blackboard, debug_decision_var, "RUNNING", "hit_reaction")
+		return RUNNING
 	if bool(agent.is_attack_pending_runtime()):
 		BTDecisionTelemetryRef.emit("MoveToBBPosition", agent, blackboard, debug_decision_var, "RUNNING", "waiting_attack_to_finish")
 		return RUNNING
@@ -37,3 +40,10 @@ func _tick(_delta: float) -> Status:
 func _exit() -> void:
 	if agent != null:
 		agent.stop_motor_movement()
+
+
+func _is_agent_hit_reacting() -> bool:
+	if agent == null:
+		return false
+	var hit_reaction := agent.get_node_or_null(^"HitReactionComponent")
+	return hit_reaction != null and hit_reaction.has_method("is_reacting") and bool(hit_reaction.call("is_reacting"))

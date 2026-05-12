@@ -43,6 +43,8 @@ static func clear_interaction_target_internal(actor: Actor8DirLimbo) -> void:
 
 
 static func play_directional(actor: Actor8DirLimbo, prefix: String, direction_source: Vector2) -> bool:
+	if _is_hit_reacting(actor):
+		return false
 	return bool(actor._play_directional_animation(prefix, direction_source))
 
 
@@ -139,3 +141,10 @@ static func set_current_emote_priority(actor: Actor8DirLimbo, value: int) -> voi
 
 static func get_emotion_bubble(actor: Actor8DirLimbo) -> AnimatedSprite2D:
 	return actor._bridge_get_emotion_bubble()
+
+
+static func _is_hit_reacting(actor: Actor8DirLimbo) -> bool:
+	if actor == null:
+		return false
+	var hit_reaction := actor.get_node_or_null(^"HitReactionComponent")
+	return hit_reaction != null and hit_reaction.has_method("is_reacting") and bool(hit_reaction.call("is_reacting"))

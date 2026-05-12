@@ -35,6 +35,7 @@ class_name Actor8DirLimbo
 @onready var attack_state: LimboState = $LimboHSM/AttackState
 @onready var wander_state: LimboState = get_node_or_null(^"LimboHSM/WanderState") as LimboState
 @onready var stagger_state: LimboState = get_node_or_null(^"LimboHSM/StaggerState") as LimboState
+@onready var hit_reaction_state: LimboState = get_node_or_null(^"LimboHSM/HitReactionState") as LimboState
 @onready var bt_player: Node = get_node_or_null(^"BTPlayer")
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var emotion_bubble: AnimatedSprite2D = get_node_or_null(^"EmotionBubble") as AnimatedSprite2D
@@ -101,6 +102,9 @@ func _setup_hsm() -> void:
 	if stagger_state != null:
 		hsm.add_transition(hsm.ANYSTATE, stagger_state, &"stagger!")
 		hsm.add_transition(stagger_state, idle_state, stagger_state.EVENT_FINISHED)
+	if hit_reaction_state != null:
+		hsm.add_transition(hsm.ANYSTATE, hit_reaction_state, &"hit_reaction!")
+		hsm.add_transition(hit_reaction_state, idle_state, hit_reaction_state.EVENT_FINISHED)
 
 	hsm.initialize(self)
 	hsm.set_active(true)
@@ -115,6 +119,12 @@ func request_attack() -> bool:
 		CombatTelemetry.emit_event(&"attack_request_rejected", {
 			"actor": name,
 			"reason": "actor_dead"
+		})
+		return false
+	if _is_hit_reacting_runtime():
+		CombatTelemetry.emit_event(&"attack_request_rejected", {
+			"actor": name,
+			"reason": "hit_reaction"
 		})
 		return false
 	if _attack_pending:
@@ -310,11 +320,18 @@ func is_attack_pending_runtime() -> bool:
 	return _attack_pending
 
 
+func _is_hit_reacting_runtime() -> bool:
+	var hit_reaction := get_node_or_null(^"HitReactionComponent")
+	return hit_reaction != null and hit_reaction.has_method("is_reacting") and bool(hit_reaction.call("is_reacting"))
+
+
 func is_target_alive_for_runtime(target: Node2D) -> bool:
 	return ActorCombatRuntimeRef.is_target_alive(target)
 
 
 func request_move_runtime(target_position: Vector2) -> void:
+	if _is_hit_reacting_runtime():
+		return
 	if motor != null:
 		motor.request_move(target_position)
 
