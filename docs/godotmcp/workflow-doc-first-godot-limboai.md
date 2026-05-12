@@ -57,12 +57,14 @@ LimboAI:
 - **LimboHSM Lifecycle:** Nunca execute `hsm.initialize()` em uma máquina de estados que já foi ligada anteriormente (ex: no Respawn). Utilize transições puras (para o `Idle`) e um `bt_player.restart()` na BT.
 
 ## Regra - Universal Hit Reaction / Hit Stun
+- Status atual: congelado no V7 em `Cliente/nexus/docs/status-freeze-funcional-v7-hit-reaction-2026-05-12.md`.
 - Implementar reacao a dano como componente plug-and-play (`HitReactionComponent`) + profile `.tres` + estado HSM.
 - Nao criar logica exclusiva de Player.
 - Nao colocar regra de dano dentro da BT; a BT decide intencao, a HSM executa reacao corporal.
 - Nao limpar `combat_target` durante Hit Reaction/Hit Stun.
 - Nao reengordar `Actor8DirLimbo`; wrappers no actor so podem ser fachada minima e delegada.
 - Nao adicionar exports/tuning de Hit Reaction no actor.
+- Apos o freeze V7, preservar o contrato visual aprovado: `Dagger01_TakeDamage_*` toca inteiro e orientado para a origem do golpe.
 
 ## Saida minima esperada por tarefa
 - Contexto consultado (links usados).

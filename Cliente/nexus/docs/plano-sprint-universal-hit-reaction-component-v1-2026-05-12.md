@@ -1,8 +1,9 @@
 # Plano Sprint - Universal Hit Reaction Component v1
 
 Data: 2026-05-12
-Status: IMPLEMENTACAO TECNICA V1 EM QA VISUAL
-Branch recomendada: criar nova branch antes de executar
+Status: CONCLUIDA - CONGELADA NO FREEZE V7
+Branch executada: `feat/universal-hit-reaction-component-v1`
+Freeze: `status-freeze-funcional-v7-hit-reaction-2026-05-12.md`
 
 ## 1) Objetivo
 Criar um sistema universal de Hit Reaction / Hit Stun para elevar o game feel quando uma entidade recebe dano.
@@ -248,17 +249,17 @@ Mudancas provaveis em tasks/scripts:
   - `hit_reaction_started`
   - `hit_reaction_finished`
   - combate retomando depois.
-- [ ] Confirmar visualmente Player recebendo hit e tocando `Dagger01_TakeDamage_*`.
+- [x] Confirmar visualmente Player recebendo hit e tocando `Dagger01_TakeDamage_*`.
 - [x] Confirmar que spam de hits nao gera hitlock permanente.
 - [x] Confirmar que kiting/stamina/knockback/orb continuam funcionais.
 
 ### Fase G - Freeze
-- [ ] Atualizar docs/status.
-- [ ] Registrar valores finais de tuning.
-- [ ] Commit e push somente apos QA aprovado.
+- [x] Atualizar docs/status.
+- [x] Registrar valores finais de tuning.
+- [x] Commit e push somente apos QA aprovado.
 
 ## 12.1) Implementacao tecnica v1 - 2026-05-12
-Status: pronta para QA visual do diretor.
+Status: implementacao validada e encerrada no freeze V7.
 
 O que foi implementado:
 
@@ -317,6 +318,27 @@ QA de duracao apos novo teste do diretor:
 3. Causa: `HitReactionState` estava usando `use_animation_length=true`, mas ainda clampava a duracao pelo `max_hit_stun_sec` do profile.
 4. Decisao corrigida: quando `use_animation_length=true`, a animacao e autoritativa e deve tocar inteira antes de liberar a HSM, igual ao fluxo aprovado do ataque.
 5. `max_hit_stun_sec` continua relevante para duracao base/fallback; nao deve cortar animacao real quando o profile pede para usar o comprimento da animacao.
+
+## 12.2) Fechamento e Freeze V7 - 2026-05-12
+Status: aprovado, commitado, enviado e congelado.
+
+Commits:
+
+1. `eacd1d2 feat(combat): add universal hit reaction`
+2. `52965d1 fix(combat): face hit reaction toward attacker`
+
+Freeze oficial:
+
+1. `res://docs/status-freeze-funcional-v7-hit-reaction-2026-05-12.md`
+
+Aceite final:
+
+1. QA visual aprovado pelo diretor.
+2. Player toca `Dagger01_TakeDamage_*` ao receber dano.
+3. Animacao toca inteira (`duration: 1.0`) antes de liberar a HSM.
+4. Orientacao da animacao foi corrigida para olhar para a origem do golpe.
+5. Knockback V6, stamina, kiting, orb e retomada de combate permaneceram funcionais.
+6. Branch `feat/universal-hit-reaction-component-v1` sincronizada com o remoto no commit `52965d1`.
 
 ## 13) Criterios de Aceite
 1. O Player toca animacao direcional de dano ao receber hit.

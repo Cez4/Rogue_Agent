@@ -1,31 +1,35 @@
 # Docs - Mapa Oficial (Estado Atual)
 
 Data de consolidacao: 2026-05-12
-Branch de referencia: `feat/combat-knockback-component-v1`
+Branch de referencia: `feat/universal-hit-reaction-component-v1`
 
 ## 1) Fonte principal de estado
-1. `status-freeze-funcional-v6-knockback-2026-05-12.md` (freeze atual: knockback modular/Data-Driven com baseline `200.0`)
-2. `plano-sprint-combat-knockback-component-v1-2026-05-12.md` (sprint concluida)
-3. `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` (proxima sprint planejada: Hit Reaction/Hit Stun universal plug-and-play)
-4. `status-freeze-funcional-v5-actor-profiles-2026-05-12.md` (actor profiles concluido)
-5. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado historico)
-6. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
-7. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (freeze concluido)
-8. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (fechamento parcial congelado)
-9. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint concluida ate E3; ver V5)
-10. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
-11. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
+1. `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` (freeze atual: Hit Reaction/Hit Stun universal aprovado)
+2. `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` (sprint concluida)
+3. `status-freeze-funcional-v6-knockback-2026-05-12.md` (knockback modular/Data-Driven com baseline `200.0`)
+4. `plano-sprint-combat-knockback-component-v1-2026-05-12.md` (sprint concluida)
+5. `status-freeze-funcional-v5-actor-profiles-2026-05-12.md` (actor profiles concluido)
+6. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado historico)
+7. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
+8. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (freeze concluido)
+9. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (fechamento parcial congelado)
+10. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint concluida ate E3; ver V5)
+11. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
+12. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
 
 ## 1.1 Regra anti-drift (obrigatoria)
 1. Quando houver conflito entre docs antigos e estado atual:
-   - o freeze V6 de 2026-05-12 vence para knockback e game feel de impacto;
+   - o freeze V7 de 2026-05-12 vence para Hit Reaction/Hit Stun e game feel de dano recebido;
+   - o freeze V6 de 2026-05-12 vence para knockback e game feel de impacto fisico;
    - o freeze V5 de 2026-05-12 vence para perfis sociais de ator;
    - o freeze total de 2026-05-11 vence;
    - os freezes anteriores viram historico tecnico.
 2. Docs de tuning/congelamento antigos devem ser lidos como historico, nao como estado operativo da sprint atual.
 3. Ordem oficial atual:
+   - `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` esta fechado;
+   - `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` e o estado atual;
    - `plano-sprint-combat-knockback-component-v1-2026-05-12.md` esta fechado;
-   - `status-freeze-funcional-v6-knockback-2026-05-12.md` e o estado atual;
+   - `status-freeze-funcional-v6-knockback-2026-05-12.md` permanece como baseline de knockback;
    - `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` esta fechado;
    - `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` esta em fechamento parcial congelado;
    - `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` esta fechado ate E3; ver freeze V5.
@@ -39,9 +43,11 @@ Branch de referencia: `feat/combat-knockback-component-v1`
    - `knockback_force = 200.0` e o baseline aprovado dos ataques principais;
    - a fonte de tuning e sempre `CombatActionData` em `.tres`;
    - nao tunar knockback pelo `KnockbackComponent`, que e receptor fisico modular.
-7. Proxima sprint planejada:
-   - `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md`;
-   - Hit Reaction/Hit Stun deve seguir o mesmo padrao plug-and-play do Knockback: componente copiavel para templates, dados em profile `.tres`, HSM para reacao corporal e BT preservada como decisora de intencao.
+7. Hit Reaction V7:
+   - implementado via `HitReactionComponent`, `HitReactionProfile` e `HitReactionState`;
+   - Player toca `Dagger01_TakeDamage_*` inteiro ao receber dano;
+   - animacao orienta para a origem do golpe, nao para a direcao do knockback;
+   - BT preservada como decisora de intencao e HSM executa a reacao corporal.
 
 ## 2) Arquitetura e contratos
 1. `arquitetura-contratos-estado-atual-2026-05-10.md` (doc mestre)
