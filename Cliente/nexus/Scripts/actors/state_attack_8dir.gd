@@ -86,8 +86,10 @@ func _apply_action_to_hitbox(hitbox: Node) -> void:
 	if resolved_action == null:
 		return
 	hitbox.damage = resolved_action.get("damage")
-	hitbox.knockback_enabled = resolved_action.get("knockback_enabled")
-	hitbox.knockback_strength = resolved_action.get("knockback_strength")
+	if "knockback_force" in hitbox:
+		hitbox.knockback_force = resolved_action.get("knockback_force")
+	if "knockback_duration_sec" in hitbox:
+		hitbox.knockback_duration_sec = resolved_action.get("knockback_duration_sec")
 	hitbox.one_hit_per_target_per_attack = resolved_action.get("one_hit_per_target_per_attack")
 	hitbox.max_targets_per_attack = resolved_action.get("max_targets_per_attack")
 

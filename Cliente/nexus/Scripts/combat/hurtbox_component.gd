@@ -12,9 +12,19 @@ func _ready() -> void:
 
 
 func take_hit(amount: float, knockback: Vector2, _source: Node = null) -> void:
+	take_hit_with_knockback_duration(amount, knockback, 0.1, _source)
+
+
+func take_hit_with_knockback_duration(amount: float, knockback: Vector2, duration: float, _source: Node = null) -> void:
 	if _health == null:
 		return
 	_try_set_aggro_target(_source)
+	
+	if knockback.length() > 0.0 and duration > 0.0 and owner != null:
+		var knockback_comp = owner.get_node_or_null(^"KnockbackComponent")
+		if knockback_comp != null and knockback_comp.has_method("apply_knockback"):
+			knockback_comp.apply_knockback(knockback, duration)
+			
 	_health.take_damage(amount, knockback)
 
 
