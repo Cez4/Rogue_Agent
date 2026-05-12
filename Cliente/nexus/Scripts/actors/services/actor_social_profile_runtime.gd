@@ -3,11 +3,13 @@ extends RefCounted
 
 
 static func has_social_profile(actor: Actor8DirLimbo) -> bool:
-	return actor.social_profile != null
+	return actor != null and actor.social_profile != null and is_instance_valid(actor.social_profile)
 
 
 static func _profile_value(actor: Actor8DirLimbo, key: StringName, fallback: Variant) -> Variant:
 	if not has_social_profile(actor):
+		return fallback
+	if not (String(key) in actor.social_profile):
 		return fallback
 	return actor.social_profile.get(key)
 

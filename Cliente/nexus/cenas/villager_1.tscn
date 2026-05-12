@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dbux36mt8uqe5" path="res://Scripts/actors/actor_8dir_limbo.gd" id="1_57edb"]
 [ext_resource type="Texture2D" uid="uid://c3lnt11kt32s0" path="res://Assets/Char/Villager_1/Idle_Unarmed.png" id="1_sklvi"]
+[ext_resource type="Resource" uid="uid://pggm1yotyrmh" path="res://configs/actors/social/villager_social_profile_v1.tres" id="2_1jarj"]
 [ext_resource type="Texture2D" uid="uid://b46nvc0ukccid" path="res://Assets/emotions/spriteExc.png" id="2_5p5bd"]
 [ext_resource type="Texture2D" uid="uid://cap3hxfhmc55q" path="res://Assets/Char/Villager_1/Walk_Unarmed.png" id="2_sklvi"]
 [ext_resource type="Texture2D" uid="uid://dffhs4xccwdww" path="res://Assets/emotions/spriteHoe.png" id="3_r4jhm"]
@@ -2012,6 +2013,7 @@ height = 22.0
 y_sort_enabled = true
 collision_layer = 2
 script = ExtResource("1_57edb")
+social_profile = ExtResource("2_1jarj")
 player_controlled = false
 use_bt_brain = true
 idle_prefix = "Idle_Unarmed"
@@ -2030,8 +2032,8 @@ wander_delay_max_sec = 4.5
 wander_radius_min = 24.0
 wander_radius_max = 96.0
 wander_max_attempts = 12
-wander_emote_hold_sec = 3.0
 wander_emote_chance = 0.35
+wander_emote_hold_sec = 3.0
 
 [node name="EmotionBubble" type="AnimatedSprite2D" parent="." unique_id=1244748270]
 visible = false

@@ -120,9 +120,9 @@ O objetivo nao e remover todos os exports. O objetivo e separar:
 - [x] Validar scripts no Godot.
 
 ### Fase C - Instanciar perfil em uma entidade de baixo risco
-- [ ] Escolher entidade piloto, preferencia `Villager1` ou cena isolada.
-- [ ] Criar `.tres` via Godot/editor, nao por texto.
-- [ ] Migrar valores apenas pelo editor/API segura.
+- [x] Escolher entidade piloto, preferencia `Villager1` ou cena isolada.
+- [x] Criar `.tres` via Godot/editor, nao por texto.
+- [x] Migrar valores apenas pelo editor/API segura.
 - [ ] QA visual: assobio, exclamacao, wander, inspect.
 - [ ] Se regressao visual, reverter somente o bloco piloto.
 
@@ -195,3 +195,34 @@ Proximo passo:
 2. Preferencia tecnica: `Villager1` ou cena isolada, porque valida social/wander/inspect com menor risco sobre combate.
 3. Criar e atribuir profile via Godot/editor, sem edicao textual de `.tscn` ou `.tres`.
 4. Se houver regressao visual, reverter apenas o bloco piloto.
+
+## 11) Implementacao - bloco 2 piloto Villager1
+Data: 2026-05-11
+Status: aplicado; pendente de QA visual jogavel.
+
+Referencias oficiais consultadas:
+1. Godot 4.6 `ResourceSaver`: salvar `Resource` em disco via `ResourceSaver.save()`.
+2. Godot 4.6 `ResourceLoader`: carregar `Resource` pelo path reconhecido pela engine.
+3. Godot 4.6 `Object`: checagem dinamica de propriedades antes de `get()` em objeto/resource dinamico.
+
+Escopo:
+1. Endurecido `ActorSocialProfileRuntime._profile_value()` para cair no fallback se `social_profile` for nulo, invalido ou sem a propriedade solicitada.
+2. Criado `res://configs/actors/social/villager_social_profile_v1.tres` via Godot/editor API.
+3. Copiados para o `.tres` os valores sociais/wander aprovados do `Villager1`.
+4. Atribuido `social_profile` em `res://cenas/villager_1.tscn` via Godot/editor, sem edicao textual manual.
+5. Nenhum BT, HSM, combate, kiting, stamina, Orb, Health Regen ou camera foi alterado.
+
+Valores migrados:
+1. Look: `radius=148.0`, `min=52.0`, `max=84.0`, `hold=1.1`, `cooldown=8.0`, `jitter=3.0`, emote `Exc`, hold `1.9`.
+2. Wander: enabled, delay `1.8..4.5`, radius `24.0..96.0`, attempts `12`, emote `Hoe`, chance `0.35`, cooldown `8.0..14.0`, hold `3.0`.
+3. Stamina feedback visual: sem emote configurado, preservando baseline do Villager.
+
+Validacao tecnica:
+1. Script abriu no Godot sem parse error. [ok]
+2. Primeiro smoke detectou UID de resource ainda nao registrado; corrigido via `ResourceSaver.set_uid()` e revalidado. [ok]
+3. Smoke MCP abriu e rodou `res://cenas/mundo.tscn` sem parse/runtime error novo. [ok]
+4. `Villager1` em runtime carregou `social_profile = res://configs/actors/social/villager_social_profile_v1.tres`. [ok]
+
+Proximo passo:
+1. QA visual jogavel focado em `Villager1`: assobio/`Hoe`, exclamacao/`Exc`, wander e inspect.
+2. Se aprovado, congelar Fase C antes de migrar qualquer hostile.
