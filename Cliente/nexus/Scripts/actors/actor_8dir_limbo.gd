@@ -85,6 +85,7 @@ const ActorLifecycleRuntimeRef = preload("res://Scripts/actors/services/actor_li
 const ActorNavigationRuntimeRef = preload("res://Scripts/actors/services/actor_navigation_runtime.gd")
 const ActorPerceptionRuntimeRef = preload("res://Scripts/actors/services/actor_perception_runtime.gd")
 const ActorSetupRuntimeRef = preload("res://Scripts/actors/services/actor_setup_runtime.gd")
+const ActorSocialProfileRuntimeRef = preload("res://Scripts/actors/services/actor_social_profile_runtime.gd")
 const ActorSocialRuntimeRef = preload("res://Scripts/actors/services/actor_social_runtime.gd")
 const ActorSpatialRuntimeRef = preload("res://Scripts/actors/services/actor_spatial_runtime.gd")
 const ActorTargetingRuntimeRef = preload("res://Scripts/actors/services/actor_targeting_runtime.gd")
@@ -473,6 +474,10 @@ func can_look_target(target: Node2D) -> bool:
 
 func trigger_look_cooldown() -> void:
 	ActorPerceptionRuntimeRef.trigger_look_cooldown(self)
+
+
+func get_look_hold_sec() -> float:
+	return ActorSocialProfileRuntimeRef.look_hold_sec(self)
 
 
 func stop_movement_for_look() -> void:

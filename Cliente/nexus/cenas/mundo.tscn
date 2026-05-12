@@ -112,11 +112,6 @@ position = Vector2(714, 162)
 
 [node name="Villager1" parent="." unique_id=1207752769 instance=ExtResource("11_puycu")]
 position = Vector2(399, -140)
-look_interest_min_distance = 28.0
-look_interest_max_distance = 148.0
-look_cooldown_sec = 3.0
-look_cooldown_jitter_sec = 1.5
-wander_emote_chance = 0.2
 
 [node name="Obj" type="TileMapLayer" parent="." unique_id=476215104]
 z_index = -4095

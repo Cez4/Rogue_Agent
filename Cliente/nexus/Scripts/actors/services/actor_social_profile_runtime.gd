@@ -23,6 +23,10 @@ static func look_interest_max_distance(actor: Actor8DirLimbo) -> float:
 	return float(_profile_value(actor, &"look_interest_max_distance", fallback))
 
 
+static func look_hold_sec(actor: Actor8DirLimbo) -> float:
+	return float(_profile_value(actor, &"look_hold_sec", actor.look_hold_sec))
+
+
 static func look_cooldown_sec(actor: Actor8DirLimbo) -> float:
 	return float(_profile_value(actor, &"look_cooldown_sec", actor.look_cooldown_sec))
 

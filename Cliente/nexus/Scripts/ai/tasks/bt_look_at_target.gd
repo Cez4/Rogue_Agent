@@ -30,7 +30,7 @@ func _tick(delta: float) -> Status:
 	agent.look_toward(target.global_position)
 
 	_elapsed += delta
-	var hold_sec: float = float(agent.look_hold_sec)
+	var hold_sec: float = agent.get_look_hold_sec()
 	if _elapsed >= hold_sec:
 		agent.trigger_look_cooldown()
 		BTDecisionTelemetryRef.emit("LookAtTarget", agent, blackboard, debug_decision_var, "SUCCESS", "hold_complete")

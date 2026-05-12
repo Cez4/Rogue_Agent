@@ -1,7 +1,7 @@
 # Plano Sprint - Actor Export/Profile Organization v1
 
 Data: 2026-05-11
-Status: FASE E0 CONCLUIDA - COBERTURA AUDITADA, SEM LIMPEZA APLICADA
+Status: FASE E1 CONCLUIDA - OVERRIDES MIGRADOS LIMPOS
 Branch: `feat/actor-export-profile-organization-v1`
 Base obrigatoria: `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` fechado parcialmente e congelado.
 
@@ -141,11 +141,11 @@ O objetivo nao e remover todos os exports. O objetivo e separar:
 - [x] Nao remover export nenhum nesta fase.
 
 ### Fase E1 - Limpeza de overrides migrados
-- [ ] Limpar somente overrides antigos de entidades que ja consomem `ActorSocialProfile`.
-- [ ] Fazer limpeza apenas via Godot/editor API, nunca por texto em `.tscn`/`.tres`.
-- [ ] Validar antes/depois que Villager e hostis continuam puxando os profiles aprovados.
-- [ ] QA visual: assobio/`Hoe`, exclamacao/`Exc`, wander e combate sem regressao.
-- [ ] Commit/push pequeno e isolado.
+- [x] Limpar somente overrides antigos de entidades que ja consomem `ActorSocialProfile`.
+- [x] Fazer limpeza apenas via Godot/editor API, nunca por texto em `.tscn`/`.tres`.
+- [x] Validar antes/depois que Villager e hostis continuam puxando os profiles aprovados.
+- [x] Smoke MCP: scripts, profiles, combate e cena principal sem erro novo.
+- [x] Commit/push pequeno e isolado.
 
 ### Fase E2 - Decisao sobre atores restantes
 - [ ] Decidir se Player e atores restantes recebem profile proprio, profile default ou continuam com fallback tecnico.
@@ -167,11 +167,11 @@ O objetivo nao e remover todos os exports. O objetivo e separar:
 - [x] Nenhuma cena `.tscn` editada por texto nas Fases A-D.
 - [x] Social/wander/emote data-driven por Resource para Villager e hostis migrados.
 - [x] Todas as cenas/atores relevantes com cobertura de profile ou fallback documentado.
-- [ ] Actor continua sendo fachada de cena, nao deposito de tuning duplicado.
-- [x] Smoke MCP limpo para E0.
+- [x] Actor continua sendo fachada de cena, sem tuning social/wander duplicado nas cenas migradas.
+- [x] Smoke MCP limpo para E0/E1.
 - [ ] QA jogavel aprovado.
-- [x] Docs atualizados com E0.
-- [ ] Branch sincronizada.
+- [x] Docs atualizados com E0/E1.
+- [x] Branch sincronizada.
 
 ## 8) Riscos e mitigacoes
 Risco: apagar tuning aprovado de cenas.
@@ -193,7 +193,7 @@ Risco: confundir valores antigos no Inspector com tuning ativo.
 Mitigacao: marcar valores antigos como `tuning_fantasma` quando a entidade ja usa `social_profile`, e limpar somente via Godot/editor API com QA visual antes/depois.
 
 ## 9) Proximo passo imediato
-Fase E0 concluida sem remocao. O proximo passo permitido e iniciar E1 somente para limpar duplicacao de entidades ja migradas, via Godot/editor API, com smoke MCP e QA visual antes/depois.
+Fase E1 concluida. O proximo passo arquitetural e E2: decidir Player/restantes com profile proprio, profile default ou fallback tecnico. Remocao de exports do `Actor8DirLimbo` continua proibida ate E3.
 
 ## 10) Implementacao - bloco 1
 Data: 2026-05-11
@@ -354,3 +354,39 @@ Proximo passo:
 3. E1 deve usar Godot/editor API para alterar `.tscn`/`.tres`.
 4. E1 deve validar Villager e hostis antes/depois com MCP e QA visual.
 5. Remocao de exports do `Actor8DirLimbo` continua proibida ate E3.
+
+## 15) Implementacao - bloco 5 limpeza E1
+Data: 2026-05-11
+Status: aplicada e validada em smoke MCP.
+
+Escopo:
+1. Migrado o consumidor direto `bt_look_at_target.gd` para usar `agent.get_look_hold_sec()`.
+2. Adicionado wrapper publico `Actor8DirLimbo.get_look_hold_sec()`.
+3. Adicionado `ActorSocialProfileRuntime.look_hold_sec()` para manter o valor de hold vindo do `ActorSocialProfile` quando existir profile.
+4. Limpas via Godot/editor API as propriedades antigas de social/wander/emote nas cenas ja migradas:
+   - `res://cenas/villager_1.tscn`
+   - `res://cenas/wildcat_1.tscn`
+   - `res://cenas/enemies/hostile_enemy_base.tscn`
+   - `res://cenas/enemies/hostile_enemy_light.tscn`
+   - `res://cenas/enemies/hostile_enemy_brute.tscn`
+5. Limpos via Godot/editor API os overrides antigos do `Villager1` dentro de `res://cenas/mundo.tscn`.
+6. `Player` nao foi alterado, porque continua classificado como `fallback_real`.
+7. Nenhum BT `.tres`, HSM, kiting, stamina, Orb, Health Regen ou camera foi alterado.
+
+Resultado:
+1. As cenas migradas mantem apenas `social_profile` como fonte de tuning social/wander/emote.
+2. Os valores antigos foram removidos da serializacao das cenas migradas.
+3. Os exports antigos continuam existindo no `Actor8DirLimbo` para fallback tecnico de atores sem profile.
+4. `Player` segue sem `social_profile`, preservando fallback ate decisao E2.
+
+Validacao:
+1. `rg` confirmou que cenas migradas mantem `social_profile` e nao carregam mais overrides antigos de social/wander/emote.
+2. `res://cenas/mundo.tscn` abriu e rodou no Godot.
+3. `get_godot_errors` apos smoke nao apresentou parse/runtime error novo.
+4. Telemetria em runtime confirmou fluxo de combate preservado: range check, stamina consumed, attack started/commit, hit confirmed, kiting started/holding/ended e orb visibility.
+5. Cena foi parada antes de atualizar docs.
+
+Proximo passo:
+1. Commit/push do bloco E1.
+2. Depois, iniciar E2 somente com decisao explicita sobre Player/restantes: profile proprio, profile default ou manter fallback tecnico.
+3. Nao remover exports do actor antes da E3.
