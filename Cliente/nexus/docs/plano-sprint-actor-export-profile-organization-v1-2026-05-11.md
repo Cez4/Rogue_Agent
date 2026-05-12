@@ -1,7 +1,7 @@
 # Plano Sprint - Actor Export/Profile Organization v1
 
 Data: 2026-05-11
-Status: BLOCO 1 APLICADO - SOCIAL PROFILE COM FALLBACK
+Status: BLOCO 1 CONGELADO - SOCIAL PROFILE COM FALLBACK
 Branch: `feat/actor-export-profile-organization-v1`
 Base obrigatoria: `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` fechado parcialmente e congelado.
 
@@ -164,11 +164,11 @@ Risco: mover fallback de combate cedo demais.
 Mitigacao: `chase_attack_range`, `base_*` e `attack_duration_sec` ficam para fase posterior, com plano proprio se necessario.
 
 ## 9) Proximo passo imediato
-Mapear consumidores reais dos exports sociais e criar `ActorSocialProfile` com fallback sem migrar cenas. Esse bloco deve alterar apenas scripts e docs; dados de cena ficam para fase piloto.
+Bloco 1 congelado. O proximo passo e iniciar a Fase C com uma entidade piloto de baixo risco, criando o `.tres` pelo Godot/editor e migrando somente os dados sociais/wander/emote dessa entidade antes de qualquer migracao hostil.
 
 ## 10) Implementacao - bloco 1
 Data: 2026-05-11
-Status: aplicado; pendente de QA jogavel.
+Status: aplicado, validado em QA jogavel e congelado.
 
 Escopo:
 1. Criado `Scripts/actors/profiles/actor_social_profile.gd`.
@@ -187,7 +187,11 @@ Validacao inicial:
 1. Scripts abriram no Godot sem parse error. [ok]
 2. Smoke MCP abriu e rodou `res://cenas/mundo.tscn` sem parse/runtime error novo. [ok]
 3. Cena foi parada antes de atualizar docs. [ok]
+4. QA visual confirmou assobio, exclamacao e wander preservados sem `social_profile` atribuido. [ok]
+5. Logs de QA preservaram attack/range/kiting/stamina/death/respawn/Orb/Health Regen/move sem erro novo. [ok]
 
 Proximo passo:
-1. QA jogavel para confirmar assobio, exclamacao, wander, inspect e combate preservados sem nenhum profile atribuido.
-2. Depois do QA, congelar bloco 1 e decidir entidade piloto para Fase C.
+1. Iniciar Fase C somente com entidade piloto.
+2. Preferencia tecnica: `Villager1` ou cena isolada, porque valida social/wander/inspect com menor risco sobre combate.
+3. Criar e atribuir profile via Godot/editor, sem edicao textual de `.tscn` ou `.tres`.
+4. Se houver regressao visual, reverter apenas o bloco piloto.
