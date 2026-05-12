@@ -1,7 +1,7 @@
 # Plano Sprint - Combat Knockback Component v1
 
 Data: 2026-05-12
-Status: ABERTA
+Status: FASE D CONCLUIDA - SPRINT FINALIZADA
 Branch Recomendada: `feat/combat-knockback-component-v1`
 
 ## 1) Objetivo
@@ -28,35 +28,35 @@ A arquitetura exige **Modularidade Extrema (Plug-and-Play)** e **Data-Driven (Gu
 ## 5) Plano de Execução
 
 ### Fase A - Estrutura de Dados (Data-Driven)
-- [ ] Editar `Scripts/combat/combat_action_data.gd` para incluir:
+- [x] Editar `Scripts/combat/combat_action_data.gd` para incluir:
   - `@export var knockback_force: float = 0.0`
   - `@export var knockback_duration_sec: float = 0.1`
-- [ ] Atualizar os arquivos `.tres` existentes (adaga do player, garras do wildcat, soco do brute) com valores iniciais seguros de teste.
+- [x] Atualizar os arquivos `.tres` existentes (adaga do player, garras do wildcat, soco do brute) com valores iniciais seguros de teste.
 
 ### Fase B - O Componente Modular (Plug-and-Play)
-- [ ] Criar `Scripts/combat/knockback_component.gd`.
-- [ ] O componente deve exportar `target_body: CharacterBody2D` (o corpo que será empurrado).
-- [ ] Criar o método público `apply_knockback(force_vector: Vector2, duration: float)`.
-- [ ] Implementar um `_physics_process` interno no componente que, quando ativado, sobrescreve/soma a `velocity` do corpo e chama `move_and_slide()` isoladamente pelo tempo determinado, caindo a zero suavemente (lerp).
+- [x] Criar `Scripts/combat/knockback_component.gd`.
+- [x] O componente deve exportar `target_body: CharacterBody2D` (o corpo que será empurrado).
+- [x] Criar o método público `apply_knockback(force_vector: Vector2, duration: float)`.
+- [x] Implementar um `_physics_process` interno no componente que, quando ativado, sobrescreve/soma a `velocity` do corpo e chama `move_and_slide()` isoladamente pelo tempo determinado, caindo a zero suavemente (lerp).
 
 ### Fase C - O Fluxo de Transmissão (Hitbox -> Hurtbox)
-- [ ] Modificar `HitboxComponent` para calcular a direção do impacto (De quem bateu para quem apanhou).
-- [ ] Enviar o vetor de Knockback via sinal ou chamada de método junto com a requisição de Dano para o `HurtboxComponent` do alvo.
-- [ ] O `HurtboxComponent` (ou o próprio ator via Bridge) repassa o vetor para o `KnockbackComponent` se ele existir na árvore do alvo.
+- [x] Modificar `HitboxComponent` para calcular a direção do impacto (De quem bateu para quem apanhou).
+- [x] Enviar o vetor de Knockback via sinal ou chamada de método junto com a requisição de Dano para o `HurtboxComponent` do alvo.
+- [x] O `HurtboxComponent` (ou o próprio ator via Bridge) repassa o vetor para o `KnockbackComponent` se ele existir na árvore do alvo.
 
 ### Fase D - Integração e QA
-- [ ] Injetar o nó `KnockbackComponent` no `player.tscn` e nas cenas de Inimigos (`hostile_enemy_brute.tscn`, etc).
-- [ ] Plugar as referências do nó via Inspector/Godot API.
-- [ ] Jogar na arena: Validar se golpes empurram o alvo.
-- [ ] Validar colisão contra parede: O alvo deve deslizar ou bater na parede sem bugar o NavAgent.
-- [ ] Telemetria: Adicionar emissão de log `knockback_applied` com a força para facilitar o balanceamento.
+- [x] Injetar o nó `KnockbackComponent` no `player.tscn` e nas cenas de Inimigos (`hostile_enemy_brute.tscn`, etc).
+- [x] Plugar as referências do nó via Inspector/Godot API.
+- [x] Jogar na arena: Validar se golpes empurram o alvo.
+- [x] Validar colisão contra parede: O alvo deve deslizar ou bater na parede sem bugar o NavAgent.
+- [x] Telemetria: Adicionar emissão de log `knockback_applied` com a força para facilitar o balanceamento.
 
 ## 6) Critérios de Aceite
-- [ ] Knockback funciona bidirecionalmente (Player empurra NPCs, NPCs empurram Player).
-- [ ] A distância do empurrão respeita o valor configurado no `.tres` do atacante.
-- [ ] Nenhuma linha de lógica matemática de empurrão foi adicionada ao `Actor8DirLimbo` (apenas o wire do Bridge, se necessário).
-- [ ] Atores não perdem o `combat_target` durante o micro-knockback.
-- [ ] Smoke MCP Limpo (`get_godot_errors` = Vazio).
+- [x] Knockback funciona bidirecionalmente (Player empurra NPCs, NPCs empurram Player).
+- [x] A distância do empurrão respeita o valor configurado no `.tres` do atacante.
+- [x] Nenhuma linha de lógica matemática de empurrão foi adicionada ao `Actor8DirLimbo` (apenas o wire do Bridge, se necessário).
+- [x] Atores não perdem o `combat_target` durante o micro-knockback.
+- [x] Smoke MCP Limpo (`get_godot_errors` = Vazio).
 
 ## 7) Próximo Passo Imediato
-Criar a nova branch `feat/combat-knockback-component-v1` e iniciar a **Fase A (Estrutura de Dados)**.
+Sprint encerrada e documentada no Status V6.
