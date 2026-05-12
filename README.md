@@ -3,6 +3,9 @@
 Este README aponta a fonte oficial de status tecnico do projeto.
 
 ## Fonte oficial de status (freeze atual)
+- `Cliente/nexus/docs/status-freeze-funcional-v6-knockback-2026-05-12.md`
+
+Freeze historico base:
 - `Cliente/nexus/docs/status-freeze-total-combate-tatico-2026-05-11.md`
 
 Esse documento manda no estado da fase atual e consolida:

@@ -1,4 +1,30 @@
 # Status Freeze V6: Combat Micro-Knockback Modular
+
+## Tuning Final Aprovado - Knockback Force 200
+Data: 12 de Maio de 2026
+Status: aprovado em QA jogavel e congelado.
+
+Decisao de Game Feel:
+1. `knockback_force = 200.0` passa a ser o baseline padrao do jogo para impacto fisico perceptivel sem exagero.
+2. A identidade entre ataques continua possivel pela duracao (`knockback_duration_sec`) e pelos demais dados do `CombatActionData`.
+3. O ajuste permanece 100% Data-Driven: nenhum script, cena, BT ou HSM precisou ser alterado.
+
+Arquivos congelados com `knockback_force = 200.0`:
+1. `res://configs/combat/player_light_attack.tres`
+2. `res://configs/combat/hostile_brute_attack_v1.tres`
+3. `res://configs/combat/hostile_light_attack_v1.tres`
+4. `res://configs/combat/wildcat_claw_attack_v1.tres`
+
+Validacao MCP:
+1. `res://cenas/mundo.tscn` abriu e rodou.
+2. `get_godot_errors` nao registrou parse/runtime error novo.
+3. `AttackHitbox` em runtime confirmou:
+   - Player: `knockback_force = 200.0`, `knockback_duration_sec = 0.15`;
+   - Brute: `knockback_force = 200.0`, `knockback_duration_sec = 0.2`.
+4. Logs confirmaram `knockback_applied` com `force` aproximadamente `200.0` nos dois sentidos:
+   - Player empurrando `HostileEnemyBrute`;
+   - `HostileEnemyBrute` empurrando Player.
+5. Telemetria de combate permaneceu saudavel: `attack_started`, `attack_commit`, `hit_confirmed`, `stamina_consumed`, `kiting_started`, `kiting_holding`, `kiting_ended` e `orb_stamina_react`.
 **Data:** 12 de Maio de 2026
 **Status:** Congelado e Estável
 **Branch:** `feat/combat-knockback-component-v1`

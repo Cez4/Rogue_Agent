@@ -1,8 +1,21 @@
 # Plano Sprint - Combat Knockback Component v1
 
 Data: 2026-05-12
-Status: FASE D CONCLUIDA - SPRINT FINALIZADA
+Status: FASE D CONCLUIDA - SPRINT FINALIZADA COM TUNING 200 CONGELADO
 Branch Recomendada: `feat/combat-knockback-component-v1`
+
+## Tuning final aprovado
+Data: 2026-05-12
+Status: congelado.
+
+1. `knockback_force = 200.0` e o baseline aprovado para os ataques principais.
+2. Arquivos atualizados:
+   - `res://configs/combat/player_light_attack.tres`
+   - `res://configs/combat/hostile_brute_attack_v1.tres`
+   - `res://configs/combat/hostile_light_attack_v1.tres`
+   - `res://configs/combat/wildcat_claw_attack_v1.tres`
+3. Validacao MCP confirmou o valor chegando ao `AttackHitbox` em runtime para Player e Brute.
+4. Logs confirmaram `knockback_applied` com `force` aproximadamente `200.0` e combate preservado.
 
 ## 1) Objetivo
 Implementar um sistema de Micro-Knockback (empurrão físico por impacto) para elevar o "Game Feel" do combate e evitar que entidades fiquem permanentemente coladas.

@@ -15,4 +15,4 @@ attack_stamina_min_after_attack_ratio = 0.04
 low_stamina_kite_probability = 0.85
 low_stamina_kite_distance = 130.0
 low_stamina_kite_cooldown_ms = 680
-knockback_force = 150.0
+knockback_force = 200.0
