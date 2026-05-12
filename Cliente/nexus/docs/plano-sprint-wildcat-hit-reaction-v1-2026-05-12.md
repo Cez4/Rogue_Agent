@@ -1,7 +1,7 @@
 # Plano Sprint - Wildcat / Hostile Hit Reaction v1
 
 Data: 2026-05-12
-Status: WILDCAT V1 CONCLUIDO E CONGELADO - HOSTIS AGUARDAM FASE C
+Status: HOSTILE COVERAGE CONCLUIDO E CONGELADO - FREEZE V9
 Base obrigatoria: `status-freeze-funcional-v7-hit-reaction-2026-05-12.md`
 
 ## 1) Objetivo
@@ -109,8 +109,8 @@ Recomendacao:
 - [x] Confirmar telemetria de dano recebida pelo Wildcat em combate real.
 
 ### Fase C - Hostile Coverage
-- [ ] Decidir se hostis recebem as animacoes agora ou se ficam para sprint de template visual.
-- [ ] Se receberem agora:
+- [x] Decidir se hostis recebem as animacoes agora ou se ficam para sprint de template visual.
+- [x] Se receberem agora:
   - adicionar `TakeDamage.png` e `TakeDamage_*` em cada hostile via Godot/editor API;
   - adicionar `HitReactionComponent`;
   - adicionar `HitReactionState`;
@@ -118,6 +118,11 @@ Recomendacao:
 - [ ] Se nao receberem agora:
   - documentar que apenas Wildcat visual tem Hit Reaction v1;
   - manter hostis com profiles prontos mas sem componente/estado.
+- [x] `HostileEnemyBase` recebeu 8 animacoes `TakeDamage_*`, `HitReactionComponent`, `LimboHSM/HitReactionState` e profile `hostile_light_hit_reaction_profile_v1.tres`.
+- [x] `HostileEnemyLight` recebeu 8 animacoes `TakeDamage_*`, `HitReactionComponent`, `LimboHSM/HitReactionState` e profile `hostile_light_hit_reaction_profile_v1.tres`.
+- [x] `HostileEnemyBrute` recebeu 8 animacoes `TakeDamage_*`, `HitReactionComponent`, `LimboHSM/HitReactionState` e profile `hostile_brute_hit_reaction_profile_v1.tres`.
+- [x] `mundo.tscn` confirma que as instancias `HostileEnemyBase`, `HostileEnemyLight` e `HostileEnemyBrute` carregam componente e estado.
+- [x] Confirmar telemetria de dano recebida por cada hostile em combate real.
 
 ### Fase D - QA
 - [x] Godot MCP: abrir cena-alvo.
@@ -169,6 +174,62 @@ Cenas ainda fora do freeze visual:
 1. `res://cenas/hostile_enemy_base.tscn`
 2. `res://cenas/hostile_enemy_light.tscn`
 3. `res://cenas/hostile_enemy_brute.tscn`
+
+## 12) Execucao Parcial Hostile Coverage - 2026-05-12
+
+Fase C implementada via Godot/editor API, com cena parada e sem edicao textual estrutural de `.tscn`.
+
+Auditoria antes da mudanca:
+
+1. Base/Light/Brute tinham `Health`, `Hurtbox`, `AttackHitbox` e `LimboHSM`.
+2. Base/Light/Brute nao tinham `TakeDamage_*`.
+3. Base/Light/Brute nao tinham `HitReactionComponent`.
+4. Base/Light/Brute nao tinham `LimboHSM/HitReactionState`.
+
+Aplicacao:
+
+1. As 8 animacoes `TakeDamage_*` do `wildcat_1.tscn` foram copiadas para cada cena hostile.
+2. Todas ficaram com 15 frames, 15 FPS e `loop = false`.
+3. `HitReactionComponent` foi adicionado em cada root.
+4. `LimboHSM/HitReactionState` foi adicionado em cada HSM.
+5. Base/Light usam `hostile_light_hit_reaction_profile_v1.tres`.
+6. Brute usa `hostile_brute_hit_reaction_profile_v1.tres`.
+
+Validacao MCP executada:
+
+1. `mundo.tscn` abriu.
+2. `mundo.tscn` rodou sem parse/runtime error novo.
+3. Logs confirmaram inicializacao de orb de `HostileEnemyBase`, `HostileEnemyLight` e `HostileEnemyBrute`.
+4. Auditoria no editor confirmou que as instancias no `mundo.tscn` carregam `HitReactionComponent` e `LimboHSM/HitReactionState`.
+
+Pendencia objetiva antes do freeze:
+
+1. QA jogavel batendo em `HostileEnemyBase`: concluido.
+2. QA jogavel batendo em `HostileEnemyLight`: concluido.
+3. QA jogavel batendo em `HostileEnemyBrute`: concluido.
+4. Confirmar nos logs, para cada um, `hit_reaction_requested`, `hit_reaction_started`, `hit_reaction_animation played=true` e `hit_reaction_finished`: concluido.
+
+## 13) Freeze Funcional V9 - 2026-05-12
+
+Estado congelado em `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md`.
+
+Hostis aprovados:
+
+1. `HostileEnemyBase`
+2. `HostileEnemyLight`
+3. `HostileEnemyBrute`
+
+Evidencia comum:
+
+1. `hit_confirmed` com `source_owner: Player`;
+2. `knockback_applied`;
+3. `hit_reaction_requested`;
+4. `hit_reaction_started`;
+5. `hit_reaction_animation played=true`;
+6. `duration: 1.0`;
+7. `hit_reaction_finished`;
+8. morte final sem nova hit reaction, correto;
+9. stamina, kiting, orb, regen, target lost, death e respawn preservados.
 
 ## 8) Recomendacao Tech Lead
 Nao tentar propagar tudo de uma vez.

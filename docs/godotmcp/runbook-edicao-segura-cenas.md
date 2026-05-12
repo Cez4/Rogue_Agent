@@ -139,14 +139,18 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 6. Se uma entidade ainda nao tiver `social_profile`, os exports antigos devem ser tratados como fallback real ate prova contraria.
 
 ## Sequenciamento Universal Hit Reaction Component v1
-1. `Cliente/nexus/docs/plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` esta concluido e congelado no V7.
-2. `Cliente/nexus/docs/status-freeze-funcional-v7-hit-reaction-2026-05-12.md` e o baseline atual de game feel ao receber dano.
-3. A sprint implementou:
+1. `Cliente/nexus/docs/plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` esta concluido e congelado no V7 para o Player.
+2. `Cliente/nexus/docs/status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md` e o baseline atual da cobertura visual de Hit Reaction em hostis.
+3. Baselines por camada:
+   - V7: Player.
+   - V8: Wildcat.
+   - V9: HostileEnemyBase, HostileEnemyLight e HostileEnemyBrute.
+4. A sprint implementou:
    - `HitReactionComponent`;
    - `HitReactionProfile`;
    - `HitReactionState`;
    - Player com `Dagger01_TakeDamage_*` tocando inteiro e orientado para a origem do golpe.
-4. Novas propagacoes para NPCs/hostis devem preservar o contrato plug-and-play e validar telemetria.
+5. Novas propagacoes para NPCs/hostis devem preservar o contrato plug-and-play e validar telemetria.
 
 ## Contrato Universal Hit Reaction Component v1
 1. A decisao arquitetural obrigatoria e componente plug-and-play:

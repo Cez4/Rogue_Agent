@@ -3,12 +3,16 @@
 Este README aponta a fonte oficial de status tecnico do projeto.
 
 ## Fonte oficial de status (freeze atual)
+- `Cliente/nexus/docs/status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md`
+
+Freezes imediatamente anteriores:
+- `Cliente/nexus/docs/status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v7-hit-reaction-2026-05-12.md`
 
 Freeze historico base:
 - `Cliente/nexus/docs/status-freeze-total-combate-tatico-2026-05-11.md`
 
-Freeze de game feel imediatamente anterior:
+Freeze de game feel fisico:
 - `Cliente/nexus/docs/status-freeze-funcional-v6-knockback-2026-05-12.md`
 
 Esse documento manda no estado da fase atual e consolida:
@@ -19,6 +23,8 @@ Esse documento manda no estado da fase atual e consolida:
 5. Orb UI V3, Stamina/Stagger e telemetria continuam preservados como base funcional.
 6. Knockback V6 permanece congelado com `knockback_force = 200.0`.
 7. Hit Reaction V7 esta aprovado: Player toca `Dagger01_TakeDamage_*` inteiro, olhando para a origem do golpe, sem limpar alvo de combate.
+8. Hit Reaction V8 esta aprovado no Wildcat.
+9. Hit Reaction V9 esta aprovado nos hostis `HostileEnemyBase`, `HostileEnemyLight` e `HostileEnemyBrute`.
 
 ## Regra de operacao
 1. Antes de nova feature, revisar o freeze atual.

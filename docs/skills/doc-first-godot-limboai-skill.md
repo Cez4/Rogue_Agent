@@ -22,7 +22,7 @@ Regra:
 15. Durante Actor Export/Profile Organization v1, nao remover exports sociais/wander/emote do `Actor8DirLimbo` antes da Fase E0 de auditoria de cobertura.
 16. Antes de limpar tuning antigo, classificar cada valor como `fallback_real`, `override_aprovado`, `tuning_fantasma` ou `remover_depois`.
 17. Se uma cena/ator ainda nao tiver `social_profile`, preservar os exports antigos como fallback real ate migracao/default aprovado.
-18. Universal Hit Reaction / Hit Stun v1 esta congelado no V7: preservar `HitReactionComponent` + profile `.tres` + estado HSM; nao criar logica exclusiva do Player, nao mover regra de dano para BT e nao reengordar `Actor8DirLimbo`.
+18. Universal Hit Reaction / Hit Stun v1 esta congelado em camadas: V7 Player, V8 Wildcat e V9 Hostile Coverage. Preservar `HitReactionComponent` + profile `.tres` + estado HSM; nao criar logica exclusiva do Player, nao mover regra de dano para BT e nao reengordar `Actor8DirLimbo`.
 
 Checklist rapido:
 - [ ] Doc interno lido.
@@ -49,7 +49,7 @@ Checklist rapido:
 - [ ] O Player continua compartilhando a mesma fundação biológica e social (Paridade The Sims-like) dos NPCs através de arquivos `.tres` idênticos?
 
 - [ ] Implementou Hit Reaction/Hit Stun? Confirme que e componente copiavel para templates, usa profile `.tres`, entra pela HSM, preserva `combat_target`, tem telemetria e nao adiciona tuning/export no `Actor8DirLimbo`.
-- [ ] Alterou Hit Reaction/Hit Stun apos o freeze V7? Confirme que o Player ainda toca `Dagger01_TakeDamage_*` inteiro, orientado para a origem do golpe, com logs `hit_reaction_animation played=true duration=1.0`.
+- [ ] Alterou Hit Reaction/Hit Stun apos os freezes V7/V8/V9? Confirme Player, Wildcat e hostis aprovados continuam tocando animacoes `TakeDamage_*`/`Dagger01_TakeDamage_*` inteiras, orientadas para a origem do golpe, com logs `hit_reaction_animation played=true duration=1.0`.
 
 Fontes base:
 - Godot: https://docs.godotengine.org/en/stable/

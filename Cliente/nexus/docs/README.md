@@ -4,23 +4,25 @@ Data de consolidacao: 2026-05-12
 Branch de referencia: `feat/universal-hit-reaction-component-v1`
 
 ## 1) Fonte principal de estado
-1. `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` (freeze atual: Wildcat Hit Reaction aprovado)
-2. `plano-sprint-wildcat-hit-reaction-v1-2026-05-12.md` (Wildcat v1 concluido; hostis aguardam Fase C)
-3. `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` (Player Hit Reaction/Hit Stun universal aprovado)
-4. `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` (sprint concluida)
-5. `status-freeze-funcional-v6-knockback-2026-05-12.md` (knockback modular/Data-Driven com baseline `200.0`)
-6. `plano-sprint-combat-knockback-component-v1-2026-05-12.md` (sprint concluida)
-7. `status-freeze-funcional-v5-actor-profiles-2026-05-12.md` (actor profiles concluido)
-8. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado historico)
-9. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
-10. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (freeze concluido)
-11. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (fechamento parcial congelado)
-12. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint concluida ate E3; ver V5)
-13. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
-14. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
+1. `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md` (freeze atual: Hostile Hit Reaction Coverage aprovado)
+2. `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` (Wildcat Hit Reaction aprovado)
+3. `plano-sprint-wildcat-hit-reaction-v1-2026-05-12.md` (Wildcat + hostis concluidos)
+4. `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` (Player Hit Reaction/Hit Stun universal aprovado)
+5. `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` (sprint concluida)
+6. `status-freeze-funcional-v6-knockback-2026-05-12.md` (knockback modular/Data-Driven com baseline `200.0`)
+7. `plano-sprint-combat-knockback-component-v1-2026-05-12.md` (sprint concluida)
+8. `status-freeze-funcional-v5-actor-profiles-2026-05-12.md` (actor profiles concluido)
+9. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado historico)
+10. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
+11. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (freeze concluido)
+12. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (fechamento parcial congelado)
+13. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint concluida ate E3; ver V5)
+14. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
+15. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
 
 ## 1.1 Regra anti-drift (obrigatoria)
 1. Quando houver conflito entre docs antigos e estado atual:
+   - o freeze V9 de 2026-05-12 vence para Hostile Hit Reaction Coverage;
    - o freeze V8 de 2026-05-12 vence para Wildcat Hit Reaction;
    - o freeze V7 de 2026-05-12 vence para Player Hit Reaction/Hit Stun e game feel de dano recebido;
    - o freeze V6 de 2026-05-12 vence para knockback e game feel de impacto fisico;
@@ -29,8 +31,9 @@ Branch de referencia: `feat/universal-hit-reaction-component-v1`
    - os freezes anteriores viram historico tecnico.
 2. Docs de tuning/congelamento antigos devem ser lidos como historico, nao como estado operativo da sprint atual.
 3. Ordem oficial atual:
-   - `plano-sprint-wildcat-hit-reaction-v1-2026-05-12.md` esta fechado para Wildcat v1 e aberto apenas para decisao futura de hostis;
-   - `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` e o estado atual de Hit Reaction em Wildcat;
+   - `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md` e o estado atual da cobertura visual de Hit Reaction em hostis;
+   - `plano-sprint-wildcat-hit-reaction-v1-2026-05-12.md` esta fechado para Wildcat e hostis;
+   - `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` permanece como baseline do Wildcat;
    - `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` esta fechado;
    - `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` permanece como baseline do Player;
    - `plano-sprint-combat-knockback-component-v1-2026-05-12.md` esta fechado;
@@ -57,7 +60,12 @@ Branch de referencia: `feat/universal-hit-reaction-component-v1`
    - `wildcat_1.tscn` possui `HitReactionComponent` e `LimboHSM/HitReactionState`;
    - profile dedicado: `wildcat_hit_reaction_profile_v1.tres`;
    - animacoes `TakeDamage_*` tocam com `played=true` e duracao de 1.0s;
-   - `HostileEnemyBase`, `HostileEnemyLight` e `HostileEnemyBrute` ainda nao estao inclusos no freeze visual.
+9. Hostile Hit Reaction V9:
+   - `HostileEnemyBase`, `HostileEnemyLight` e `HostileEnemyBrute` possuem `HitReactionComponent` e `LimboHSM/HitReactionState`;
+   - Base/Light usam `hostile_light_hit_reaction_profile_v1.tres`;
+   - Brute usa `hostile_brute_hit_reaction_profile_v1.tres`;
+   - animacoes `TakeDamage_*` tocam com `played=true` e duracao de 1.0s;
+   - morte final nao dispara nova hit reaction, preservando death/target lost/respawn.
 
 ## 2) Arquitetura e contratos
 1. `arquitetura-contratos-estado-atual-2026-05-10.md` (doc mestre)

@@ -57,14 +57,18 @@ LimboAI:
 - **LimboHSM Lifecycle:** Nunca execute `hsm.initialize()` em uma máquina de estados que já foi ligada anteriormente (ex: no Respawn). Utilize transições puras (para o `Idle`) e um `bt_player.restart()` na BT.
 
 ## Regra - Universal Hit Reaction / Hit Stun
-- Status atual: congelado no V7 em `Cliente/nexus/docs/status-freeze-funcional-v7-hit-reaction-2026-05-12.md`.
+- Status atual: congelado em V9 em `Cliente/nexus/docs/status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md`.
+- Baselines por camada:
+  - V7: Player em `Cliente/nexus/docs/status-freeze-funcional-v7-hit-reaction-2026-05-12.md`.
+  - V8: Wildcat em `Cliente/nexus/docs/status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md`.
+  - V9: Hostile coverage em `Cliente/nexus/docs/status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md`.
 - Implementar reacao a dano como componente plug-and-play (`HitReactionComponent`) + profile `.tres` + estado HSM.
 - Nao criar logica exclusiva de Player.
 - Nao colocar regra de dano dentro da BT; a BT decide intencao, a HSM executa reacao corporal.
 - Nao limpar `combat_target` durante Hit Reaction/Hit Stun.
 - Nao reengordar `Actor8DirLimbo`; wrappers no actor so podem ser fachada minima e delegada.
 - Nao adicionar exports/tuning de Hit Reaction no actor.
-- Apos o freeze V7, preservar o contrato visual aprovado: `Dagger01_TakeDamage_*` toca inteiro e orientado para a origem do golpe.
+- Apos os freezes V7/V8/V9, preservar o contrato visual aprovado: Player, Wildcat e hostis tocam animacoes de dano inteiras, orientadas para a origem do golpe, com `hit_reaction_animation played=true duration=1.0`.
 
 ## Saida minima esperada por tarefa
 - Contexto consultado (links usados).
