@@ -1,7 +1,7 @@
 # Plano Sprint - Actor Export/Profile Organization v1
 
 Data: 2026-05-11
-Status: FASE D APLICADA - HOSTILE SOCIAL PROFILE PENDENTE QA COMBATE
+Status: FASE D CONGELADA - HOSTILE SOCIAL PROFILE APROVADO
 Branch: `feat/actor-export-profile-organization-v1`
 Base obrigatoria: `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` fechado parcialmente e congelado.
 
@@ -130,7 +130,7 @@ O objetivo nao e remover todos os exports. O objetivo e separar:
 - [x] Criar perfil hostil/wildcat compartilhado.
 - [x] Aplicar em `hostile_enemy_base`, `hostile_enemy_light`, `hostile_enemy_brute`, `wildcat_1` somente via Godot/editor.
 - [x] Confirmar que Player, Brute, Light e Wildcat continuam compartilhando core.
-- [ ] QA combate: attack, kiting, death/respawn, Orb e Health Regen.
+- [x] QA combate: attack, kiting, death/respawn, Orb e Health Regen.
 
 ### Fase E - Limpar exports redundantes
 - [ ] Remover exports do actor somente quando todas as cenas consumirem profile.
@@ -232,7 +232,7 @@ Proximo passo:
 
 ## 12) Implementacao - bloco 3 profile social hostil
 Data: 2026-05-11
-Status: aplicado tecnicamente; pendente de QA combate jogavel.
+Status: aprovado em QA combate jogavel e congelado.
 
 Decisao tecnica:
 1. Auditoria via Godot/editor mostrou que `wildcat_1`, `hostile_enemy_base`, `hostile_enemy_light` e `hostile_enemy_brute` tinham o mesmo pacote social/wander.
@@ -257,7 +257,11 @@ Validacao tecnica:
 1. Smoke MCP abriu e rodou `res://cenas/mundo.tscn` sem parse/runtime error novo. [ok]
 2. Runtime confirmou `social_profile = res://configs/actors/social/hostile_social_profile_v1.tres` em Wildcat, HostileEnemyBase, HostileEnemyLight e HostileEnemyBrute. [ok]
 3. Runtime confirmou valores sociais/wander preservados nos quatro hostis. [ok]
+4. QA visual confirmou emotions e comportamento dos hostis aprovados apos migracao. [ok]
+5. Logs do Brute confirmaram attack, kiting, death/respawn, Orb e Health Regen preservados. [ok]
+6. Revalidacao runtime confirmou os quatro hostis puxando `hostile_social_profile_v1.tres` com `look_min=22.0`, `look_max=44.0`, `wander_emote_chance=0.17` e `wander_emote_hold=2.6`. [ok]
 
 Proximo passo:
-1. QA jogavel de combate completo: attack, kiting, death/respawn, Orb e Health Regen.
-2. Se aprovado, congelar Fase D antes de qualquer limpeza de exports redundantes.
+1. Fase D congelada.
+2. Proxima etapa: avaliar Fase E de limpeza de exports redundantes com cuidado, mantendo fallback ate todas as cenas relevantes consumirem profiles.
+3. Antes de remover qualquer export do actor, auditar consumidores reais em BT/HSM/Controller/Scenes e rodar MCP.
