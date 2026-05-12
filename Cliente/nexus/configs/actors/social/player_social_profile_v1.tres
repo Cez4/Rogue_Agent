@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="ActorSocialProfile" format=3 uid="uid://cwg6n2klj3608"]
+
+[ext_resource type="Script" uid="uid://jkdwlg6aritr" path="res://Scripts/actors/profiles/actor_social_profile.gd" id="1_mylyd"]
+
+[resource]
+script = ExtResource("1_mylyd")
