@@ -16,5 +16,5 @@ low_stamina_kite_probability = 0.8
 low_stamina_kite_distance = 120.0
 low_stamina_kite_cooldown_ms = 620
 damage = 0.85
-knockback_strength = 220.0
+knockback_force = 250.0
 max_targets_per_attack = 1
