@@ -32,7 +32,7 @@ func _enter() -> void:
 		if bool(_profile.get("interrupt_attack")):
 			_interrupt_attack(actor)
 
-	var direction: Vector2 = request.get("direction", Vector2.ZERO)
+	var direction: Vector2 = -Vector2(request.get("direction", Vector2.ZERO))
 	_timer = maxf(0.01, float(request.get("duration", _profile.get("base_hit_stun_sec"))))
 	_played_animation = _play_reaction_animation(actor, direction)
 
