@@ -51,6 +51,10 @@ LimboAI:
 - Armadilha GDScript 2.0: Ao animar variáveis no `_process`, lembre-se que chamadas diretas a variáveis locais NÃO invocam suas funções `set(v):` automaticamente. Utilize `self.variavel` ou faça o update manual para garantir sincronia com os shaders.
 - Armadilha de Sincronia de UI (Respawn/Heal): Variáveis visuais atrasadas (como *Ghost Trails* ou barras secundárias) nunca devem ficar para trás de ganhos instantâneos de status. Em eventos de cura ou respawn (ex: HP vai de 0 a 100), obrigatoriamente faça o **Snap** (igualar instantaneamente) da variável atrasada para o valor atual, ou a lógica de decaimento ficará permanentemente travada no passado.
 - Em bugs de morte/respawn, auditar primeiro overrides da cena instanciadora (ex.: `mundo.tscn`) antes de mexer no script base.
+- **Paridade The Sims-like:** O Player e os NPCs dividem 100% da arquitetura de inteligência, mobilidade e social. Não criar lógicas que excluam o Player do ecossistema de Data-Driven (ex: Profiles Sociais devem ser aplicados a todos).
+- **Navigation Anti-Spam:** Nunca envie a mesma `target_position` para um `NavigationAgent2D` a cada frame. O Godot 4 reseta o cálculo e zera a velocidade. Use filtros de distância quadrada (ex: `distance_squared < 25.0`).
+- **Raw Nav Vectors (Sem Clamp Manual):** Nunca tente "ajudar" o `NavigationAgent2D` grampeando vetores de fuga matemáticos em quinas de mapa com `NavigationServer2D.map_get_closest_point()`. Passe o vetor de distância pura e confie na engine, evitando bugs de "Passo Único".
+- **LimboHSM Lifecycle:** Nunca execute `hsm.initialize()` em uma máquina de estados que já foi ligada anteriormente (ex: no Respawn). Utilize transições puras (para o `Idle`) e um `bt_player.restart()` na BT.
 
 ## Saida minima esperada por tarefa
 - Contexto consultado (links usados).

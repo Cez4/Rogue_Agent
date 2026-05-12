@@ -44,6 +44,8 @@ Checklist rapido:
 - [ ] O log tem spam de `kiting_started`? Nao avancar para Fase C nem mexer em kiting/movimento antes de decidir se e ruido aceito ou ajuste de telemetria.
 - [ ] Na sprint Actor Export/Profile Organization v1, a Fase E comecou por E0/auditoria antes de qualquer remocao de export?
 - [ ] Valores sociais/wander antigos em cenas migradas foram tratados como tuning fantasma e limpos somente via Godot/editor API?
+- [ ] Implementou fuga (Kiting) ou navegação autônoma? Garanta que você NÃO está "spammando" o NavAgent com recalculações por frame (adicione threshold de distância) e NÃO está clampando coordenadas com `map_get_closest_point`.
+- [ ] O Player continua compartilhando a mesma fundação biológica e social (Paridade The Sims-like) dos NPCs através de arquivos `.tres` idênticos?
 
 Fontes base:
 - Godot: https://docs.godotengine.org/en/stable/

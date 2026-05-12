@@ -1,7 +1,7 @@
 # Nexus - README de Projeto
 
 ## Status oficial da fase atual
-- `docs/status-freeze-total-combate-tatico-2026-05-11.md`
+- `docs/status-freeze-funcional-v5-actor-profiles-2026-05-12.md`
 
 Esse documento e a referencia principal para:
 1. estado funcional congelado,
@@ -12,8 +12,8 @@ Esse documento e a referencia principal para:
 1. Combate: BT decide, HSM executa, Motor locomove.
 2. Orb UI: V3 contextual congelada.
 3. Stamina/Stagger: consolidado e validado com telemetria.
-4. Combate tatico: freeze total aprovado em 2026-05-11.
-5. Spam de ataque atualiza alvo sem cancelar kiting; clique no chao cancela combate manualmente.
+4. Identidade "The Sims-like": Player e NPCs utilizam a mesma fundação de perfis Data-Driven (`ActorSocialProfile` etc). 
+5. NavAgent: Filtro anti-spam implementado no PlayerMotor. Kiting livre de travamentos em bordas.
 
 ## Fluxo obrigatorio
 1. MCP gate: `open_scene -> play_scene -> get_godot_errors`.
