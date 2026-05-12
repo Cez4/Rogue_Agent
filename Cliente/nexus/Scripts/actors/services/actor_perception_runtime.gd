@@ -24,4 +24,10 @@ static func stop_movement_for_look(actor: Actor8DirLimbo) -> void:
 
 
 static func play_look_emote(actor: Actor8DirLimbo) -> void:
-	await ActorRuntimeBridgeRef.show_emote(actor, actor.look_emote_name, false, maxf(0.2, actor.look_emote_hold_sec), 2)
+	await ActorRuntimeBridgeRef.show_emote(
+		actor,
+		ActorSocialProfileRuntime.look_emote_name(actor),
+		false,
+		maxf(0.2, ActorSocialProfileRuntime.look_emote_hold_sec(actor)),
+		2
+	)

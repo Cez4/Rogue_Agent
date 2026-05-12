@@ -6,7 +6,9 @@ const CombatTelemetryRef = preload("res://Scripts/combat/combat_telemetry.gd")
 
 static func trigger_look_cooldown(actor: Actor8DirLimbo) -> void:
 	var now_sec: float = Time.get_ticks_msec() * 0.001
-	var cooldown: float = maxf(0.0, actor.look_cooldown_sec + randf_range(0.0, maxf(0.0, actor.look_cooldown_jitter_sec)))
+	var cooldown_sec: float = ActorSocialProfileRuntime.look_cooldown_sec(actor)
+	var jitter_sec: float = ActorSocialProfileRuntime.look_cooldown_jitter_sec(actor)
+	var cooldown: float = maxf(0.0, cooldown_sec + randf_range(0.0, maxf(0.0, jitter_sec)))
 	ActorRuntimeBridgeRef.set_next_look_allowed(actor, now_sec + cooldown)
 
 
@@ -18,8 +20,8 @@ static func can_look_target(actor: Actor8DirLimbo, target: Node2D) -> bool:
 	var now_sec: float = Time.get_ticks_msec() * 0.001
 	if now_sec < ActorRuntimeBridgeRef.get_next_look_allowed(actor):
 		return false
-	var min_dist: float = actor.get_perception_min_distance()
-	var max_dist: float = maxf(actor.get_perception_max_distance(), actor.get_stat_value(&"perception_radius", actor.base_perception_radius))
+	var min_dist: float = ActorSocialProfileRuntime.look_interest_min_distance(actor)
+	var max_dist: float = ActorSocialProfileRuntime.look_interest_max_distance(actor)
 	if max_dist < min_dist:
 		max_dist = min_dist
 	var dist_sq: float = actor.global_position.distance_squared_to(target.global_position)
@@ -60,18 +62,19 @@ static func hide_emote_immediate(actor: Actor8DirLimbo) -> void:
 
 
 static func try_play_stamina_exhausted_emote(actor: Actor8DirLimbo) -> void:
-	if actor.stamina_exhausted_emote_name == &"":
+	var emote_name: StringName = ActorSocialProfileRuntime.stamina_exhausted_emote_name(actor)
+	if emote_name == &"":
 		return
 	var now_sec: float = Time.get_ticks_msec() * 0.001
 	if now_sec < ActorRuntimeBridgeRef.get_next_stamina_exhausted_emote_allowed(actor):
 		return
-	var cooldown_sec: float = maxf(0.0, actor.stamina_exhausted_emote_cooldown_sec)
+	var cooldown_sec: float = maxf(0.0, ActorSocialProfileRuntime.stamina_exhausted_emote_cooldown_sec(actor))
 	ActorRuntimeBridgeRef.set_next_stamina_exhausted_emote_allowed(actor, now_sec + cooldown_sec)
 	await show_emote(
 		actor,
-		actor.stamina_exhausted_emote_name,
+		emote_name,
 		false,
-		maxf(0.2, actor.stamina_exhausted_emote_hold_sec),
+		maxf(0.2, ActorSocialProfileRuntime.stamina_exhausted_emote_hold_sec(actor)),
 		3
 	)
 	CombatTelemetryRef.emit_event(&"stamina_exhausted_emote", {

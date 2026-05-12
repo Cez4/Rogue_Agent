@@ -19,7 +19,7 @@ static func ready(actor: Actor8DirLimbo) -> void:
 		actor.equipment_loadout = load("res://configs/items/loadouts/player_starter_loadout.tres")
 	if actor.movement_config != null:
 		actor.movement_config = actor.movement_config.duplicate(true)
-		if actor.enable_wander and not actor.player_controlled:
+		if ActorSocialProfileRuntime.enable_wander(actor) and not actor.player_controlled:
 			# Wander NPCs should not depend on nav projection being available in all maps.
 			actor.movement_config.project_target_to_navmesh = false
 

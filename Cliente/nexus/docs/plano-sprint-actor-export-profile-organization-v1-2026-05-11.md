@@ -1,7 +1,7 @@
 # Plano Sprint - Actor Export/Profile Organization v1
 
 Data: 2026-05-11
-Status: INICIADA - AUDITORIA SEM MIGRACAO DE DADOS
+Status: BLOCO 1 APLICADO - SOCIAL PROFILE COM FALLBACK
 Branch: `feat/actor-export-profile-organization-v1`
 Base obrigatoria: `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` fechado parcialmente e congelado.
 
@@ -109,15 +109,15 @@ O objetivo nao e remover todos os exports. O objetivo e separar:
 - [x] Auditar exports do actor.
 - [x] Auditar Resources existentes.
 - [x] Auditar overrides em cenas.
-- [ ] Mapear consumidores reais de cada export.
-- [ ] Classificar cada export como `scene_wiring`, `identity`, `animation_profile`, `social_profile`, `combat_profile`, `fallback_stat`, `runtime_only`.
+- [x] Mapear consumidores reais de cada export social/wander/emote.
+- [x] Classificar cada export como `scene_wiring`, `identity`, `animation_profile`, `social_profile`, `combat_profile`, `fallback_stat`, `runtime_only`.
 
 ### Fase B - Criar perfil social/wander sem migrar cena
-- [ ] Criar `ActorSocialProfile` ou nome equivalente.
-- [ ] Incluir apenas look/wander/stamina feedback visual.
-- [ ] Implementar runtime leitor com fallback para exports atuais.
-- [ ] Nao remover exports ainda.
-- [ ] Validar scripts no Godot.
+- [x] Criar `ActorSocialProfile` ou nome equivalente.
+- [x] Incluir apenas look/wander/stamina feedback visual.
+- [x] Implementar runtime leitor com fallback para exports atuais.
+- [x] Nao remover exports ainda.
+- [x] Validar scripts no Godot.
 
 ### Fase C - Instanciar perfil em uma entidade de baixo risco
 - [ ] Escolher entidade piloto, preferencia `Villager1` ou cena isolada.
@@ -165,3 +165,29 @@ Mitigacao: `chase_attack_range`, `base_*` e `attack_duration_sec` ficam para fas
 
 ## 9) Proximo passo imediato
 Mapear consumidores reais dos exports sociais e criar `ActorSocialProfile` com fallback sem migrar cenas. Esse bloco deve alterar apenas scripts e docs; dados de cena ficam para fase piloto.
+
+## 10) Implementacao - bloco 1
+Data: 2026-05-11
+Status: aplicado; pendente de QA jogavel.
+
+Escopo:
+1. Criado `Scripts/actors/profiles/actor_social_profile.gd`.
+2. Criado `Scripts/actors/services/actor_social_profile_runtime.gd`.
+3. Adicionado `social_profile: Resource` em `Actor8DirLimbo`.
+4. `ActorSocialRuntime`, `ActorWanderRuntime`, `ActorPerceptionRuntime` e `ActorSetupRuntime` passaram a ler look/wander/stamina feedback pelo runtime de profile.
+5. Nenhum `.tscn`, `.tres`, BT, HSM, Orb, Health Regen, stamina, kiting ou camera foi alterado.
+
+Contrato de compatibilidade:
+1. Nenhuma cena recebeu `social_profile` ainda.
+2. Enquanto `social_profile == null`, os valores continuam vindo dos exports atuais do actor.
+3. Para look distance, o fallback preserva o comportamento anterior baseado em `get_perception_min_distance()`, `get_perception_max_distance()` e stat `perception_radius`.
+4. Os exports antigos permanecem no actor para evitar regressao e permitir migracao gradual.
+
+Validacao inicial:
+1. Scripts abriram no Godot sem parse error. [ok]
+2. Smoke MCP abriu e rodou `res://cenas/mundo.tscn` sem parse/runtime error novo. [ok]
+3. Cena foi parada antes de atualizar docs. [ok]
+
+Proximo passo:
+1. QA jogavel para confirmar assobio, exclamacao, wander, inspect e combate preservados sem nenhum profile atribuido.
+2. Depois do QA, congelar bloco 1 e decidir entidade piloto para Fase C.

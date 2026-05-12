@@ -4,6 +4,7 @@ class_name Actor8DirLimbo
 @export var movement_config: Resource
 @export var equipment_loadout: EquipmentLoadout
 @export var combat_perception_profile: CombatPerceptionProfile
+@export var social_profile: Resource
 @export var player_controlled: bool = true
 @export var is_hostile: bool = false
 @export var use_bt_brain: bool = false
