@@ -1,7 +1,7 @@
 # Plano Sprint - Wildcat / Hostile Hit Reaction v1
 
 Data: 2026-05-12
-Status: PLANEJADO - AGUARDANDO EXECUCAO
+Status: WILDCAT V1 CONCLUIDO E CONGELADO - HOSTIS AGUARDAM FASE C
 Base obrigatoria: `status-freeze-funcional-v7-hit-reaction-2026-05-12.md`
 
 ## 1) Objetivo
@@ -89,22 +89,24 @@ Recomendacao:
 ## 7) Plano de Execucao
 
 ### Fase A - Auditoria Sem Alterar Cena
-- [ ] Confirmar `wildcat_1.tscn` abre no Godot sem erro apos as animacoes adicionadas.
-- [ ] Confirmar loops `TakeDamage_* = false`.
-- [ ] Medir duracao real das animacoes `TakeDamage_*`.
-- [ ] Confirmar se `wildcat_1.tscn` esta sendo usado no mapa atual ou se os inimigos do QA usam `hostile_enemy_*`.
-- [ ] Confirmar se `HostileEnemyBase`, `HostileEnemyLight` e `HostileEnemyBrute` possuem `TakeDamage_*`.
+- [x] Confirmar `wildcat_1.tscn` abre no Godot sem erro apos as animacoes adicionadas.
+- [x] Confirmar loops `TakeDamage_* = false`.
+- [x] Medir duracao real das animacoes `TakeDamage_*`: 15 frames, 15 FPS, 1.0s por direcao.
+- [x] Confirmar se `wildcat_1.tscn` esta sendo usado no mapa atual ou se os inimigos do QA usam `hostile_enemy_*`: `mundo.tscn` instancia `res://cenas/wildcat_1.tscn` como `Wildcat`; hostis continuam em cenas independentes.
+- [x] Confirmar se `HostileEnemyBase`, `HostileEnemyLight` e `HostileEnemyBrute` possuem `TakeDamage_*`: continuam fora da implementacao Wildcat v1 porque nao herdam automaticamente as animacoes do `wildcat_1.tscn`.
 
 ### Fase B - Wildcat v1
-- [ ] Criar `wildcat_hit_reaction_profile_v1.tres`.
-- [ ] Adicionar `HitReactionComponent` em `wildcat_1.tscn` via Godot/editor API.
-- [ ] Adicionar `HitReactionState` em `wildcat_1.tscn` via Godot/editor API.
-- [ ] Conectar paths iguais ao Player:
+- [x] Criar `wildcat_hit_reaction_profile_v1.tres`.
+- [x] Adicionar `HitReactionComponent` em `wildcat_1.tscn` via Godot/editor API.
+- [x] Adicionar `HitReactionState` em `wildcat_1.tscn` via Godot/editor API.
+- [x] Conectar paths iguais ao Player:
   - `HitReactionComponent.profile`;
   - `HitReactionComponent.health_component_path`;
   - `HitReactionComponent.hsm_path`;
   - `HitReactionState.hit_reaction_component_path`.
-- [ ] Rodar `mundo.tscn` ou cena-alvo e confirmar telemetria.
+- [x] Rodar `wildcat_1.tscn` e `mundo.tscn` sem parse/runtime error novo.
+- [x] Confirmar em runtime que `/root/Mundo/Wildcat/HitReactionComponent` e `/root/Mundo/Wildcat/LimboHSM/HitReactionState` existem com paths corretos.
+- [x] Confirmar telemetria de dano recebida pelo Wildcat em combate real.
 
 ### Fase C - Hostile Coverage
 - [ ] Decidir se hostis recebem as animacoes agora ou se ficam para sprint de template visual.
@@ -118,9 +120,10 @@ Recomendacao:
   - manter hostis com profiles prontos mas sem componente/estado.
 
 ### Fase D - QA
-- [ ] Godot MCP: abrir cena-alvo.
-- [ ] Rodar combate.
-- [ ] Confirmar no log:
+- [x] Godot MCP: abrir cena-alvo.
+- [x] Rodar cena-alvo sem erro novo.
+- [x] Rodar combate direcionado contra Wildcat.
+- [x] Confirmar no log:
   - `hit_confirmed`;
   - `knockback_applied`;
   - `hit_reaction_requested`;
@@ -129,14 +132,43 @@ Recomendacao:
   - `duration` coerente com a animacao;
   - `hit_reaction_finished`;
   - alvo de combate preservado.
-- [ ] QA visual: Wildcat olha para origem do golpe e toca `TakeDamage_*` inteiro.
-- [ ] Confirmar sem regressao de ataque, kiting, stamina, orb e regen.
+- [x] QA visual: Wildcat toca `TakeDamage_*` inteiro ao receber dano.
+- [x] Confirmar sem regressao de ataque, kiting, stamina, orb e regen.
+
+## 10) Execucao Parcial - 2026-05-12
+
+Implementacao Wildcat v1 iniciada conforme fluxo do projeto:
+
+1. `wildcat_1.tscn` foi auditado pelo Godot/editor API.
+2. Todas as animacoes `TakeDamage_*` existem, nao fazem loop e duram 1.0s.
+3. `wildcat_hit_reaction_profile_v1.tres` foi criado em `res://configs/combat/hit_reaction/`.
+4. `HitReactionComponent` foi adicionado ao root do `Wildcat`.
+5. `LimboHSM/HitReactionState` foi adicionado ao HSM do `Wildcat`.
+6. `mundo.tscn` confirma em runtime que o Wildcat instanciado carrega o componente e o estado.
+7. Smoke do Godot rodou sem parse/runtime error novo.
+
+QA visual/logico batendo especificamente no `Wildcat` foi aprovado pelo diretor. Logs confirmaram `hit_confirmed`, `knockback_applied`, `hit_reaction_requested`, `hit_reaction_started`, `hit_reaction_animation played=true`, animacoes `TakeDamage_*` reais, `duration: 1.0` e `hit_reaction_finished`. Hostis Base/Light/Brute permanecem fora desta etapa ate decisao da Fase C.
 
 ### Fase E - Freeze
-- [ ] Atualizar docs/status.
-- [ ] Registrar quais cenas possuem Hit Reaction visual.
-- [ ] Registrar quais hostis ainda precisam de asset/componente.
+- [x] Atualizar docs/status.
+- [x] Registrar quais cenas possuem Hit Reaction visual.
+- [x] Registrar quais hostis ainda precisam de asset/componente.
 - [ ] Commit e push somente apos QA aprovado.
+
+## 11) Freeze Funcional - 2026-05-12
+
+Estado congelado em `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md`.
+
+Cenas com Hit Reaction visual aprovado:
+
+1. `res://cenas/player.tscn` via freeze V7.
+2. `res://cenas/wildcat_1.tscn` via freeze V8.
+
+Cenas ainda fora do freeze visual:
+
+1. `res://cenas/hostile_enemy_base.tscn`
+2. `res://cenas/hostile_enemy_light.tscn`
+3. `res://cenas/hostile_enemy_brute.tscn`
 
 ## 8) Recomendacao Tech Lead
 Nao tentar propagar tudo de uma vez.

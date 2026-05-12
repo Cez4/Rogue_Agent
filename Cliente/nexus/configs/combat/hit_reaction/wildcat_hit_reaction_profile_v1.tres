@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="HitReactionProfile" format=3 uid="uid://da87aamsfpus1"]
+
+[ext_resource type="Script" uid="uid://baiybhgaupoe0" path="res://Scripts/combat/hit_reaction_profile.gd" id="1_x4nms"]
+
+[resource]
+script = ExtResource("1_x4nms")
+base_hit_stun_sec = 0.14
+reaction_cooldown_sec = 0.14

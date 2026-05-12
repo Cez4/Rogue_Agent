@@ -21,12 +21,15 @@
 [ext_resource type="Script" uid="uid://bi7hbd4ws5d33" path="res://Scripts/actors/states/stagger_state.gd" id="15_oawiv"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/health_component_node.tscn" id="16_tntqu"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="18_dkk0s"]
+[ext_resource type="Script" uid="uid://bpkh2dg32uev5" path="res://Scripts/actors/states/hit_reaction_state.gd" id="18_nevbp"]
 [ext_resource type="Resource" uid="uid://bbi5b1l06posj" path="res://configs/combat/wildcat_claw_attack_v1.tres" id="19_wcatatk"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/attack_hitbox_component_node.tscn" id="20_igu0s"]
 [ext_resource type="Script" uid="uid://d087gw3m6nlpa" path="res://Scripts/stats/stamina_component.gd" id="22_ligv6"]
 [ext_resource type="PackedScene" uid="uid://cpqqeuy3ge470" path="res://cenas/components/ui/combat_orb_presenter.tscn" id="22_oawiv"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/health_regen_component_node.tscn" id="29_xgcpa"]
+[ext_resource type="Script" uid="uid://d25m2w1hsn1u5" path="res://Scripts/combat/hit_reaction_component.gd" id="30_7bilb"]
 [ext_resource type="Resource" path="res://configs/ui/orbs/stamina_orb_profile_v1.tres" id="30_orbpf"]
+[ext_resource type="Resource" uid="uid://da87aamsfpus1" path="res://configs/combat/hit_reaction/wildcat_hit_reaction_profile_v1.tres" id="31_74is0"]
 [ext_resource type="Script" uid="uid://diwfcith2c22c" path="res://Scripts/combat/knockback_component.gd" id="32_hto2f"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijbr8"]
@@ -4733,6 +4736,9 @@ script = ExtResource("11_xusch")
 [node name="StaggerState" type="LimboState" parent="LimboHSM" unique_id=657328311]
 script = ExtResource("15_oawiv")
 
+[node name="HitReactionState" type="LimboState" parent="LimboHSM" unique_id=1861436551]
+script = ExtResource("18_nevbp")
+
 [node name="EmotionBubble" parent="." unique_id=587887002 instance=ExtResource("13_emote")]
 sprite_frames = SubResource("SpriteFrames_emotes")
 
@@ -4760,3 +4766,7 @@ script = ExtResource("22_ligv6")
 
 [node name="KnockbackComponent" type="Node" parent="." unique_id=1969197188]
 script = ExtResource("32_hto2f")
+
+[node name="HitReactionComponent" type="Node" parent="." unique_id=119462673]
+script = ExtResource("30_7bilb")
+profile = ExtResource("31_74is0")
