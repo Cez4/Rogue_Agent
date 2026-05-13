@@ -96,26 +96,24 @@ func _apply_starting_items() -> void:
 	if _inventory == null or database == null or not _inventory.stacks.is_empty():
 		return
 	
-	# --- INJECT QA TEST DAGGER ---
-	var definition = database.get_item("weapon_dagger_starter")
-	var generator = load("res://Scripts/systems/item_generator.gd")
-	if generator != null and definition != null:
-		var rare_stack = generator.generate_item_stack("weapon_dagger_starter", definition, 3)
-		var rolled_props = rare_stack.get("properties") if "properties" in rare_stack else {}
-		_authority().apply_add_item(self, "weapon_dagger_starter", 1, rolled_props)
-	# -----------------------------
-
 	for index in range(starting_items.size()):
 		var item_id := starting_items[index]
-		if item_id == "weapon_dagger_starter":
-			continue # Skip because we injected a rare one
-			
 		var amount := 1
 		if index < starting_item_amounts.size():
 			amount = starting_item_amounts[index]
 		if item_id.is_empty() or amount <= 0:
 			continue
-		_authority().apply_add_item(self, item_id, amount)
+		
+		# For starting items, we just use the generator for a normal level 1 item
+		var definition = database.get_item(item_id)
+		var generator = load("res://Scripts/systems/item_generator.gd")
+		var properties = {}
+		if generator != null and definition != null:
+			var stack = generator.generate_item_stack(item_id, definition, 1)
+			if "properties" in stack:
+				properties = stack.get("properties")
+				
+		_authority().apply_add_item(self, item_id, amount, properties)
 
 
 func _authority() -> GDScript:
