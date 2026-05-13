@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="CombatFeedbackProfile" format=3 uid="uid://wyetswulivmd"]
+
+[ext_resource type="Script" path="res://Scripts/combat/feedback/combat_feedback_profile.gd" id="1_nnctj"]
+[ext_resource type="Shader" path="res://Scripts/combat/feedback/hitbreak_flash.gdshader" id="2_nis04"]
+
+[resource]
+script = ExtResource("1_nnctj")
+hitbreak_flash_color = Color(1, 0.95, 0.35, 1)
+shader = ExtResource("2_nis04")

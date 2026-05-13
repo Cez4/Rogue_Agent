@@ -5,7 +5,7 @@ Branch de referencia: `feat/hitbreak-combat-feedback-v1`
 
 ## 1) Fonte principal de estado
 1. `status-freeze-operacional-v10-combat-core-restored-2026-05-13.md` (freeze atual: Combat Core restaurado, Combat Clash temporal removido)
-2. `plano-sprint-hitbreak-combat-feedback-v1-2026-05-13.md` (sprint em execucao: Fase A de telemetria `hitbreak_success` concluida; proxima fase cria brilho data-driven no atacante que causa Hitbreak)
+2. `plano-sprint-hitbreak-combat-feedback-v1-2026-05-13.md` (sprint em execucao: Fase B implementada no Player; QA visual pendente antes de propagar para Wildcat/hostis)
 3. `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md` (Hostile Hit Reaction Coverage aprovado)
 4. `plano-sprint-combat-clash-parry-v1-2026-05-12.md` (Combat Clash temporal auditado e removido do runtime)
 5. `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` (Wildcat Hit Reaction aprovado)
@@ -82,11 +82,13 @@ Branch de referencia: `feat/hitbreak-combat-feedback-v1`
    - sprint ativa apos V10 na branch `feat/hitbreak-combat-feedback-v1`;
    - objetivo: brilho/flash data-driven no atacante que causa Hitbreak;
    - apenas feedback visual, sem alterar dano, stamina, Hit Reaction, Knockback, BT ou HSM;
-   - deve usar `CombatFeedbackComponent` + `CombatFeedbackProfile`;
+   - usa `CombatFeedbackComponent` + `CombatFeedbackProfile`;
    - Fase A ja integrou o pipeline por evento `hitbreak_success`, sem visual;
+   - Fase B ja integrou o Player com shader simples e profile default;
    - `hitbreak_success` e emitido somente quando `attack_interrupted.reason == hit_reaction` e existe fonte de dano atual;
    - interrupcao por `death` nao gera falso Hitbreak;
-   - deve usar shader/material duplicado em runtime ou fallback controlado por profile.
+   - usa shader/material por ator em runtime ou fallback controlado por profile;
+   - proxima etapa e QA visual do diretor antes de propagar para Wildcat/hostis.
 
 ## 2) Arquitetura e contratos
 1. `arquitetura-contratos-estado-atual-2026-05-10.md` (doc mestre)

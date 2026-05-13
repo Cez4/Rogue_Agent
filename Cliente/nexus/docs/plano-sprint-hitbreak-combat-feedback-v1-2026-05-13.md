@@ -1,7 +1,7 @@
 # Plano Sprint - Hitbreak Combat Feedback v1
 
 Data: 2026-05-13
-Status: EM EXECUCAO - FASE A CONCLUIDA
+Status: EM EXECUCAO - FASE B IMPLEMENTADA, QA VISUAL PENDENTE
 Baseline obrigatorio: `status-freeze-operacional-v10-combat-core-restored-2026-05-13.md`
 Branch: `feat/hitbreak-combat-feedback-v1`
 
@@ -211,13 +211,38 @@ Evidencia MCP:
 3. Log tambem separou `attack_interrupted`, `reason = death`, sem emitir `hitbreak_success`.
 
 ### Fase B - Componente Visual Em Um Ator
-- [ ] Criar `CombatFeedbackProfile`.
-- [ ] Criar `CombatFeedbackComponent`.
-- [ ] Criar shader simples `hitbreak_flash.gdshader`.
-- [ ] Integrar no Player via Godot/editor API.
-- [ ] Tocar brilho somente quando o Player causar hitbreak.
-- [ ] Nao alterar dano, stamina, Hit Reaction, Knockback, BT ou HSM.
-- [ ] Validar MCP e QA visual.
+- [x] Criar `CombatFeedbackProfile`.
+- [x] Criar `CombatFeedbackComponent`.
+- [x] Criar shader simples `hitbreak_flash.gdshader`.
+- [x] Integrar no Player via Godot/editor API.
+- [x] Tocar brilho somente quando o Player causar hitbreak.
+- [x] Nao alterar dano, stamina, Hit Reaction, Knockback, BT ou HSM.
+- [x] Validar MCP runtime/log.
+- [ ] QA visual do diretor.
+
+Resultado Fase B:
+
+1. Criado `res://Scripts/combat/feedback/combat_feedback_profile.gd`.
+2. Criado `res://Scripts/combat/feedback/combat_feedback_component.gd`.
+3. Criado shader simples `res://Scripts/combat/feedback/hitbreak_flash.gdshader`.
+4. Criado profile data-driven `res://configs/combat/feedback/default_hitbreak_feedback_profile_v1.tres`.
+5. `Player` recebeu `CombatFeedbackComponent` via Godot/editor API apontando para `AnimatedSprite2D` e para o profile default.
+6. `state_attack_8dir.gd` continua emitindo `hitbreak_success` e agora chama `play_hitbreak_success(...)` apenas se o atacante tiver `CombatFeedbackComponent`.
+7. Atores sem o componente nao mudam comportamento.
+
+Evidencia MCP:
+
+1. `mundo.tscn` abriu e rodou sem parse/runtime error novo.
+2. Log comprovado:
+   - `hitbreak_success` com `actor = Player`;
+   - `combat_feedback_hitbreak_started` com `mode = shader`, `duration = 0.12`, `intensity = 1.0`;
+   - `combat_feedback_hitbreak_finished`;
+   - alvo continuou tocando `hit_reaction_animation`.
+3. O aviso inicial de UID do profile foi sanado ao registrar o resource e salvar `player.tscn` novamente pelo editor.
+
+Pendencia:
+
+1. Diretor ainda precisa aprovar visualmente o brilho do Player antes de propagar para Wildcat/hostis.
 
 ### Fase C - Propagacao Para NPC Hostil
 - [ ] Integrar no Wildcat via Godot/editor API.

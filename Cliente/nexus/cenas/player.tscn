@@ -26,6 +26,8 @@
 [ext_resource type="Script" uid="uid://d25m2w1hsn1u5" path="res://Scripts/combat/hit_reaction_component.gd" id="26_qwrs5"]
 [ext_resource type="Resource" uid="uid://dhn8pv7gu6ntm" path="res://configs/combat/hit_reaction/player_hit_reaction_profile_v1.tres" id="27_rmatm"]
 [ext_resource type="Script" uid="uid://diwfcith2c22c" path="res://Scripts/combat/knockback_component.gd" id="28_qwrs5"]
+[ext_resource type="Script" uid="uid://bu3jajmtlug26" path="res://Scripts/combat/feedback/combat_feedback_component.gd" id="28_rmatm"]
+[ext_resource type="Resource" uid="uid://wyetswulivmd" path="res://configs/combat/feedback/default_hitbreak_feedback_profile_v1.tres" id="29_rmatm"]
 [ext_resource type="Resource" path="res://configs/ui/orbs/stamina_orb_profile_v1.tres" id="30_orbpf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5qvh4"]
@@ -4541,3 +4543,7 @@ script = ExtResource("28_qwrs5")
 [node name="HitReactionComponent" type="Node" parent="." unique_id=272014950]
 script = ExtResource("26_qwrs5")
 profile = ExtResource("27_rmatm")
+
+[node name="CombatFeedbackComponent" type="Node" parent="." unique_id=695001128]
+script = ExtResource("28_rmatm")
+profile = ExtResource("29_rmatm")

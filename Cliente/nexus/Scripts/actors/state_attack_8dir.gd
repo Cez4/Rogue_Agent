@@ -228,7 +228,20 @@ func _emit_hitbreak_success_if_needed(interrupt_reason: StringName) -> void:
 	if agent.has_meta(HITBREAK_SOURCE_HITBOX_SEQUENCE_META):
 		payload["source_hitbox_sequence_id"] = int(agent.get_meta(HITBREAK_SOURCE_HITBOX_SEQUENCE_META))
 	CombatTelemetry.emit_event(&"hitbreak_success", payload)
+	_play_hitbreak_feedback(payload)
 	_clear_hitbreak_source_meta()
+
+
+func _play_hitbreak_feedback(payload: Dictionary) -> void:
+	if not payload.has("source_actor_path"):
+		return
+	var source_actor := get_node_or_null(NodePath(str(payload.get("source_actor_path"))))
+	if source_actor == null:
+		return
+	var feedback := source_actor.get_node_or_null(^"CombatFeedbackComponent")
+	if feedback == null or not feedback.has_method("play_hitbreak_success"):
+		return
+	feedback.play_hitbreak_success(payload)
 
 
 func _clear_hitbreak_source_meta() -> void:
