@@ -338,6 +338,10 @@ func request_move_runtime(target_position: Vector2) -> void:
 
 var _cached_loadout: EquipmentLoadout = null
 
+func invalidate_equipment_loadout_runtime() -> void:
+	_cached_loadout = null
+
+
 func get_equipment_loadout_runtime() -> EquipmentLoadout:
 	if _cached_loadout != null:
 		return _cached_loadout

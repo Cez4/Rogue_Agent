@@ -1,7 +1,7 @@
 # Plano Sprint - SaveFlow Lite Persistence v1
 
 Data: 2026-05-13
-Status: PLANEJADA - DOC-FIRST
+Status: CONCLUIDA - FREEZE FUNCIONAL V15
 Branch sugerida: `feat/saveflow-lite-persistence-v1`
 Baseline obrigatorio:
 1. `status-freeze-funcional-v14-dynamic-loot-dex-2026-05-13.md`
@@ -78,23 +78,23 @@ Contrato:
 - [x] Confirmar que o editor abriu a aba `SaveFlow Settings`.
 - [x] Validar pelo Godot MCP que o editor esta acessivel com `res://cenas/mundo.tscn` aberto e sem erro de sessao apos a instalacao.
 - [x] Registrar que `SaveFlow` foi adicionado como autoload e `res://addons/saveflow_lite/plugin.cfg` foi habilitado no `project.godot`.
-- [ ] Rodar play/smoke completo pelo MCP antes de qualquer implementacao runtime.
+- [x] Rodar play/smoke completo pelo MCP antes de qualquer implementacao runtime.
 
 ### Fase B - Contrato De Persistencia Do Inventario
-- [ ] Auditar `NexusInventoryBridgeComponent` para decidir o menor ajuste seguro:
+- [x] Auditar `NexusInventoryBridgeComponent` para decidir o menor ajuste seguro:
   - opcao preferida: adicionar modo explicito de hidratacao antes dos starting items;
   - alternativa: criar um metodo `apply_loaded_inventory(data)` e marcar `_starting_items_applied = true` quando o save e valido.
-- [ ] Garantir que starting item so e aplicado quando nao existe save carregado e o inventario real esta vazio.
-- [ ] Manter `NexusInventoryAuthority` como unica rota de mutacao em gameplay.
+- [x] Garantir que starting item so e aplicado quando nao existe save carregado e o inventario real esta vazio.
+- [x] Manter `NexusInventoryAuthority` como unica rota de mutacao em gameplay.
 
 ### Fase C - Save Source Isolado
-- [ ] Criar `Scripts/save/nexus_inventory_save_source.gd`.
-- [ ] Implementar como `SaveFlowDataSource`, nao como `NodeSource`, para evitar double ownership de subtree.
-- [ ] Adicionar telemetria:
+- [x] Criar `Scripts/save/nexus_inventory_save_source.gd`.
+- [x] Implementar como `SaveFlowDataSource`, nao como `NodeSource`, para evitar double ownership de subtree.
+- [x] Adicionar telemetria:
   - `saveflow_inventory_gathered`;
   - `saveflow_inventory_applied`;
   - `saveflow_inventory_rejected`.
-- [ ] Validar payload minimo:
+- [x] Validar payload minimo:
   - `item_id`;
   - `amount`;
   - `properties`;
@@ -102,17 +102,17 @@ Contrato:
   - sem uso de `stack.item`.
 
 ### Fase D - SaveGraph De Smoke
-- [ ] Criar um grafo de save isolado em cena ou subcena propria, sem acoplar em combate.
-- [ ] Adicionar `PlayerScope` e `PlayerInventorySource`.
-- [ ] Usar slot de dev em `user://saves`.
-- [ ] Rodar save/load manual via Godot MCP/editor API.
+- [x] Criar um grafo de save isolado em cena ou subcena propria, sem acoplar em combate.
+- [x] Adicionar `PlayerScope` e `PlayerInventorySource`.
+- [x] Usar slot de dev em `user://saves`.
+- [x] Rodar save/load manual via Godot MCP/editor API.
 
 ### Fase E - QA Funcional Principal
-- [ ] Iniciar jogo com inventario vazio.
-- [ ] Confirmar geracao da adaga starter.
-- [ ] Salvar slot.
-- [ ] Reiniciar/load.
-- [ ] Confirmar que:
+- [x] Iniciar jogo com inventario vazio.
+- [x] Confirmar geracao da adaga starter.
+- [x] Salvar slot.
+- [x] Reiniciar/load.
+- [x] Confirmar que:
   - o mesmo `rolled_damage` permanece;
   - o mesmo `rolled_dex_bonus` permanece;
   - nao houve novo `inventory_item_added` de starter depois do load;
@@ -127,9 +127,9 @@ Somente depois do inventario aprovado:
 - [ ] `RuntimeEntityCollectionSource`: drops no chao, inimigos persistentes e entidades runtime.
 
 ### Fase G - Freeze
-- [ ] Criar `status-freeze-funcional-v15-saveflow-lite-persistence-2026-05-13.md`.
-- [ ] Atualizar `README.md`, `Cliente/nexus/docs/README.md` e runbooks.
-- [ ] Registrar evidencia MCP:
+- [x] Criar `status-freeze-funcional-v15-saveflow-lite-persistence-2026-05-13.md`.
+- [x] Atualizar `README.md`, `Cliente/nexus/docs/README.md` e runbooks.
+- [x] Registrar evidencia MCP:
   - `open_scene -> play_scene -> get_godot_errors`;
   - save/load;
   - telemetria de inventario;
@@ -163,3 +163,21 @@ Executar Fase A pelo Godot MCP:
 2. dar play;
 3. coletar `get_godot_errors`;
 4. confirmar que SaveFlow instalado nao introduziu erro no baseline V14.2.
+
+## 9) Resultado Da Sprint
+Sprint concluida em V15.
+
+Implementado:
+1. `NexusInventorySaveSource` como `SaveFlowDataSource` customizado.
+2. `SaveGraphRoot`/`PlayerInventorySource` no `player.tscn`.
+3. `NexusInventoryBridgeComponent.apply_loaded_inventory(data)` para hidratar save valido e impedir reroll de starting items.
+4. Invalidação de `EquipmentLoadout` runtime apos add/remove/transfer/load.
+5. Smoke runner de QA em `Scripts/save/debug/saveflow_inventory_smoke_runner.gd`.
+
+Evidencia:
+1. `saveflow_inventory_gathered` com `stack_count = 1`.
+2. `saveflow_inventory_applied` com `stack_count = 1`.
+3. `saveflow_inventory_smoke_result ok=true`.
+4. `payload_restored=true`.
+5. `rolled_damage = 5`, `rolled_dex_bonus = 0`, `rarity = normal` preservados no smoke.
+6. Gate final sem runner temporario manteve `inventory_equipment_adapter_resolved resource_path=memory_generated`.

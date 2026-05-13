@@ -3,9 +3,10 @@
 Este README aponta a fonte oficial de status tecnico do projeto.
 
 ## Fonte oficial de status (freeze atual)
-- `Cliente/nexus/docs/status-freeze-operacional-v15-saveflow-lite-prep-2026-05-13.md`
+- `Cliente/nexus/docs/status-freeze-funcional-v15-saveflow-lite-persistence-2026-05-13.md`
 
 Freezes imediatamente anteriores:
+- `Cliente/nexus/docs/status-freeze-operacional-v15-saveflow-lite-prep-2026-05-13.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v14-dynamic-loot-dex-2026-05-13.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v13-inventory-datadriven-core-2026-05-13.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v12-inventory-expresso-spike-2026-05-13.md`
@@ -22,8 +23,8 @@ Freeze de game feel fisico:
 - `Cliente/nexus/docs/status-freeze-funcional-v6-knockback-2026-05-12.md`
 
 Esse documento manda no estado da fase atual e consolida:
-1. SaveFlow Lite instalado e congelado como preparacao operacional V15.
-2. Persistencia funcional ainda nao implementada; proxima sprint deve provar anti-reroll do inventario.
+1. SaveFlow Lite Persistence V15 funcional para inventario do Player.
+2. Prova anti-reroll aprovada: save/load preserva `ItemStack.item_id/properties`.
 3. SaveFlow nao substitui ExpressoBits, `NexusInventoryAuthority`, `NexusInventoryBridgeComponent` nem `NexusEquipmentAdapter`.
 4. Co-op segue host-authoritative: host salva/carrega estado autoritativo.
 5. Combate tatico BT/LimboAI congelado.
@@ -37,21 +38,16 @@ Esse documento manda no estado da fase atual e consolida:
 13. Dynamic Loot & DEX V14 gera `EquipmentLoadout`/`CombatActionData` em memoria para o Player.
 14. Orb UI, Health Regen fora de combate, stamina/kiting e telemetria continuam preservados.
 
-## Sprint atual em execucao
-- `Cliente/nexus/docs/plano-sprint-dynamic-loot-dex-v1-2026-05-13.md`
-- Branch: `feat/dynamic-loot-dex-v1`
-
-Escopo atual: Dynamic Loot & DEX V14 sobre o ExpressoBits Inventory System. O Player resolve equipamento pelo `InventoryBridge`, o `NexusEquipmentAdapter` gera dados de combate em memoria e `ActorCombatProfileRuntime` deve consumir `get_equipment_loadout_runtime()` para dano, stamina, range e kiting.
-
-Proxima sprint planejada:
+## Sprint atual congelada
 - `Cliente/nexus/docs/plano-sprint-saveflow-lite-persistence-v1-2026-05-13.md`
+- Branch: `feat/saveflow-lite-persistence-v1`
 
-Escopo planejado: integrar SaveFlow Lite como orquestrador de persistencia local/host-authoritative, sem substituir ExpressoBits, `NexusInventoryAuthority`, `NexusInventoryBridgeComponent` ou `NexusEquipmentAdapter`. Primeiro criterio: salvar/carregar o inventario do Player preservando `ItemStack.item_id/properties` e impedindo reroll da adaga starter quando existe save valido.
+Escopo atual: SaveFlow Lite Persistence V15 concluido para inventario do Player. O Player possui `SaveGraphRoot/PlayerInventorySource`, o source salva/carrega via `NexusInventoryBridgeComponent`, e o load valido preserva as propriedades roladas do `ItemStack`.
 
 Sprint anterior:
-- `Cliente/nexus/docs/plano-sprint-inventory-datadriven-core-v1-2026-05-13.md`
+- `Cliente/nexus/docs/plano-sprint-dynamic-loot-dex-v1-2026-05-13.md`
 
-Escopo anterior: Inventory Data-Driven Core V13 congelado. O ExpressoBits virou fonte unica de dados de equipamento do Player e os `.tres` antigos de item/equipamento foram removidos para evitar drift.
+Escopo anterior: Dynamic Loot & DEX V14 congelado. O ExpressoBits fornece os dados do equipamento do Player, o `NexusEquipmentAdapter` gera o loadout em memoria e os rolls de item vivem em `ItemStack.properties`.
 
 Historico imediato: Combat Clash temporal foi auditado e removido do runtime. A prova tecnica de `mutual_clash` fica registrada como pesquisa historica, mas Player/Wildcat nao carregam mais `CombatClashComponent` nem profiles de Clash. O core aprovado continua sendo Hit Reaction/Hit Interrupt. Qualquer Parry futuro deve nascer como `DefenseComponent`/`ParryComponent` simples, modular e data-driven por chance/atributo, consultado antes do dano.
 

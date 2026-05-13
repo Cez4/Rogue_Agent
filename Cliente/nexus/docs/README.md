@@ -1,44 +1,46 @@
 # Docs - Mapa Oficial (Estado Atual)
 
 Data de consolidacao: 2026-05-13
-Branch de referencia: `feat/dynamic-loot-dex-v1`
+Branch de referencia: `feat/saveflow-lite-persistence-v1`
 
 ## 1) Fonte principal de estado
-1. `status-freeze-operacional-v15-saveflow-lite-prep-2026-05-13.md` (freeze atual: SaveFlow Lite instalado e planejamento congelado)
-2. `status-freeze-funcional-v14-dynamic-loot-dex-2026-05-13.md` (freeze funcional: Dynamic Loot & DEX System aprovado)
-3. `plano-sprint-saveflow-lite-persistence-v1-2026-05-13.md` (proxima sprint planejada: persistencia local/host-authoritative com SaveFlow Lite)
-4. `plano-sprint-kite-distance-finetuning-v14-2-2026-05-13.md` (micro-freeze V14.2 de kite distance)
-5. `plano-sprint-balance-scale-v14-1-2026-05-13.md` (micro-freeze V14.1 de escala HP/dano)
-6. `plano-sprint-dynamic-loot-dex-v1-2026-05-13.md` (sprint concluida e congelada em V14)
-7. `status-freeze-funcional-v13-inventory-datadriven-core-2026-05-13.md` (freeze: Inventory Data-Driven Core aprovado)
-8. `plano-sprint-inventory-datadriven-core-v1-2026-05-13.md` (sprint concluida e congelada em V13)
-9. `status-freeze-funcional-v12-inventory-expresso-spike-2026-05-13.md` (freeze: Inventory ExpressoBits Spike aprovado)
-10. `plano-sprint-inventory-expresso-spike-v1-2026-05-13.md` (sprint concluida e congelada em V12)
-11. `status-freeze-funcional-v11-hitbreak-combat-feedback-2026-05-13.md` (freeze historico: Hitbreak Combat Feedback aprovado)
-12. `plano-sprint-hitbreak-combat-feedback-v1-2026-05-13.md` (sprint concluida e congelada em V11)
-13. `status-freeze-operacional-v10-combat-core-restored-2026-05-13.md` (Combat Core restaurado, Combat Clash temporal removido)
-14. `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md` (Hostile Hit Reaction Coverage aprovado)
-15. `plano-sprint-combat-clash-parry-v1-2026-05-12.md` (Combat Clash temporal auditado e removido do runtime)
-16. `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` (Wildcat Hit Reaction aprovado)
-17. `plano-sprint-wildcat-hit-reaction-v1-2026-05-12.md` (Wildcat + hostis concluidos)
-18. `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` (Player Hit Reaction/Hit Stun universal aprovado)
-19. `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` (sprint concluida)
-20. `status-freeze-funcional-v6-knockback-2026-05-12.md` (knockback modular/Data-Driven com baseline `200.0`)
-21. `plano-sprint-combat-knockback-component-v1-2026-05-12.md` (sprint concluida)
-22. `status-freeze-funcional-v5-actor-profiles-2026-05-12.md` (actor profiles concluido)
-23. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado historico)
-24. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
-25. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (freeze concluido)
-26. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (fechamento parcial congelado)
-27. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint concluida ate E3; ver V5)
-28. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
-29. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
+1. `status-freeze-funcional-v15-saveflow-lite-persistence-2026-05-13.md` (freeze atual: SaveFlow Lite Persistence aprovado para inventario do Player)
+2. `status-freeze-operacional-v15-saveflow-lite-prep-2026-05-13.md` (freeze operacional: SaveFlow Lite instalado e planejamento congelado)
+3. `status-freeze-funcional-v14-dynamic-loot-dex-2026-05-13.md` (freeze funcional: Dynamic Loot & DEX System aprovado)
+4. `plano-sprint-saveflow-lite-persistence-v1-2026-05-13.md` (sprint concluida: persistencia local/host-authoritative com SaveFlow Lite)
+5. `plano-sprint-kite-distance-finetuning-v14-2-2026-05-13.md` (micro-freeze V14.2 de kite distance)
+6. `plano-sprint-balance-scale-v14-1-2026-05-13.md` (micro-freeze V14.1 de escala HP/dano)
+7. `plano-sprint-dynamic-loot-dex-v1-2026-05-13.md` (sprint concluida e congelada em V14)
+8. `status-freeze-funcional-v13-inventory-datadriven-core-2026-05-13.md` (freeze: Inventory Data-Driven Core aprovado)
+9. `plano-sprint-inventory-datadriven-core-v1-2026-05-13.md` (sprint concluida e congelada em V13)
+10. `status-freeze-funcional-v12-inventory-expresso-spike-2026-05-13.md` (freeze: Inventory ExpressoBits Spike aprovado)
+11. `plano-sprint-inventory-expresso-spike-v1-2026-05-13.md` (sprint concluida e congelada em V12)
+12. `status-freeze-funcional-v11-hitbreak-combat-feedback-2026-05-13.md` (freeze historico: Hitbreak Combat Feedback aprovado)
+13. `plano-sprint-hitbreak-combat-feedback-v1-2026-05-13.md` (sprint concluida e congelada em V11)
+14. `status-freeze-operacional-v10-combat-core-restored-2026-05-13.md` (Combat Core restaurado, Combat Clash temporal removido)
+15. `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md` (Hostile Hit Reaction Coverage aprovado)
+16. `plano-sprint-combat-clash-parry-v1-2026-05-12.md` (Combat Clash temporal auditado e removido do runtime)
+17. `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` (Wildcat Hit Reaction aprovado)
+18. `plano-sprint-wildcat-hit-reaction-v1-2026-05-12.md` (Wildcat + hostis concluidos)
+19. `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` (Player Hit Reaction/Hit Stun universal aprovado)
+20. `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` (sprint concluida)
+21. `status-freeze-funcional-v6-knockback-2026-05-12.md` (knockback modular/Data-Driven com baseline `200.0`)
+22. `plano-sprint-combat-knockback-component-v1-2026-05-12.md` (sprint concluida)
+23. `status-freeze-funcional-v5-actor-profiles-2026-05-12.md` (actor profiles concluido)
+24. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado historico)
+25. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
+26. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (freeze concluido)
+27. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (fechamento parcial congelado)
+28. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint concluida ate E3; ver V5)
+29. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
+30. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
 
 ## 1.1 Regra anti-drift (obrigatoria)
 1. Quando houver conflito entre docs antigos e estado atual:
+   - o freeze funcional V15 de 2026-05-13 vence para persistencia de inventario com SaveFlow Lite;
    - o freeze operacional V15 de 2026-05-13 vence para instalacao/planejamento SaveFlow Lite;
    - o freeze V14 de 2026-05-13 vence para o sistema de Loot Dinamico e DEX (ExpressoBits Data-Driven Core);
-   - o plano SaveFlow Lite Persistence v1 vence para a proxima integracao de persistencia local/host-authoritative;
+   - o plano SaveFlow Lite Persistence v1 esta concluido e vence junto do freeze funcional V15 para persistencia local/host-authoritative;
    - o freeze V13 de 2026-05-13 vence para a infraestrutura Data-Driven de Inventario;
    - o freeze V12 de 2026-05-13 vence para a integracao da Bridge/Authority do ExpressoBits;
    - o freeze V11 de 2026-05-13 vence para Hitbreak Combat Feedback;
@@ -144,11 +146,13 @@ Branch de referencia: `feat/dynamic-loot-dex-v1`
    - HostileEnemyBrute `low_stamina_kite_distance = 70.0`;
    - apenas dados foram alterados; BT/HSM/scripts continuam preservados.
 16. SaveFlow Lite Persistence v1:
-   - sprint planejada em `plano-sprint-saveflow-lite-persistence-v1-2026-05-13.md`;
+   - sprint concluida e congelada em `status-freeze-funcional-v15-saveflow-lite-persistence-2026-05-13.md`;
    - SaveFlow Lite deve ser usado como orquestrador de persistencia, nao como fonte de verdade de itens;
    - inventario deve ser salvo/carregado via `NexusInventoryBridgeComponent.serialize_inventory()` e `deserialize_inventory()`;
    - load valido deve impedir reroll de `starting_items`;
    - em co-op, apenas o host salva/carrega estado autoritativo;
+   - `PlayerInventorySource` usa `SaveFlowDataSource`, nao `SaveFlowNodeSource`;
+   - QA confirmou `saveflow_inventory_smoke_result ok=true` e `payload_restored=true`;
    - ver `../../docs/godotmcp/runbook-saveflow-lite-rogue-agent.md`.
 
 ## 2) Arquitetura e contratos

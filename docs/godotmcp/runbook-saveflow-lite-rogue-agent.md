@@ -5,6 +5,7 @@ Orientar integracoes com o SaveFlow Lite sem quebrar os contratos congelados do 
 
 Este runbook vale para a sprint:
 - `Cliente/nexus/docs/plano-sprint-saveflow-lite-persistence-v1-2026-05-13.md`
+- `Cliente/nexus/docs/status-freeze-funcional-v15-saveflow-lite-persistence-2026-05-13.md`
 
 ## Regra Principal
 SaveFlow Lite e orquestrador de persistencia. Ele nao substitui:
@@ -82,9 +83,26 @@ Antes de commitar qualquer integracao SaveFlow:
 6. reiniciar/load;
 7. provar que o item rolado nao rerollou.
 
+## Smoke Runner
+O projeto possui um runner de QA runtime:
+- `res://Scripts/save/debug/saveflow_inventory_smoke_runner.gd`
+
+Uso:
+1. Anexar temporariamente em `mundo.tscn`.
+2. Rodar a cena.
+3. Conferir `saveflow_inventory_smoke_result`.
+4. Remover o node temporario antes de salvar/congelar a cena final.
+
+Resultado aprovado no V15:
+1. `ok = true`.
+2. `payload_restored = true`.
+3. `stack_count = 1`.
+4. `item_id = weapon_dagger_starter`.
+5. `rolled_damage` e `rolled_dex_bonus` preservados.
+
 ## Criterio Anti-Drift
 Quando houver conflito:
 1. Freeze V14 vence para Dynamic Loot/DEX.
 2. Freeze V13 vence para ponte ExpressoBits/Adapter.
-3. Este runbook vence para persistencia SaveFlow no Rogue Agent.
-
+3. Freeze funcional V15 vence para persistencia de inventario com SaveFlow.
+4. Este runbook vence para persistencia SaveFlow no Rogue Agent.

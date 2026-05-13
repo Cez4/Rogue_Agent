@@ -47,19 +47,30 @@ func get_inventory() -> Inventory:
 
 func request_add_item(item_id: String, amount: int = 1, properties: Dictionary = {}) -> int:
 	_ensure_inventory()
-	return _authority().apply_add_item(self, item_id, amount, properties)
+	var result: int = int(_authority().apply_add_item(self, item_id, amount, properties))
+	if result == 0:
+		_invalidate_actor_equipment_runtime()
+	return result
 
 
 func request_remove_item(item_id: String, amount: int = 1) -> int:
 	_ensure_inventory()
-	return _authority().apply_remove_item(self, item_id, amount)
+	var result: int = int(_authority().apply_remove_item(self, item_id, amount))
+	if result == 0:
+		_invalidate_actor_equipment_runtime()
+	return result
 
 
 func request_transfer_stack(stack_index: int, target_bridge: NexusInventoryBridgeComponent, amount: int = 1) -> int:
 	_ensure_inventory()
 	if target_bridge != null:
 		target_bridge.get_inventory()
-	return _authority().apply_transfer_stack(self, stack_index, target_bridge, amount)
+	var result: int = int(_authority().apply_transfer_stack(self, stack_index, target_bridge, amount))
+	if result == 0:
+		_invalidate_actor_equipment_runtime()
+		if target_bridge != null:
+			target_bridge._invalidate_actor_equipment_runtime()
+	return result
 
 
 func serialize_inventory() -> Dictionary:
@@ -74,6 +85,16 @@ func deserialize_inventory(data: Dictionary) -> void:
 	if _inventory == null:
 		return
 	_inventory.deserialize(data)
+	_invalidate_actor_equipment_runtime()
+
+
+func apply_loaded_inventory(data: Dictionary) -> void:
+	_starting_items_applied = true
+	deserialize_inventory(data)
+
+
+func apply_starting_items_if_empty() -> void:
+	_apply_starting_items()
 
 
 func _ensure_inventory() -> void:
@@ -114,7 +135,15 @@ func _apply_starting_items() -> void:
 				properties = stack.get("properties")
 				
 		_authority().apply_add_item(self, item_id, amount, properties)
+	_invalidate_actor_equipment_runtime()
 
 
 func _authority() -> GDScript:
 	return ResourceLoader.load(AUTHORITY_SCRIPT_PATH, "", ResourceLoader.CACHE_MODE_IGNORE) as GDScript
+
+
+func _invalidate_actor_equipment_runtime() -> void:
+	if _actor != null and _actor.has_method("on_inventory_changed"):
+		_actor.call("on_inventory_changed")
+	elif _actor != null and _actor.has_method("invalidate_equipment_loadout_runtime"):
+		_actor.call("invalidate_equipment_loadout_runtime")

@@ -31,6 +31,8 @@
 [ext_resource type="Script" uid="uid://cjeb2mbqawccu" path="res://Scripts/inventory/nexus_inventory_bridge_component.gd" id="30_4coxd"]
 [ext_resource type="Resource" path="res://configs/ui/orbs/stamina_orb_profile_v1.tres" id="30_orbpf"]
 [ext_resource type="InventoryDatabase" uid="uid://cfduw6tfwadtt" path="res://configs/items/inventory/nexus_inventory_database_v1.tres" id="31_yrlys"]
+[ext_resource type="Script" uid="uid://dmvmckws1mw8t" path="res://addons/saveflow_core/runtime/core/saveflow_scope.gd" id="32_0qyyh"]
+[ext_resource type="Script" path="res://Scripts/save/nexus_inventory_save_source.gd" id="33_3kkam"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5qvh4"]
 atlas = ExtResource("1_kthid")
@@ -4555,3 +4557,11 @@ script = ExtResource("30_4coxd")
 database = ExtResource("31_yrlys")
 starting_items = Array[String](["weapon_dagger_starter"])
 starting_item_amounts = Array[int]([1])
+
+[node name="SaveGraphRoot" type="Node" parent="." unique_id=2486849]
+script = ExtResource("32_0qyyh")
+scope_key = "player"
+
+[node name="PlayerInventorySource" type="Node" parent="SaveGraphRoot" unique_id=1794040116]
+script = ExtResource("33_3kkam")
+bridge_path = NodePath("../../InventoryBridge")
