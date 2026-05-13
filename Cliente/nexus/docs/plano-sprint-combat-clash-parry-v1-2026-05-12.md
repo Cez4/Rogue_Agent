@@ -1,7 +1,7 @@
 # Plano Sprint - Data-Driven Combat Clash / Parry Window v1
 
 Data: 2026-05-12
-Status: EM EXECUCAO - FASE D GAMEPLAY AUDITADA E DESABILITADA, OBSERVER PRESERVADO
+Status: ENCERRADA COMO PESQUISA - COMBAT CLASH TEMPORAL REMOVIDO DO RUNTIME
 Branch de implementacao: `feat/combat-clash-parry-telemetry-v1`
 Baseline obrigatorio: `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md`
 
@@ -854,3 +854,54 @@ Estado operativo atual:
 
 1. Gameplay aprovado volta a ser o core Hit Reaction/Hit Interrupt.
 2. Combat Clash / Parry continua apenas como observabilidade e base tecnica futura.
+
+## 26) Decisao Final - Arquivar Combat Clash Temporal e Limpar Runtime
+Data: 2026-05-13
+Status: aplicado.
+
+Leitura de Tech Lead:
+
+1. O sistema D/D2 implementado era um Combat Clash temporal entre dois ataques simultaneos.
+2. Esse modelo e tecnicamente valido para "clash de armas", mas ficou complexo demais para o objetivo imediato de Parry de RPG/MMO.
+3. O design aprovado para Parry futuro e mais simples e controlavel:
+   - chance/atributo data-driven;
+   - custo/cooldown opcionais;
+   - consulta antes de dano/knockback/Hit Reaction;
+   - sem depender de dois ataques cruzando no mesmo `clash_window_sec`.
+4. Manter `CombatClashComponent` plugado em Player/Wildcat confundiria o projeto e futuros agentes.
+
+Mudancas aplicadas:
+
+1. Removido `CombatClashComponent` de `player.tscn` via Godot/editor API.
+2. Removido `CombatClashComponent` de `wildcat_1.tscn` via Godot/editor API.
+3. Removidos scripts/resources:
+   - `res://Scripts/combat/combat_clash_component.gd`;
+   - `res://Scripts/combat/combat_clash_profile.gd`;
+   - `res://configs/combat/clash/player_combat_clash_profile_v1.tres`;
+   - `res://configs/combat/clash/wildcat_combat_clash_profile_v1.tres`.
+4. `state_attack_8dir.gd` voltou a manter somente telemetria generica de ataque/interrupcao:
+   - `attack_stamina_cost`;
+   - `attack_started`;
+   - `attack_phase_started`;
+   - `attack_interrupted`.
+5. `HitboxComponent` voltou a confirmar hit e aplicar dano sem resolver Clash.
+6. `HurtboxComponent` voltou a aplicar dano/knockback/aggro sem consultar `CombatClashComponent`.
+
+Decisao de produto:
+
+1. Nao criar Freeze V10 para Combat Clash.
+2. Manter V9 Hostile Hit Reaction como baseline funcional atual.
+3. Arquivar esta sprint como pesquisa tecnica e telemetria historica.
+4. Abrir sprint nova quando chegar a hora de defesa/parry:
+   - nome recomendado: `Data-Driven Defense / Parry Component v1`;
+   - componente recomendado: `DefenseComponent` ou `ParryComponent`;
+   - profile recomendado: `DefenseProfile.tres` ou `ParryProfile.tres`;
+   - campos iniciais recomendados: `parry_chance`, `parry_cooldown_sec`, `parry_stamina_cost`, `requires_facing`, `cancel_knockback`, `cancel_hit_reaction`;
+   - ponto de integracao recomendado: antes de `HurtboxComponent.take_hit_with_knockback_duration(...)` aplicar dano.
+
+Regra anti-drift:
+
+1. Nao reativar `CombatClashComponent`.
+2. Nao reintroduzir `mutual_clash` global sem sprint propria e QA visual.
+3. Nao chamar a futura defesa por chance de Combat Clash; usar nomenclatura Defense/Parry para evitar ambiguidade.
+4. O core aprovado do combate continua sendo: hit confirmado -> dano -> knockback -> Hit Reaction -> ataque interrompido se aplicavel.

@@ -29,7 +29,7 @@ Esse documento manda no estado da fase atual e consolida:
 ## Sprint atual em execucao
 - `Cliente/nexus/docs/plano-sprint-combat-clash-parry-v1-2026-05-12.md`
 
-Escopo atual: Fase D2 provou `mutual_clash`, mas o gameplay voltou para observer porque o core aprovado de Hit Reaction/Hit Interrupt ja entrega melhor o combate atual. Player/Wildcat estao em `resolution_mode = "observer"`, `can_parry = false` e `emit_only_telemetry = true`. O codigo e a telemetria de Clash ficam preservados para futura skill explicita de Parry/Clash, sem substituir o core.
+Escopo atual: Combat Clash temporal foi auditado e removido do runtime. A prova tecnica de `mutual_clash` fica registrada como pesquisa historica, mas Player/Wildcat nao carregam mais `CombatClashComponent` nem profiles de Clash. O core aprovado continua sendo Hit Reaction/Hit Interrupt. Qualquer Parry futuro deve nascer como `DefenseComponent`/`ParryComponent` simples, modular e data-driven por chance/atributo, consultado antes do dano.
 
 ## Regra de operacao
 1. Antes de nova feature, revisar o freeze atual.

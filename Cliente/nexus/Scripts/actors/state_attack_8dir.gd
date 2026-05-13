@@ -3,10 +3,6 @@ extends LimboState
 @export var action_data: Resource
 @export var hitbox_path: NodePath = ^"AttackHitbox"
 
-const CLASH_CANCEL_ATTACK_SEQUENCE_META := &"combat_clash_cancel_attack_sequence_id"
-const CLASH_CANCEL_REASON_META := &"combat_clash_cancel_reason"
-const CLASH_RECOVERY_SEC_META := &"combat_clash_recovery_sec"
-
 var _cooldown_until_sec: float = 0.0
 var _attack_sequence_counter: int = 0
 var _attack_sequence_id: int = 0
@@ -60,7 +56,6 @@ func _enter() -> void:
 			"attack_sequence_id": _attack_sequence_id,
 			"target": telemetry_target
 		})
-		_notify_clash_attack_started(telemetry_target)
 	_attack_started_runtime = true
 	_emit_attack_phase(&"windup", telemetry_target)
 
@@ -77,9 +72,6 @@ func _enter() -> void:
 
 	await get_tree().create_timer(_windup()).timeout
 	if not is_active(): return
-	if _should_cancel_attack_for_clash():
-		_cancel_attack_for_clash()
-		return
 	_emit_attack_phase(&"active", telemetry_target)
 	if hitbox != null:
 		hitbox.attack_sequence_id = _attack_sequence_id
@@ -87,9 +79,6 @@ func _enter() -> void:
 
 	await get_tree().create_timer(_active()).timeout
 	if not is_active(): return
-	if _should_cancel_attack_for_clash():
-		_cancel_attack_for_clash()
-		return
 	if hitbox != null:
 		hitbox.set_hitbox_enabled(false, &"active_elapsed")
 	_emit_attack_phase(&"recover", telemetry_target)
@@ -116,8 +105,6 @@ func _exit() -> void:
 				"phase": String(_attack_phase),
 				"reason": String(interrupt_reason)
 			})
-			_notify_clash_attack_interrupted(interrupt_reason)
-		_clear_clash_cancel_request()
 		agent.clear_attack_pending()
 
 
@@ -162,7 +149,6 @@ func _finish_attack() -> void:
 	_finished_normally = true
 	_attack_phase = &"finished"
 	if agent != null:
-		_clear_clash_cancel_request()
 		agent.clear_attack_pending()
 	get_root().dispatch(EVENT_FINISHED)
 
@@ -193,7 +179,6 @@ func _emit_attack_phase(phase: StringName, target: String = "") -> void:
 	if not target.is_empty():
 		payload["target"] = target
 	CombatTelemetry.emit_event(&"attack_phase_started", payload)
-	_notify_clash_attack_phase(phase, target)
 
 
 func _resolve_interrupt_reason() -> StringName:
@@ -209,81 +194,3 @@ func _resolve_interrupt_reason() -> StringName:
 		agent.remove_meta(&"attack_interrupt_reason")
 		return reason
 	return &"state_exit"
-
-
-func _get_clash_component() -> Node:
-	if agent == null:
-		return null
-	return agent.get_node_or_null(^"CombatClashComponent")
-
-
-func _notify_clash_attack_started(target: String) -> void:
-	var clash := _get_clash_component()
-	if clash != null:
-		clash.notify_attack_started(_attack_sequence_id, target)
-
-
-func _notify_clash_attack_phase(phase: StringName, target: String) -> void:
-	var clash := _get_clash_component()
-	if clash != null:
-		clash.notify_attack_phase(_attack_sequence_id, phase, target)
-
-
-func _notify_clash_attack_interrupted(reason: StringName) -> void:
-	var clash := _get_clash_component()
-	if clash != null:
-		clash.notify_attack_interrupted(_attack_sequence_id, _attack_phase, reason)
-
-
-func _should_cancel_attack_for_clash() -> bool:
-	if agent == null:
-		return false
-	if not agent.has_meta(CLASH_CANCEL_ATTACK_SEQUENCE_META):
-		return false
-	return int(agent.get_meta(CLASH_CANCEL_ATTACK_SEQUENCE_META)) == _attack_sequence_id
-
-
-func _cancel_attack_for_clash() -> void:
-	if agent == null:
-		_finish_attack()
-		return
-	var hitbox := agent.get_node_or_null(hitbox_path) as HitboxComponent
-	if hitbox != null:
-		hitbox.set_hitbox_enabled(false, &"combat_clash")
-	var reason: StringName = StringName(str(agent.get_meta(CLASH_CANCEL_REASON_META, &"mutual_clash")))
-	CombatTelemetry.emit_event(&"attack_interrupted", {
-		"actor": str(agent.name),
-		"attack_sequence_id": _attack_sequence_id,
-		"phase": String(_attack_phase),
-		"reason": String(reason)
-	})
-	CombatTelemetry.emit_event(&"combat_clash_attack_cancelled", {
-		"actor": str(agent.name),
-		"attack_sequence_id": _attack_sequence_id,
-		"phase": String(_attack_phase),
-		"reason": String(reason),
-		"post_clash_lockout_sec": _clash_recovery_sec()
-	})
-	_notify_clash_attack_interrupted(reason)
-	_cooldown_until_sec = Time.get_ticks_msec() * 0.001 + _clash_recovery_sec()
-	_clear_clash_cancel_request()
-	_finish_attack()
-
-
-func _clear_clash_cancel_request() -> void:
-	if agent == null:
-		return
-	if agent.has_meta(CLASH_CANCEL_ATTACK_SEQUENCE_META) and int(agent.get_meta(CLASH_CANCEL_ATTACK_SEQUENCE_META)) == _attack_sequence_id:
-		agent.remove_meta(CLASH_CANCEL_ATTACK_SEQUENCE_META)
-	if agent.has_meta(CLASH_CANCEL_REASON_META):
-		agent.remove_meta(CLASH_CANCEL_REASON_META)
-	if agent.has_meta(CLASH_RECOVERY_SEC_META):
-		agent.remove_meta(CLASH_RECOVERY_SEC_META)
-
-
-func _clash_recovery_sec() -> float:
-	if agent == null:
-		return _recover()
-	if not agent.has_meta(CLASH_RECOVERY_SEC_META):
-		return _recover()
-	return maxf(_recover(), float(agent.get_meta(CLASH_RECOVERY_SEC_META)))

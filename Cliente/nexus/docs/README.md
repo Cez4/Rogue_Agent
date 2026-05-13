@@ -5,7 +5,7 @@ Branch de referencia: `feat/combat-clash-parry-telemetry-v1`
 
 ## 1) Fonte principal de estado
 1. `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md` (freeze atual: Hostile Hit Reaction Coverage aprovado)
-2. `plano-sprint-combat-clash-parry-v1-2026-05-12.md` (sprint atual: Fase D auditada; gameplay desabilitado nos profiles, observer preservado)
+2. `plano-sprint-combat-clash-parry-v1-2026-05-12.md` (sprint atual: Combat Clash temporal auditado e removido do runtime)
 3. `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` (Wildcat Hit Reaction aprovado)
 4. `plano-sprint-wildcat-hit-reaction-v1-2026-05-12.md` (Wildcat + hostis concluidos)
 5. `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` (Player Hit Reaction/Hit Stun universal aprovado)
@@ -68,17 +68,12 @@ Branch de referencia: `feat/combat-clash-parry-telemetry-v1`
    - animacoes `TakeDamage_*` tocam com `played=true` e duracao de 1.0s;
    - morte final nao dispara nova hit reaction, preservando death/target lost/respawn.
 10. Combat Clash / Parry Window v1:
-   - Fase D gameplay v1 foi implementada e auditada;
-   - `CombatClashProfile` e `CombatClashComponent` existem;
-   - Player e Wildcat carregam `CombatClashComponent` via cena/profile;
-   - candidatos temporais e interrupcoes sao classificados por telemetria;
-   - gameplay de parry/clash esta desabilitado nos profiles para preservar feel aprovado;
-   - Fase D2 base foi implementada em scripts como `mutual_clash`: se o hit recebido for cancelado, o ataque do defensor tambem deve ser cancelado/desarmado por `attack_sequence_id`;
-   - D2 provou `mutual_clash`, mas o gameplay voltou para observer para preservar o core aprovado;
-   - Player/Wildcat estao em `resolution_mode = "observer"`, `can_parry = false` e `emit_only_telemetry = true`;
-   - `clash_window_sec = 0.12` e `post_clash_lockout_sec = 0.50` ficam como dados futuros para skill explicita;
-   - o custo de stamina do ataque interrompido ja e a punicao base;
-   - dano extra de stamina/parry perfeito so pode entrar depois de prova por logs, profile `.tres` e QA;
+   - Fase D/D2 provou tecnicamente `mutual_clash`, mas reprovou como regra global de gameplay;
+   - `CombatClashComponent`, `CombatClashProfile` e profiles `.tres` foram removidos do runtime para evitar drift conceitual;
+   - Player e Wildcat nao carregam mais componente/profile de Clash;
+   - a pesquisa fica registrada no plano como historico tecnico, nao como sistema ativo;
+   - o core aprovado continua sendo Hit Reaction/Hit Interrupt: quem acerta primeiro aplica dano, o alvo entra em Taken Damage e o ataque interrompido ja pagou stamina;
+   - qualquer Parry futuro deve ser sprint nova de `DefenseComponent`/`ParryComponent` por chance/atributo, consultado antes do dano;
    - nao reengordar `Actor8DirLimbo` e nao criar regra exclusiva de Player.
 
 ## 2) Arquitetura e contratos

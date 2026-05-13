@@ -1,7 +1,0 @@
-[gd_resource type="Resource" script_class="CombatClashProfile" format=3 uid="uid://beu5bxxegmt8y"]
-
-[ext_resource type="Script" uid="uid://b7f4jxfkgn51p" path="res://Scripts/combat/combat_clash_profile.gd" id="1_6iv8e"]
-
-[resource]
-script = ExtResource("1_6iv8e")
-clash_window_sec = 0.12

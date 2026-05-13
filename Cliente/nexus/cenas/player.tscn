@@ -18,7 +18,7 @@
 [ext_resource type="PackedScene" path="res://cenas/components/combat/health_component_node.tscn" id="13_vtxll"]
 [ext_resource type="BehaviorTree" uid="uid://clxtjhojbk2dw" path="res://ai/trees/player/player_combat_bt.tres" id="13_ym2kn"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/attack_hitbox_component_node.tscn" id="15_6ptbh"]
-[ext_resource type="Script" path="res://Scripts/actors/states/hit_reaction_state.gd" id="16_gqqv0"]
+[ext_resource type="Script" uid="uid://bpkh2dg32uev5" path="res://Scripts/actors/states/hit_reaction_state.gd" id="16_gqqv0"]
 [ext_resource type="PackedScene" uid="uid://cpqqeuy3ge470" path="res://cenas/components/ui/combat_orb_presenter.tscn" id="16_uk4ck"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/hurtbox_component_node.tscn" id="17_gonb2"]
 [ext_resource type="Script" uid="uid://d087gw3m6nlpa" path="res://Scripts/stats/stamina_component.gd" id="17_uk4ck"]
@@ -27,8 +27,6 @@
 [ext_resource type="Resource" uid="uid://dhn8pv7gu6ntm" path="res://configs/combat/hit_reaction/player_hit_reaction_profile_v1.tres" id="27_rmatm"]
 [ext_resource type="Script" uid="uid://diwfcith2c22c" path="res://Scripts/combat/knockback_component.gd" id="28_qwrs5"]
 [ext_resource type="Resource" path="res://configs/ui/orbs/stamina_orb_profile_v1.tres" id="30_orbpf"]
-[ext_resource type="Script" path="res://Scripts/combat/combat_clash_component.gd" id="33_5e3xa"]
-[ext_resource type="Resource" uid="uid://beu5bxxegmt8y" path="res://configs/combat/clash/player_combat_clash_profile_v1.tres" id="34_ulfow"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5qvh4"]
 atlas = ExtResource("1_kthid")
@@ -4511,8 +4509,6 @@ script = ExtResource("12_gonb2")
 
 [node name="HitReactionState" type="LimboState" parent="LimboHSM" unique_id=899264544]
 script = ExtResource("16_gqqv0")
-hit_reaction_component_path = NodePath("../../HitReactionComponent")
-hitbox_path = NodePath("../../AttackHitbox")
 
 [node name="Health" parent="." unique_id=2099938439 instance=ExtResource("13_vtxll")]
 max_health = 20.0
@@ -4544,12 +4540,4 @@ script = ExtResource("28_qwrs5")
 
 [node name="HitReactionComponent" type="Node" parent="." unique_id=272014950]
 script = ExtResource("26_qwrs5")
-target_actor_path = NodePath("..")
-health_component_path = NodePath("../Health")
-hsm_path = NodePath("../LimboHSM")
 profile = ExtResource("27_rmatm")
-
-[node name="CombatClashComponent" type="Node" parent="." unique_id=25131214]
-script = ExtResource("33_5e3xa")
-target_actor_path = NodePath("..")
-profile = ExtResource("34_ulfow")
