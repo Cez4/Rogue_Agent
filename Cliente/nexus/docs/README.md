@@ -1,11 +1,11 @@
 # Docs - Mapa Oficial (Estado Atual)
 
 Data de consolidacao: 2026-05-12
-Branch de referencia: `feat/universal-hit-reaction-component-v1`
+Branch de referencia: `feat/combat-clash-parry-telemetry-v1`
 
 ## 1) Fonte principal de estado
 1. `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md` (freeze atual: Hostile Hit Reaction Coverage aprovado)
-2. `plano-sprint-combat-clash-parry-v1-2026-05-12.md` (sprint atual: Fase A de telemetria de Attack Interrupt / Clash implementada sem mudar gameplay)
+2. `plano-sprint-combat-clash-parry-v1-2026-05-12.md` (sprint atual: Fase D auditada; gameplay desabilitado nos profiles, observer preservado)
 3. `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` (Wildcat Hit Reaction aprovado)
 4. `plano-sprint-wildcat-hit-reaction-v1-2026-05-12.md` (Wildcat + hostis concluidos)
 5. `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` (Player Hit Reaction/Hit Stun universal aprovado)
@@ -68,8 +68,12 @@ Branch de referencia: `feat/universal-hit-reaction-component-v1`
    - animacoes `TakeDamage_*` tocam com `played=true` e duracao de 1.0s;
    - morte final nao dispara nova hit reaction, preservando death/target lost/respawn.
 10. Combat Clash / Parry Window v1:
-   - Fase A de telemetria implementada;
-   - ainda sem mudanca de gameplay;
+   - Fase D gameplay v1 foi implementada e auditada;
+   - `CombatClashProfile` e `CombatClashComponent` existem;
+   - Player e Wildcat carregam `CombatClashComponent` via cena/profile;
+   - candidatos temporais e interrupcoes sao classificados por telemetria;
+   - gameplay de parry/clash esta desabilitado nos profiles para preservar feel aprovado;
+   - Fase D2 deve redesenhar regra antes de reabilitar cancelamento de hit;
    - o custo de stamina do ataque interrompido ja e a punicao base;
    - dano extra de stamina/parry perfeito so pode entrar depois de prova por logs, profile `.tres` e QA;
    - nao reengordar `Actor8DirLimbo` e nao criar regra exclusiva de Player.

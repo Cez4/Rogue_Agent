@@ -29,7 +29,7 @@ Esse documento manda no estado da fase atual e consolida:
 ## Sprint atual em execucao
 - `Cliente/nexus/docs/plano-sprint-combat-clash-parry-v1-2026-05-12.md`
 
-Escopo atual: Fase A implementada com telemetria de Attack Interrupt / Clash, sem mudanca de gameplay. O custo de stamina do ataque interrompido ja e a punicao base; dano extra de stamina/parry perfeito so entra depois de prova por logs e QA.
+Escopo atual: Fase D foi auditada e o gameplay de parry/clash esta desabilitado nos profiles para preservar o feel aprovado. `CombatClashProfile` e `CombatClashComponent` existem, candidatos temporais continuam observaveis, mas Player e Wildcat estao em `emit_only_telemetry = true` e `can_parry = false` ate uma Fase D2 mais justa.
 
 ## Regra de operacao
 1. Antes de nova feature, revisar o freeze atual.

@@ -28,6 +28,15 @@ func take_hit_with_knockback_duration(amount: float, knockback: Vector2, duratio
 	_health.take_damage(amount, knockback)
 
 
+func try_resolve_incoming_hit(amount: float, _knockback: Vector2, _duration: float, source: Node = null, source_attack_sequence_id: int = 0, source_hitbox_sequence_id: int = 0) -> Dictionary:
+	if owner == null:
+		return {"resolved": false}
+	var clash_component := owner.get_node_or_null(^"CombatClashComponent")
+	if clash_component == null or not clash_component.has_method("try_resolve_incoming_hit"):
+		return {"resolved": false}
+	return clash_component.try_resolve_incoming_hit(source, source_attack_sequence_id, source_hitbox_sequence_id, amount)
+
+
 func _try_set_aggro_target(source: Node) -> void:
 	if not aggro_on_hit:
 		return

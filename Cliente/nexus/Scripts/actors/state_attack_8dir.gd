@@ -56,6 +56,7 @@ func _enter() -> void:
 			"attack_sequence_id": _attack_sequence_id,
 			"target": telemetry_target
 		})
+		_notify_clash_attack_started(telemetry_target)
 	_attack_started_runtime = true
 	_emit_attack_phase(&"windup", telemetry_target)
 
@@ -98,12 +99,14 @@ func _exit() -> void:
 		if hitbox != null:
 			hitbox.set_hitbox_enabled(false, &"interrupted")
 		if _attack_started_runtime and not _finished_normally:
+			var interrupt_reason: StringName = _resolve_interrupt_reason()
 			CombatTelemetry.emit_event(&"attack_interrupted", {
 				"actor": str(agent.name),
 				"attack_sequence_id": _attack_sequence_id,
 				"phase": String(_attack_phase),
-				"reason": String(_resolve_interrupt_reason())
+				"reason": String(interrupt_reason)
 			})
+			_notify_clash_attack_interrupted(interrupt_reason)
 		agent.clear_attack_pending()
 
 
@@ -178,6 +181,7 @@ func _emit_attack_phase(phase: StringName, target: String = "") -> void:
 	if not target.is_empty():
 		payload["target"] = target
 	CombatTelemetry.emit_event(&"attack_phase_started", payload)
+	_notify_clash_attack_phase(phase, target)
 
 
 func _resolve_interrupt_reason() -> StringName:
@@ -193,3 +197,27 @@ func _resolve_interrupt_reason() -> StringName:
 		agent.remove_meta(&"attack_interrupt_reason")
 		return reason
 	return &"state_exit"
+
+
+func _get_clash_component() -> Node:
+	if agent == null:
+		return null
+	return agent.get_node_or_null(^"CombatClashComponent")
+
+
+func _notify_clash_attack_started(target: String) -> void:
+	var clash := _get_clash_component()
+	if clash != null:
+		clash.notify_attack_started(_attack_sequence_id, target)
+
+
+func _notify_clash_attack_phase(phase: StringName, target: String) -> void:
+	var clash := _get_clash_component()
+	if clash != null:
+		clash.notify_attack_phase(_attack_sequence_id, phase, target)
+
+
+func _notify_clash_attack_interrupted(reason: StringName) -> void:
+	var clash := _get_clash_component()
+	if clash != null:
+		clash.notify_attack_interrupted(_attack_sequence_id, _attack_phase, reason)

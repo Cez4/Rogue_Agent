@@ -1,7 +1,7 @@
 # Plano Sprint - Data-Driven Combat Clash / Parry Window v1
 
 Data: 2026-05-12
-Status: EM EXECUCAO - FASE A TELEMETRIA IMPLEMENTADA
+Status: EM EXECUCAO - FASE D GAMEPLAY AUDITADA E DESABILITADA, OBSERVER PRESERVADO
 Branch de implementacao: `feat/combat-clash-parry-telemetry-v1`
 Baseline obrigatorio: `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md`
 
@@ -153,28 +153,34 @@ Preferencia:
 - [ ] Persistir freeze/status apos QA visual do diretor, se aprovado.
 
 ### Fase B - Resource e Componente em Modo Observador
-- [ ] Criar `CombatClashProfile`.
-- [ ] Criar `CombatClashComponent` em modo `emit_only_telemetry`.
-- [ ] Integrar em Player e um hostil via Godot/editor API.
-- [ ] Nao mudar dano, stamina, knockback, hit reaction ou BT.
-- [ ] Validar que o componente pode ser copiado para outro ator.
+- [x] Criar `CombatClashProfile`.
+- [x] Criar `CombatClashComponent` em modo `emit_only_telemetry`.
+- [x] Integrar em Player e um hostil via Godot/editor API.
+- [x] Nao mudar dano, stamina, knockback, hit reaction ou BT.
+- [x] Validar que o componente pode ser copiado para outro ator.
 
 ### Fase C - Classificacao de Clash
-- [ ] Classificar ataques concorrentes por timestamp/fase.
-- [ ] Emitir `combat_clash_candidate` quando dois ataques forem iniciados dentro de `clash_window_sec`.
-- [ ] Emitir `parry_candidate` somente se existir profile com `can_parry = true`.
-- [ ] Manter resultado igual ao baseline enquanto `emit_only_telemetry = true`.
+- [x] Classificar ataques concorrentes por timestamp/fase.
+- [x] Emitir `combat_clash_candidate` quando dois ataques forem iniciados dentro de `clash_window_sec`.
+- [x] Emitir `parry_candidate` somente se existir profile com `can_parry = true`.
+- [x] Manter resultado igual ao baseline enquanto `emit_only_telemetry = true`.
+- [x] Validar em log dirigido Player versus Wildcat:
+  - `combat_clash_candidate`;
+  - `combat_clash_interrupt_classified`;
+  - `classification = death_filtered`.
+  - Observacao: `valid_hit_reaction_candidate` era apenas candidato observacional; antes da Fase D nao havia regra de gameplay para forcar esse resultado.
 
 ### Fase D - Gameplay Opcional e Tuning
-- [ ] So iniciar apos logs provarem janela consistente.
-- [ ] Decidir se Parry perfeito:
-  - cancela dano;
-  - reduz dano;
-  - gera stagger;
-  - gera refund de stamina;
-  - gera stamina damage extra.
-- [ ] Comecar com valores conservadores e data-driven.
-- [ ] Validar visual e telemetria antes de congelar.
+- [x] So iniciar apos logs provarem janela consistente.
+- [x] Decidir Parry/Clash v1:
+  - cancela dano recebido quando o alvo tambem esta atacando o agressor dentro de `clash_window_sec`;
+  - nao reduz dano parcialmente;
+  - nao gera stagger extra;
+  - nao gera refund de stamina;
+  - nao gera stamina damage extra.
+- [x] Comecar com valores conservadores e data-driven.
+- [x] Validar visual e telemetria antes de congelar.
+- [x] Auditar regressao de feel e desabilitar resolucao gameplay nos profiles.
 
 ### Fase E - QA e Freeze
 - [ ] QA visual aprovado pelo diretor.
@@ -223,6 +229,10 @@ Sprint completa so fica pronta quando:
    - https://limboai.readthedocs.io/en/stable/classes/class_limbostate.html
 4. LimboAI `LimboHSM`, base de transicao `ANYSTATE` e eventos:
    - https://limboai.readthedocs.io/en/stable/classes/class_limbohsm.html
+5. Godot `Resource`, base para profiles `.tres` data-driven:
+   - https://docs.godotengine.org/en/stable/classes/class_resource.html
+6. Godot `Node`, base para componentes plug-and-play em cena:
+   - https://docs.godotengine.org/en/stable/classes/class_node.html
 
 ## 13) Definicao de Pronto
 1. Plano atualizado.
@@ -381,3 +391,190 @@ Observacao:
 
 1. O teste validou `hit_reaction`.
 2. `death` ja foi observado nos logs anteriores como classe necessaria, mas deve ser reamostrado depois com o campo `reason` novo se quisermos congelar a taxonomia final antes da Fase B.
+
+## 17) Registro de Implementacao - Fase B
+Data: 2026-05-12
+Status: implementada e validada por MCP em modo observador, sem mudanca de gameplay.
+
+Arquivos adicionados:
+
+1. `res://Scripts/combat/combat_clash_profile.gd`
+2. `res://Scripts/combat/combat_clash_component.gd`
+3. `res://configs/combat/clash/player_combat_clash_profile_v1.tres`
+4. `res://configs/combat/clash/wildcat_combat_clash_profile_v1.tres`
+
+Arquivos alterados:
+
+1. `res://Scripts/actors/state_attack_8dir.gd`
+2. `res://Scripts/combat/hitbox_component.gd`
+3. `res://cenas/player.tscn`
+4. `res://cenas/wildcat_1.tscn`
+
+Decisao tecnica:
+
+1. `CombatClashComponent` e plug-and-play e fica como filho do ator.
+2. `CombatClashProfile` guarda tuning em `.tres`.
+3. A integracao inicial cobre Player e Wildcat porque o Wildcat foi a melhor evidencia bidirecional da Fase A.
+4. O componente foi tipado contra `Resource`/`Node` nos pontos de integracao para evitar dependencia fragil de ordem de importacao do Godot.
+5. `Actor8DirLimbo` nao recebeu export, tuning ou nova responsabilidade.
+
+Eventos novos em modo observador:
+
+1. `combat_clash_attack_started_observed`
+2. `combat_clash_phase_observed`
+3. `combat_clash_attack_window_observed`
+4. `combat_clash_attack_window_result`
+5. `combat_clash_hit_observed`
+6. `combat_clash_interrupt_observed`
+
+Garantias preservadas:
+
+1. Nenhum dano extra de stamina foi implementado.
+2. Nenhum parry perfeito foi implementado.
+3. Nenhuma mudanca em dano, stamina, knockback, hit reaction, BT ou timings de ataque.
+4. `emit_only_telemetry = true` nos profiles criados.
+
+Validacao MCP:
+
+1. Scripts de `CombatClashProfile`, `CombatClashComponent`, `state_attack_8dir.gd` e `hitbox_component.gd` abriram sem parse error apos a correcao de tipagem desacoplada.
+2. `res://cenas/mundo.tscn` abriu e rodou.
+3. `get_godot_errors` nao registrou parse/runtime error novo.
+4. Busca no runtime confirmou:
+   - `Mundo/Player/CombatClashComponent`;
+   - `Mundo/Wildcat/CombatClashComponent`.
+
+Proximo passo:
+
+1. Gerar logs de combate com Player versus Wildcat para confirmar os novos eventos observer.
+2. So depois dos logs, decidir se a Fase C esta pronta para congelamento ou se precisa ajustar classificacao.
+
+## 18) Registro de Implementacao - Fase C
+Data: 2026-05-12
+Status: implementada em modo observador, aguardando QA por log dirigido.
+
+Arquivo alterado:
+
+1. `res://Scripts/combat/combat_clash_component.gd`
+
+Eventos adicionados:
+
+1. `combat_clash_candidate`
+2. `combat_clash_interrupt_classified`
+
+Decisao tecnica:
+
+1. O componente mantem um registro estatico leve dos ataques recentes por ator.
+2. O registro usa TTL curto de 2 segundos para evitar estado preso.
+3. Um candidato temporal exige:
+   - ator local atacando alvo;
+   - alvo tambem atacando o ator local;
+   - diferenca entre inicios dentro de `clash_window_sec`;
+   - par unico por `attack_sequence_id`.
+4. Interrupcoes sao classificadas sem alterar gameplay:
+   - `valid_hit_reaction_candidate`: ataque cruzado dentro da janela e interrupcao por `hit_reaction`;
+   - `death_filtered`: interrupcao por morte, nao elegivel para parry;
+   - `interrupt_outside_clash_window`: interrupcao real, mas fora da janela;
+   - `interrupt_without_temporal_match`: interrupcao sem ataque cruzado registrado;
+   - `ignored_interrupt_reason`: razao nao elegivel.
+5. `parry_candidate` continua bloqueado por `can_parry = true`; nos profiles atuais, permanece `false`.
+
+Garantias preservadas:
+
+1. Nenhum dano extra de stamina foi implementado.
+2. Nenhum refund de stamina foi implementado.
+3. Nenhum cancelamento de dano foi implementado.
+4. Nenhum timing de ataque foi alterado.
+5. `emit_only_telemetry = true` continua preservado.
+
+Validacao MCP:
+
+1. `res://Scripts/combat/combat_clash_component.gd` abriu sem parse error.
+2. `res://cenas/mundo.tscn` abriu e rodou.
+3. `get_godot_errors` nao registrou parse/runtime error novo.
+4. O smoke automatico nao gerou combate suficiente para provar `combat_clash_candidate`; validacao funcional depende de novo log dirigido pelo diretor.
+
+## 19) Registro de Implementacao - Fase D
+Data: 2026-05-12
+Status: gameplay v1 implementado, auditado e desabilitado nos profiles; observer preservado.
+
+Arquivos alterados:
+
+1. `res://Scripts/combat/combat_clash_component.gd`
+2. `res://Scripts/combat/hitbox_component.gd`
+3. `res://Scripts/combat/hurtbox_component.gd`
+4. `res://configs/combat/clash/player_combat_clash_profile_v1.tres`
+5. `res://configs/combat/clash/wildcat_combat_clash_profile_v1.tres`
+
+Decisao de gameplay v1:
+
+1. O parry/clash real acontece antes de `Hurtbox` aplicar knockback, dano e Hit Reaction.
+2. O alvo so cancela o hit se:
+   - tem `CombatClashComponent`;
+   - o profile esta `enabled`;
+   - `can_parry = true`;
+   - `emit_only_telemetry = false`;
+   - o alvo esta em `windup`;
+   - o agressor tambem iniciou ataque contra esse alvo;
+   - a diferenca entre inicios esta dentro de `clash_window_sec`.
+3. Quando resolvido, o hit e cancelado:
+   - sem dano;
+   - sem knockback;
+   - sem Hit Reaction;
+   - sem refund;
+   - sem stamina damage extra.
+4. O custo de stamina ja pago continua sendo a punicao base.
+
+Eventos adicionados:
+
+1. `combat_clash_incoming_hit_classified`
+2. `combat_parry_resolved`
+3. `hit_cancelled_by_parry`
+
+Profiles apos auditoria:
+
+1. `player_combat_clash_profile_v1.tres`
+   - `can_parry = false`
+   - `emit_only_telemetry = true`
+2. `wildcat_combat_clash_profile_v1.tres`
+   - `can_parry = false`
+   - `emit_only_telemetry = true`
+
+Validacao MCP:
+
+1. Scripts abriram sem parse error.
+2. `res://cenas/mundo.tscn` abriu e rodou.
+3. `get_godot_errors` nao registrou parse/runtime error novo.
+4. O ruido de UID dos profiles foi removido deixando o script do resource referenciado por path estavel.
+
+Auditoria de regressao:
+
+1. O log confirmou que o Wildcat nao estava batendo sem stamina:
+   - cada golpe vinha precedido de `stamina_consumed`;
+   - exemplos: `attack_sequence_id = 85`, `97`, `109`, `149`.
+2. A mudanca de resultado veio de `combat_parry_resolved`:
+   - Player `attack_sequence_id = 25`;
+   - Wildcat `attack_sequence_id = 97`;
+   - diferenca de 100ms dentro de `clash_window_sec`;
+   - o golpe do Player foi cancelado por `hit_cancelled_by_parry`;
+   - Wildcat completou o ataque e acertou o Player.
+3. Leitura: a regra favoreceu demais quem estava em `windup`, permitindo defender e ainda completar o proprio ataque.
+4. Decisao: desabilitar gameplay nos profiles e manter a telemetria/estrutura para uma Fase D2 mais justa.
+
+Correcao aplicada:
+
+1. `CombatClashComponent` limpa o registro do ataque ao entrar em `recover`, reduzindo telemetria antiga como `started_delta_ms` alto.
+2. Profiles voltaram para observer:
+   - `can_parry = false`;
+   - `emit_only_telemetry = true`.
+3. MCP gate apos a correcao:
+   - `res://cenas/mundo.tscn` abriu e rodou;
+   - `get_godot_errors` nao registrou parse/runtime error novo;
+   - cena parada apos validacao.
+
+Proxima decisao recomendada:
+
+1. Projetar Fase D2 antes de reabilitar gameplay.
+2. A regra D2 deve evitar vantagem unilateral:
+   - se cancela o hit do atacante, tambem deve cancelar/interromper o ataque do defensor; ou
+   - aplicar uma janela menor/mais explicita; ou
+   - exigir fase propria futura de parry, nao `windup` de ataque normal.
