@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CombatActionData" format=3 uid="uid://ds74kf5studbw"]
+
+[ext_resource type="Script" uid="uid://c40808nx0r0oy" path="res://Scripts/combat/combat_action_data.gd" id="1_04mh1"]
+
+[resource]
+script = ExtResource("1_04mh1")
+windup_sec = 0.14
+active_sec = 0.09
+recover_sec = 0.24
+cooldown_sec = 0.36
+attack_stamina_buffer_ratio = 0.25
+attack_stamina_resume_multiplier_when_exhausted = 1.8
+attack_stamina_budget_hits = 1.6
+attack_stamina_min_after_attack_ratio = 0.04
+low_stamina_kite_probability = 0.85
+low_stamina_kite_distance = 130.0
+low_stamina_kite_cooldown_ms = 680
+damage = 5.0
+knockback_force = 200.0
+max_targets_per_attack = 1

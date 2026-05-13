@@ -14,9 +14,9 @@
 [ext_resource type="Script" uid="uid://w6oyxr36dcgy" path="res://Scripts/actors/state_idle_8dir.gd" id="10_5v8ye"]
 [ext_resource type="Script" uid="uid://dwo1bk64b01w" path="res://Scripts/actors/state_walk_8dir.gd" id="11_tacm5"]
 [ext_resource type="Script" uid="uid://d3iujpe3t8fla" path="res://Scripts/actors/state_attack_8dir.gd" id="12_60t1r"]
-[ext_resource type="Resource" uid="uid://bbi5b1l06posj" path="res://configs/combat/wildcat_claw_attack_v1.tres" id="13_texcc"]
 [ext_resource type="Script" uid="uid://cpo2dt0djpyes" path="res://Scripts/actors/state_wander_8dir.gd" id="14_frxuc"]
 [ext_resource type="PackedScene" path="res://cenas/components/emotion_bubble_shared.tscn" id="15_lvdsk"]
+[ext_resource type="Resource" uid="uid://ds74kf5studbw" path="res://configs/combat/hostile_base_attack_v1.tres" id="15_texcc"]
 [ext_resource type="Script" uid="uid://bi7hbd4ws5d33" path="res://Scripts/actors/states/stagger_state.gd" id="15_vsdir"]
 [ext_resource type="Texture2D" uid="uid://b46nvc0ukccid" path="res://Assets/emotions/spriteExc.png" id="16_ae4fc"]
 [ext_resource type="Texture2D" uid="uid://dffhs4xccwdww" path="res://Assets/emotions/spriteHoe.png" id="17_m3isr"]
@@ -4728,7 +4728,7 @@ script = ExtResource("11_tacm5")
 
 [node name="AttackState" type="LimboState" parent="LimboHSM" unique_id=952194669]
 script = ExtResource("12_60t1r")
-action_data = ExtResource("13_texcc")
+action_data = ExtResource("15_texcc")
 
 [node name="WanderState" type="LimboState" parent="LimboHSM" unique_id=1259319103]
 script = ExtResource("14_frxuc")
@@ -4743,7 +4743,7 @@ script = ExtResource("18_60t1r")
 sprite_frames = SubResource("SpriteFrames_emotes")
 
 [node name="Health" parent="." unique_id=905350051 instance=ExtResource("18_i5wkl")]
-max_health = 14.0
+max_health = 50.0
 
 [node name="Hurtbox" parent="." unique_id=987265784 instance=ExtResource("20_05h1s")]
 

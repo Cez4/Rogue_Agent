@@ -58,3 +58,42 @@ Evidencia MCP:
 2. Depois do hotfix, `attack_stamina_cost.required` voltou para `40.0`, respeitando `combat_stamina_cost = 20.0` e `combat_attack_stamina_budget_hits = 2.0`.
 3. `bt_inrange_check` do Player passou a reportar `attack_stop_distance = 34.0`, derivado da adaga runtime do inventario.
 4. Logs confirmaram `kiting_started` e `kiting_holding` do Player apos ataques, preservando o contrato tatico.
+
+## Addendum - Balance Scale V14.1
+Data: 2026-05-13
+Status: micro-freeze concluido.
+Plano: `plano-sprint-balance-scale-v14-1-2026-05-13.md`
+
+Objetivo:
+Alinhar Wildcat e HostileEnemyBase ao padrao numerico x5 aprovado apos V14, sem alterar arquitetura.
+
+Valores finais de vida:
+1. Player: `max_health = 70.0`.
+2. HostileEnemyBrute: `max_health = 75.0`.
+3. HostileEnemyLight: `max_health = 50.0`.
+4. Wildcat: `max_health = 50.0`.
+5. HostileEnemyBase: `max_health = 50.0`.
+
+Hotfix data-driven do HostileEnemyBase:
+1. O Base estava com HP novo, mas ainda consumia `wildcat_claw_attack_v1.tres`.
+2. Esse recurso nao define `damage`, portanto o Base caia no default `CombatActionData.damage = 1.0`.
+3. Foi criado `res://configs/combat/hostile_base_attack_v1.tres`.
+4. `HostileEnemyBase/LimboHSM/AttackState.action_data` agora aponta para o recurso proprio.
+5. Valores aprovados para a escala x5:
+   - `damage = 5.0`;
+   - `stamina_cost = 20.0`;
+   - `low_stamina_kite_distance = 130.0`;
+   - `knockback_force = 200.0`.
+
+Contrato preservado:
+1. Hostis continuam consumindo `CombatActionData` `.tres`; nao usam database de itens.
+2. Player continua consumindo a database ExpressoBits via `NexusEquipmentAdapter`.
+3. Nenhum script de BT/HSM/stamina/kiting/dano foi alterado.
+
+Evidencia MCP:
+1. `mundo.tscn` abriu e rodou sem parse/runtime error novo.
+2. Runtime confirmou Player com `max_health = 70.0`, Wildcat/Base/Light com `max_health = 50.0` e Brute com `max_health = 75.0`.
+3. Telemetria confirmou `inventory_equipment_adapter_resolved` em `memory_generated`, preservando a ponte V14.
+4. Runtime confirmou `HostileEnemyBase/LimboHSM/AttackState.action_data = res://configs/combat/hostile_base_attack_v1.tres`.
+5. Recurso `hostile_base_attack_v1.tres` carregou com `damage = 5.0`, `stamina_cost = 20.0`, `attack_range = 48.0`, `low_stamina_kite_distance = 130.0` e `knockback_force = 200.0`.
+6. Log dirigido contra `HostileEnemyBase` confirmou `hit_confirmed damage = 5.0` vindo do Base, `hit_reaction_requested` no Player e disputa mais apertada com Player em torno de `40 HP` antes da regen passiva.
