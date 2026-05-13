@@ -177,7 +177,7 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 4. Implementar em fases:
    - Fase A: telemetria `hitbreak_success` sem mudanca visual;
    - Fase B: `CombatFeedbackComponent` + profile em um ator;
-   - Fase C: propagacao para Wildcat;
+   - Fase C: propagacao para Wildcat concluida/aprovada;
    - Fase D: cobertura hostis;
    - Fase E: QA/freeze.
 5. Shader/material deve ser duplicado em runtime antes de alterar parametros, evitando flash global por material compartilhado.

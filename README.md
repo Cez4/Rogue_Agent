@@ -28,7 +28,7 @@ Esse documento manda no estado da fase atual e consolida:
 ## Sprint atual em execucao
 - `Cliente/nexus/docs/plano-sprint-hitbreak-combat-feedback-v1-2026-05-13.md`
 
-Escopo atual: implementar feedback visual data-driven para Hitbreak. A Fase A criou e validou a telemetria `hitbreak_success`. A Fase B criou `CombatFeedbackComponent`, `CombatFeedbackProfile`, shader simples e integrou o Player; logs comprovam `combat_feedback_hitbreak_started/finished` quando o Player causa Hitbreak. O QA visual do Player foi aprovado pelo diretor. Proxima fase: propagar para Wildcat antes de hostis. Isto e apenas game feel visual; nao altera dano, stamina, Hit Reaction, Knockback, BT ou HSM.
+Escopo atual: implementar feedback visual data-driven para Hitbreak. A Fase A criou e validou a telemetria `hitbreak_success`. A Fase B criou `CombatFeedbackComponent`, `CombatFeedbackProfile`, shader simples e integrou o Player. A Fase C integrou o Wildcat via Godot/editor API usando o mesmo profile default; MCP confirmou `CombatFeedbackComponent` carregado em Player/Wildcat e o QA visual do diretor aprovou o feedback. Proxima fase: propagar para HostileEnemyBase, HostileEnemyLight e HostileEnemyBrute. Isto e apenas game feel visual; nao altera dano, stamina, Hit Reaction, Knockback, BT ou HSM.
 
 Historico imediato: Combat Clash temporal foi auditado e removido do runtime. A prova tecnica de `mutual_clash` fica registrada como pesquisa historica, mas Player/Wildcat nao carregam mais `CombatClashComponent` nem profiles de Clash. O core aprovado continua sendo Hit Reaction/Hit Interrupt. Qualquer Parry futuro deve nascer como `DefenseComponent`/`ParryComponent` simples, modular e data-driven por chance/atributo, consultado antes do dano.
 

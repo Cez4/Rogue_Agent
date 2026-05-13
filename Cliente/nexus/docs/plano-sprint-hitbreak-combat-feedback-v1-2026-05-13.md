@@ -1,7 +1,7 @@
 # Plano Sprint - Hitbreak Combat Feedback v1
 
 Data: 2026-05-13
-Status: EM EXECUCAO - FASE B APROVADA, PROXIMA FASE C
+Status: EM EXECUCAO - FASE C INTEGRADA/APROVADA, PROXIMA FASE D
 Baseline obrigatorio: `status-freeze-operacional-v10-combat-core-restored-2026-05-13.md`
 Branch: `feat/hitbreak-combat-feedback-v1`
 
@@ -256,10 +256,30 @@ QA visual:
    - morte posterior do Brute separada por `reason = death`, sem falso Hitbreak.
 
 ### Fase C - Propagacao Para NPC Hostil
-- [ ] Integrar no Wildcat via Godot/editor API.
-- [ ] Confirmar brilho quando Wildcat causar hitbreak no Player.
-- [ ] Validar que Player e Wildcat usam o mesmo componente/profile ou profiles compatíveis.
-- [ ] Confirmar que nao ha material compartilhado causando flash em todos os atores ao mesmo tempo.
+- [x] Integrar no Wildcat via Godot/editor API.
+- [x] Confirmar brilho quando Wildcat causar hitbreak no Player.
+- [x] Validar que Player e Wildcat usam o mesmo componente/profile ou profiles compativeis.
+- [x] Confirmar que nao ha material compartilhado causando flash em todos os atores ao mesmo tempo.
+
+Resultado Fase C:
+
+1. `wildcat_1.tscn` recebeu `CombatFeedbackComponent` via Godot/editor API.
+2. O componente aponta para o mesmo profile default usado pelo Player: `default_hitbreak_feedback_profile_v1.tres`.
+3. Player e Wildcat agora usam o mesmo componente visual e o mesmo contrato data-driven.
+4. O componente continua plug-and-play: futuros atores recebem o feedback adicionando o node e o profile, sem script por entidade.
+5. Nao houve alteracao em dano, stamina, Hit Reaction, Knockback, BT ou HSM.
+
+Evidencia MCP:
+
+1. `mundo.tscn` abriu em runtime sem parse/runtime error novo.
+2. A arvore runtime confirmou `CombatFeedbackComponent` carregado em `Player` e `Wildcat`.
+3. Logs continuaram comprovando `hitbreak_success` e `combat_feedback_hitbreak_started/finished` no fluxo aprovado.
+4. QA visual do diretor confirmou o feedback funcional.
+5. O material/shader e instanciado por componente em runtime; nao foi observado flash global indevido em atores sem evento.
+
+Pendencia:
+
+1. Propagar para `HostileEnemyBase`, `HostileEnemyLight` e `HostileEnemyBrute` somente na Fase D.
 
 ### Fase D - Cobertura Hostis E Tuning
 - [ ] Integrar em HostileEnemyBase, HostileEnemyLight e HostileEnemyBrute via Godot/editor API.
