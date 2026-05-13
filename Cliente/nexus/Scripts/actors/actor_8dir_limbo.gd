@@ -342,7 +342,7 @@ func get_equipment_loadout_runtime() -> EquipmentLoadout:
 	if _cached_loadout != null:
 		return _cached_loadout
 		
-	var bridge := get_node_or_null(^"NexusInventoryBridgeComponent")
+	var bridge := get_node_or_null(^"InventoryBridge")
 	if bridge != null and bridge.has_method("get_inventory"):
 		var inv = bridge.call("get_inventory")
 		if inv != null and not inv.stacks.is_empty():
