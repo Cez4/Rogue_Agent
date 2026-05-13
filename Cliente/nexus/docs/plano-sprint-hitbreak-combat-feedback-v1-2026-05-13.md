@@ -1,7 +1,7 @@
 # Plano Sprint - Hitbreak Combat Feedback v1
 
 Data: 2026-05-13
-Status: EM EXECUCAO - FASE B IMPLEMENTADA, QA VISUAL PENDENTE
+Status: EM EXECUCAO - FASE B APROVADA, PROXIMA FASE C
 Baseline obrigatorio: `status-freeze-operacional-v10-combat-core-restored-2026-05-13.md`
 Branch: `feat/hitbreak-combat-feedback-v1`
 
@@ -218,7 +218,7 @@ Evidencia MCP:
 - [x] Tocar brilho somente quando o Player causar hitbreak.
 - [x] Nao alterar dano, stamina, Hit Reaction, Knockback, BT ou HSM.
 - [x] Validar MCP runtime/log.
-- [ ] QA visual do diretor.
+- [x] QA visual do diretor.
 
 Resultado Fase B:
 
@@ -242,7 +242,18 @@ Evidencia MCP:
 
 Pendencia:
 
-1. Diretor ainda precisa aprovar visualmente o brilho do Player antes de propagar para Wildcat/hostis.
+1. Propagar para Wildcat somente apos este ponto aprovado.
+2. Hostis devem aguardar Fase D, depois de validar Wildcat.
+
+QA visual:
+
+1. Diretor confirmou que o visual esta funcional.
+2. Logs gerados pelo diretor confirmaram:
+   - `hitbreak_success` do `Player` contra `HostileEnemyBrute`;
+   - `combat_feedback_hitbreak_started` em `mode = shader`;
+   - `combat_feedback_hitbreak_finished`;
+   - `HostileEnemyBrute` tocando `TakeDamage_*` normalmente;
+   - morte posterior do Brute separada por `reason = death`, sem falso Hitbreak.
 
 ### Fase C - Propagacao Para NPC Hostil
 - [ ] Integrar no Wildcat via Godot/editor API.
