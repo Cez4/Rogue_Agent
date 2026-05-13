@@ -15,8 +15,6 @@ static func ready(actor: Actor8DirLimbo) -> void:
 
 	if actor.movement_config == null:
 		actor.movement_config = load("res://configs/player/player_movement_config.tres")
-	if actor.equipment_loadout == null and actor.player_controlled:
-		actor.equipment_loadout = load("res://configs/items/loadouts/player_starter_loadout.tres")
 	if actor.movement_config != null:
 		actor.movement_config = actor.movement_config.duplicate(true)
 		if ActorSocialProfileRuntime.enable_wander(actor) and not actor.player_controlled:
