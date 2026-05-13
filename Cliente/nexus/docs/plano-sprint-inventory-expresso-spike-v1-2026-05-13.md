@@ -193,67 +193,191 @@ Nao fazer:
 - [x] Confirmar `Inventory` tab carregada.
 - [x] Corrigir colisao `Slot` -> `EquipmentSlot`.
 - [x] Criar database vazia do projeto.
-- [ ] Remover ou excluir do commit final `res://addons/inventory-system-demos/`, mantendo apenas como referencia local se necessario.
-- [ ] Validar MCP limpo: `get_godot_errors`.
-- [ ] Documentar exatamente o que fica versionado.
+- [x] Remover ou excluir do commit final `res://addons/inventory-system-demos/`, mantendo apenas como referencia local se necessario.
+- [x] Validar MCP limpo: `get_godot_errors`.
+- [x] Documentar exatamente o que fica versionado.
 
 ### Fase B - Database Nexus v1
-- [ ] Criar categorias iniciais via Godot/editor API ou editor visual do addon.
-- [ ] Criar `dagger_starter`, `cloth_starter`, `wooden_charm_starter`.
-- [ ] Criar materiais simples de smoke.
-- [ ] Registrar propriedades Nexus nos itens sem acoplar runtime.
-- [ ] Validar que `InventoryDatabase.get_item(...)` encontra todos os ids.
-- [ ] Criar telemetria/editor script de auditoria da database.
+- [x] Criar categorias iniciais via Godot/editor API ou editor visual do addon.
+- [x] Criar `weapon_dagger_starter`, `armor_cloth_starter`, `necklace_wooden_charm_starter`.
+- [x] Criar materiais simples de smoke.
+- [x] Registrar propriedades Nexus nos itens sem acoplar runtime.
+- [x] Validar que `InventoryDatabase.get_item(...)` encontra todos os ids.
+- [x] Criar telemetria/editor script de auditoria da database.
+
+Resultado Fase B:
+
+1. Database `res://configs/items/inventory/nexus_inventory_database_v1.tres` populada via Godot/editor API.
+2. Categorias criadas:
+   - `weapon`;
+   - `armor`;
+   - `necklace`;
+   - `material`;
+   - `consumable`.
+3. Itens criados:
+   - `weapon_dagger_starter`;
+   - `armor_cloth_starter`;
+   - `necklace_wooden_charm_starter`;
+   - `wood`;
+   - `stone`;
+   - `fiber`.
+4. Os tres equipamentos iniciais espelham os ids reais ja aprovados nos resources atuais, evitando camada de traducao prematura.
+5. Cada equipamento carrega propriedade `nexus_equipment_resource` apontando para o `.tres` atual.
+6. O metodo correto do addon para inserir itens e `InventoryDatabase.add_new_item(...)`; alterar diretamente `db.items.append(...)` nao atualiza o array nativo de itens.
+7. `ResourceSaver.save(...)` retornou `OK` (`0`).
+8. `get_item(...)` confirmou todos os seis ids.
 
 ### Fase C - Smoke De Inventario Isolado
-- [ ] Criar script/ferramenta de smoke sem cena final:
+- [x] Criar script/ferramenta de smoke sem cena final:
   - carregar database;
   - criar `Inventory`;
   - adicionar/remover/transferir item;
   - serializar/desserializar;
   - validar retornos.
-- [ ] Criar smoke de `GridInventory`:
+- [x] Criar smoke de `GridInventory`:
   - tamanho fixo;
   - item stackavel;
   - item nao stackavel;
   - transferencia.
-- [ ] Nenhum Player/NPC deve ser alterado nesta fase.
+- [x] Nenhum Player/NPC deve ser alterado nesta fase.
+
+Resultado Fase C:
+
+1. Smoke isolado executado via Godot MCP sem alterar cena.
+2. `Inventory.add("wood", 5)` retornou `0`.
+3. `Inventory.add("weapon_dagger_starter", 1)` retornou `0`.
+4. `Inventory.contains(...)` confirmou material e dagger.
+5. `Inventory.serialize()` e `deserialize(...)` restauraram os stacks corretamente.
+6. `GridInventory.set_size(Vector2i(4, 4))` aceitou dagger e stone.
+7. `GridInventory.has_space_for("fiber")` retornou `true`.
+8. Um segundo `GridInventory` restaurado por `deserialize(...)` confirmou dagger e stone.
+9. Nenhum Player, NPC, BT, HSM, combate, stamina, Orb, Knockback ou Hit Reaction foi alterado.
 
 ### Fase D - Bridge Sem Gameplay
-- [ ] Criar `NexusInventoryBridgeComponent`.
-- [ ] Criar `NexusInventoryAuthority` ou servico equivalente.
-- [ ] Integrar telemetria de intent/commit/reject.
-- [ ] Instanciar em cena de teste ou sandbox, nao no `mundo.tscn` principal.
-- [ ] Provar que cliente/UI chama intent e nao muta inventario oficial diretamente.
+- [x] Criar `NexusInventoryBridgeComponent`.
+- [x] Criar `NexusInventoryAuthority` ou servico equivalente.
+- [x] Integrar telemetria de intent/commit/reject.
+- [x] Instanciar em cena de teste ou sandbox, nao no `mundo.tscn` principal.
+- [x] Provar que cliente/UI chama intent e nao muta inventario oficial diretamente.
+
+Resultado Fase D:
+
+1. Criado `res://Scripts/inventory/nexus_inventory_bridge_component.gd`.
+2. Criado `res://Scripts/inventory/nexus_inventory_authority.gd`.
+3. A bridge cria `Inventory` ou `GridInventory` em runtime, recebe `InventoryDatabase` e expoe intents:
+   - `request_add_item`;
+   - `request_remove_item`;
+   - `request_transfer_stack`;
+   - `serialize_inventory`;
+   - `deserialize_inventory`.
+4. A authority valida:
+   - bridge;
+   - database;
+   - inventario;
+   - item existente;
+   - quantidade;
+   - espaco;
+   - autoridade host/local.
+5. A authority emite telemetria:
+   - `inventory_add_requested`;
+   - `inventory_item_added`;
+   - `inventory_remove_requested`;
+   - `inventory_item_removed`;
+   - `inventory_transfer_requested`;
+   - `inventory_transfer_committed`;
+   - `inventory_rejected`.
+6. Smoke via Godot MCP confirmou:
+   - `request_add_item("wood", 6) == 0`;
+   - `request_add_item("weapon_dagger_starter", 1) == 0`;
+   - `request_transfer_stack(0, target, 3) == 0`;
+   - `request_remove_item("weapon_dagger_starter", 1) == 0`;
+   - item inexistente retorna rejeicao controlada;
+   - serializacao/restauracao manteve stacks.
+7. Nenhuma cena, Player, NPC, BT, HSM ou combate foi alterado nesta fase.
 
 ### Fase E - Adapter De Equipamento Controlado
-- [ ] Criar `NexusEquipmentAdapter`.
-- [ ] Mapear item de inventario para resource atual de equipamento.
-- [ ] Provar leitura de `nexus_equipment_resource`.
-- [ ] Nao substituir `EquipmentLoadout` ativo ainda.
-- [ ] Validar que o combate continua usando a dagger atual sem regressao.
+- [x] Criar `NexusEquipmentAdapter`.
+- [x] Mapear item de inventario para resource atual de equipamento.
+- [x] Provar leitura de `nexus_equipment_resource`.
+- [x] Nao substituir `EquipmentLoadout` ativo ainda.
+- [x] Validar que o combate continua usando a dagger atual sem regressao.
+
+Resultado Fase E:
+
+1. Criado `res://Scripts/inventory/nexus_equipment_adapter.gd`.
+2. O adapter resolve `nexus_equipment_resource` a partir do `ItemDefinition.properties`.
+3. O adapter rejeita itens que nao sao equipamento, como `wood`, com telemetria `inventory_equipment_adapter_rejected`.
+4. Smoke via Godot MCP confirmou:
+   - `weapon_dagger_starter -> Starter Dagger`;
+   - `armor_cloth_starter -> Cloth Tunic`;
+   - `necklace_wooden_charm_starter -> Wooden Charm`;
+   - `wood` rejeitado como `not_equipment`;
+   - `build_readonly_loadout_from_inventory(...)` monta `EquipmentLoadout` com weapon/armor/necklace.
+5. `EquipmentLoadout` ativo do Player nao foi substituido.
+6. Nenhuma cena, Player, NPC, BT, HSM ou combate foi alterado nesta fase.
 
 ### Fase F - Craft Smoke
-- [ ] Criar recipe simples na database.
-- [ ] Criar `CraftStation` ou smoke de craft isolado.
-- [ ] Validar:
+- [x] Criar recipe simples na database.
+- [x] Criar `CraftStation` ou smoke de craft isolado.
+- [x] Validar:
   - ingredientes presentes;
   - craft aceito;
   - ingredientes removidos;
   - produto adicionado;
   - rejeicao quando falta ingrediente.
-- [ ] Registrar telemetria `craft_requested`, `craft_committed`, `inventory_rejected`.
+- [x] Registrar telemetria `craft_requested`, `craft_committed`, `inventory_rejected`.
+
+Resultado Fase F:
+
+1. Criada receita simples na database `nexus_inventory_database_v1.tres` via Godot/editor API:
+   - ingredientes: `fiber x2` e `stone x1`;
+   - produto: `weapon_dagger_starter x1`;
+   - `time_to_craft = 0.0` para smoke deterministico.
+2. Smoke isolado confirmou o contrato real do addon:
+   - `CraftStation` precisa de `Inventory` de entrada e saida como nos filhos/NodePaths resolviveis;
+   - `load_valid_recipes()` encontrou a receita;
+   - `can_craft(...)` retornou `true` quando os ingredientes existiam.
+3. `NexusInventoryAuthority.apply_craft(...)` foi adicionado para manter craft host-authoritative.
+4. Smoke via Godot MCP confirmou:
+   - `recipes=1`;
+   - `valid_recipes=1`;
+   - `craft_result=0`;
+   - `output_has_dagger=true`;
+   - `input_has_fiber=false`;
+   - `input_has_stone=false`;
+   - `reject_result=1` quando faltavam ingredientes.
+5. Telemetria confirmada:
+   - `craft_requested`;
+   - `craft_committed`;
+   - `inventory_rejected` com `reason="cannot_craft"`.
+6. Nenhuma cena, Player, NPC, BT, HSM, combate, stamina, Orb, Knockback ou Hit Reaction foi alterado nesta fase.
 
 ### Fase G - Integracao Minima Com Player
-- [ ] Somente apos A-F aprovadas, adicionar bridge ao Player via Godot/editor API.
-- [ ] Inventario inicial deve conter `dagger_starter` sem mudar feel do combate.
-- [ ] Confirmar que `EquipmentLoadout` atual permanece fonte de ataque ate adapter aprovado.
-- [ ] Validar MCP com `mundo.tscn`.
-- [ ] Logs devem confirmar sem erro:
+- [x] Somente apos A-F aprovadas, adicionar bridge ao Player via Godot/editor API.
+- [x] Inventario inicial deve conter `weapon_dagger_starter` sem mudar feel do combate.
+- [x] Confirmar que `EquipmentLoadout` atual permanece fonte de ataque ate adapter aprovado.
+- [x] Validar MCP com `mundo.tscn`.
+- [x] Logs devem confirmar sem erro:
   - player spawn;
   - combat;
   - attack;
   - inventory smoke.
+
+Resultado parcial Fase G:
+
+1. `InventoryBridge` foi adicionado ao `res://cenas/player.tscn` via Godot/editor API.
+2. O bridge aponta para `res://configs/items/inventory/nexus_inventory_database_v1.tres`.
+3. O seed inicial do Player contem:
+   - `starting_items = ["weapon_dagger_starter"]`;
+   - `starting_item_amounts = [1]`.
+4. O seed usa `NexusInventoryAuthority.apply_add_item(...)`, preservando o fluxo de intent/host validation em vez de mutar o inventario diretamente.
+5. Smoke runtime do `player.tscn` confirmou:
+   - `inventory_add_requested`;
+   - `inventory_item_added`;
+   - item `weapon_dagger_starter` adicionado para `actor="Player"`.
+6. Smoke runtime do `mundo.tscn` confirmou carregamento sem parse/runtime error novo e telemetria de inventario do Player.
+7. `EquipmentLoadout` ativo nao foi substituido; o combate continua usando o sistema aprovado ate a proxima fase de QA do adapter.
+8. Logs de QA no mapa `mundo.tscn` confirmaram: player atacando hostil Brute, knockback, dano, hitbreak, morte de hostil e health regen restaurados, tudo perfeitamente funcional sem alteracoes estruturais no `Actor8DirLimbo` e com o inventario passivo presente.
 
 ### Fase H - Freeze E Decisao
 - [ ] Registrar resultado do spike.
@@ -298,6 +422,16 @@ Sprint pronta somente quando:
    - https://docs.godotengine.org/en/stable/classes/class_resourcesaver.html
 6. Godot High-level multiplayer:
    - https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html
+
+## 13) Definicao De Pronto
+1. Plano versionado.
+2. Database auditada.
+3. Demos classificados como referencia, nao runtime.
+4. Implementacao em fases pequenas.
+5. Godot MCP limpo a cada bloco.
+6. Telemetria de inventario/craft registrada.
+7. Freeze V12 criado somente depois de QA funcional.
+odotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html
 
 ## 13) Definicao De Pronto
 1. Plano versionado.

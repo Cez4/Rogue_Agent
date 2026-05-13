@@ -28,7 +28,9 @@
 [ext_resource type="Script" uid="uid://diwfcith2c22c" path="res://Scripts/combat/knockback_component.gd" id="28_qwrs5"]
 [ext_resource type="Script" uid="uid://bu3jajmtlug26" path="res://Scripts/combat/feedback/combat_feedback_component.gd" id="28_rmatm"]
 [ext_resource type="Resource" uid="uid://wyetswulivmd" path="res://configs/combat/feedback/default_hitbreak_feedback_profile_v1.tres" id="29_rmatm"]
+[ext_resource type="Script" path="res://Scripts/inventory/nexus_inventory_bridge_component.gd" id="30_4coxd"]
 [ext_resource type="Resource" path="res://configs/ui/orbs/stamina_orb_profile_v1.tres" id="30_orbpf"]
+[ext_resource type="InventoryDatabase" uid="uid://cfduw6tfwadtt" path="res://configs/items/inventory/nexus_inventory_database_v1.tres" id="31_yrlys"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5qvh4"]
 atlas = ExtResource("1_kthid")
@@ -4547,3 +4549,9 @@ profile = ExtResource("27_rmatm")
 [node name="CombatFeedbackComponent" type="Node" parent="." unique_id=695001128]
 script = ExtResource("28_rmatm")
 profile = ExtResource("29_rmatm")
+
+[node name="InventoryBridge" type="Node" parent="." unique_id=1735402229]
+script = ExtResource("30_4coxd")
+database = ExtResource("31_yrlys")
+starting_items = ["weapon_dagger_starter"]
+starting_item_amounts = [1]

@@ -1,3 +1,125 @@
 [gd_resource type="InventoryDatabase" format=3 uid="uid://cfduw6tfwadtt"]
 
+[sub_resource type="ItemCategory" id="ItemCategory_orqbx"]
+id = "weapon"
+name = "Weapon"
+color = Color(0.9, 0.35, 0.3, 1)
+
+[sub_resource type="ItemCategory" id="ItemCategory_5nlc3"]
+id = "armor"
+name = "Armor"
+color = Color(0.35, 0.55, 0.9, 1)
+
+[sub_resource type="ItemCategory" id="ItemCategory_c8hae"]
+id = "necklace"
+name = "Necklace"
+color = Color(0.75, 0.55, 0.95, 1)
+
+[sub_resource type="ItemCategory" id="ItemCategory_6ae0n"]
+id = "material"
+name = "Material"
+color = Color(0.45, 0.75, 0.45, 1)
+
+[sub_resource type="ItemCategory" id="ItemCategory_3gsrh"]
+id = "consumable"
+name = "Consumable"
+color = Color(0.95, 0.75, 0.35, 1)
+
+[sub_resource type="ItemDefinition" id="ItemDefinition_orqbx"]
+id = "weapon_dagger_starter"
+can_stack = false
+max_stack = 1
+name = "Starter Dagger"
+weight = 1.0
+size = Vector2i(1, 2)
+properties = {
+"nexus_equipment_resource": "res://configs/items/weapons/dagger_starter.tres",
+"nexus_equipment_slot": "weapon",
+"nexus_item_kind": "equipment"
+}
+categories = Array[ItemCategory]([SubResource("ItemCategory_orqbx")])
+description = "Melee starter weapon mirrored from Nexus WeaponData."
+
+[sub_resource type="ItemDefinition" id="ItemDefinition_5nlc3"]
+id = "armor_cloth_starter"
+can_stack = false
+max_stack = 1
+name = "Cloth Tunic"
+weight = 1.0
+size = Vector2i(2, 2)
+properties = {
+"nexus_equipment_resource": "res://configs/items/armors/cloth_starter.tres",
+"nexus_equipment_slot": "armor",
+"nexus_item_kind": "equipment"
+}
+categories = Array[ItemCategory]([SubResource("ItemCategory_5nlc3")])
+description = "Simple starter armor mirrored from Nexus ArmorData."
+
+[sub_resource type="ItemDefinition" id="ItemDefinition_c8hae"]
+id = "necklace_wooden_charm_starter"
+can_stack = false
+max_stack = 1
+name = "Wooden Charm"
+weight = 0.2
+properties = {
+"nexus_equipment_resource": "res://configs/items/necklaces/wooden_charm_starter.tres",
+"nexus_equipment_slot": "necklace",
+"nexus_item_kind": "equipment"
+}
+categories = Array[ItemCategory]([SubResource("ItemCategory_c8hae")])
+description = "Basic charm mirrored from Nexus NecklaceData."
+
+[sub_resource type="ItemDefinition" id="ItemDefinition_6ae0n"]
+id = "wood"
+max_stack = 32
+name = "Wood"
+weight = 0.2
+properties = {
+"nexus_item_kind": "material"
+}
+categories = Array[ItemCategory]([SubResource("ItemCategory_6ae0n")])
+description = "Basic crafting material."
+
+[sub_resource type="ItemDefinition" id="ItemDefinition_3gsrh"]
+id = "stone"
+max_stack = 32
+name = "Stone"
+weight = 0.35
+properties = {
+"nexus_item_kind": "material"
+}
+categories = Array[ItemCategory]([SubResource("ItemCategory_6ae0n")])
+description = "Basic crafting material."
+
+[sub_resource type="ItemDefinition" id="ItemDefinition_qjq42"]
+id = "fiber"
+max_stack = 32
+name = "Fiber"
+weight = 0.1
+properties = {
+"nexus_item_kind": "material"
+}
+categories = Array[ItemCategory]([SubResource("ItemCategory_6ae0n")])
+description = "Basic crafting material."
+
+[sub_resource type="ItemStack" id="ItemStack_orqbx"]
+item_id = "fiber"
+amount = 2
+
+[sub_resource type="ItemStack" id="ItemStack_5nlc3"]
+item_id = "stone"
+amount = 1
+
+[sub_resource type="ItemStack" id="ItemStack_c8hae"]
+item_id = "weapon_dagger_starter"
+amount = 1
+
+[sub_resource type="Recipe" id="Recipe_6ae0n"]
+products = Array[ItemStack]([SubResource("ItemStack_c8hae")])
+time_to_craft = 0.0
+ingredients = Array[ItemStack]([SubResource("ItemStack_orqbx"), SubResource("ItemStack_5nlc3")])
+
 [resource]
+items = Array[ItemDefinition]([SubResource("ItemDefinition_orqbx"), SubResource("ItemDefinition_5nlc3"), SubResource("ItemDefinition_c8hae"), SubResource("ItemDefinition_6ae0n"), SubResource("ItemDefinition_3gsrh"), SubResource("ItemDefinition_qjq42")])
+recipes = Array[Recipe]([SubResource("Recipe_6ae0n")])
+item_categories = Array[ItemCategory]([SubResource("ItemCategory_orqbx"), SubResource("ItemCategory_5nlc3"), SubResource("ItemCategory_c8hae"), SubResource("ItemCategory_6ae0n"), SubResource("ItemCategory_3gsrh")])
