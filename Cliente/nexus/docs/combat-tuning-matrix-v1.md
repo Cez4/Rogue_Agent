@@ -111,7 +111,7 @@ Sinais de problema:
 | Weapon | Range | Windup | Active | Recover | Cooldown | Stamina Cost | Damage | Knockback |
 |---|---:|---:|---:|---:|---:|---:|---:|---|
 | dagger_starter_current | 36.0 | 0.12 | 0.10 | 0.20 | 0.28 | 20.0 | 4.0-6.0 roll | 200 |
-| wildcat_claw_v1 | 48.0 | 0.14 | 0.09 | 0.24 | 0.36 | 20.0 | 1.0 | 200 |
+| wildcat_claw_v1 | 48.0 | 0.14 | 0.09 | 0.24 | 0.36 | 20.0 | 4.0 | 200 |
 | hostile_base_attack_v1 | 48.0 | 0.14 | 0.09 | 0.24 | 0.36 | 20.0 | 5.0 | 200 |
 | hostile_light_attack_v1 | 42.0 | 0.12* | 0.08* | 0.22 | 0.32 | 14.0 | 4.0 | 200 |
 | hostile_brute_attack_v1 | 50.0 | 0.18 | 0.12 | 0.32 | 0.46 | 28.0 | 6.0 | 200 |
@@ -123,6 +123,7 @@ Nota V14/V14.1:
 2. Hostis ainda usam `.tres` de `CombatActionData`.
 3. `HostileEnemyBase` nao deve voltar a apontar para `wildcat_claw_attack_v1.tres`; o Base possui `hostile_base_attack_v1.tres` proprio para evitar dano default `1.0` na escala x5.
 4. Player esta em `max_health = 70.0` no balance atual para deixar duelos contra Base/Light/Brute menos longos e com maior risco.
+5. Wildcat usa `damage = 4.0` por ser atacante agil; Base fica em `5.0` e Brute em `6.0`.
 
 ## 7.1) Health Regen v1
 Sprint: `plano-sprint-health-regen-datadriven-v1-2026-05-11.md`

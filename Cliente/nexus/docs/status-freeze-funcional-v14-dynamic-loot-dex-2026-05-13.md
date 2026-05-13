@@ -85,6 +85,12 @@ Hotfix data-driven do HostileEnemyBase:
    - `low_stamina_kite_distance = 130.0`;
    - `knockback_force = 200.0`.
 
+Hotfix data-driven do Wildcat:
+1. O Wildcat estava com `max_health = 50.0`, mas `wildcat_claw_attack_v1.tres` ainda nao definia `damage`.
+2. Por herdar o default de `CombatActionData`, o log confirmava hits do Wildcat com `damage = 1.0`.
+3. `wildcat_claw_attack_v1.tres` agora define `damage = 4.0`.
+4. O valor preserva a identidade de atacante agil, igual ao Light, sem superar o Base (`5.0`) nem o Brute (`6.0`).
+
 Contrato preservado:
 1. Hostis continuam consumindo `CombatActionData` `.tres`; nao usam database de itens.
 2. Player continua consumindo a database ExpressoBits via `NexusEquipmentAdapter`.
@@ -97,3 +103,5 @@ Evidencia MCP:
 4. Runtime confirmou `HostileEnemyBase/LimboHSM/AttackState.action_data = res://configs/combat/hostile_base_attack_v1.tres`.
 5. Recurso `hostile_base_attack_v1.tres` carregou com `damage = 5.0`, `stamina_cost = 20.0`, `attack_range = 48.0`, `low_stamina_kite_distance = 130.0` e `knockback_force = 200.0`.
 6. Log dirigido contra `HostileEnemyBase` confirmou `hit_confirmed damage = 5.0` vindo do Base, `hit_reaction_requested` no Player e disputa mais apertada com Player em torno de `40 HP` antes da regen passiva.
+7. Runtime confirmou `Wildcat/LimboHSM/AttackState.action_data = res://configs/combat/wildcat_claw_attack_v1.tres`.
+8. Recurso `wildcat_claw_attack_v1.tres` carregou com `damage = 4.0`, `stamina_cost = 20.0`, `attack_range = 48.0`, `low_stamina_kite_distance = 130.0` e `knockback_force = 200.0`.

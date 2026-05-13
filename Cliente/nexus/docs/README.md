@@ -123,6 +123,7 @@ Branch de referencia: `feat/dynamic-loot-dex-v1`
    - hostis continuam podendo usar fallback de cena/`.tres` enquanto nao forem migrados.
 14. Balance Scale V14.1:
    - Wildcat e HostileEnemyBase foram alinhados para `max_health = 50.0`;
+   - `wildcat_claw_attack_v1.tres` define `damage = 4.0`, preservando Wildcat como atacante agil;
    - HostileEnemyBase deixou de reutilizar `wildcat_claw_attack_v1.tres` e agora usa `hostile_base_attack_v1.tres`;
    - `hostile_base_attack_v1.tres` define `damage = 5.0`, `stamina_cost = 20.0`, `low_stamina_kite_distance = 130.0` e `knockback_force = 200.0`;
    - HostileEnemyLight permanece `max_health = 50.0`;
