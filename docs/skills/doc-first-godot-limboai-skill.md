@@ -33,6 +33,9 @@ Regra:
 26. Dynamic Loot & DEX v1 esta congelado em V14. `ItemStack` deve ser lido por `item_id` + `properties`; buscar o molde com `inventory.database.get_item(item_id)`. Nunca usar `stack.item` nem inserir stack com `.append()`.
 27. Runtime de combate do Player deve consumir `actor.get_equipment_loadout_runtime()`. Nao voltar a ler `actor.equipment_loadout` diretamente em stamina, range, stop distance ou kiting, pois isso quebra a ponte V13/V14.
 28. Ao trabalhar com ExpressoBits, evitar nomes genericos que colidem com classes nativas da GDExtension; `Slot` local deve ser `EquipmentSlot` ou nome prefixado.
+29. SaveFlow Lite Persistence v1 deve ser doc-first e host-authoritative: SaveFlow orquestra save/load, mas nao substitui ExpressoBits, `NexusInventoryAuthority`, `NexusInventoryBridgeComponent` nem `NexusEquipmentAdapter`.
+30. Ao salvar inventario com SaveFlow, usar fonte customizada (`SaveFlowDataSource`) e preservar somente `ItemStack.item_id`, `amount` e `properties`; nunca salvar `ItemDefinition`, nunca usar `stack.item` e nunca varrer o Player inteiro com `NodeSource` para persistir inventario.
+31. Load valido de inventario deve acontecer antes dos `starting_items` ou marcar hidratacao explicita para impedir reroll da adaga starter. Prova obrigatoria: mesmo `rolled_damage`/`rolled_dex_bonus` apos save/load.
 
 Checklist rapido:
 - [ ] Doc interno lido.
@@ -67,6 +70,7 @@ Checklist rapido:
 - [ ] Adicionou punicao de stamina em Clash/Parry? Confirme que ela nao duplica o custo ja pago pelo ataque interrompido e que veio de profile `.tres`, com QA aprovado.
 - [ ] Vai mexer em inventario/craft/loot/equipamento? Confirme a fase correta: V12 para bridge/authority, V13 para dados de equipamento na database, V14 para loot/DEX. Sem copiar demo para runtime, sem cliente mutar estado oficial, sem `stack.item`, sem `.append()` em `inventory.stacks`.
 - [ ] Vai mexer em stamina/range/kiting do Player? Confirme que a fonte de dados vem de `actor.get_equipment_loadout_runtime()` e que a telemetria mostra `attack_stamina_cost.required` coerente com a database ExpressoBits.
+- [ ] Vai mexer em SaveFlow/persistencia? Confirme `docs/godotmcp/runbook-saveflow-lite-rogue-agent.md`, preserve host-authority, use `SaveFlowDataSource` para inventario e prove anti-reroll por telemetria.
 
 Fontes base:
 - Godot: https://docs.godotengine.org/en/stable/

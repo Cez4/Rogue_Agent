@@ -23,6 +23,7 @@ config/icon="res://icon.svg"
 
 GDAIMCPRuntime="*uid://dcne7ryelpxmn"
 DebugTelemetrySettings="*res://Scripts/debug/debug_telemetry_settings.gd"
+SaveFlow="*uid://dt4a6xk0kvlm0"
 
 [display]
 
@@ -34,7 +35,7 @@ window/stretch/mode="canvas_items"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gamedev_ai/plugin.cfg", "res://addons/gdai-mcp-plugin-godot/plugin.cfg")
+enabled=PackedStringArray("res://addons/gamedev_ai/plugin.cfg", "res://addons/gdai-mcp-plugin-godot/plugin.cfg", "res://addons/saveflow_lite/plugin.cfg")
 
 [input]
 
