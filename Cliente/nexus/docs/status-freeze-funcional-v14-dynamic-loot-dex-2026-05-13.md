@@ -105,3 +105,31 @@ Evidencia MCP:
 6. Log dirigido contra `HostileEnemyBase` confirmou `hit_confirmed damage = 5.0` vindo do Base, `hit_reaction_requested` no Player e disputa mais apertada com Player em torno de `40 HP` antes da regen passiva.
 7. Runtime confirmou `Wildcat/LimboHSM/AttackState.action_data = res://configs/combat/wildcat_claw_attack_v1.tres`.
 8. Recurso `wildcat_claw_attack_v1.tres` carregou com `damage = 4.0`, `stamina_cost = 20.0`, `attack_range = 48.0`, `low_stamina_kite_distance = 130.0` e `knockback_force = 200.0`.
+
+## Addendum - Kite Distance Fine Tuning V14.2
+Data: 2026-05-13
+Status: micro-freeze concluido.
+Plano: `plano-sprint-kite-distance-finetuning-v14-2-2026-05-13.md`
+
+Objetivo:
+Reduzir o recuo de baixa stamina porque os valores V14.1 estavam deixando o combate elastico demais.
+
+Valores finais:
+1. Player: `combat_low_stamina_kite_distance = 95.0` em `weapon_dagger_starter` na database ExpressoBits.
+2. Wildcat: `low_stamina_kite_distance = 80.0`.
+3. HostileEnemyBase: `low_stamina_kite_distance = 85.0`.
+4. HostileEnemyLight: `low_stamina_kite_distance = 80.0`.
+5. HostileEnemyBrute: `low_stamina_kite_distance = 70.0`.
+
+Contrato preservado:
+1. Player continua consumindo ExpressoBits via `NexusEquipmentAdapter`.
+2. Hostis continuam consumindo `CombatActionData` `.tres`.
+3. Nenhum script de BT/HSM/stamina/kiting/dano foi alterado.
+4. `player_light_attack.tres` foi removido como recurso legado morto; Player nao usa mais `.tres` de ataque.
+5. O fallback do `NexusEquipmentAdapter` para `combat_low_stamina_kite_distance` agora e `95.0`, alinhado ao baseline V14.2.
+
+Evidencia MCP:
+1. `mundo.tscn` abriu e rodou sem parse/runtime error novo.
+2. Script de validacao confirmou Player `95.0`, Wildcat `80.0`, Base `85.0`, Light `80.0` e Brute `70.0`.
+3. Telemetria confirmou `inventory_equipment_adapter_resolved` em `memory_generated`, preservando a ponte V14.
+4. Logs confirmaram combate, stamina, hit reaction e reengajamento sem erro novo.

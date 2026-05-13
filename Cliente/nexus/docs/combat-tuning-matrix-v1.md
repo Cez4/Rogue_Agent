@@ -124,8 +124,18 @@ Nota V14/V14.1:
 3. `HostileEnemyBase` nao deve voltar a apontar para `wildcat_claw_attack_v1.tres`; o Base possui `hostile_base_attack_v1.tres` proprio para evitar dano default `1.0` na escala x5.
 4. Player esta em `max_health = 70.0` no balance atual para deixar duelos contra Base/Light/Brute menos longos e com maior risco.
 5. Wildcat usa `damage = 4.0` por ser atacante agil; Base fica em `5.0` e Brute em `6.0`.
+6. `player_light_attack.tres` foi removido em V14.2 como legado morto; Player atual usa somente ExpressoBits para dados de ataque.
 
-## 7.1) Health Regen v1
+## 7.1) Kite Distance V14.2
+| Actor | Source | Previous | Current |
+|---|---|---:|---:|
+| Player | `weapon_dagger_starter.combat_low_stamina_kite_distance` | 140.0 | 95.0 |
+| Wildcat | `wildcat_claw_attack_v1.low_stamina_kite_distance` | 130.0 | 80.0 |
+| HostileEnemyBase | `hostile_base_attack_v1.low_stamina_kite_distance` | 130.0 | 85.0 |
+| HostileEnemyLight | `hostile_light_attack_v1.low_stamina_kite_distance` | 120.0 | 80.0 |
+| HostileEnemyBrute | `hostile_brute_attack_v1.low_stamina_kite_distance` | 110.0 | 70.0 |
+
+## 7.2) Health Regen v1
 Sprint: `plano-sprint-health-regen-datadriven-v1-2026-05-11.md`
 
 | Sistema | Valor | Fonte | Notes |
@@ -370,7 +380,7 @@ Mudanca:
 3. `bt_is_stamina_low.gd` removeu o export morto `threshold_ratio`.
 4. `bt_move_to_blackboard_pos.gd` permaneceu intocado.
 
-Valores implementados:
+Valores historicos implementados na sprint original:
 
 | Archetype | Action data | Kite Distance |
 |---|---|---:|
@@ -378,6 +388,8 @@ Valores implementados:
 | Brute | `hostile_brute_attack_v1.tres` | 110.0 |
 | Light | `hostile_light_attack_v1.tres` | 120.0 |
 | Wildcat | `wildcat_claw_attack_v1.tres` | 130.0 |
+
+Estado atual: os valores operacionais foram reduzidos em V14.2; ver a tabela `Kite Distance V14.2` neste documento. O Player atual usa a database ExpressoBits (`weapon_dagger_starter`), nao `player_light_attack.tres`.
 
 Validacao tecnica:
 1. `open_scene(res://cenas/mundo.tscn)` executado.

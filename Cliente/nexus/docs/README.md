@@ -5,31 +5,32 @@ Branch de referencia: `feat/dynamic-loot-dex-v1`
 
 ## 1) Fonte principal de estado
 1. `status-freeze-funcional-v14-dynamic-loot-dex-2026-05-13.md` (freeze atual: Dynamic Loot & DEX System aprovado)
-2. `plano-sprint-balance-scale-v14-1-2026-05-13.md` (micro-freeze V14.1 de escala HP)
-3. `plano-sprint-dynamic-loot-dex-v1-2026-05-13.md` (sprint concluida e congelada em V14)
-4. `status-freeze-funcional-v13-inventory-datadriven-core-2026-05-13.md` (freeze: Inventory Data-Driven Core aprovado)
-5. `plano-sprint-inventory-datadriven-core-v1-2026-05-13.md` (sprint concluida e congelada em V13)
-6. `status-freeze-funcional-v12-inventory-expresso-spike-2026-05-13.md` (freeze: Inventory ExpressoBits Spike aprovado)
-7. `plano-sprint-inventory-expresso-spike-v1-2026-05-13.md` (sprint concluida e congelada em V12)
-8. `status-freeze-funcional-v11-hitbreak-combat-feedback-2026-05-13.md` (freeze historico: Hitbreak Combat Feedback aprovado)
-9. `plano-sprint-hitbreak-combat-feedback-v1-2026-05-13.md` (sprint concluida e congelada em V11)
-10. `status-freeze-operacional-v10-combat-core-restored-2026-05-13.md` (Combat Core restaurado, Combat Clash temporal removido)
-11. `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md` (Hostile Hit Reaction Coverage aprovado)
-12. `plano-sprint-combat-clash-parry-v1-2026-05-12.md` (Combat Clash temporal auditado e removido do runtime)
-13. `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` (Wildcat Hit Reaction aprovado)
-14. `plano-sprint-wildcat-hit-reaction-v1-2026-05-12.md` (Wildcat + hostis concluidos)
-15. `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` (Player Hit Reaction/Hit Stun universal aprovado)
-16. `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` (sprint concluida)
-17. `status-freeze-funcional-v6-knockback-2026-05-12.md` (knockback modular/Data-Driven com baseline `200.0`)
-18. `plano-sprint-combat-knockback-component-v1-2026-05-12.md` (sprint concluida)
-19. `status-freeze-funcional-v5-actor-profiles-2026-05-12.md` (actor profiles concluido)
-20. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado historico)
-21. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
-22. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (freeze concluido)
-23. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (fechamento parcial congelado)
-24. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint concluida ate E3; ver V5)
-25. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
-26. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
+2. `plano-sprint-kite-distance-finetuning-v14-2-2026-05-13.md` (micro-freeze V14.2 de kite distance)
+3. `plano-sprint-balance-scale-v14-1-2026-05-13.md` (micro-freeze V14.1 de escala HP/dano)
+4. `plano-sprint-dynamic-loot-dex-v1-2026-05-13.md` (sprint concluida e congelada em V14)
+5. `status-freeze-funcional-v13-inventory-datadriven-core-2026-05-13.md` (freeze: Inventory Data-Driven Core aprovado)
+6. `plano-sprint-inventory-datadriven-core-v1-2026-05-13.md` (sprint concluida e congelada em V13)
+7. `status-freeze-funcional-v12-inventory-expresso-spike-2026-05-13.md` (freeze: Inventory ExpressoBits Spike aprovado)
+8. `plano-sprint-inventory-expresso-spike-v1-2026-05-13.md` (sprint concluida e congelada em V12)
+9. `status-freeze-funcional-v11-hitbreak-combat-feedback-2026-05-13.md` (freeze historico: Hitbreak Combat Feedback aprovado)
+10. `plano-sprint-hitbreak-combat-feedback-v1-2026-05-13.md` (sprint concluida e congelada em V11)
+11. `status-freeze-operacional-v10-combat-core-restored-2026-05-13.md` (Combat Core restaurado, Combat Clash temporal removido)
+12. `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md` (Hostile Hit Reaction Coverage aprovado)
+13. `plano-sprint-combat-clash-parry-v1-2026-05-12.md` (Combat Clash temporal auditado e removido do runtime)
+14. `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` (Wildcat Hit Reaction aprovado)
+15. `plano-sprint-wildcat-hit-reaction-v1-2026-05-12.md` (Wildcat + hostis concluidos)
+16. `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` (Player Hit Reaction/Hit Stun universal aprovado)
+17. `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` (sprint concluida)
+18. `status-freeze-funcional-v6-knockback-2026-05-12.md` (knockback modular/Data-Driven com baseline `200.0`)
+19. `plano-sprint-combat-knockback-component-v1-2026-05-12.md` (sprint concluida)
+20. `status-freeze-funcional-v5-actor-profiles-2026-05-12.md` (actor profiles concluido)
+21. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado historico)
+22. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
+23. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (freeze concluido)
+24. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (fechamento parcial congelado)
+25. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint concluida ate E3; ver V5)
+26. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
+27. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
 
 ## 1.1 Regra anti-drift (obrigatoria)
 1. Quando houver conflito entre docs antigos e estado atual:
@@ -130,6 +131,14 @@ Branch de referencia: `feat/dynamic-loot-dex-v1`
    - HostileEnemyBrute permanece `max_health = 75.0`;
    - Player foi ajustado para `max_health = 70.0` para manter uma disputa maior sem voltar ao burst antigo;
    - nenhum script de combate foi alterado.
+15. Kite Distance Fine Tuning V14.2:
+   - Player `combat_low_stamina_kite_distance = 95.0` no item `weapon_dagger_starter` da database ExpressoBits;
+   - `player_light_attack.tres` foi removido como legado morto para evitar tuning fantasma;
+   - Wildcat `low_stamina_kite_distance = 80.0`;
+   - HostileEnemyBase `low_stamina_kite_distance = 85.0`;
+   - HostileEnemyLight `low_stamina_kite_distance = 80.0`;
+   - HostileEnemyBrute `low_stamina_kite_distance = 70.0`;
+   - apenas dados foram alterados; BT/HSM/scripts continuam preservados.
 
 ## 2) Arquitetura e contratos
 1. `arquitetura-contratos-estado-atual-2026-05-10.md` (doc mestre)

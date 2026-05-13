@@ -44,7 +44,7 @@ properties = {
 "combat_knockback_duration_sec": 0.15,
 "combat_knockback_force": 200.0,
 "combat_low_stamina_kite_cooldown_ms": 650,
-"combat_low_stamina_kite_distance": 140.0,
+"combat_low_stamina_kite_distance": 95.0,
 "combat_low_stamina_kite_probability": 0.85,
 "combat_recover_sec": 0.2,
 "combat_stamina_cost": 20.0,

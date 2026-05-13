@@ -93,7 +93,7 @@ static func _build_weapon_data(item_id: String, item_name: String, def_props: Di
 	action.attack_stamina_budget_hits = float(def_props.get("combat_attack_stamina_budget_hits", 2.0))
 	action.attack_stamina_min_after_attack_ratio = float(def_props.get("combat_attack_stamina_min_after_attack_ratio", 0.08))
 	action.low_stamina_kite_probability = float(def_props.get("combat_low_stamina_kite_probability", 0.85))
-	action.low_stamina_kite_distance = float(def_props.get("combat_low_stamina_kite_distance", 140.0))
+	action.low_stamina_kite_distance = float(def_props.get("combat_low_stamina_kite_distance", 95.0))
 	action.low_stamina_kite_cooldown_ms = int(def_props.get("combat_low_stamina_kite_cooldown_ms", 650))
 	action.knockback_force = float(def_props.get("combat_knockback_force", 200.0))
 	action.knockback_duration_sec = float(def_props.get("combat_knockback_duration_sec", 0.15))
