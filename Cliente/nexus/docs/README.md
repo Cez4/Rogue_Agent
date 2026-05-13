@@ -1,11 +1,16 @@
 # Docs - Mapa Oficial (Estado Atual)
 
 Data de consolidacao: 2026-05-13
-Branch de referencia: `feat/inventory-expresso-spike-v1`
+Branch de referencia: `feat/dynamic-loot-dex-v1`
 
 ## 1) Fonte principal de estado
-1. `plano-sprint-inventory-expresso-spike-v1-2026-05-13.md` (sprint atual: spike de inventario/craft com ExpressoBits)
-2. `status-freeze-funcional-v11-hitbreak-combat-feedback-2026-05-13.md` (freeze atual: Hitbreak Combat Feedback aprovado)
+1. `status-freeze-funcional-v14-dynamic-loot-dex-2026-05-13.md` (freeze atual: Dynamic Loot & DEX System aprovado)
+2. `plano-sprint-dynamic-loot-dex-v1-2026-05-13.md` (sprint concluida e congelada em V14)
+3. `status-freeze-funcional-v13-inventory-datadriven-core-2026-05-13.md` (freeze: Inventory Data-Driven Core aprovado)
+4. `plano-sprint-inventory-datadriven-core-v1-2026-05-13.md` (sprint concluida e congelada em V13)
+5. `status-freeze-funcional-v12-inventory-expresso-spike-2026-05-13.md` (freeze: Inventory ExpressoBits Spike aprovado)
+6. `plano-sprint-inventory-expresso-spike-v1-2026-05-13.md` (sprint concluida e congelada em V12)
+7. `status-freeze-funcional-v11-hitbreak-combat-feedback-2026-05-13.md` (freeze atual: Hitbreak Combat Feedback aprovado)
 3. `plano-sprint-hitbreak-combat-feedback-v1-2026-05-13.md` (sprint concluida e congelada em V11)
 4. `status-freeze-operacional-v10-combat-core-restored-2026-05-13.md` (Combat Core restaurado, Combat Clash temporal removido)
 5. `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md` (Hostile Hit Reaction Coverage aprovado)
@@ -27,7 +32,9 @@ Branch de referencia: `feat/inventory-expresso-spike-v1`
 
 ## 1.1 Regra anti-drift (obrigatoria)
 1. Quando houver conflito entre docs antigos e estado atual:
-   - o plano de Inventory ExpressoBits Spike v1 de 2026-05-13 vence para a sprint atual de inventario/craft;
+   - o freeze V14 de 2026-05-13 vence para o sistema de Loot Dinamico e DEX (ExpressoBits Data-Driven Core);
+   - o freeze V13 de 2026-05-13 vence para a infraestrutura Data-Driven de Inventario;
+   - o freeze V12 de 2026-05-13 vence para a integracao da Bridge/Authority do ExpressoBits;
    - o freeze V11 de 2026-05-13 vence para Hitbreak Combat Feedback;
    - o freeze operacional V10 de 2026-05-13 vence para Combat Core restaurado e remocao do Combat Clash temporal;
    - o freeze V9 de 2026-05-12 vence para Hostile Hit Reaction Coverage;
@@ -126,6 +133,7 @@ Branch de referencia: `feat/inventory-expresso-spike-v1`
 ## 5) Regras de processo (qualidade)
 1. `checklist-regressao-pr-actor-bt-hsm.md`
 2. `guia-saude-projeto-godot-limboai-2026-05-09.md`
+3. `../../docs/godotmcp/runbook-expressobits-seguranca.md`
 
 ## 6) Referencias externas (base tecnica)
 1. Godot Navigation:

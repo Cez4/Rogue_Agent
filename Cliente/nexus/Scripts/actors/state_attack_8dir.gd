@@ -118,7 +118,13 @@ func _apply_action_to_hitbox(hitbox: Node) -> void:
 	var resolved_action: Resource = _resolved_action_data()
 	if resolved_action == null:
 		return
-	hitbox.damage = resolved_action.get("damage")
+	
+	var base_damage: float = float(resolved_action.get("damage"))
+	var dex: float = 0.0
+	if agent != null and agent.has_method("get_stat_value"):
+		dex = float(agent.call("get_stat_value", &"dex", 0.0))
+		
+	hitbox.damage = base_damage + (dex * 0.5)
 	
 	var action: CombatActionData = resolved_action as CombatActionData
 	if action != null:
@@ -164,6 +170,8 @@ func _resolved_action_data() -> Resource:
 		var loadout: EquipmentLoadout = agent.get_equipment_loadout_runtime() as EquipmentLoadout
 		if loadout != null and loadout.weapon != null and loadout.weapon.action_data != null:
 			return loadout.weapon.action_data
+		else:
+			print("Fallback! loadout: ", loadout, " weapon: ", loadout.weapon if loadout else "null")
 	return action_data
 
 

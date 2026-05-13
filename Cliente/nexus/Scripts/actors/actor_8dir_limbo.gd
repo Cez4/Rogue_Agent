@@ -20,6 +20,7 @@ class_name Actor8DirLimbo
 @export var interaction_stop_range: float = 26.0
 @export var chase_repath_interval_sec: float = 0.2
 @export_group("Runtime Stats")
+@export var base_dex: float = 10.0
 @export var base_perception_radius: float = 120.0
 @export var base_perception_min_distance: float = 28.0
 @export var base_perception_max_distance: float = 148.0
@@ -406,6 +407,11 @@ func on_health_death() -> void:
 
 func on_stamina_exhausted() -> void:
 	ActorSocialRuntimeRef.try_play_stamina_exhausted_emote(self)
+
+
+func on_inventory_changed() -> void:
+	_cached_loadout = null
+	ActorStatsRuntimeRef.apply_loadout_modifiers_to_stats(self)
 
 
 func face_toward(target_position: Vector2) -> void:

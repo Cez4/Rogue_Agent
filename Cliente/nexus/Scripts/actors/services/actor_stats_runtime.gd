@@ -9,6 +9,7 @@ static func setup_stats(actor: Actor8DirLimbo) -> void:
 		actor.add_child(stats)
 	actor._bridge_set_stats_component(stats)
 	stats.set_base_stats({
+		&"dex": actor.base_dex,
 		&"perception_radius": actor.base_perception_radius,
 		&"perception_min_distance": actor.base_perception_min_distance,
 		&"perception_max_distance": actor.base_perception_max_distance,
@@ -28,11 +29,12 @@ static func apply_loadout_modifiers_to_stats(actor: Actor8DirLimbo) -> void:
 	if stats == null:
 		return
 	stats.clear_modifiers()
-	if actor.equipment_loadout == null:
+	var loadout := actor.get_equipment_loadout_runtime()
+	if loadout == null:
 		return
-	add_item_modifiers(actor, actor.equipment_loadout.weapon)
-	add_item_modifiers(actor, actor.equipment_loadout.armor)
-	add_item_modifiers(actor, actor.equipment_loadout.necklace)
+	add_item_modifiers(actor, loadout.weapon)
+	add_item_modifiers(actor, loadout.armor)
+	add_item_modifiers(actor, loadout.necklace)
 
 
 static func add_item_modifiers(actor: Actor8DirLimbo, item: EquipmentData) -> void:

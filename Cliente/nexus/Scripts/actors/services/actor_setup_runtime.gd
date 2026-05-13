@@ -28,6 +28,7 @@ static func ready(actor: Actor8DirLimbo) -> void:
 	_setup_interactable_component(actor)
 	_connect_health_signals(actor)
 	_connect_stamina_signals(actor)
+	_connect_inventory_signals(actor)
 	ActorRuntimeBridgeRef.reset_wander_timer(actor)
 	ActorRuntimeBridgeRef.hide_emote(actor)
 	ActorRuntimeBridgeRef.setup_hsm(actor)
@@ -39,6 +40,15 @@ static func setup_interactable_component(actor: Actor8DirLimbo) -> void:
 
 static func connect_health_signals(actor: Actor8DirLimbo) -> void:
 	_connect_health_signals(actor)
+
+
+static func _connect_inventory_signals(actor: Actor8DirLimbo) -> void:
+	var bridge := actor.get_node_or_null(^"InventoryBridge")
+	if bridge != null and bridge.has_method("get_inventory"):
+		var inv = bridge.call("get_inventory")
+		if inv != null and inv.has_signal("contents_changed"):
+			if not inv.contents_changed.is_connected(actor.on_inventory_changed):
+				inv.contents_changed.connect(actor.on_inventory_changed)
 
 
 static func _setup_interactable_component(actor: Actor8DirLimbo) -> void:

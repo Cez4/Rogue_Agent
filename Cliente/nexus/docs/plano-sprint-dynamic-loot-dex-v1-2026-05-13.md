@@ -32,31 +32,34 @@ Não criaremos novas classes de `Resource` para moldes ou instâncias. Utilizare
 ## 4) Plano De Execução
 
 ### Fase A - Setup & Branch
-- [ ] Criar nova branch `feat/dynamic-loot-dex-v1`.
-- [ ] Validar inicialização MCP sem erros residuais da sprint anterior.
+- [x] Criar nova branch `feat/dynamic-loot-dex-v1`.
+- [x] Validar inicialização MCP sem erros residuais da sprint anterior.
 
 ### Fase B - Stats Component
-- [ ] Criar `StatsComponent.gd` em `Scripts/stats/` (focado em `base_dex` e `bonus_dex`).
-- [ ] Acoplar `StatsComponent` ao `player.tscn`.
-- [ ] Criar funcionalidade no `Actor8DirLimbo` ou `ActorStatsRuntime` para consultar facilmente o DEX atual.
+- [x] Criar `StatsComponent.gd` em `Scripts/stats/` (focado em `base_dex` e `bonus_dex`).
+- [x] Acoplar `StatsComponent` ao `player.tscn`.
+- [x] Criar funcionalidade no `Actor8DirLimbo` ou `ActorStatsRuntime` para consultar facilmente o DEX atual.
 
 ### Fase C - Configuração do "Molde" na Database
-- [ ] Via *Godot Editor Script*, adicionar os arrays numéricos na `weapon_dagger_starter` dentro do ExpressoBits:
+- [x] Via *Godot Editor Script*, adicionar os arrays numéricos na `weapon_dagger_starter` dentro do ExpressoBits:
   - `min_level`, `max_level`, `damage_min_per_level`, `damage_max_per_level`, `dex_min_per_level`, `dex_max_per_level`.
 
 ### Fase D - Item Generator System
-- [ ] Criar `ItemGenerator.gd` para ser uma factory Autoritativa.
-- [ ] Implementar `generate_item_stack(definition, monster_level)` -> Rola Raridade (Normal, Magic, Rare), Dano e DEX, retornando um `ItemStack` do ExpressoBits pronto e preenchido.
+- [x] Criar `ItemGenerator.gd` para ser uma factory Autoritativa.
+- [x] Implementar `generate_item_stack(definition, monster_level)` -> Rola Raridade (Normal, Magic, Rare), Dano e DEX, retornando um `ItemStack` do ExpressoBits pronto e preenchido.
 
 ### Fase E - Refatoração do Adapter & Dano Dinâmico
-- [ ] Modificar o `NexusEquipmentAdapter` para ler `rolled_damage` e `rolled_dex_bonus` do `ItemStack`.
-- [ ] Quando o `InventoryBridge` notificar equipamento alterado, atualizar o `bonus_dex` do `StatsComponent`.
-- [ ] Fazer a injeção do cálculo de dano: `Dano = rolled_damage + (final_dex * 0.5)` e salvar no `CombatActionData` em memória gerado pelo Adapter.
+- [x] Modificar o `NexusEquipmentAdapter` para ler `rolled_damage` e `rolled_dex_bonus` do `ItemStack`.
+- [x] Quando o `InventoryBridge` notificar equipamento alterado, atualizar o `bonus_dex` do `StatsComponent`.
+- [x] Fazer a injeção do cálculo de dano: `Dano = rolled_damage + (final_dex * 0.5)` e salvar no `CombatActionData` em memória gerado pelo Adapter.
 
 ### Fase F - Teste de Fogo (QA MCP) e Freeze
-- [ ] Fazer script de inject para dropar propositalmente uma *Rare Rusty Dagger* de level alto na mochila do Player.
-- [ ] Testar no MCP o player batendo num inimigo e conferir se a telemetria reporta o dano ampliado pelo DEX e Rolagem.
-- [ ] Gerar Status Freeze V14.
+- [x] Fazer script de inject para dropar propositalmente uma *Rare Rusty Dagger* de level alto na mochila do Player.
+- [x] Testar no MCP o player batendo num inimigo e conferir se a telemetria reporta o dano ampliado pelo DEX e Rolagem.
+- [x] Gerar Status Freeze V14.
+
+Resultado da Sprint:
+A fase de DEX e Loot Dinamico foi implementada e exaustivamente testada no MCP. Durante o QA, descobrimos que a tentativa de injetar o `ItemDefinition` diretamente no stack resultava em falhas criticas devido a natureza GDExtension (C++) do ExpressoBits, que nao expoe a propriedade `item`, mas sim `item_id`. O `NexusEquipmentAdapter` foi blindado para sempre resolver via `item_id` -> `database.get_item()`. O QA final confirmou a telemetria processando `21.5` de dano num hit (Arma com dano base + rolagem rara + DEX bonus). Sprint perfeitamente finalizada.
 
 ## 5) Critérios De Aceite
 1. Player ganha bônus de dano de acordo com a Raridade da arma e seus stats.
