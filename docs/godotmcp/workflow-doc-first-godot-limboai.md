@@ -80,6 +80,14 @@ LimboAI:
 - A BT continua decidindo intencao; HSM/Componentes resolvem janelas corporais e reacoes.
 - Preservar Hit Reaction V9, Knockback V6, stamina/kiting/orb e `combat_target`.
 
+## Regra - Hitbreak Combat Feedback V11
+- Status atual: congelado em `Cliente/nexus/docs/status-freeze-funcional-v11-hitbreak-combat-feedback-2026-05-13.md`.
+- Cobertura aprovada: Player, Wildcat, HostileEnemyBase, HostileEnemyLight e HostileEnemyBrute.
+- O efeito e apenas feedback visual no atacante que causa interrupcao por `hit_reaction`.
+- Usar `CombatFeedbackComponent` + `CombatFeedbackProfile` + shader/material duplicado em runtime.
+- Nao alterar dano, stamina, Hit Reaction, Knockback, BT, HSM ou regra de morte dentro deste sistema.
+- Parry ficou fora do V11; deve virar sprint futura com `DefenseComponent`/`ParryComponent` data-driven por chance/atributo.
+
 ## Saida minima esperada por tarefa
 - Contexto consultado (links usados).
 - Mudanca aplicada.

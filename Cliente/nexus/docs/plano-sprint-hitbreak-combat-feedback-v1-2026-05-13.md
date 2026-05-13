@@ -1,7 +1,7 @@
 # Plano Sprint - Hitbreak Combat Feedback v1
 
 Data: 2026-05-13
-Status: EM EXECUCAO - FASE C INTEGRADA/APROVADA, PROXIMA FASE D
+Status: CONCLUIDA - FREEZE V11 APROVADO
 Baseline obrigatorio: `status-freeze-operacional-v10-combat-core-restored-2026-05-13.md`
 Branch: `feat/hitbreak-combat-feedback-v1`
 
@@ -282,19 +282,77 @@ Pendencia:
 1. Propagar para `HostileEnemyBase`, `HostileEnemyLight` e `HostileEnemyBrute` somente na Fase D.
 
 ### Fase D - Cobertura Hostis E Tuning
-- [ ] Integrar em HostileEnemyBase, HostileEnemyLight e HostileEnemyBrute via Godot/editor API.
-- [ ] Se necessario, criar profile diferente para Brute/Light.
-- [ ] Ajustar duracao/intensidade pelo `.tres`, nao por codigo.
-- [ ] Confirmar performance visual com varios atores.
+- [x] Integrar em HostileEnemyBase, HostileEnemyLight e HostileEnemyBrute via Godot/editor API.
+- [x] Se necessario, criar profile diferente para Brute/Light.
+- [x] Ajustar duracao/intensidade pelo `.tres`, nao por codigo.
+- [x] Confirmar performance visual com varios atores.
+
+Resultado Fase D tecnico:
+
+1. `hostile_enemy_base.tscn` recebeu `CombatFeedbackComponent`.
+2. `hostile_enemy_light.tscn` recebeu `CombatFeedbackComponent`.
+3. `hostile_enemy_brute.tscn` recebeu `CombatFeedbackComponent`.
+4. Os tres hostis usam o mesmo profile default aprovado em Player/Wildcat.
+5. Nao foi necessario criar profile separado para Brute/Light nesta etapa; o tuning continua centralizado no `.tres`.
+6. Nao houve alteracao em dano, stamina, Hit Reaction, Knockback, BT ou HSM.
+
+Evidencia MCP:
+
+1. As cenas hostis foram editadas e salvas via Godot/editor API.
+2. `mundo.tscn` rodou sem parse/runtime error novo.
+3. A arvore runtime confirmou `CombatFeedbackComponent` carregado em:
+   - `HostileEnemyBase`;
+   - `HostileEnemyLight`;
+   - `HostileEnemyBrute`.
+4. Logs de init de Orb/telemetria dos hostis continuaram limpos.
+
+QA Brute:
+
+1. Diretor confirmou visual do `HostileEnemyBrute` como OK.
+2. Logs comprovaram `HostileEnemyBrute` causando `hitbreak_success` contra `Player`.
+3. Logs comprovaram `combat_feedback_hitbreak_started` no `HostileEnemyBrute` com `mode = shader`, `duration = 0.12` e `intensity = 1.0`.
+4. Logs comprovaram `combat_feedback_hitbreak_finished` no `HostileEnemyBrute`.
+5. O alvo `Player` continuou executando `Dagger01_TakeDamage_*` com `played = true`, preservando Hit Reaction V7.
+6. O fluxo preservou stamina, knockback, attack window e separacao entre hitbreak e hit normal.
+
+QA Base:
+
+1. Diretor confirmou visual do `HostileEnemyBase` como OK.
+2. Logs comprovaram `HostileEnemyBase` causando `hitbreak_success` contra `Player`.
+3. Logs comprovaram `combat_feedback_hitbreak_started` no `HostileEnemyBase` com `mode = shader`, `duration = 0.12` e `intensity = 1.0`.
+4. Logs comprovaram `combat_feedback_hitbreak_finished` no `HostileEnemyBase`.
+5. O alvo `Player` continuou executando `Dagger01_TakeDamage_*` com `played = true`, preservando Hit Reaction V7.
+6. O fluxo preservou stamina, knockback, attack window, kiting e separacao entre hitbreak e hit normal.
+
+QA Light:
+
+1. Diretor confirmou visual do `HostileEnemyLight` como OK.
+2. Logs comprovaram `HostileEnemyLight` causando `hitbreak_success` contra `Player`.
+3. Logs comprovaram `combat_feedback_hitbreak_started` no `HostileEnemyLight` com `mode = shader`, `duration = 0.12` e `intensity = 1.0`.
+4. Logs comprovaram `combat_feedback_hitbreak_finished` no `HostileEnemyLight`.
+5. O alvo `Player` continuou executando `Dagger01_TakeDamage_*` com `played = true`, preservando Hit Reaction V7.
+6. O fluxo preservou stamina, knockback, attack window, kiting e separacao entre hitbreak e hit normal.
+
+Pendencia:
+
+1. Abrir Fase E para criar freeze funcional da sprint.
+2. Commitar e enviar a cobertura completa quando o freeze estiver registrado.
 
 ### Fase E - QA, Docs E Freeze
-- [ ] QA visual aprovado pelo diretor.
-- [ ] Logs comprovam `hitbreak_success`.
-- [ ] Logs comprovam `combat_feedback_hitbreak_started`.
-- [ ] Sem regressao em Hit Reaction V7/V8/V9.
-- [ ] Sem regressao em Knockback V6.
-- [ ] Sem regressao em stamina/kiting/orb/regen.
-- [ ] Criar freeze funcional se aprovado.
+- [x] QA visual aprovado pelo diretor.
+- [x] Logs comprovam `hitbreak_success`.
+- [x] Logs comprovam `combat_feedback_hitbreak_started`.
+- [x] Sem regressao em Hit Reaction V7/V8/V9.
+- [x] Sem regressao em Knockback V6.
+- [x] Sem regressao em stamina/kiting/orb/regen.
+- [x] Criar freeze funcional se aprovado.
+
+Resultado Fase E:
+
+1. Criado `status-freeze-funcional-v11-hitbreak-combat-feedback-2026-05-13.md`.
+2. Player, Wildcat, HostileEnemyBase, HostileEnemyLight e HostileEnemyBrute ficaram aprovados.
+3. Sprint congelada como V11.
+4. Parry ficou explicitamente fora do escopo e deve virar sprint futura separada.
 
 ## 12) Criterios De Aceite
 Sprint pronta somente quando:

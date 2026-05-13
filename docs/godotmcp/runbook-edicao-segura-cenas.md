@@ -178,13 +178,14 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
    - Fase A: telemetria `hitbreak_success` sem mudanca visual;
    - Fase B: `CombatFeedbackComponent` + profile em um ator;
    - Fase C: propagacao para Wildcat concluida/aprovada;
-   - Fase D: cobertura hostis;
-   - Fase E: QA/freeze.
+   - Fase D: cobertura hostis integrada/aprovada;
+   - Fase E: QA/freeze concluido em V11.
 5. Shader/material deve ser duplicado em runtime antes de alterar parametros, evitando flash global por material compartilhado.
 6. Qualquer edicao de cena/resource deve ser feita via Godot/editor API, nunca por texto.
 7. Nao adicionar exports de feedback no `Actor8DirLimbo`.
 8. Validacao obrigatoria: MCP limpo + telemetria `hitbreak_success`, `combat_feedback_hitbreak_started`, `combat_feedback_hitbreak_finished`.
 9. Separar morte de hitbreak: `reason = death` nao deve acionar brilho de sucesso.
+10. Parry ficou fora do V11. Nao implementar ou reativar Parry/Clash dentro do Hitbreak Feedback; abrir sprint futura com `DefenseComponent`/`ParryComponent` data-driven.
 
 ## Contrato Universal Hit Reaction Component v1
 1. A decisao arquitetural obrigatoria e componente plug-and-play:

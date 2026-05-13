@@ -25,8 +25,9 @@ Regra:
 18. Universal Hit Reaction / Hit Stun v1 esta congelado em camadas: V7 Player, V8 Wildcat e V9 Hostile Coverage. Preservar `HitReactionComponent` + profile `.tres` + estado HSM; nao criar logica exclusiva do Player, nao mover regra de dano para BT e nao reengordar `Actor8DirLimbo`.
 19. Combat Clash / Parry Window v1 deve comecar por telemetria, nao por gameplay. O custo de stamina do ataque interrompido ja e a punicao base; dano extra de stamina/parry perfeito so entra depois de logs com fase do ataque e `attack_sequence_id`.
 20. Combat Clash temporal D/D2 foi removido do runtime apos auditoria de feel. Nao reativar Parry unilateral nem `mutual_clash` global; qualquer Parry futuro deve nascer como `DefenseComponent`/`ParryComponent` por chance/atributo em `.tres`.
-21. Hitbreak Combat Feedback v1 deve vir apos o freeze operacional V10: feedback visual no atacante que causa interrupcao por `hit_reaction`, sem alterar dano/stamina/BT/HSM. Player e Wildcat ja foram integrados/aprovados; proxima propagacao e HostileEnemyBase, HostileEnemyLight e HostileEnemyBrute. Usar `CombatFeedbackComponent` + `CombatFeedbackProfile`, shader/material duplicado em runtime e telemetria `hitbreak_success`.
-21. Apos QA D2, Player/Wildcat voltaram para observer. Nao reativar Clash/Parry global automatico sem novo plano de skill/estado explicito e aprovacao visual.
+21. Hitbreak Combat Feedback v1 esta congelado em V11: feedback visual no atacante que causa interrupcao por `hit_reaction`, sem alterar dano/stamina/BT/HSM. Player, Wildcat, Brute, Base e Light estao integrados/aprovados. Usar `CombatFeedbackComponent` + `CombatFeedbackProfile`, shader/material duplicado em runtime e telemetria `hitbreak_success`.
+22. Parry ficou para depois do V11. Nao implementar ou reativar Parry/Clash no escopo de Hitbreak Feedback; abrir sprint futura com `DefenseComponent`/`ParryComponent` data-driven por chance/atributo.
+23. Apos QA D2, Player/Wildcat voltaram para observer. Nao reativar Clash/Parry global automatico sem novo plano de skill/estado explicito e aprovacao visual.
 
 Checklist rapido:
 - [ ] Doc interno lido.

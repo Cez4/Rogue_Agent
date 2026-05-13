@@ -3,9 +3,10 @@
 Este README aponta a fonte oficial de status tecnico do projeto.
 
 ## Fonte oficial de status (freeze atual)
-- `Cliente/nexus/docs/status-freeze-operacional-v10-combat-core-restored-2026-05-13.md`
+- `Cliente/nexus/docs/status-freeze-funcional-v11-hitbreak-combat-feedback-2026-05-13.md`
 
 Freezes imediatamente anteriores:
+- `Cliente/nexus/docs/status-freeze-operacional-v10-combat-core-restored-2026-05-13.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v7-hit-reaction-2026-05-12.md`
@@ -23,12 +24,13 @@ Esse documento manda no estado da fase atual e consolida:
 4. Parry futuro deve ser `DefenseComponent`/`ParryComponent` por chance/atributo, nao `mutual_clash` global.
 5. Knockback V6 permanece congelado com `knockback_force = 200.0`.
 6. Hit Reaction V7/V8/V9 seguem aprovados para Player, Wildcat e hostis.
-7. Orb UI, Health Regen fora de combate, stamina/kiting e telemetria continuam preservados.
+7. Hitbreak Combat Feedback V11 segue aprovado para Player, Wildcat, Base, Light e Brute.
+8. Orb UI, Health Regen fora de combate, stamina/kiting e telemetria continuam preservados.
 
 ## Sprint atual em execucao
 - `Cliente/nexus/docs/plano-sprint-hitbreak-combat-feedback-v1-2026-05-13.md`
 
-Escopo atual: implementar feedback visual data-driven para Hitbreak. A Fase A criou e validou a telemetria `hitbreak_success`. A Fase B criou `CombatFeedbackComponent`, `CombatFeedbackProfile`, shader simples e integrou o Player. A Fase C integrou o Wildcat via Godot/editor API usando o mesmo profile default; MCP confirmou `CombatFeedbackComponent` carregado em Player/Wildcat e o QA visual do diretor aprovou o feedback. Proxima fase: propagar para HostileEnemyBase, HostileEnemyLight e HostileEnemyBrute. Isto e apenas game feel visual; nao altera dano, stamina, Hit Reaction, Knockback, BT ou HSM.
+Escopo atual: Hitbreak Combat Feedback V11 congelado. A sprint criou `CombatFeedbackComponent`, `CombatFeedbackProfile`, shader simples e integrou Player, Wildcat, HostileEnemyBase, HostileEnemyLight e HostileEnemyBrute. QA visual/log aprovado para todos, com `combat_feedback_hitbreak_started/finished` em `mode = shader`. Isto e apenas game feel visual; nao altera dano, stamina, Hit Reaction, Knockback, BT ou HSM.
 
 Historico imediato: Combat Clash temporal foi auditado e removido do runtime. A prova tecnica de `mutual_clash` fica registrada como pesquisa historica, mas Player/Wildcat nao carregam mais `CombatClashComponent` nem profiles de Clash. O core aprovado continua sendo Hit Reaction/Hit Interrupt. Qualquer Parry futuro deve nascer como `DefenseComponent`/`ParryComponent` simples, modular e data-driven por chance/atributo, consultado antes do dano.
 

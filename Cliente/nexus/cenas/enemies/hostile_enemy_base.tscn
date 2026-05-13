@@ -30,7 +30,9 @@
 [ext_resource type="Resource" path="res://configs/ui/orbs/stamina_orb_profile_v1.tres" id="30_orbpf"]
 [ext_resource type="Script" uid="uid://d25m2w1hsn1u5" path="res://Scripts/combat/hit_reaction_component.gd" id="30_texcc"]
 [ext_resource type="Resource" uid="uid://cql45ltgdn6k3" path="res://configs/combat/hit_reaction/hostile_light_hit_reaction_profile_v1.tres" id="31_frxuc"]
+[ext_resource type="Script" uid="uid://bu3jajmtlug26" path="res://Scripts/combat/feedback/combat_feedback_component.gd" id="32_60t1r"]
 [ext_resource type="Script" uid="uid://diwfcith2c22c" path="res://Scripts/combat/knockback_component.gd" id="32_m3isr"]
+[ext_resource type="Resource" uid="uid://wyetswulivmd" path="res://configs/combat/feedback/default_hitbreak_feedback_profile_v1.tres" id="33_texcc"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijbr8"]
 atlas = ExtResource("3_vsdir")
@@ -4769,3 +4771,7 @@ script = ExtResource("32_m3isr")
 [node name="HitReactionComponent" type="Node" parent="." unique_id=599220710]
 script = ExtResource("30_texcc")
 profile = ExtResource("31_frxuc")
+
+[node name="CombatFeedbackComponent" type="Node" parent="." unique_id=404356542]
+script = ExtResource("32_60t1r")
+profile = ExtResource("33_texcc")
