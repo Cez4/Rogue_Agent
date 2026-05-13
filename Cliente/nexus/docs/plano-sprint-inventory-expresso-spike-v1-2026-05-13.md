@@ -380,11 +380,15 @@ Resultado parcial Fase G:
 8. Logs de QA no mapa `mundo.tscn` confirmaram: player atacando hostil Brute, knockback, dano, hitbreak, morte de hostil e health regen restaurados, tudo perfeitamente funcional sem alteracoes estruturais no `Actor8DirLimbo` e com o inventario passivo presente.
 
 ### Fase H - Freeze E Decisao
-- [ ] Registrar resultado do spike.
-- [ ] Confirmar se ExpressoBits vira dependencia oficial.
-- [ ] Remover demos do commit final ou registrar explicitamente como referencia nao-runtime se ficarem versionados.
-- [ ] Atualizar README, docs, runbooks e skill.
-- [ ] Criar freeze funcional V12 somente se houver QA positivo.
+- [x] Registrar resultado do spike.
+- [x] Confirmar se ExpressoBits vira dependencia oficial.
+- [x] Remover demos do commit final ou registrar explicitamente como referencia nao-runtime se ficarem versionados.
+- [x] Atualizar README, docs, runbooks e skill.
+- [x] Criar freeze funcional V12 somente se houver QA positivo.
+
+Resultado Fase H:
+
+O ExpressoBits foi formalmente aprovado como dependencia oficial para inventario e itens. O diretorio de demos `inventory-system-demos` permanecera untracked (no `.gitignore`) para servir apenas como consulta tecnica local e nao entrara na runtime compilada do projeto. O V12 foi gerado atestando que a ponte de dados nao corrompeu a versao V11.
 
 ## 10) Criterios De Aceite
 Sprint pronta somente quando:
