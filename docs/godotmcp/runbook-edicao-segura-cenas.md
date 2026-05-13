@@ -168,6 +168,9 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 8. Nao editar `.tscn`/`.tres` por texto; qualquer componente/profile em cena deve ser aplicado via Godot/editor API.
 9. Validacao MCP obrigatoria antes de commit: `open_scene -> play_scene -> get_godot_errors -> conferir telemetria`.
 10. Se houver mudanca funcional aprovada, criar freeze V10.
+11. Fase D2 deve seguir `mutual_clash`: cancelamento de hit so pode entrar se o ataque do defensor tambem for cancelado/desarmado por `attack_sequence_id`.
+12. Nao reativar `parry_resolved` unilateral da Fase D v1; ele favorece quem ataca depois e altera o resultado aprovado do combate.
+13. Estado atual apos QA D2: manter profiles em observer; qualquer Parry/Clash funcional futuro deve ser skill/estado explicito, nao regra global automatica em todo ataque.
 
 ## Contrato Universal Hit Reaction Component v1
 1. A decisao arquitetural obrigatoria e componente plug-and-play:

@@ -4,3 +4,4 @@
 
 [resource]
 script = ExtResource("1_itx5o")
+clash_window_sec = 0.12

@@ -73,7 +73,10 @@ Branch de referencia: `feat/combat-clash-parry-telemetry-v1`
    - Player e Wildcat carregam `CombatClashComponent` via cena/profile;
    - candidatos temporais e interrupcoes sao classificados por telemetria;
    - gameplay de parry/clash esta desabilitado nos profiles para preservar feel aprovado;
-   - Fase D2 deve redesenhar regra antes de reabilitar cancelamento de hit;
+   - Fase D2 base foi implementada em scripts como `mutual_clash`: se o hit recebido for cancelado, o ataque do defensor tambem deve ser cancelado/desarmado por `attack_sequence_id`;
+   - D2 provou `mutual_clash`, mas o gameplay voltou para observer para preservar o core aprovado;
+   - Player/Wildcat estao em `resolution_mode = "observer"`, `can_parry = false` e `emit_only_telemetry = true`;
+   - `clash_window_sec = 0.12` e `post_clash_lockout_sec = 0.50` ficam como dados futuros para skill explicita;
    - o custo de stamina do ataque interrompido ja e a punicao base;
    - dano extra de stamina/parry perfeito so pode entrar depois de prova por logs, profile `.tres` e QA;
    - nao reengordar `Actor8DirLimbo` e nao criar regra exclusiva de Player.

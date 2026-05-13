@@ -8,6 +8,9 @@ static var _active_attacks: Dictionary = {}
 static var _emitted_candidate_pairs: Dictionary = {}
 
 const ATTACK_REGISTRY_TTL_MS: int = 2000
+const CLASH_CANCEL_ATTACK_SEQUENCE_META := &"combat_clash_cancel_attack_sequence_id"
+const CLASH_CANCEL_REASON_META := &"combat_clash_cancel_reason"
+const CLASH_RECOVERY_SEC_META := &"combat_clash_recovery_sec"
 
 var _target_actor: Node
 var _attack_sequence_id: int = 0
@@ -83,6 +86,7 @@ func notify_attack_window_closed(attack_sequence_id: int, hitbox_sequence_id: in
 		"reason": String(reason),
 		"hits_count": hits_count,
 		"parried_count": parried_count,
+		"clashed_count": parried_count,
 		"result": _attack_window_result(hits_count, parried_count)
 	})
 
@@ -106,7 +110,7 @@ func try_resolve_incoming_hit(source: Node, source_attack_sequence_id: int, sour
 	var source_actor_name: String = _source_actor_name(source)
 	var matching_attack: Dictionary = _matching_attack_for_source(source_actor_name)
 	var classification: String = _incoming_hit_classification(matching_attack)
-	var resolved: bool = classification == "parry_resolved" and not _profile_bool(&"emit_only_telemetry", true)
+	var resolved: bool = classification == "mutual_clash_resolved" and not _profile_bool(&"emit_only_telemetry", true)
 	CombatTelemetry.emit_event(&"combat_clash_incoming_hit_classified", {
 		"actor": _actor_name(),
 		"attack_sequence_id": _attack_sequence_id,
@@ -118,10 +122,12 @@ func try_resolve_incoming_hit(source: Node, source_attack_sequence_id: int, sour
 		"classification": classification,
 		"resolved": resolved,
 		"damage": amount,
-		"emit_only_telemetry": _profile_bool(&"emit_only_telemetry", true)
+		"emit_only_telemetry": _profile_bool(&"emit_only_telemetry", true),
+		"resolution_mode": _profile_string(&"resolution_mode", "observer")
 	})
 	if resolved:
-		CombatTelemetry.emit_event(&"combat_parry_resolved", {
+		_request_local_attack_cancel(source_actor_name, source_attack_sequence_id)
+		CombatTelemetry.emit_event(&"combat_clash_mutual_resolved", {
 			"actor": _actor_name(),
 			"attack_sequence_id": _attack_sequence_id,
 			"phase": String(_attack_phase),
@@ -133,7 +139,8 @@ func try_resolve_incoming_hit(source: Node, source_attack_sequence_id: int, sour
 		})
 	return {
 		"resolved": resolved,
-		"classification": classification
+		"classification": classification,
+		"cancel_event": "hit_cancelled_by_clash" if resolved else ""
 	}
 
 
@@ -175,6 +182,7 @@ func notify_attack_interrupted(attack_sequence_id: int, phase: StringName, reaso
 			"reason": String(reason)
 		})
 	_clear_registered_attack()
+	_reset_local_attack_runtime()
 
 
 func _set_phase(phase: StringName) -> void:
@@ -210,13 +218,22 @@ func _profile_float(property_name: StringName, fallback: float) -> float:
 	return float(value)
 
 
+func _profile_string(property_name: StringName, fallback: String) -> String:
+	if profile == null:
+		return fallback
+	var value: Variant = profile.get(property_name)
+	if value == null:
+		return fallback
+	return str(value)
+
+
 func _attack_window_result(hits_count: int, parried_count: int) -> String:
 	if hits_count > 0 and parried_count > 0:
 		return "mixed"
 	if hits_count > 0:
 		return "hit"
 	if parried_count > 0:
-		return "parried"
+		return "clashed"
 	return "whiff"
 
 
@@ -253,6 +270,13 @@ func _clear_registered_attack() -> void:
 		var attack: Dictionary = _active_attacks[actor_name]
 		if int(attack.get("attack_sequence_id", 0)) == _attack_sequence_id:
 			_active_attacks.erase(actor_name)
+
+
+func _reset_local_attack_runtime() -> void:
+	_attack_phase = &"idle"
+	_attack_target = ""
+	_active_started_ms = 0
+	_window_open = false
 
 
 func _cleanup_attack_registry(now_ms: int) -> void:
@@ -345,6 +369,11 @@ func _interrupt_classification(reason: StringName, matching_attack: Dictionary) 
 
 
 func _incoming_hit_classification(matching_attack: Dictionary) -> String:
+	var resolution_mode: String = _profile_string(&"resolution_mode", "observer")
+	if resolution_mode == "observer":
+		return "observer_only"
+	if resolution_mode != "mutual_clash":
+		return "unsupported_resolution_mode"
 	if not _profile_bool(&"can_parry", false):
 		return "parry_disabled"
 	if String(_attack_phase) != "windup":
@@ -355,7 +384,25 @@ func _incoming_hit_classification(matching_attack: Dictionary) -> String:
 	var window_ms: int = mini(int(maxf(0.0, _profile_float(&"clash_window_sec", 0.10)) * 1000.0), int(matching_attack.get("clash_window_ms", 100)))
 	if delta_ms > window_ms:
 		return "incoming_outside_clash_window"
-	return "parry_resolved"
+	return "mutual_clash_resolved"
+
+
+func _request_local_attack_cancel(source_actor_name: String, source_attack_sequence_id: int) -> void:
+	if _target_actor == null:
+		return
+	_target_actor.set_meta(CLASH_CANCEL_ATTACK_SEQUENCE_META, _attack_sequence_id)
+	_target_actor.set_meta(CLASH_CANCEL_REASON_META, &"mutual_clash")
+	var recovery_sec: float = maxf(0.0, _profile_float(&"post_clash_lockout_sec", 0.50))
+	_target_actor.set_meta(CLASH_RECOVERY_SEC_META, recovery_sec)
+	CombatTelemetry.emit_event(&"combat_clash_attack_cancel_requested", {
+		"actor": _actor_name(),
+		"attack_sequence_id": _attack_sequence_id,
+		"phase": String(_attack_phase),
+		"source_actor": source_actor_name,
+		"source_attack_sequence_id": source_attack_sequence_id,
+		"reason": "mutual_clash",
+		"post_clash_lockout_sec": recovery_sec
+	})
 
 
 func _source_actor_name(source: Node) -> String:

@@ -53,7 +53,8 @@ func _close_attack_window(reason: StringName) -> void:
 		"hitbox_sequence_id": _attack_seq,
 		"reason": String(reason),
 		"hits_count": _hits_count,
-		"parried_count": _parried_count
+		"parried_count": _parried_count,
+		"clashed_count": _parried_count
 	})
 	var clash := _clash_component()
 	if clash != null:
@@ -86,12 +87,14 @@ func _on_area_entered(area: Area2D) -> void:
 		if bool(resolution.get("resolved", false)):
 			_hit_target_ids[target_id] = true
 			_parried_count += 1
-			CombatTelemetry.emit_event(&"hit_cancelled_by_parry", {
+			var cancel_event: StringName = StringName(str(resolution.get("cancel_event", "hit_cancelled_by_parry")))
+			CombatTelemetry.emit_event(cancel_event, {
 				"source_owner": _owner_name(),
 				"attack_sequence_id": attack_sequence_id,
 				"hitbox_sequence_id": _attack_seq,
 				"target_area": area.name,
-				"classification": str(resolution.get("classification", ""))
+				"classification": str(resolution.get("classification", "")),
+				"cancel_type": "mutual_clash"
 			})
 			return
 

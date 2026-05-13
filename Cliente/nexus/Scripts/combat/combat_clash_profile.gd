@@ -12,3 +12,5 @@ extends Resource
 @export var extra_stamina_damage_on_parry: float = 0.0
 @export var interrupt_cooldown_sec: float = 0.0
 @export var emit_only_telemetry: bool = true
+@export var post_clash_lockout_sec: float = 0.50
+@export_enum("observer", "mutual_clash") var resolution_mode: String = "observer"

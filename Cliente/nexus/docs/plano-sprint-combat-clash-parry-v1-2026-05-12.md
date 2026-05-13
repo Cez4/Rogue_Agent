@@ -578,3 +578,279 @@ Proxima decisao recomendada:
    - se cancela o hit do atacante, tambem deve cancelar/interromper o ataque do defensor; ou
    - aplicar uma janela menor/mais explicita; ou
    - exigir fase propria futura de parry, nao `windup` de ataque normal.
+
+## 20) Plano D2 - Mutual Clash sem substituir Hit Interrupt
+Data: 2026-05-13
+Status: D2 base implementada em scripts, gameplay ainda desligado por profile/observer.
+
+Decisao de Tech Lead:
+
+1. O core aprovado do combate continua intocado:
+   - quem acerta primeiro aplica dano;
+   - `HitReactionComponent` dispara Taken Damage/Hit Stun;
+   - o ataque do alvo e interrompido;
+   - o custo de stamina do ataque interrompido permanece como punicao base.
+2. Combat Clash / Parry e uma camada opcional acima do core, nao substitui Hit Reaction.
+3. A regra D v1 de `parry_resolved` unilateral nao deve ser reativada:
+   - ela cancelava o hit recebido;
+   - mantinha o ataque do defensor vivo;
+   - favorecia quem atacava alguns milissegundos depois.
+
+Regra D2 recomendada: `mutual_clash`.
+
+1. Dois ataques cruzados dentro de `clash_window_sec` geram clash.
+2. O hit recebido e cancelado antes de dano/knockback/Hit Reaction.
+3. O ataque do defensor tambem deve ser cancelado/desarmado pelo mesmo `attack_sequence_id`.
+4. Ambos mantem o custo de stamina ja pago.
+5. Nenhum dos dois causa dano nesse encontro.
+6. A luta volta para recover/reposicionamento, preservando o loop de stamina.
+
+Contrato tecnico proposto:
+
+1. `CombatClashComponent` continua sendo o decisor modular.
+2. `HitboxComponent` continua consultando `HurtboxComponent.try_resolve_incoming_hit(...)` antes do dano.
+3. `state_attack_8dir.gd` deve obedecer uma intencao curta de cancelamento por `attack_sequence_id`, sem adicionar regra no `Actor8DirLimbo`.
+4. A intencao de cancelamento deve ser limpa ao encerrar/interromper o ataque para evitar estado preso.
+5. Eventos minimos da D2:
+   - `combat_clash_incoming_hit_classified`;
+   - `combat_clash_mutual_resolved`;
+   - `combat_clash_attack_cancel_requested`;
+   - `combat_clash_attack_cancelled`;
+   - `hit_cancelled_by_clash`.
+
+Fases D2:
+
+- [x] D2.0 - Revalidar MCP/editor antes de qualquer alteracao funcional.
+- [x] D2.1 - Adicionar modo data-driven no `CombatClashProfile`, com default seguro em observer/desligado.
+- [x] D2.2 - Implementar cancelamento mutuo por `attack_sequence_id` em componentes/HSM, sem inflar `Actor8DirLimbo`.
+- [x] D2.3 - Manter profiles de Player/Wildcat em observer ate log provar estabilidade.
+- [ ] D2.4 - Teste dirigido com Player x Wildcat:
+  - provar que o hit do atacante e cancelado;
+  - provar que o ataque do defensor tambem nao acerta depois;
+  - provar que ambos gastaram stamina;
+  - provar que o core de hit interrupt continua funcionando fora do clash.
+- [ ] D2.5 - Se QA visual aprovar, habilitar `mutual_clash` por profile e criar freeze V10.
+
+Registro de implementacao D2 base:
+
+1. MCP voltou a responder apos reabertura do editor em 2026-05-13.
+2. `CombatClashProfile` ganhou `resolution_mode` com default `"observer"`.
+3. `CombatClashComponent` so resolve gameplay quando a classificacao for `mutual_clash_resolved` e `emit_only_telemetry = false`.
+4. `state_attack_8dir.gd` ganhou obediencia a uma intencao curta de cancelamento por `attack_sequence_id`, sem novo export/tuning no `Actor8DirLimbo`.
+5. `HitboxComponent` emite `hit_cancelled_by_clash` quando o cancelamento vem da D2.
+6. Profiles atuais nao foram alterados:
+   - continuam sem propriedades serializadas alem do script;
+   - portanto preservam defaults `emit_only_telemetry = true`, `can_parry = false`, `resolution_mode = "observer"`;
+   - gameplay D2 permanece desligado.
+7. Smoke MCP:
+   - scripts abriram sem parse error;
+   - `res://cenas/mundo.tscn` rodou;
+   - `get_godot_errors` nao registrou parse/runtime error novo;
+   - cena foi parada apos validacao.
+
+Proxima etapa obrigatoria:
+
+1. D2.4 precisa de log dirigido antes de qualquer ativacao em `.tres`.
+2. Para ativar gameplay futuramente, o profile devera explicitar:
+   - `resolution_mode = "mutual_clash"`;
+   - `can_parry = true`;
+   - `emit_only_telemetry = false`.
+3. Essa ativacao deve ser feita via Godot/editor API, nunca por texto.
+
+## 21) Ativacao Temporaria para QA D2
+Data: 2026-05-13
+Status: ativo para teste dirigido, ainda nao congelado/aprovado.
+
+Profiles ativados via Godot/editor API:
+
+1. `res://configs/combat/clash/player_combat_clash_profile_v1.tres`
+2. `res://configs/combat/clash/wildcat_combat_clash_profile_v1.tres`
+
+Valores aplicados:
+
+1. `resolution_mode = "mutual_clash"`
+2. `can_parry = true`
+3. `emit_only_telemetry = false`
+
+Validacao antes do QA:
+
+1. `get_godot_errors` sem parse/runtime error novo apos salvar resources.
+2. `res://cenas/mundo.tscn` rodou em smoke curto com a regra ativa.
+3. Logs de carga mostraram apenas inicializacao normal das orbs.
+4. Cena foi parada apos o smoke.
+
+Observacao:
+
+1. Esta ativacao ainda e experimental.
+2. O freeze V10 so pode existir depois do teste dirigido confirmar:
+   - `combat_clash_mutual_resolved`;
+   - `hit_cancelled_by_clash`;
+   - `combat_clash_attack_cancel_requested`;
+   - `combat_clash_attack_cancelled`;
+   - nenhum hit posterior do defensor no mesmo `attack_sequence_id`;
+   - stamina consumida pelos dois quando ambos iniciaram ataque.
+
+## 22) Ajuste de QA D2 - Janela 120ms e Reset de Fase
+Data: 2026-05-13
+Status: aplicado, aguardando novo log dirigido.
+
+Motivo:
+
+1. O log de QA mostrou um caso quase elegivel:
+   - Player iniciou ataque `38` em `60582ms`;
+   - Wildcat iniciou ataque `161` em `60683ms`;
+   - `started_delta_ms = 101`;
+   - com janela anterior de `100ms`, classificou `incoming_outside_clash_window`.
+2. O core aprovado funcionou corretamente nesse caso:
+   - Player acertou;
+   - Wildcat tomou Hit Reaction;
+   - ataque do Wildcat foi interrompido;
+   - ambos consumiram stamina quando iniciaram ataque.
+3. O mesmo log mostrou risco de fase local antiga em classificacoes posteriores.
+
+Mudancas aplicadas:
+
+1. `player_combat_clash_profile_v1.tres`:
+   - `clash_window_sec = 0.12`;
+   - `resolution_mode = "mutual_clash"`;
+   - `can_parry = true`;
+   - `emit_only_telemetry = false`.
+2. `wildcat_combat_clash_profile_v1.tres`:
+   - `clash_window_sec = 0.12`;
+   - `resolution_mode = "mutual_clash"`;
+   - `can_parry = true`;
+   - `emit_only_telemetry = false`.
+3. `CombatClashComponent.notify_attack_interrupted(...)` agora limpa runtime local apos remover o ataque do registry:
+   - `_attack_phase = "idle"`;
+   - `_attack_target = ""`;
+   - `_active_started_ms = 0`;
+   - `_window_open = false`.
+
+Validacao:
+
+1. Alteracao dos profiles feita via Godot/editor API.
+2. `res://Scripts/combat/combat_clash_component.gd` abriu sem parse error.
+3. `res://cenas/mundo.tscn` rodou em smoke curto.
+4. `get_godot_errors` nao registrou parse/runtime error novo.
+5. Cena foi parada apos smoke.
+
+## 23) Ajuste de QA D2 - Lockout Pos-Clash
+Data: 2026-05-13
+Status: aplicado em codigo, aguardando novo log dirigido.
+
+Motivo:
+
+1. O log confirmou `mutual_clash_resolved` correto:
+   - Player `attack_sequence_id = 43`;
+   - Wildcat `attack_sequence_id = 147`;
+   - `started_delta_ms = 17`;
+   - `hit_cancelled_by_clash`;
+   - `combat_clash_attack_cancelled`;
+   - nenhum hit posterior do Wildcat com o mesmo ataque `147`.
+2. O Wildcat reengajou rapido demais em novo ataque `152`, acertando o Player ainda em recover.
+3. Isso nao era mais o bug do ataque antigo continuar vivo; era falta de recuperacao pos-clash.
+
+Mudancas aplicadas:
+
+1. `CombatClashProfile` ganhou `post_clash_lockout_sec: float = 0.35`.
+2. `CombatClashComponent` envia `post_clash_lockout_sec` como meta para o ator defensor cancelado.
+3. `state_attack_8dir.gd` usa esse lockout para estender `_cooldown_until_sec` quando o ataque e cancelado por `mutual_clash`.
+4. Eventos atualizados:
+   - `combat_clash_attack_cancel_requested` inclui `post_clash_lockout_sec`;
+   - `combat_clash_attack_cancelled` inclui `post_clash_lockout_sec`.
+
+Nota de editor:
+
+1. O script ja mostra o export `post_clash_lockout_sec`.
+2. O editor ainda retornou property list antiga para os `.tres` durante esta sessao, provavelmente cache de Resource.
+3. Em runtime, se o resource ainda devolver `null`, o componente usa fallback seguro `0.35`.
+4. Depois de reiniciar o editor, o campo deve aparecer no Inspector para tuning data-driven normal.
+
+Validacao:
+
+1. Scripts abriram sem parse error.
+2. `res://cenas/mundo.tscn` rodou em smoke curto.
+3. `get_godot_errors` nao registrou parse/runtime error novo.
+4. Cena foi parada apos smoke.
+
+Proximo log dirigido deve confirmar:
+
+1. `combat_clash_attack_cancel_requested` com `post_clash_lockout_sec = 0.35`.
+2. `combat_clash_attack_cancelled` com `post_clash_lockout_sec = 0.35`.
+3. O defensor cancelado nao deve iniciar novo ataque antes do lockout.
+
+## 24) Ajuste de QA D2 - Telemetria Clash e Lockout 500ms
+Data: 2026-05-13
+Status: aplicado, aguardando novo log dirigido.
+
+Motivo:
+
+1. O QA visual mostrou que o dano bloqueado do Player era o `mutual_clash` correto.
+2. A telemetria ainda dizia `result = "parried"`, o que confundia leitura e auditoria.
+3. O lockout de `0.35s` foi respeitado, mas o Wildcat reengajava quase no primeiro frame elegivel.
+
+Mudancas aplicadas:
+
+1. `CombatClashProfile.post_clash_lockout_sec` subiu de `0.35` para `0.50`.
+2. Profiles Player/Wildcat foram atualizados via Godot/editor API para `post_clash_lockout_sec = 0.50`.
+3. `HitboxComponent.attack_window_closed` agora inclui `clashed_count`.
+4. `CombatClashComponent.combat_clash_attack_window_result` agora inclui `clashed_count`.
+5. Quando a janela fecha sem hit por clash, `result` passa a ser `"clashed"` em vez de `"parried"`.
+6. `hit_cancelled_by_clash` agora inclui `cancel_type = "mutual_clash"`.
+
+Validacao:
+
+1. Scripts abriram sem parse error.
+2. Profiles salvaram com `post_clash_lockout_sec = 0.5` via Godot/editor API.
+3. `res://cenas/mundo.tscn` rodou em smoke curto.
+4. `get_godot_errors` nao registrou parse/runtime error novo.
+5. Cena foi parada apos smoke.
+
+Proximo log dirigido deve confirmar:
+
+1. `post_clash_lockout_sec = 0.5`.
+2. `result = "clashed"`.
+3. `clashed_count = 1`.
+4. Nenhum ataque novo do defensor antes de 500ms apos `combat_clash_attack_cancelled`.
+
+## 25) Decisao de Tech Lead - Voltar Gameplay para Observer
+Data: 2026-05-13
+Status: aplicado e validado em smoke.
+
+Leitura de QA:
+
+1. A D2 provou tecnicamente o `mutual_clash`:
+   - `combat_clash_candidate`;
+   - `mutual_clash_resolved`;
+   - `hit_cancelled_by_clash`;
+   - `combat_clash_attack_cancelled`;
+   - stamina consumida pelos dois atores.
+2. Mesmo com lockout, a mecanica automatica global mudou demais o resultado do duelo Player x Wildcat.
+3. O core aprovado antes da sprint ja entregava o comportamento desejado:
+   - quem acerta primeiro aplica dano;
+   - Hit Reaction cancela o ataque do alvo;
+   - stamina do ataque interrompido ja foi gasta;
+   - o combate volta a girar por stamina, reposicionamento e timing.
+
+Decisao:
+
+1. Nao congelar V10 com Parry/Clash global automatico.
+2. Preservar codigo e telemetria D2 para uso futuro.
+3. Voltar Player/Wildcat para modo observer:
+   - `resolution_mode = "observer"`;
+   - `can_parry = false`;
+   - `emit_only_telemetry = true`.
+4. Manter `clash_window_sec = 0.12` e `post_clash_lockout_sec = 0.50` como dados futuros de design, sem efeito enquanto observer.
+5. Proxima tentativa deve ser uma skill/estado explicito de Parry/Clash, nao uma regra automatica global aplicada a todo ataque.
+
+Validacao:
+
+1. Profiles alterados via Godot/editor API.
+2. `res://cenas/mundo.tscn` rodou em smoke curto.
+3. `get_godot_errors` nao registrou parse/runtime error novo.
+4. Cena foi parada apos smoke.
+
+Estado operativo atual:
+
+1. Gameplay aprovado volta a ser o core Hit Reaction/Hit Interrupt.
+2. Combat Clash / Parry continua apenas como observabilidade e base tecnica futura.
