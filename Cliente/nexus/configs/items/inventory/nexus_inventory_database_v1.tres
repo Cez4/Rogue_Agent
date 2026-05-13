@@ -33,7 +33,23 @@ name = "Starter Dagger"
 weight = 1.0
 size = Vector2i(1, 2)
 properties = {
-"nexus_equipment_resource": "res://configs/items/weapons/dagger_starter.tres",
+"combat_active_sec": 0.1,
+"combat_attack_range": 36.0,
+"combat_attack_stamina_budget_hits": 2.0,
+"combat_attack_stamina_buffer_ratio": 0.5,
+"combat_attack_stamina_min_after_attack_ratio": 0.08,
+"combat_attack_stamina_resume_multiplier_when_exhausted": 2.0,
+"combat_cooldown_sec": 0.28,
+"combat_damage": 1.0,
+"combat_knockback_duration_sec": 0.15,
+"combat_knockback_force": 200.0,
+"combat_low_stamina_kite_cooldown_ms": 650,
+"combat_low_stamina_kite_distance": 140.0,
+"combat_low_stamina_kite_probability": 0.85,
+"combat_recover_sec": 0.2,
+"combat_stamina_cost": 20.0,
+"combat_weapon_kind": 0,
+"combat_windup_sec": 0.12,
 "nexus_equipment_slot": "weapon",
 "nexus_item_kind": "equipment"
 }
@@ -48,7 +64,7 @@ name = "Cloth Tunic"
 weight = 1.0
 size = Vector2i(2, 2)
 properties = {
-"nexus_equipment_resource": "res://configs/items/armors/cloth_starter.tres",
+"combat_armor_value": 1.0,
 "nexus_equipment_slot": "armor",
 "nexus_item_kind": "equipment"
 }
@@ -62,7 +78,7 @@ max_stack = 1
 name = "Wooden Charm"
 weight = 0.2
 properties = {
-"nexus_equipment_resource": "res://configs/items/necklaces/wooden_charm_starter.tres",
+"combat_bonus_health": 0.5,
 "nexus_equipment_slot": "necklace",
 "nexus_item_kind": "equipment"
 }

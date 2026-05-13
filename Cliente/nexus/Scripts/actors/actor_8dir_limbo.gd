@@ -336,7 +336,19 @@ func request_move_runtime(target_position: Vector2) -> void:
 		motor.request_move(target_position)
 
 
+var _cached_loadout: EquipmentLoadout = null
+
 func get_equipment_loadout_runtime() -> EquipmentLoadout:
+	if _cached_loadout != null:
+		return _cached_loadout
+		
+	var bridge := get_node_or_null(^"NexusInventoryBridgeComponent")
+	if bridge != null and bridge.has_method("get_inventory"):
+		var inv = bridge.call("get_inventory")
+		if inv != null and not inv.stacks.is_empty():
+			_cached_loadout = NexusEquipmentAdapter.build_readonly_loadout_from_inventory(inv)
+			return _cached_loadout
+			
 	return equipment_loadout
 
 

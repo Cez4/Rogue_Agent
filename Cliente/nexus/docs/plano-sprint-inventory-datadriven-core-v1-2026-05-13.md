@@ -39,38 +39,41 @@ O dicionário `properties` dos equipamentos precisará comportar estas chaves (e
 ## 5) Plano De Execucao
 
 ### Fase A - Setup & Branch
-- [ ] Criar nova branch `feat/inventory-datadriven-core-v1`.
-- [ ] Garantir que o Godot MCP inicializa sem erros no mapa `mundo.tscn`.
+- [x] Criar nova branch `feat/inventory-datadriven-core-v1`.
+- [x] Garantir que o Godot MCP inicializa sem erros no mapa `mundo.tscn`.
 
 ### Fase B - População Data-Driven na Database
-- [ ] Via Godot Editor Script, popular todas as estatísticas reais de combate (dano, stamina, tempos) dentro do dicionário `properties` do item `weapon_dagger_starter` no `nexus_inventory_database_v1.tres`.
-- [ ] Popular estatísticas para `armor_cloth_starter` e `necklace_wooden_charm_starter`.
-- [ ] Validar a extração dos dados usando script de teste isolado no MCP.
+- [x] Via Godot Editor Script, popular todas as estatísticas reais de combate (dano, stamina, tempos) dentro do dicionário `properties` do item `weapon_dagger_starter` no `nexus_inventory_database_v1.tres`.
+- [x] Popular estatísticas para `armor_cloth_starter` e `necklace_wooden_charm_starter`.
+- [x] Validar a extração dos dados usando script de teste isolado no MCP.
 
 ### Fase C - Refatoração do Adapter
-- [ ] Atualizar o script `NexusEquipmentAdapter.gd`.
-- [ ] Remover a lógica de leitura do `EQUIPMENT_RESOURCE_PROPERTY` (load de arquivo).
-- [ ] Adicionar lógica de parse dinâmico: `_build_weapon_data(properties)`, `_build_combat_action_data(properties)`, `_build_armor_data(properties)`.
-- [ ] O Adapter agora deve retornar recursos criados em memória (`WeaponData.new()`) com base nos dicionários.
+- [x] Atualizar o script `NexusEquipmentAdapter.gd`.
+- [x] Remover a lógica de leitura do `EQUIPMENT_RESOURCE_PROPERTY` (load de arquivo).
+- [x] Adicionar lógica de parse dinâmico: `_build_weapon_data(properties)`, `_build_combat_action_data(properties)`, `_build_armor_data(properties)`.
+- [x] O Adapter agora deve retornar recursos criados em memória (`WeaponData.new()`) com base nos dicionários.
 
 ### Fase D - Ligação no Player & Combate (O Teste de Fogo)
-- [ ] Forçar o `EquipmentLoadout` do Player a utilizar o output do novo Adapter (gerado a partir do bridge do inventário).
-- [ ] Rodar `mundo.tscn` no MCP.
-- [ ] Observar telemetria: verificar se `attack_started`, consumo de stamina e `hit_confirmed` com dano ocorrem perfeitamente usando as variáveis em memória.
-- [ ] Não devem surgir `NullReferenceExceptions` na HSM.
+- [x] Forçar o `EquipmentLoadout` do Player a utilizar o output do novo Adapter (gerado a partir do bridge do inventário).
+- [x] Rodar `mundo.tscn` no MCP.
+- [x] Observar telemetria: verificar se `attack_started`, consumo de stamina e `hit_confirmed` com dano ocorrem perfeitamente usando as variáveis em memória.
+- [x] Não devem surgir `NullReferenceExceptions` na HSM.
 
 ### Fase E - Limpeza Geral
-- [ ] Com o combate provado e funcional com o Adapter de Memória, excluir os antigos arquivos de configuração que ficaram obsoletos:
+- [x] Com o combate provado e funcional com o Adapter de Memória, excluir os antigos arquivos de configuração que ficaram obsoletos:
   - `configs/items/weapons/dagger_starter.tres`
   - `configs/items/armors/cloth_starter.tres`
   - `configs/items/necklaces/wooden_charm_starter.tres`
-- [ ] Limpar antigas menções de preload desses recursos caso existam.
-- [ ] Rodar validação final no mapa inteiro para certificar o fim do drift.
+- [x] Limpar antigas menções de preload desses recursos caso existam.
+- [x] Rodar validação final no mapa inteiro para certificar o fim do drift.
 
 ### Fase F - Freeze e QA Final
-- [ ] Registrar documentação final.
-- [ ] Garantir telemetria intacta.
-- [ ] Preparar documento de Freeze V13.
+- [x] Registrar documentação final.
+- [x] Garantir telemetria intacta.
+- [x] Preparar documento de Freeze V13.
+
+Resultado da Sprint:
+A refatoracao foi um sucesso absoluto. O combate gerou danos (`1.0`) e custos de stamina (`20.0`) diretamente do novo adapter gerado em memoria. Todos os antigas gambiarras (`.tres` obsoletos) foram deletados, assegurando que o plugin ExpressoBits e o unico *Single Source of Truth* do projeto.
 
 ## 6) Critérios De Aceite
 1. O combate do LimboAI funciona sem arquivos `.tres` de armas antigos.
