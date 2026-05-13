@@ -33,3 +33,15 @@ stack.properties["rolled_dex_bonus"] = 2
 ## Injeção Autoritatíva (A API de Inventory)
 NUNCA modifique a array de stacks manualmente para adicionar itens em gameplays ou scripts de QA. Fazer um `.append(stack)` corrompe o signal loop interno do C++ (`contents_changed`).
 Sempre utilize os metodos de autoridade `NexusInventoryAuthority.apply_add_item(...)` ou a API nativa do inventario: `inventory.add(item_id, amount, properties_dictionary)`.
+
+## Ponte Runtime V13/V14
+O Player nao consome mais `.tres` antigos de equipamento como fonte oficial. O caminho correto e:
+
+`InventoryDatabase` -> `InventoryBridge` -> `ItemStack.item_id/properties` -> `NexusEquipmentAdapter` -> `EquipmentLoadout`/`WeaponData`/`CombatActionData` em memoria.
+
+Regras obrigatorias:
+1. `NexusEquipmentAdapter` deve buscar a definition por `inventory.database.get_item(item_id)`.
+2. Dados base de combate ficam em `ItemDefinition.properties` (`combat_damage`, `combat_stamina_cost`, `combat_attack_range`, `combat_low_stamina_kite_distance`, etc.).
+3. Dados rolados ficam em `ItemStack.properties` (`rolled_damage`, `rolled_dex_bonus`, `rarity`, `item_level`).
+4. Runtime de combate deve consumir `actor.get_equipment_loadout_runtime()`.
+5. Nao usar `actor.equipment_loadout` diretamente em stamina, attack range, stop distance ou kiting do Player, pois isso ignora a ponte ExpressoBits e reintroduz a regressao de baixa stamina.

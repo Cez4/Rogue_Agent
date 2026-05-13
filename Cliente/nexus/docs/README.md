@@ -10,25 +10,25 @@ Branch de referencia: `feat/dynamic-loot-dex-v1`
 4. `plano-sprint-inventory-datadriven-core-v1-2026-05-13.md` (sprint concluida e congelada em V13)
 5. `status-freeze-funcional-v12-inventory-expresso-spike-2026-05-13.md` (freeze: Inventory ExpressoBits Spike aprovado)
 6. `plano-sprint-inventory-expresso-spike-v1-2026-05-13.md` (sprint concluida e congelada em V12)
-7. `status-freeze-funcional-v11-hitbreak-combat-feedback-2026-05-13.md` (freeze atual: Hitbreak Combat Feedback aprovado)
-3. `plano-sprint-hitbreak-combat-feedback-v1-2026-05-13.md` (sprint concluida e congelada em V11)
-4. `status-freeze-operacional-v10-combat-core-restored-2026-05-13.md` (Combat Core restaurado, Combat Clash temporal removido)
-5. `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md` (Hostile Hit Reaction Coverage aprovado)
-6. `plano-sprint-combat-clash-parry-v1-2026-05-12.md` (Combat Clash temporal auditado e removido do runtime)
-7. `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` (Wildcat Hit Reaction aprovado)
-8. `plano-sprint-wildcat-hit-reaction-v1-2026-05-12.md` (Wildcat + hostis concluidos)
-9. `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` (Player Hit Reaction/Hit Stun universal aprovado)
-10. `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` (sprint concluida)
-11. `status-freeze-funcional-v6-knockback-2026-05-12.md` (knockback modular/Data-Driven com baseline `200.0`)
-12. `plano-sprint-combat-knockback-component-v1-2026-05-12.md` (sprint concluida)
-13. `status-freeze-funcional-v5-actor-profiles-2026-05-12.md` (actor profiles concluido)
-14. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado historico)
-15. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
-16. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (freeze concluido)
-17. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (fechamento parcial congelado)
-18. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint concluida ate E3; ver V5)
-19. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
-20. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
+7. `status-freeze-funcional-v11-hitbreak-combat-feedback-2026-05-13.md` (freeze historico: Hitbreak Combat Feedback aprovado)
+8. `plano-sprint-hitbreak-combat-feedback-v1-2026-05-13.md` (sprint concluida e congelada em V11)
+9. `status-freeze-operacional-v10-combat-core-restored-2026-05-13.md` (Combat Core restaurado, Combat Clash temporal removido)
+10. `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md` (Hostile Hit Reaction Coverage aprovado)
+11. `plano-sprint-combat-clash-parry-v1-2026-05-12.md` (Combat Clash temporal auditado e removido do runtime)
+12. `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` (Wildcat Hit Reaction aprovado)
+13. `plano-sprint-wildcat-hit-reaction-v1-2026-05-12.md` (Wildcat + hostis concluidos)
+14. `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` (Player Hit Reaction/Hit Stun universal aprovado)
+15. `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` (sprint concluida)
+16. `status-freeze-funcional-v6-knockback-2026-05-12.md` (knockback modular/Data-Driven com baseline `200.0`)
+17. `plano-sprint-combat-knockback-component-v1-2026-05-12.md` (sprint concluida)
+18. `status-freeze-funcional-v5-actor-profiles-2026-05-12.md` (actor profiles concluido)
+19. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado historico)
+20. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
+21. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (freeze concluido)
+22. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (fechamento parcial congelado)
+23. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint concluida ate E3; ver V5)
+24. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
+25. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
 
 ## 1.1 Regra anti-drift (obrigatoria)
 1. Quando houver conflito entre docs antigos e estado atual:
@@ -106,8 +106,8 @@ Branch de referencia: `feat/dynamic-loot-dex-v1`
    - QA visual/log do Player, Wildcat, Brute, Base e Light aprovado;
    - Parry nao entra nesta sprint; deve virar `DefenseComponent`/`ParryComponent` futuro, data-driven por chance/atributo.
 12. Inventory ExpressoBits Spike v1:
-   - sprint atual na branch `feat/inventory-expresso-spike-v1`;
-   - usa `res://addons/inventory-system/` como core candidato;
+   - sprint concluida/congelada em V12 na branch `feat/inventory-expresso-spike-v1`;
+   - usa `res://addons/inventory-system/` como core oficial;
    - `res://addons/inventory-system-demos/` e referencia de estudo, nao runtime;
    - database inicial: `res://configs/items/inventory/nexus_inventory_database_v1.tres`;
    - integracao deve nascer por bridge/authority propria do Nexus;

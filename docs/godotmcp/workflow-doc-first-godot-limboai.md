@@ -88,14 +88,17 @@ LimboAI:
 - Nao alterar dano, stamina, Hit Reaction, Knockback, BT, HSM ou regra de morte dentro deste sistema.
 - Parry ficou fora do V11; deve virar sprint futura com `DefenseComponent`/`ParryComponent` data-driven por chance/atributo.
 
-## Regra - Inventory ExpressoBits Spike v1
-- Status atual: planejado em `Cliente/nexus/docs/plano-sprint-inventory-expresso-spike-v1-2026-05-13.md`.
-- Usar ExpressoBits Inventory System como candidato para database, inventario, grid, hotbar, recipes, loot e craft.
+## Regra - Inventory / ExpressoBits V12-V14
+- V12 congelou o ExpressoBits como core oficial de inventario/craft em `Cliente/nexus/docs/status-freeze-funcional-v12-inventory-expresso-spike-2026-05-13.md`.
+- V13 congelou o Inventory Data-Driven Core em `Cliente/nexus/docs/status-freeze-funcional-v13-inventory-datadriven-core-2026-05-13.md`.
+- V14 congelou Dynamic Loot & DEX em `Cliente/nexus/docs/status-freeze-funcional-v14-dynamic-loot-dex-2026-05-13.md`.
 - O core versionavel e `res://addons/inventory-system/`; demos sao referencia e nao runtime.
-- Database do projeto: `res://configs/items/inventory/nexus_inventory_database_v1.tres`.
-- Integrar por `NexusInventoryBridgeComponent`/authority propria; nao copiar `CharacterInventorySystem` do demo.
+- Database oficial: `res://configs/items/inventory/nexus_inventory_database_v1.tres`.
+- Integrar por `NexusInventoryBridgeComponent`/`NexusInventoryAuthority`; nao copiar `CharacterInventorySystem` do demo.
 - Cliente envia intents; host valida e executa.
-- Preservar `EquipmentLoadout` e combate V11 ate adapter aprovado por smoke + QA.
+- O Player resolve equipamento pela ponte ExpressoBits -> `NexusEquipmentAdapter` -> `EquipmentLoadout`/`WeaponData`/`CombatActionData` em memoria.
+- `ActorCombatProfileRuntime` e qualquer runtime de stamina/range/kiting devem usar `actor.get_equipment_loadout_runtime()`, nunca `actor.equipment_loadout` direto.
+- `ItemStack` seguro: `item_id`, `amount` e `properties`. Buscar molde com `inventory.database.get_item(item_id)`. Nunca usar `stack.item` nem `.append()` em `inventory.stacks`.
 - Recursos `.tres` do addon devem ser criados pelo editor visual ou Godot/editor API, nao por texto.
 
 ## Saida minima esperada por tarefa

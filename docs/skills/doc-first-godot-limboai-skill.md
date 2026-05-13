@@ -28,9 +28,11 @@ Regra:
 21. Hitbreak Combat Feedback v1 esta congelado em V11: feedback visual no atacante que causa interrupcao por `hit_reaction`, sem alterar dano/stamina/BT/HSM. Player, Wildcat, Brute, Base e Light estao integrados/aprovados. Usar `CombatFeedbackComponent` + `CombatFeedbackProfile`, shader/material duplicado em runtime e telemetria `hitbreak_success`.
 22. Parry ficou para depois do V11. Nao implementar ou reativar Parry/Clash no escopo de Hitbreak Feedback; abrir sprint futura com `DefenseComponent`/`ParryComponent` data-driven por chance/atributo.
 23. Apos QA D2, Player/Wildcat voltaram para observer. Nao reativar Clash/Parry global automatico sem novo plano de skill/estado explicito e aprovacao visual.
-24. Inventory ExpressoBits Spike v1 e a sprint atual apos V11. Usar `res://addons/inventory-system/` como core candidato, tratar `inventory-system-demos` apenas como referencia, criar integracao por bridge/authority propria e manter cliente como emissor de intents.
-25. Nao substituir `EquipmentLoadout` nem alterar combate com item/equipamento do addon antes de adapter aprovado, smoke MCP e QA visual/log.
-26. Ao trabalhar com ExpressoBits, evitar nomes genericos que colidem com classes nativas da GDExtension; `Slot` local deve ser `EquipmentSlot` ou nome prefixado.
+24. Inventory ExpressoBits Spike v1 esta congelado em V12. Usar `res://addons/inventory-system/` como core oficial, tratar `inventory-system-demos` apenas como referencia e manter cliente como emissor de intents.
+25. Inventory Data-Driven Core v1 esta congelado em V13. O Player nao deve depender de `.tres` antigos de equipamento; a database ExpressoBits e a fonte oficial, e `NexusEquipmentAdapter` monta `EquipmentLoadout`, `WeaponData` e `CombatActionData` em memoria.
+26. Dynamic Loot & DEX v1 esta congelado em V14. `ItemStack` deve ser lido por `item_id` + `properties`; buscar o molde com `inventory.database.get_item(item_id)`. Nunca usar `stack.item` nem inserir stack com `.append()`.
+27. Runtime de combate do Player deve consumir `actor.get_equipment_loadout_runtime()`. Nao voltar a ler `actor.equipment_loadout` diretamente em stamina, range, stop distance ou kiting, pois isso quebra a ponte V13/V14.
+28. Ao trabalhar com ExpressoBits, evitar nomes genericos que colidem com classes nativas da GDExtension; `Slot` local deve ser `EquipmentSlot` ou nome prefixado.
 
 Checklist rapido:
 - [ ] Doc interno lido.
@@ -49,7 +51,7 @@ Checklist rapido:
 - [ ] Implementou UI flutuante ou rastros (Trails)? Confirme que existe uma lógica de "Snap" para igualar as variáveis secundárias ao valor principal em casos de Respawn ou Cura instantânea, evitando desincronização.
 - [ ] Necessita alterar um arquivo `.tres` estruturalmente? Utilize estritamente `mcp_godot-mcp_execute_editor_script` para evitar corrupção de serialização.
 - [ ] Prova data-driven registrada: mesma logica, perfis `.tres` diferentes e telemetria mostrando comportamento distinto.
-- [ ] A sprint atual permite mexer em `Actor8DirLimbo`? Na Actor8Dir Facade Slimming v1, manter wrappers publicos e validar cada bloco no MCP.
+- [ ] A fase atual permite mexer em `Actor8DirLimbo`? Se estiver na Actor8Dir Facade Slimming v1, manter wrappers publicos e validar cada bloco no MCP.
 - [ ] O log tem spam de `kiting_started`? Nao avancar para Fase C nem mexer em kiting/movimento antes de decidir se e ruido aceito ou ajuste de telemetria.
 - [ ] Na sprint Actor Export/Profile Organization v1, a Fase E comecou por E0/auditoria antes de qualquer remocao de export?
 - [ ] Valores sociais/wander antigos em cenas migradas foram tratados como tuning fantasma e limpos somente via Godot/editor API?
@@ -63,7 +65,8 @@ Checklist rapido:
 - [ ] Vai implementar Hitbreak Feedback? Primeiro emita `hitbreak_success` sem visual, depois adicione `CombatFeedbackComponent` data-driven, validando material unico por ator e MCP/logs.
 - [ ] Vai transformar Clash/Parry em gameplay? Garanta que seja skill/estado explicito, nao regra global automatica em todo ataque.
 - [ ] Adicionou punicao de stamina em Clash/Parry? Confirme que ela nao duplica o custo ja pago pelo ataque interrompido e que veio de profile `.tres`, com QA aprovado.
-- [ ] Vai mexer em inventario/craft? Confirme que esta na branch `feat/inventory-expresso-spike-v1`, usando `plano-sprint-inventory-expresso-spike-v1-2026-05-13.md`, sem copiar demo para runtime e sem cliente mutar estado oficial.
+- [ ] Vai mexer em inventario/craft/loot/equipamento? Confirme a fase correta: V12 para bridge/authority, V13 para dados de equipamento na database, V14 para loot/DEX. Sem copiar demo para runtime, sem cliente mutar estado oficial, sem `stack.item`, sem `.append()` em `inventory.stacks`.
+- [ ] Vai mexer em stamina/range/kiting do Player? Confirme que a fonte de dados vem de `actor.get_equipment_loadout_runtime()` e que a telemetria mostra `attack_stamina_cost.required` coerente com a database ExpressoBits.
 
 Fontes base:
 - Godot: https://docs.godotengine.org/en/stable/
