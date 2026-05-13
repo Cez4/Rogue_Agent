@@ -28,9 +28,15 @@ Esse documento manda no estado da fase atual e consolida:
 8. Orb UI, Health Regen fora de combate, stamina/kiting e telemetria continuam preservados.
 
 ## Sprint atual em execucao
+- `Cliente/nexus/docs/plano-sprint-inventory-expresso-spike-v1-2026-05-13.md`
+- Branch: `feat/inventory-expresso-spike-v1`
+
+Escopo atual: spike doc-first do ExpressoBits Inventory System como base data-driven de inventario, item database, craft, loot e hotbar. O addon core fica em `Cliente/nexus/addons/inventory-system/`; `inventory-system-demos` e apenas referencia de estudo e nao deve virar runtime do projeto. A database inicial do Nexus e `Cliente/nexus/configs/items/inventory/nexus_inventory_database_v1.tres`.
+
+Sprint anterior:
 - `Cliente/nexus/docs/plano-sprint-hitbreak-combat-feedback-v1-2026-05-13.md`
 
-Escopo atual: Hitbreak Combat Feedback V11 congelado. A sprint criou `CombatFeedbackComponent`, `CombatFeedbackProfile`, shader simples e integrou Player, Wildcat, HostileEnemyBase, HostileEnemyLight e HostileEnemyBrute. QA visual/log aprovado para todos, com `combat_feedback_hitbreak_started/finished` em `mode = shader`. Isto e apenas game feel visual; nao altera dano, stamina, Hit Reaction, Knockback, BT ou HSM.
+Escopo anterior: Hitbreak Combat Feedback V11 congelado. A sprint criou `CombatFeedbackComponent`, `CombatFeedbackProfile`, shader simples e integrou Player, Wildcat, HostileEnemyBase, HostileEnemyLight e HostileEnemyBrute. QA visual/log aprovado para todos, com `combat_feedback_hitbreak_started/finished` em `mode = shader`. Isto e apenas game feel visual; nao altera dano, stamina, Hit Reaction, Knockback, BT ou HSM.
 
 Historico imediato: Combat Clash temporal foi auditado e removido do runtime. A prova tecnica de `mutual_clash` fica registrada como pesquisa historica, mas Player/Wildcat nao carregam mais `CombatClashComponent` nem profiles de Clash. O core aprovado continua sendo Hit Reaction/Hit Interrupt. Qualquer Parry futuro deve nascer como `DefenseComponent`/`ParryComponent` simples, modular e data-driven por chance/atributo, consultado antes do dano.
 

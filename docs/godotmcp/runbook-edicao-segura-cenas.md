@@ -187,6 +187,18 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 9. Separar morte de hitbreak: `reason = death` nao deve acionar brilho de sucesso.
 10. Parry ficou fora do V11. Nao implementar ou reativar Parry/Clash dentro do Hitbreak Feedback; abrir sprint futura com `DefenseComponent`/`ParryComponent` data-driven.
 
+## Sequenciamento Inventory ExpressoBits Spike v1
+1. `Cliente/nexus/docs/plano-sprint-inventory-expresso-spike-v1-2026-05-13.md` e a sprint atual apos o freeze V11.
+2. O addon core e `res://addons/inventory-system/`.
+3. `res://addons/inventory-system-demos/` e somente referencia de estudo/consulta e nao deve virar runtime do projeto.
+4. A database oficial inicial e `res://configs/items/inventory/nexus_inventory_database_v1.tres`.
+5. Nao copiar `CharacterInventorySystem` do demo para o projeto; criar bridge propria, pequena e autoritativa.
+6. Cliente envia intent; host valida e executa `add/remove/transfer/equip/craft`.
+7. Nao trocar `EquipmentLoadout` nem alterar combate antes de adapter aprovado e QA.
+8. Nao editar `.tres` estruturais por texto; usar editor visual do addon ou Godot/editor API.
+9. Se houver colisao com classes nativas do addon, renomear nomes genericos nossos; exemplo aprovado: `Slot` -> `EquipmentSlot`.
+10. Validacao minima por bloco: `get_godot_errors`, smoke de `InventoryDatabase`, smoke de `Inventory/GridInventory`, telemetria de intent/commit/reject.
+
 ## Contrato Universal Hit Reaction Component v1
 1. A decisao arquitetural obrigatoria e componente plug-and-play:
    - `HitReactionComponent` copiavel para Player, NPC amigavel ou inimigo;

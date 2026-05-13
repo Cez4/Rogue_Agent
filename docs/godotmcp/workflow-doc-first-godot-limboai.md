@@ -88,6 +88,16 @@ LimboAI:
 - Nao alterar dano, stamina, Hit Reaction, Knockback, BT, HSM ou regra de morte dentro deste sistema.
 - Parry ficou fora do V11; deve virar sprint futura com `DefenseComponent`/`ParryComponent` data-driven por chance/atributo.
 
+## Regra - Inventory ExpressoBits Spike v1
+- Status atual: planejado em `Cliente/nexus/docs/plano-sprint-inventory-expresso-spike-v1-2026-05-13.md`.
+- Usar ExpressoBits Inventory System como candidato para database, inventario, grid, hotbar, recipes, loot e craft.
+- O core versionavel e `res://addons/inventory-system/`; demos sao referencia e nao runtime.
+- Database do projeto: `res://configs/items/inventory/nexus_inventory_database_v1.tres`.
+- Integrar por `NexusInventoryBridgeComponent`/authority propria; nao copiar `CharacterInventorySystem` do demo.
+- Cliente envia intents; host valida e executa.
+- Preservar `EquipmentLoadout` e combate V11 ate adapter aprovado por smoke + QA.
+- Recursos `.tres` do addon devem ser criados pelo editor visual ou Godot/editor API, nao por texto.
+
 ## Saida minima esperada por tarefa
 - Contexto consultado (links usados).
 - Mudanca aplicada.

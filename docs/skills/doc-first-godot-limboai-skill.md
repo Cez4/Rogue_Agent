@@ -28,6 +28,9 @@ Regra:
 21. Hitbreak Combat Feedback v1 esta congelado em V11: feedback visual no atacante que causa interrupcao por `hit_reaction`, sem alterar dano/stamina/BT/HSM. Player, Wildcat, Brute, Base e Light estao integrados/aprovados. Usar `CombatFeedbackComponent` + `CombatFeedbackProfile`, shader/material duplicado em runtime e telemetria `hitbreak_success`.
 22. Parry ficou para depois do V11. Nao implementar ou reativar Parry/Clash no escopo de Hitbreak Feedback; abrir sprint futura com `DefenseComponent`/`ParryComponent` data-driven por chance/atributo.
 23. Apos QA D2, Player/Wildcat voltaram para observer. Nao reativar Clash/Parry global automatico sem novo plano de skill/estado explicito e aprovacao visual.
+24. Inventory ExpressoBits Spike v1 e a sprint atual apos V11. Usar `res://addons/inventory-system/` como core candidato, tratar `inventory-system-demos` apenas como referencia, criar integracao por bridge/authority propria e manter cliente como emissor de intents.
+25. Nao substituir `EquipmentLoadout` nem alterar combate com item/equipamento do addon antes de adapter aprovado, smoke MCP e QA visual/log.
+26. Ao trabalhar com ExpressoBits, evitar nomes genericos que colidem com classes nativas da GDExtension; `Slot` local deve ser `EquipmentSlot` ou nome prefixado.
 
 Checklist rapido:
 - [ ] Doc interno lido.
@@ -60,6 +63,7 @@ Checklist rapido:
 - [ ] Vai implementar Hitbreak Feedback? Primeiro emita `hitbreak_success` sem visual, depois adicione `CombatFeedbackComponent` data-driven, validando material unico por ator e MCP/logs.
 - [ ] Vai transformar Clash/Parry em gameplay? Garanta que seja skill/estado explicito, nao regra global automatica em todo ataque.
 - [ ] Adicionou punicao de stamina em Clash/Parry? Confirme que ela nao duplica o custo ja pago pelo ataque interrompido e que veio de profile `.tres`, com QA aprovado.
+- [ ] Vai mexer em inventario/craft? Confirme que esta na branch `feat/inventory-expresso-spike-v1`, usando `plano-sprint-inventory-expresso-spike-v1-2026-05-13.md`, sem copiar demo para runtime e sem cliente mutar estado oficial.
 
 Fontes base:
 - Godot: https://docs.godotengine.org/en/stable/

@@ -25,3 +25,6 @@ Cliente/godot/*.exe
 
 # Local plugin storage (do not version)
 Pluguins/
+
+# Third-party addon demos used only as local reference
+Cliente/nexus/addons/inventory-system-demos/

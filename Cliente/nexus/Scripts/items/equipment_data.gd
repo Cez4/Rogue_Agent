@@ -3,10 +3,10 @@ extends ItemData
 
 @export var stat_modifiers: Array[StatModifier] = []
 
-enum Slot {
+enum EquipmentSlot {
 	WEAPON,
 	ARMOR,
 	NECKLACE
 }
 
-@export var slot: Slot = Slot.WEAPON
+@export var slot: EquipmentSlot = EquipmentSlot.WEAPON
