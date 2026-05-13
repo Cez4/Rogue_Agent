@@ -28,7 +28,7 @@ Esse documento manda no estado da fase atual e consolida:
 ## Sprint atual em execucao
 - `Cliente/nexus/docs/plano-sprint-hitbreak-combat-feedback-v1-2026-05-13.md`
 
-Escopo atual: planejar e implementar feedback visual data-driven para Hitbreak. Quando um atacante confirma hit e interrompe o ataque do alvo via Hit Reaction, o atacante deve receber brilho/flash curto por `CombatFeedbackComponent` + `CombatFeedbackProfile`. Isto e apenas game feel visual; nao altera dano, stamina, Hit Reaction, Knockback, BT ou HSM.
+Escopo atual: implementar feedback visual data-driven para Hitbreak. A Fase A ja criou e validou a telemetria `hitbreak_success`: quando um atacante confirma hit e interrompe o ataque do alvo via Hit Reaction, o log agora liga atacante, alvo e sequencias de ataque no mesmo evento. A proxima fase cria o brilho/flash curto por `CombatFeedbackComponent` + `CombatFeedbackProfile`. Isto e apenas game feel visual; nao altera dano, stamina, Hit Reaction, Knockback, BT ou HSM.
 
 Historico imediato: Combat Clash temporal foi auditado e removido do runtime. A prova tecnica de `mutual_clash` fica registrada como pesquisa historica, mas Player/Wildcat nao carregam mais `CombatClashComponent` nem profiles de Clash. O core aprovado continua sendo Hit Reaction/Hit Interrupt. Qualquer Parry futuro deve nascer como `DefenseComponent`/`ParryComponent` simples, modular e data-driven por chance/atributo, consultado antes do dano.
 

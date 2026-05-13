@@ -6,6 +6,15 @@ extends Node
 @export var hsm_path: NodePath = ^"../LimboHSM"
 @export var profile: Resource
 
+const LAST_DAMAGE_SOURCE_ACTOR_NAME_META := &"last_damage_source_actor_name"
+const LAST_DAMAGE_SOURCE_ACTOR_PATH_META := &"last_damage_source_actor_path"
+const LAST_DAMAGE_SOURCE_ATTACK_SEQUENCE_META := &"last_damage_source_attack_sequence_id"
+const LAST_DAMAGE_SOURCE_HITBOX_SEQUENCE_META := &"last_damage_source_hitbox_sequence_id"
+const HITBREAK_SOURCE_ACTOR_NAME_META := &"hitbreak_source_actor_name"
+const HITBREAK_SOURCE_ACTOR_PATH_META := &"hitbreak_source_actor_path"
+const HITBREAK_SOURCE_ATTACK_SEQUENCE_META := &"hitbreak_source_attack_sequence_id"
+const HITBREAK_SOURCE_HITBOX_SEQUENCE_META := &"hitbreak_source_hitbox_sequence_id"
+
 var _target_actor: Node
 var _health: HealthComponent
 var _hsm: LimboHSM
@@ -44,6 +53,10 @@ func request_hit_reaction(amount: float, knockback: Vector2) -> bool:
 
 	if _target_actor != null and bool(profile.get("interrupt_attack")):
 		_target_actor.set_meta(&"attack_interrupt_reason", &"hit_reaction")
+		if _is_target_attack_pending():
+			_mark_hitbreak_source_from_last_damage()
+		else:
+			_clear_hitbreak_source()
 	_pending_request = {
 		"profile": profile,
 		"damage": amount,
@@ -59,6 +72,8 @@ func request_hit_reaction(amount: float, knockback: Vector2) -> bool:
 	var consumed: bool = bool(_hsm.dispatch(&"hit_reaction!"))
 	if not consumed:
 		_pending_request.clear()
+		_clear_attack_interrupt_reason()
+		_clear_hitbreak_source()
 		_emit_skipped("hsm_event_not_consumed", amount)
 		return false
 	return true
@@ -122,6 +137,49 @@ func _emit_skipped(reason: String, amount: float) -> void:
 		"reason": reason,
 		"damage": amount
 	})
+
+
+func _is_target_attack_pending() -> bool:
+	if _target_actor == null:
+		return false
+	if not _target_actor.has_method("is_attack_pending_runtime"):
+		return true
+	return bool(_target_actor.call("is_attack_pending_runtime"))
+
+
+func _mark_hitbreak_source_from_last_damage() -> void:
+	if _target_actor == null:
+		return
+	_clear_hitbreak_source()
+	if not _target_actor.has_meta(LAST_DAMAGE_SOURCE_ACTOR_NAME_META):
+		return
+	_target_actor.set_meta(HITBREAK_SOURCE_ACTOR_NAME_META, str(_target_actor.get_meta(LAST_DAMAGE_SOURCE_ACTOR_NAME_META)))
+	if _target_actor.has_meta(LAST_DAMAGE_SOURCE_ACTOR_PATH_META):
+		_target_actor.set_meta(HITBREAK_SOURCE_ACTOR_PATH_META, str(_target_actor.get_meta(LAST_DAMAGE_SOURCE_ACTOR_PATH_META)))
+	if _target_actor.has_meta(LAST_DAMAGE_SOURCE_ATTACK_SEQUENCE_META):
+		_target_actor.set_meta(HITBREAK_SOURCE_ATTACK_SEQUENCE_META, int(_target_actor.get_meta(LAST_DAMAGE_SOURCE_ATTACK_SEQUENCE_META)))
+	if _target_actor.has_meta(LAST_DAMAGE_SOURCE_HITBOX_SEQUENCE_META):
+		_target_actor.set_meta(HITBREAK_SOURCE_HITBOX_SEQUENCE_META, int(_target_actor.get_meta(LAST_DAMAGE_SOURCE_HITBOX_SEQUENCE_META)))
+
+
+func _clear_hitbreak_source() -> void:
+	if _target_actor == null:
+		return
+	if _target_actor.has_meta(HITBREAK_SOURCE_ACTOR_NAME_META):
+		_target_actor.remove_meta(HITBREAK_SOURCE_ACTOR_NAME_META)
+	if _target_actor.has_meta(HITBREAK_SOURCE_ACTOR_PATH_META):
+		_target_actor.remove_meta(HITBREAK_SOURCE_ACTOR_PATH_META)
+	if _target_actor.has_meta(HITBREAK_SOURCE_ATTACK_SEQUENCE_META):
+		_target_actor.remove_meta(HITBREAK_SOURCE_ATTACK_SEQUENCE_META)
+	if _target_actor.has_meta(HITBREAK_SOURCE_HITBOX_SEQUENCE_META):
+		_target_actor.remove_meta(HITBREAK_SOURCE_HITBOX_SEQUENCE_META)
+
+
+func _clear_attack_interrupt_reason() -> void:
+	if _target_actor == null:
+		return
+	if _target_actor.has_meta(&"attack_interrupt_reason"):
+		_target_actor.remove_meta(&"attack_interrupt_reason")
 
 
 func _actor_name() -> String:

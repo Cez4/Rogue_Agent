@@ -73,7 +73,7 @@ func _on_area_entered(area: Area2D) -> void:
 		knockback_vector = dir * knockback_force
 
 	if hurtbox.has_method("take_hit_with_knockback_duration"):
-		hurtbox.take_hit_with_knockback_duration(damage, knockback_vector, knockback_duration_sec, self)
+		hurtbox.take_hit_with_knockback_duration(damage, knockback_vector, knockback_duration_sec, self, attack_sequence_id, _attack_seq)
 	else:
 		hurtbox.take_hit(damage, knockback_vector, self)
 		

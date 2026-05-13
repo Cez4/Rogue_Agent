@@ -1,8 +1,9 @@
 # Plano Sprint - Hitbreak Combat Feedback v1
 
 Data: 2026-05-13
-Status: PLANEJADA - AGUARDANDO BRANCH PROPRIA
+Status: EM EXECUCAO - FASE A CONCLUIDA
 Baseline obrigatorio: `status-freeze-operacional-v10-combat-core-restored-2026-05-13.md`
+Branch: `feat/hitbreak-combat-feedback-v1`
 
 ## 1) Objetivo
 Criar feedback visual global, modular e data-driven para o ator que causa um **Hitbreak**.
@@ -53,7 +54,7 @@ Limite atual:
 
 1. O log sabe quando o alvo foi interrompido.
 2. O log sabe quem confirmou o hit.
-3. Mas ainda nao existe um evento unico `hitbreak_success` ligando atacante e alvo no mesmo fluxo.
+3. A Fase A criou o evento unico `hitbreak_success`, ligando atacante e alvo no mesmo fluxo.
 4. O atacante ainda nao possui componente visual universal para reagir a esse sucesso.
 
 ## 5) Decisao Arquitetural
@@ -180,17 +181,34 @@ Preferencia:
 ## 11) Plano De Execucao
 
 ### Fase A - Telemetria Sem Mudanca Visual
-- [ ] Revisar freeze V10 e logs de hitbreak aprovados.
+- [x] Revisar freeze V10 e logs de hitbreak aprovados.
 - [ ] Ler docs oficiais Godot sobre `ShaderMaterial`, `CanvasItem`, `AnimatedSprite2D` e `Tween`.
-- [ ] Mapear como carregar `source_actor` do `HitboxComponent` ate o `HitReactionComponent`.
-- [ ] Emitir evento `hitbreak_success` sem tocar visual.
-- [ ] Confirmar por log:
+- [x] Mapear como carregar `source_actor` do `HitboxComponent` ate o `HitReactionComponent`.
+- [x] Emitir evento `hitbreak_success` sem tocar visual.
+- [x] Confirmar por log:
   - atacante;
   - alvo;
   - `source_attack_sequence_id`;
   - `target_attack_sequence_id` quando existir;
   - `reason = hit_reaction`.
-- [ ] Validar MCP: `open_scene -> play_scene -> get_godot_errors`.
+- [x] Validar MCP: `open_scene -> play_scene -> get_godot_errors`.
+
+Resultado Fase A:
+
+1. `HitboxComponent` passa `attack_sequence_id` e `hitbox_sequence_id` para a `HurtboxComponent`.
+2. `HurtboxComponent` marca temporariamente no ator atingido a fonte do dano atual.
+3. `HitReactionComponent` copia essa fonte para metadados de Hitbreak somente se o alvo estava com ataque pendente.
+4. `state_attack_8dir.gd` emite `hitbreak_success` quando o ataque sai por `reason = hit_reaction`.
+5. Interrupcao por `death` continua separada e nao gera falso `hitbreak_success`.
+6. Nao houve mudanca visual, shader, cena, BT, HSM, dano, stamina ou Knockback nesta fase.
+
+Evidencia MCP:
+
+1. `mundo.tscn` abriu e rodou sem parse/runtime error novo.
+2. Log comprovado:
+   - `attack_interrupted` em `HostileEnemyLight`, `reason = hit_reaction`;
+   - `hitbreak_success` com `actor = Player`, `target = HostileEnemyLight`, `source_attack_sequence_id`, `source_hitbox_sequence_id`, `target_attack_sequence_id` e `target_phase`.
+3. Log tambem separou `attack_interrupted`, `reason = death`, sem emitir `hitbreak_success`.
 
 ### Fase B - Componente Visual Em Um Ator
 - [ ] Criar `CombatFeedbackProfile`.
@@ -264,4 +282,3 @@ Sprint pronta somente quando:
 5. Propagacao para hostis somente apos QA visual.
 6. Docs/runbooks/skills atualizados.
 7. Freeze criado somente apos aprovacao visual e telemetria.
-

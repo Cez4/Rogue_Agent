@@ -3,6 +3,11 @@ extends LimboState
 @export var action_data: Resource
 @export var hitbox_path: NodePath = ^"AttackHitbox"
 
+const HITBREAK_SOURCE_ACTOR_NAME_META := &"hitbreak_source_actor_name"
+const HITBREAK_SOURCE_ACTOR_PATH_META := &"hitbreak_source_actor_path"
+const HITBREAK_SOURCE_ATTACK_SEQUENCE_META := &"hitbreak_source_attack_sequence_id"
+const HITBREAK_SOURCE_HITBOX_SEQUENCE_META := &"hitbreak_source_hitbox_sequence_id"
+
 var _cooldown_until_sec: float = 0.0
 var _attack_sequence_counter: int = 0
 var _attack_sequence_id: int = 0
@@ -105,6 +110,7 @@ func _exit() -> void:
 				"phase": String(_attack_phase),
 				"reason": String(interrupt_reason)
 			})
+			_emit_hitbreak_success_if_needed(interrupt_reason)
 		agent.clear_attack_pending()
 
 
@@ -188,9 +194,51 @@ func _resolve_interrupt_reason() -> StringName:
 	if health != null and not health.is_alive():
 		if agent.has_meta(&"attack_interrupt_reason"):
 			agent.remove_meta(&"attack_interrupt_reason")
+		_clear_hitbreak_source_meta()
 		return &"death"
 	if agent.has_meta(&"attack_interrupt_reason"):
 		var reason: StringName = StringName(str(agent.get_meta(&"attack_interrupt_reason")))
 		agent.remove_meta(&"attack_interrupt_reason")
 		return reason
+	_clear_hitbreak_source_meta()
 	return &"state_exit"
+
+
+func _emit_hitbreak_success_if_needed(interrupt_reason: StringName) -> void:
+	if agent == null:
+		return
+	if interrupt_reason != &"hit_reaction":
+		_clear_hitbreak_source_meta()
+		return
+	if not agent.has_meta(HITBREAK_SOURCE_ACTOR_NAME_META):
+		_clear_hitbreak_source_meta()
+		return
+	var source_actor_name: String = str(agent.get_meta(HITBREAK_SOURCE_ACTOR_NAME_META))
+	var payload := {
+		"actor": source_actor_name,
+		"target": str(agent.name),
+		"target_attack_sequence_id": _attack_sequence_id,
+		"target_phase": String(_attack_phase),
+		"reason": "hit_reaction"
+	}
+	if agent.has_meta(HITBREAK_SOURCE_ACTOR_PATH_META):
+		payload["source_actor_path"] = str(agent.get_meta(HITBREAK_SOURCE_ACTOR_PATH_META))
+	if agent.has_meta(HITBREAK_SOURCE_ATTACK_SEQUENCE_META):
+		payload["source_attack_sequence_id"] = int(agent.get_meta(HITBREAK_SOURCE_ATTACK_SEQUENCE_META))
+	if agent.has_meta(HITBREAK_SOURCE_HITBOX_SEQUENCE_META):
+		payload["source_hitbox_sequence_id"] = int(agent.get_meta(HITBREAK_SOURCE_HITBOX_SEQUENCE_META))
+	CombatTelemetry.emit_event(&"hitbreak_success", payload)
+	_clear_hitbreak_source_meta()
+
+
+func _clear_hitbreak_source_meta() -> void:
+	if agent == null:
+		return
+	if agent.has_meta(HITBREAK_SOURCE_ACTOR_NAME_META):
+		agent.remove_meta(HITBREAK_SOURCE_ACTOR_NAME_META)
+	if agent.has_meta(HITBREAK_SOURCE_ACTOR_PATH_META):
+		agent.remove_meta(HITBREAK_SOURCE_ACTOR_PATH_META)
+	if agent.has_meta(HITBREAK_SOURCE_ATTACK_SEQUENCE_META):
+		agent.remove_meta(HITBREAK_SOURCE_ATTACK_SEQUENCE_META)
+	if agent.has_meta(HITBREAK_SOURCE_HITBOX_SEQUENCE_META):
+		agent.remove_meta(HITBREAK_SOURCE_HITBOX_SEQUENCE_META)
