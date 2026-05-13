@@ -37,6 +37,7 @@ Regra:
 30. Ao salvar inventario com SaveFlow, usar fonte customizada (`SaveFlowDataSource`) e preservar somente `ItemStack.item_id`, `amount` e `properties`; nunca salvar `ItemDefinition`, nunca usar `stack.item` e nunca varrer o Player inteiro com `NodeSource` para persistir inventario.
 31. Load valido de inventario deve acontecer antes dos `starting_items` ou marcar hidratacao explicita para impedir reroll da adaga starter. Prova obrigatoria: mesmo `rolled_damage`/`rolled_dex_bonus` apos save/load.
 32. SaveFlow Lite Persistence v1 esta congelado em V15: `PlayerInventorySource` salva/carrega o inventario do Player via `NexusInventoryBridgeComponent`, o smoke aprovado gera `saveflow_inventory_smoke_result ok=true payload_restored=true`, e qualquer expansao para quests/world flags deve nascer em nova sprint.
+33. SaveFlow Slots & Host Authority v1 deve criar `NexusSaveAuthority` antes de UI/autosave: nenhum botao, cliente ou sistema de gameplay deve chamar SaveFlow direto para estado autoritativo.
 
 Checklist rapido:
 - [ ] Doc interno lido.

@@ -44,6 +44,11 @@ Esse documento manda no estado da fase atual e consolida:
 
 Escopo atual: SaveFlow Lite Persistence V15 concluido para inventario do Player. O Player possui `SaveGraphRoot/PlayerInventorySource`, o source salva/carrega via `NexusInventoryBridgeComponent`, e o load valido preserva as propriedades roladas do `ItemStack`.
 
+## Proxima sprint planejada
+- `Cliente/nexus/docs/plano-sprint-saveflow-slots-host-authority-v1-2026-05-13.md`
+
+Escopo planejado: criar `NexusSaveAuthority`, slot ativo `profile_0` e smoke entre sessoes para provar persistencia real da dagger sem reroll, mantendo SaveFlow atras da autoridade Nexus.
+
 Sprint anterior:
 - `Cliente/nexus/docs/plano-sprint-dynamic-loot-dex-v1-2026-05-13.md`
 

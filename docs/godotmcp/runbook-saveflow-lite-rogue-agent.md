@@ -5,6 +5,7 @@ Orientar integracoes com o SaveFlow Lite sem quebrar os contratos congelados do 
 
 Este runbook vale para a sprint:
 - `Cliente/nexus/docs/plano-sprint-saveflow-lite-persistence-v1-2026-05-13.md`
+- `Cliente/nexus/docs/plano-sprint-saveflow-slots-host-authority-v1-2026-05-13.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v15-saveflow-lite-persistence-2026-05-13.md`
 
 ## Regra Principal
@@ -38,6 +39,12 @@ Regras:
 2. Cliente nao deve chamar save/load autoritativo de inventario, quests ou mundo.
 3. Em modo offline/dev, a instancia local e tratada como host.
 4. Qualquer UI de save deve chamar uma fachada/authority do Nexus, nao manipular SaveFlow diretamente em gameplay multiplayer.
+
+Fachada planejada para V16:
+1. `NexusSaveAuthority` deve ser a unica entrada de save/load de gameplay.
+2. UI/dev commands chamam `NexusSaveAuthority`.
+3. `NexusSaveAuthority` chama SaveFlow depois de validar autoridade.
+4. Sources continuam donos da serializacao por dominio.
 
 ## Escolha De Fonte SaveFlow
 Use:
