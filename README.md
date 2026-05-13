@@ -3,9 +3,10 @@
 Este README aponta a fonte oficial de status tecnico do projeto.
 
 ## Fonte oficial de status (freeze atual)
-- `Cliente/nexus/docs/status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md`
+- `Cliente/nexus/docs/status-freeze-operacional-v10-combat-core-restored-2026-05-13.md`
 
 Freezes imediatamente anteriores:
+- `Cliente/nexus/docs/status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v7-hit-reaction-2026-05-12.md`
 
@@ -17,14 +18,12 @@ Freeze de game feel fisico:
 
 Esse documento manda no estado da fase atual e consolida:
 1. Combate tatico BT/LimboAI congelado.
-2. Spam de clique de ataque sem cancelar kiting automatico.
-3. Baixa stamina baseada em custo real de ataque, sem zona morta.
-4. NavMesh/tuning/stamina/walk atuais aprovados como baseline de QA.
-5. Orb UI V3, Stamina/Stagger e telemetria continuam preservados como base funcional.
-6. Knockback V6 permanece congelado com `knockback_force = 200.0`.
-7. Hit Reaction V7 esta aprovado: Player toca `Dagger01_TakeDamage_*` inteiro, olhando para a origem do golpe, sem limpar alvo de combate.
-8. Hit Reaction V8 esta aprovado no Wildcat.
-9. Hit Reaction V9 esta aprovado nos hostis `HostileEnemyBase`, `HostileEnemyLight` e `HostileEnemyBrute`.
+2. Hit Reaction/Hit Interrupt restaurado como core aprovado.
+3. Combat Clash temporal removido do runtime.
+4. Parry futuro deve ser `DefenseComponent`/`ParryComponent` por chance/atributo, nao `mutual_clash` global.
+5. Knockback V6 permanece congelado com `knockback_force = 200.0`.
+6. Hit Reaction V7/V8/V9 seguem aprovados para Player, Wildcat e hostis.
+7. Orb UI, Health Regen fora de combate, stamina/kiting e telemetria continuam preservados.
 
 ## Sprint atual em execucao
 - `Cliente/nexus/docs/plano-sprint-combat-clash-parry-v1-2026-05-12.md`

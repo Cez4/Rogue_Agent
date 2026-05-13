@@ -4,25 +4,27 @@ Data de consolidacao: 2026-05-12
 Branch de referencia: `feat/combat-clash-parry-telemetry-v1`
 
 ## 1) Fonte principal de estado
-1. `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md` (freeze atual: Hostile Hit Reaction Coverage aprovado)
-2. `plano-sprint-combat-clash-parry-v1-2026-05-12.md` (sprint atual: Combat Clash temporal auditado e removido do runtime)
-3. `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` (Wildcat Hit Reaction aprovado)
-4. `plano-sprint-wildcat-hit-reaction-v1-2026-05-12.md` (Wildcat + hostis concluidos)
-5. `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` (Player Hit Reaction/Hit Stun universal aprovado)
-6. `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` (sprint concluida)
-7. `status-freeze-funcional-v6-knockback-2026-05-12.md` (knockback modular/Data-Driven com baseline `200.0`)
-8. `plano-sprint-combat-knockback-component-v1-2026-05-12.md` (sprint concluida)
-9. `status-freeze-funcional-v5-actor-profiles-2026-05-12.md` (actor profiles concluido)
-10. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado historico)
-11. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
-12. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (freeze concluido)
-13. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (fechamento parcial congelado)
-14. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint concluida ate E3; ver V5)
-15. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
-16. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
+1. `status-freeze-operacional-v10-combat-core-restored-2026-05-13.md` (freeze atual: Combat Core restaurado, Combat Clash temporal removido)
+2. `status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md` (Hostile Hit Reaction Coverage aprovado)
+3. `plano-sprint-combat-clash-parry-v1-2026-05-12.md` (Combat Clash temporal auditado e removido do runtime)
+4. `status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md` (Wildcat Hit Reaction aprovado)
+5. `plano-sprint-wildcat-hit-reaction-v1-2026-05-12.md` (Wildcat + hostis concluidos)
+6. `status-freeze-funcional-v7-hit-reaction-2026-05-12.md` (Player Hit Reaction/Hit Stun universal aprovado)
+7. `plano-sprint-universal-hit-reaction-component-v1-2026-05-12.md` (sprint concluida)
+8. `status-freeze-funcional-v6-knockback-2026-05-12.md` (knockback modular/Data-Driven com baseline `200.0`)
+9. `plano-sprint-combat-knockback-component-v1-2026-05-12.md` (sprint concluida)
+10. `status-freeze-funcional-v5-actor-profiles-2026-05-12.md` (actor profiles concluido)
+11. `status-freeze-total-combate-tatico-2026-05-11.md` (freeze total aprovado historico)
+12. `recomendacoes-techlead-pos-freeze-2026-05-11.md` (proximos passos recomendados)
+13. `plano-sprint-health-regen-datadriven-v1-2026-05-11.md` (freeze concluido)
+14. `plano-sprint-actor8dir-facade-slimming-v1-2026-05-11.md` (fechamento parcial congelado)
+15. `plano-sprint-actor-export-profile-organization-v1-2026-05-11.md` (sprint concluida ate E3; ver V5)
+16. `plano-sprint-kiting-datadriven-v1-2026-05-11.md` (sprint concluida)
+17. `status-freeze-funcional-v3-limbo-modular-2026-05-11.md` (arquitetura modular LimboAI)
 
 ## 1.1 Regra anti-drift (obrigatoria)
 1. Quando houver conflito entre docs antigos e estado atual:
+   - o freeze operacional V10 de 2026-05-13 vence para Combat Core restaurado e remocao do Combat Clash temporal;
    - o freeze V9 de 2026-05-12 vence para Hostile Hit Reaction Coverage;
    - o freeze V8 de 2026-05-12 vence para Wildcat Hit Reaction;
    - o freeze V7 de 2026-05-12 vence para Player Hit Reaction/Hit Stun e game feel de dano recebido;
