@@ -113,6 +113,13 @@ Branch de referencia: `feat/dynamic-loot-dex-v1`
    - integracao deve nascer por bridge/authority propria do Nexus;
    - cliente envia intent, host valida e executa;
    - nao substituir `EquipmentLoadout` nem alterar combate antes do adapter e QA.
+13. Dynamic Loot & DEX V14:
+   - sprint concluida na branch `feat/dynamic-loot-dex-v1`;
+   - ExpressoBits e a fonte oficial dos dados de equipamento do Player;
+   - `NexusEquipmentAdapter` gera `EquipmentLoadout`, `WeaponData` e `CombatActionData` em memoria;
+   - `ActorCombatProfileRuntime` deve consultar `actor.get_equipment_loadout_runtime()`, nao `actor.equipment_loadout` direto;
+   - stamina, attack range, attack stop distance e kiting do Player dependem dessa fonte runtime;
+   - hostis continuam podendo usar fallback de cena/`.tres` enquanto nao forem migrados.
 
 ## 2) Arquitetura e contratos
 1. `arquitetura-contratos-estado-atual-2026-05-10.md` (doc mestre)

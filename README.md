@@ -3,9 +3,12 @@
 Este README aponta a fonte oficial de status tecnico do projeto.
 
 ## Fonte oficial de status (freeze atual)
-- `Cliente/nexus/docs/status-freeze-funcional-v11-hitbreak-combat-feedback-2026-05-13.md`
+- `Cliente/nexus/docs/status-freeze-funcional-v14-dynamic-loot-dex-2026-05-13.md`
 
 Freezes imediatamente anteriores:
+- `Cliente/nexus/docs/status-freeze-funcional-v13-inventory-datadriven-core-2026-05-13.md`
+- `Cliente/nexus/docs/status-freeze-funcional-v12-inventory-expresso-spike-2026-05-13.md`
+- `Cliente/nexus/docs/status-freeze-funcional-v11-hitbreak-combat-feedback-2026-05-13.md`
 - `Cliente/nexus/docs/status-freeze-operacional-v10-combat-core-restored-2026-05-13.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v9-hostile-hit-reaction-2026-05-12.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v8-wildcat-hit-reaction-2026-05-12.md`
@@ -25,18 +28,20 @@ Esse documento manda no estado da fase atual e consolida:
 5. Knockback V6 permanece congelado com `knockback_force = 200.0`.
 6. Hit Reaction V7/V8/V9 seguem aprovados para Player, Wildcat e hostis.
 7. Hitbreak Combat Feedback V11 segue aprovado para Player, Wildcat, Base, Light e Brute.
-8. Orb UI, Health Regen fora de combate, stamina/kiting e telemetria continuam preservados.
+8. ExpressoBits Inventory System V12/V13 e a fonte oficial data-driven de inventario/equipamento.
+9. Dynamic Loot & DEX V14 gera `EquipmentLoadout`/`CombatActionData` em memoria para o Player.
+10. Orb UI, Health Regen fora de combate, stamina/kiting e telemetria continuam preservados.
 
 ## Sprint atual em execucao
-- `Cliente/nexus/docs/plano-sprint-inventory-expresso-spike-v1-2026-05-13.md`
-- Branch: `feat/inventory-expresso-spike-v1`
+- `Cliente/nexus/docs/plano-sprint-dynamic-loot-dex-v1-2026-05-13.md`
+- Branch: `feat/dynamic-loot-dex-v1`
 
-Escopo atual: spike doc-first do ExpressoBits Inventory System como base data-driven de inventario, item database, craft, loot e hotbar. O addon core fica em `Cliente/nexus/addons/inventory-system/`; `inventory-system-demos` e apenas referencia de estudo e nao deve virar runtime do projeto. A database inicial do Nexus e `Cliente/nexus/configs/items/inventory/nexus_inventory_database_v1.tres`.
+Escopo atual: Dynamic Loot & DEX V14 sobre o ExpressoBits Inventory System. O Player resolve equipamento pelo `InventoryBridge`, o `NexusEquipmentAdapter` gera dados de combate em memoria e `ActorCombatProfileRuntime` deve consumir `get_equipment_loadout_runtime()` para dano, stamina, range e kiting.
 
 Sprint anterior:
-- `Cliente/nexus/docs/plano-sprint-hitbreak-combat-feedback-v1-2026-05-13.md`
+- `Cliente/nexus/docs/plano-sprint-inventory-datadriven-core-v1-2026-05-13.md`
 
-Escopo anterior: Hitbreak Combat Feedback V11 congelado. A sprint criou `CombatFeedbackComponent`, `CombatFeedbackProfile`, shader simples e integrou Player, Wildcat, HostileEnemyBase, HostileEnemyLight e HostileEnemyBrute. QA visual/log aprovado para todos, com `combat_feedback_hitbreak_started/finished` em `mode = shader`. Isto e apenas game feel visual; nao altera dano, stamina, Hit Reaction, Knockback, BT ou HSM.
+Escopo anterior: Inventory Data-Driven Core V13 congelado. O ExpressoBits virou fonte unica de dados de equipamento do Player e os `.tres` antigos de item/equipamento foram removidos para evitar drift.
 
 Historico imediato: Combat Clash temporal foi auditado e removido do runtime. A prova tecnica de `mutual_clash` fica registrada como pesquisa historica, mas Player/Wildcat nao carregam mais `CombatClashComponent` nem profiles de Clash. O core aprovado continua sendo Hit Reaction/Hit Interrupt. Qualquer Parry futuro deve nascer como `DefenseComponent`/`ParryComponent` simples, modular e data-driven por chance/atributo, consultado antes do dano.
 

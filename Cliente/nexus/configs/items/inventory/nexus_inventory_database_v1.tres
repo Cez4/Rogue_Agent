@@ -50,7 +50,7 @@ properties = {
 "combat_stamina_cost": 20.0,
 "combat_weapon_kind": 0,
 "combat_windup_sec": 0.12,
-"damage_max_per_level": [8, 12, 16],
+"damage_max_per_level": [6, 10, 14],
 "damage_min_per_level": [4, 7, 10],
 "dex_max_per_level": [1, 2, 3],
 "dex_min_per_level": [0, 0, 1],

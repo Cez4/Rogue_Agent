@@ -2,9 +2,10 @@ class_name ActorCombatProfileRuntime
 extends RefCounted
 
 static func get_combat_action_data(actor: Actor8DirLimbo) -> CombatActionData:
-	if actor.equipment_loadout != null and actor.equipment_loadout.weapon != null:
-		if actor.equipment_loadout.weapon.get("action_data") != null:
-			return actor.equipment_loadout.weapon.action_data
+	var loadout := actor.get_equipment_loadout_runtime()
+	if loadout != null and loadout.weapon != null:
+		if loadout.weapon.get("action_data") != null:
+			return loadout.weapon.action_data
 	if actor.attack_state != null and actor.attack_state.get("action_data") != null:
 		return actor.attack_state.get("action_data") as CombatActionData
 	return null
@@ -12,8 +13,9 @@ static func get_combat_action_data(actor: Actor8DirLimbo) -> CombatActionData:
 static func get_attack_range(actor: Actor8DirLimbo) -> float:
 	var range_bonus: float = actor.get_stat_value(&"attack_range_bonus", actor.base_attack_range_bonus)
 	var range_mul: float = actor.get_stat_value(&"attack_range_multiplier", actor.base_attack_range_multiplier)
-	if actor.equipment_loadout != null and actor.equipment_loadout.weapon != null:
-		var weapon_range: float = float(actor.equipment_loadout.weapon.attack_range)
+	var loadout := actor.get_equipment_loadout_runtime()
+	if loadout != null and loadout.weapon != null:
+		var weapon_range: float = float(loadout.weapon.attack_range)
 		return maxf(6.0, (weapon_range + range_bonus) * (1.0 + range_mul))
 	return maxf(6.0, (actor.chase_attack_range + range_bonus) * (1.0 + range_mul))
 

@@ -26,12 +26,17 @@
 [ext_resource type="PackedScene" path="res://cenas/components/combat/attack_hitbox_component_node.tscn" id="20_wtst7"]
 [ext_resource type="PackedScene" uid="uid://cpqqeuy3ge470" path="res://cenas/components/ui/combat_orb_presenter.tscn" id="21_ygsh7"]
 [ext_resource type="Script" uid="uid://d087gw3m6nlpa" path="res://Scripts/stats/stamina_component.gd" id="22_ygsh7"]
+[ext_resource type="Script" uid="uid://c4albnh7g2uh2" path="res://Scripts/combat/health_component.gd" id="23_577ti"]
+[ext_resource type="Script" uid="uid://dgemf4hu2eypk" path="res://Scripts/combat/hurtbox_component.gd" id="25_gh5pf"]
+[ext_resource type="Script" uid="uid://cnyih1kegdel6" path="res://Scripts/combat/hitbox_component.gd" id="27_rkyp6"]
+[ext_resource type="Script" uid="uid://ckly2vu2kieg3" path="res://Scripts/ui/orb/combat_orb_presenter.gd" id="29_e608m"]
 [ext_resource type="PackedScene" path="res://cenas/components/combat/health_regen_component_node.tscn" id="29_q7j62"]
 [ext_resource type="Script" uid="uid://d25m2w1hsn1u5" path="res://Scripts/combat/hit_reaction_component.gd" id="30_olv6a"]
 [ext_resource type="Resource" path="res://configs/ui/orbs/stamina_orb_profile_v1.tres" id="30_orbpf"]
 [ext_resource type="Resource" uid="uid://cql45ltgdn6k3" path="res://configs/combat/hit_reaction/hostile_light_hit_reaction_profile_v1.tres" id="31_q7j62"]
 [ext_resource type="Script" uid="uid://bu3jajmtlug26" path="res://Scripts/combat/feedback/combat_feedback_component.gd" id="32_hsskg"]
 [ext_resource type="Script" uid="uid://diwfcith2c22c" path="res://Scripts/combat/knockback_component.gd" id="32_njn5f"]
+[ext_resource type="Script" uid="uid://w7rnp2vrc4b2" path="res://Scripts/combat/health_regen_component.gd" id="33_7urvv"]
 [ext_resource type="Resource" uid="uid://wyetswulivmd" path="res://configs/combat/feedback/default_hitbreak_feedback_profile_v1.tres" id="33_olv6a"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijbr8"]
@@ -4741,21 +4746,37 @@ script = ExtResource("15_reepw")
 [node name="HitReactionState" type="LimboState" parent="LimboHSM" unique_id=1271458192]
 script = ExtResource("18_hsskg")
 
-[node name="EmotionBubble" parent="." unique_id=587887002 instance=ExtResource("15_lvdsk")]
+[node name="EmotionBubble" type="AnimatedSprite2D" parent="." unique_id=587887002 instance=ExtResource("15_lvdsk")]
+visible = false
+position = Vector2(-8, -40)
 sprite_frames = SubResource("SpriteFrames_emotes")
+animation = &"Hoe"
 
-[node name="Health" parent="." unique_id=905350051 instance=ExtResource("18_i5wkl")]
-max_health = 13.0
+[node name="Health" type="Node" parent="." unique_id=905350051 instance=ExtResource("18_i5wkl")]
+script = ExtResource("23_577ti")
+max_health = 50.0
 
-[node name="Hurtbox" parent="." unique_id=987265784 instance=ExtResource("20_05h1s")]
+[node name="Hurtbox" type="Area2D" parent="." unique_id=987265784 instance=ExtResource("20_05h1s")]
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+script = ExtResource("25_gh5pf")
 
-[node name="AttackHitbox" parent="." unique_id=1741533143 instance=ExtResource("20_wtst7")]
+[node name="AttackHitbox" type="Area2D" parent="." unique_id=1741533143 instance=ExtResource("20_wtst7")]
+position = Vector2(20, 0)
+collision_layer = 8
+collision_mask = 16
+monitoring = false
+monitorable = false
+script = ExtResource("27_rkyp6")
 
-[node name="CombatOrb" parent="." unique_id=2024503709 instance=ExtResource("21_ygsh7")]
+[node name="CombatOrb" type="Node2D" parent="." unique_id=2024503709 instance=ExtResource("21_ygsh7")]
+script = ExtResource("29_e608m")
 display_mode = 1
 follow_offset = Vector2(-34, -44)
 
-[node name="StaminaOrb" parent="." unique_id=1720972146 instance=ExtResource("21_ygsh7")]
+[node name="StaminaOrb" type="Node2D" parent="." unique_id=1720972146 instance=ExtResource("21_ygsh7")]
+script = ExtResource("29_e608m")
 resource_type = 1
 resource_profile = ExtResource("30_orbpf")
 display_mode = 1
@@ -4765,7 +4786,8 @@ follow_offset = Vector2(-34, -14)
 script = ExtResource("22_ygsh7")
 regen_rate = 8.0
 
-[node name="HealthRegen" parent="." unique_id=1994131435 instance=ExtResource("29_q7j62")]
+[node name="HealthRegen" type="Node" parent="." unique_id=1994131435 instance=ExtResource("29_q7j62")]
+script = ExtResource("33_7urvv")
 
 [node name="KnockbackComponent" type="Node" parent="." unique_id=1167224384]
 script = ExtResource("32_njn5f")

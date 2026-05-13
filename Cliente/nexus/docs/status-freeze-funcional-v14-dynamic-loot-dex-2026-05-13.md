@@ -32,3 +32,29 @@ Durante QA real no Godot MCP (`mundo.tscn`), comprovamos:
 
 ## Contrato Congelado
 O sistema base de inventario, drop e consumo de dados para combate tatico esta completamente blindado e estabilizado. Qualquer nova adicao de atributo (ex: `STR`, `INT`, `Crit Chance`) devera apenas plugar no `StatsComponent` e no `NexusEquipmentAdapter`, respeitando os dicionarios pre-estabelecidos.
+
+## Addendum - Hotfix De Kiting/Stamina Runtime
+Data: 2026-05-13
+Status: validado via Godot MCP em `res://cenas/mundo.tscn`.
+
+Regressao encontrada apos a migracao V13/V14:
+1. O Player passou a resolver arma pelo `InventoryBridge`/ExpressoBits.
+2. `ActorCombatProfileRuntime.get_combat_action_data()` ainda consultava `actor.equipment_loadout` legado diretamente.
+3. Como o Player nao possui mais `equipment_loadout` legado nem `AttackState.action_data` ativo, a BT via `action_data == null`.
+4. Com `action_data == null`, `has_stamina_for_attack()` retornava `true`, impedindo `bt_is_stamina_low` e `bt_request_attack` de entrarem corretamente no ramo de baixa stamina.
+5. Sintoma visual: Player avancava/atacava repetidamente e nao fazia o ciclo de kiting aprovado.
+
+Correcao oficial:
+1. `ActorCombatProfileRuntime` agora usa `actor.get_equipment_loadout_runtime()`.
+2. A mesma fonte runtime alimenta:
+   - stamina requerida para ataque;
+   - attack range;
+   - attack stop distance;
+   - parametros de kiting vindos do `CombatActionData` gerado pelo `NexusEquipmentAdapter`.
+3. Hostis continuam funcionando pelo fallback aprovado de cena/`.tres`.
+
+Evidencia MCP:
+1. Antes do hotfix, `attack_stamina_cost.required` do Player aparecia como `20.0`.
+2. Depois do hotfix, `attack_stamina_cost.required` voltou para `40.0`, respeitando `combat_stamina_cost = 20.0` e `combat_attack_stamina_budget_hits = 2.0`.
+3. `bt_inrange_check` do Player passou a reportar `attack_stop_distance = 34.0`, derivado da adaga runtime do inventario.
+4. Logs confirmaram `kiting_started` e `kiting_holding` do Player apos ataques, preservando o contrato tatico.
