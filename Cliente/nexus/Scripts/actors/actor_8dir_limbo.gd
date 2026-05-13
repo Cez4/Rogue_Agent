@@ -20,7 +20,6 @@ class_name Actor8DirLimbo
 @export var interaction_stop_range: float = 26.0
 @export var chase_repath_interval_sec: float = 0.2
 @export_group("Runtime Stats")
-@export var base_dex: float = 10.0
 @export var base_perception_radius: float = 120.0
 @export var base_perception_min_distance: float = 28.0
 @export var base_perception_max_distance: float = 148.0

@@ -8,8 +8,12 @@ static func setup_stats(actor: Actor8DirLimbo) -> void:
 		stats.name = "Stats"
 		actor.add_child(stats)
 	actor._bridge_set_stats_component(stats)
+	
+	# If the StatsComponent in the scene already has a base_dex set, keep it, otherwise default to 0.0
+	var dex: float = stats.get_stat(&"dex", 0.0) if stats != null else 0.0
+	
 	stats.set_base_stats({
-		&"dex": actor.base_dex,
+		&"dex": dex,
 		&"perception_radius": actor.base_perception_radius,
 		&"perception_min_distance": actor.base_perception_min_distance,
 		&"perception_max_distance": actor.base_perception_max_distance,
