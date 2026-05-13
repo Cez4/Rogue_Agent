@@ -170,6 +170,22 @@ Este projeto usa MCP + edição automatizada. Portanto, este runbook é obrigat�
 11. Se houver mudanca funcional aprovada, criar freeze novo.
 12. Nao reativar `parry_resolved` unilateral nem `mutual_clash` global da Fase D/D2; ambos alteraram o resultado aprovado do combate.
 
+## Sequenciamento Hitbreak Combat Feedback v1
+1. `Cliente/nexus/docs/plano-sprint-hitbreak-combat-feedback-v1-2026-05-13.md` e a proxima sprint planejada apos o freeze operacional V10.
+2. Hitbreak Feedback e apenas game feel visual no atacante que causa interrupcao por `hit_reaction`.
+3. Nao alterar dano, stamina, Hit Reaction, Knockback, BT, HSM ou regra de morte nesta sprint sem bug comprovado.
+4. Implementar em fases:
+   - Fase A: telemetria `hitbreak_success` sem mudanca visual;
+   - Fase B: `CombatFeedbackComponent` + profile em um ator;
+   - Fase C: propagacao para Wildcat;
+   - Fase D: cobertura hostis;
+   - Fase E: QA/freeze.
+5. Shader/material deve ser duplicado em runtime antes de alterar parametros, evitando flash global por material compartilhado.
+6. Qualquer edicao de cena/resource deve ser feita via Godot/editor API, nunca por texto.
+7. Nao adicionar exports de feedback no `Actor8DirLimbo`.
+8. Validacao obrigatoria: MCP limpo + telemetria `hitbreak_success`, `combat_feedback_hitbreak_started`, `combat_feedback_hitbreak_finished`.
+9. Separar morte de hitbreak: `reason = death` nao deve acionar brilho de sucesso.
+
 ## Contrato Universal Hit Reaction Component v1
 1. A decisao arquitetural obrigatoria e componente plug-and-play:
    - `HitReactionComponent` copiavel para Player, NPC amigavel ou inimigo;

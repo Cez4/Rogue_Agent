@@ -26,9 +26,11 @@ Esse documento manda no estado da fase atual e consolida:
 7. Orb UI, Health Regen fora de combate, stamina/kiting e telemetria continuam preservados.
 
 ## Sprint atual em execucao
-- `Cliente/nexus/docs/plano-sprint-combat-clash-parry-v1-2026-05-12.md`
+- `Cliente/nexus/docs/plano-sprint-hitbreak-combat-feedback-v1-2026-05-13.md`
 
-Escopo atual: Combat Clash temporal foi auditado e removido do runtime. A prova tecnica de `mutual_clash` fica registrada como pesquisa historica, mas Player/Wildcat nao carregam mais `CombatClashComponent` nem profiles de Clash. O core aprovado continua sendo Hit Reaction/Hit Interrupt. Qualquer Parry futuro deve nascer como `DefenseComponent`/`ParryComponent` simples, modular e data-driven por chance/atributo, consultado antes do dano.
+Escopo atual: planejar e implementar feedback visual data-driven para Hitbreak. Quando um atacante confirma hit e interrompe o ataque do alvo via Hit Reaction, o atacante deve receber brilho/flash curto por `CombatFeedbackComponent` + `CombatFeedbackProfile`. Isto e apenas game feel visual; nao altera dano, stamina, Hit Reaction, Knockback, BT ou HSM.
+
+Historico imediato: Combat Clash temporal foi auditado e removido do runtime. A prova tecnica de `mutual_clash` fica registrada como pesquisa historica, mas Player/Wildcat nao carregam mais `CombatClashComponent` nem profiles de Clash. O core aprovado continua sendo Hit Reaction/Hit Interrupt. Qualquer Parry futuro deve nascer como `DefenseComponent`/`ParryComponent` simples, modular e data-driven por chance/atributo, consultado antes do dano.
 
 ## Regra de operacao
 1. Antes de nova feature, revisar o freeze atual.
