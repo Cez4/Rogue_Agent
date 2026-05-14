@@ -38,7 +38,7 @@ Regra:
 31. Load valido de inventario deve acontecer antes dos `starting_items` ou marcar hidratacao explicita para impedir reroll da adaga starter. Prova obrigatoria: mesmo `rolled_damage`/`rolled_dex_bonus` apos save/load.
 32. SaveFlow Lite Persistence v1 esta congelado em V15: `PlayerInventorySource` salva/carrega o inventario do Player via `NexusInventoryBridgeComponent`, o smoke aprovado gera `saveflow_inventory_smoke_result ok=true payload_restored=true`, e qualquer expansao para quests/world flags deve nascer em nova sprint.
 33. SaveFlow Slots & Host Authority v1 esta congelado em V16: `NexusSaveAuthority` e a fachada obrigatoria para save/load de gameplay. Nenhum botao, cliente ou sistema de gameplay deve chamar SaveFlow direto para estado autoritativo.
-34. SaveFlow UI Dev Panel v1 deve ser apenas cliente visual da `NexusSaveAuthority`: botoes de Save/Load/Summary nao podem chamar SaveFlow direto, nao podem mutar inventario diretamente e nao podem alterar BT/HSM/combat core.
+34. SaveFlow UI Dev Panel v1 esta congelado em V17: `SaveFlowDevPanel` e apenas cliente visual da `NexusSaveAuthority`; botoes de Save/Load/Summary nao podem chamar SaveFlow direto, nao podem mutar inventario diretamente e nao podem alterar BT/HSM/combat core. O runner de smoke e ferramenta temporaria e nao deve ficar salvo como node na cena final.
 
 Checklist rapido:
 - [ ] Doc interno lido.

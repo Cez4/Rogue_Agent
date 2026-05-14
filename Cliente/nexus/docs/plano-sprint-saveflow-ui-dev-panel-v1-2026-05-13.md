@@ -1,8 +1,8 @@
 # Plano Sprint - SaveFlow UI Dev Panel v1
 
 Data: 2026-05-13
-Status: PLANEJADA
-Branch sugerida: `feat/saveflow-ui-dev-panel-v1`
+Status: CONCLUIDA - FREEZE FUNCIONAL V17
+Branch executada: `feat/saveflow-ui-dev-panel-v1`
 Baseline obrigatorio:
 1. `status-freeze-funcional-v16-saveflow-slots-host-authority-2026-05-13.md`
 2. `plano-sprint-saveflow-slots-host-authority-v1-2026-05-13.md`
@@ -92,61 +92,61 @@ Regra de decisao:
 ## 5) Plano De Execucao
 
 ### Fase A - Auditoria Inicial
-- [ ] Criar branch `feat/saveflow-ui-dev-panel-v1`.
-- [ ] Confirmar worktree limpa.
-- [ ] Auditar `DebugTelemetryPanel`.
-- [ ] Decidir painel separado vs integracao no painel existente.
-- [ ] Rodar gate MCP baseline:
+- [x] Criar branch `feat/saveflow-ui-dev-panel-v1`.
+- [x] Confirmar worktree limpa.
+- [x] Auditar `DebugTelemetryPanel`.
+- [x] Decidir painel separado vs integracao no painel existente.
+- [x] Rodar gate MCP baseline:
   - abrir `mundo.tscn`;
   - play;
   - `get_godot_errors`;
   - confirmar `inventory_equipment_adapter_resolved resource_path=memory_generated`.
 
 ### Fase B - Criar UI Minima
-- [ ] Criar cena/script do painel.
-- [ ] Layout simples e funcional:
+- [x] Criar cena/script do painel.
+- [x] Layout simples e funcional:
   - titulo curto;
   - botao Save;
   - botao Load;
   - botao Refresh;
   - texto de status.
-- [ ] Nao usar design final, inventario visual ou menus complexos.
-- [ ] Garantir que texto nao sobrepoe em viewport comum.
+- [x] Nao usar design final, inventario visual ou menus complexos.
+- [x] Garantir que texto nao sobrepoe em viewport comum.
 
 ### Fase C - Conectar Authority
-- [ ] Exportar `authority_path`.
-- [ ] Resolver `NexusSaveAuthority` por NodePath.
-- [ ] Botao Save chama `authority.save_player_slot("profile_0")`.
-- [ ] Botao Load chama `authority.load_player_slot("profile_0")`.
-- [ ] Botao Refresh chama `authority.read_player_slot_summary("profile_0")`.
-- [ ] Nenhum metodo chama `SaveFlow` direto.
+- [x] Exportar `authority_path`.
+- [x] Resolver `NexusSaveAuthority` por NodePath.
+- [x] Botao Save chama `authority.save_player_slot("profile_0")`.
+- [x] Botao Load chama `authority.load_player_slot("profile_0")`.
+- [x] Botao Refresh chama `authority.read_player_slot_summary("profile_0")`.
+- [x] Nenhum metodo chama `SaveFlow` direto.
 
 ### Fase D - Telemetria E Status
-- [ ] Emitir eventos de clique.
-- [ ] Atualizar status com resultado de `SaveResult`.
-- [ ] Mostrar resumo de inventario apos save/load quando possivel.
-- [ ] Mostrar erro legivel quando authority ausente ou slot inexistente.
+- [x] Emitir eventos de clique.
+- [x] Atualizar status com resultado de `SaveResult`.
+- [x] Mostrar resumo de inventario apos save/load quando possivel.
+- [x] Mostrar erro legivel quando authority ausente ou slot inexistente.
 
 ### Fase E - QA MCP
-- [ ] Rodar `mundo.tscn`.
-- [ ] Clicar Save via editor/teste manual ou runner de input se disponivel.
-- [ ] Clicar Load.
-- [ ] Clicar Refresh.
-- [ ] Confirmar logs:
+- [x] Rodar `mundo.tscn`.
+- [x] Clicar Save via editor/teste manual ou runner de input se disponivel.
+- [x] Clicar Load.
+- [x] Clicar Refresh.
+- [x] Confirmar logs:
   - `saveflow_dev_panel_save_clicked`;
   - `save_authority_save_completed ok=true`;
   - `saveflow_dev_panel_load_clicked`;
   - `save_authority_load_completed ok=true`;
   - `saveflow_dev_panel_summary_clicked`;
   - summary ok.
-- [ ] Confirmar que o combate/inventario continuam `memory_generated`.
+- [x] Confirmar que o combate/inventario continuam `memory_generated`.
 
 ### Fase F - Freeze
-- [ ] Criar `status-freeze-funcional-v17-saveflow-ui-dev-panel-2026-05-13.md`.
-- [ ] Atualizar `README.md`.
-- [ ] Atualizar `Cliente/nexus/docs/README.md`.
-- [ ] Atualizar `docs/godotmcp/runbook-saveflow-lite-rogue-agent.md`.
-- [ ] Atualizar `docs/skills/doc-first-godot-limboai-skill.md`.
+- [x] Criar `status-freeze-funcional-v17-saveflow-ui-dev-panel-2026-05-13.md`.
+- [x] Atualizar `README.md`.
+- [x] Atualizar `Cliente/nexus/docs/README.md`.
+- [x] Atualizar `docs/godotmcp/runbook-saveflow-lite-rogue-agent.md`.
+- [x] Atualizar `docs/skills/doc-first-godot-limboai-skill.md`.
 - [ ] Commit/push apenas apos gate limpo.
 
 ## 6) Criterios De Aceite
@@ -193,5 +193,23 @@ Payload minimo:
 5. **Risco: mexer em combate por conveniencia.**
    - Mitigacao: escopo proibe BT/HSM/combat core.
 
-## 9) Proximo Passo Seguro
-Criar a branch `feat/saveflow-ui-dev-panel-v1` e executar a Fase A pelo Godot MCP antes de qualquer edicao de cena.
+## 9) Resultado Da Sprint
+V17 esta funcional e congelada. O projeto agora possui:
+1. `res://cenas/debug/saveflow_dev_panel.tscn`;
+2. `res://Scripts/debug/saveflow_dev_panel.gd`;
+3. `res://Scripts/debug/saveflow_dev_panel_smoke_runner.gd` como runner de QA manual;
+4. `SaveFlowDevPanel` instanciado em `res://cenas/mundo.tscn`;
+5. telemetria de Save, Load, Summary e Status;
+6. gate MCP final sem runner temporario salvo na cena.
+
+Evidencia validada:
+1. `saveflow_dev_panel_summary_clicked`;
+2. `saveflow_dev_panel_status_updated command=summary ok=true`;
+3. `saveflow_dev_panel_save_clicked`;
+4. `save_authority_save_completed ok=true`;
+5. `saveflow_dev_panel_load_clicked`;
+6. `save_authority_load_completed ok=true`;
+7. `saveflow_dev_panel_smoke_result ok=true`;
+8. `inventory_equipment_adapter_resolved resource_path=memory_generated`.
+
+O painel chama somente `NexusSaveAuthority`, nao chama SaveFlow direto, nao muta inventario diretamente e nao altera combate, BT ou HSM.

@@ -7,6 +7,7 @@ Este runbook vale para a sprint:
 - `Cliente/nexus/docs/plano-sprint-saveflow-lite-persistence-v1-2026-05-13.md`
 - `Cliente/nexus/docs/plano-sprint-saveflow-slots-host-authority-v1-2026-05-13.md`
 - `Cliente/nexus/docs/plano-sprint-saveflow-ui-dev-panel-v1-2026-05-13.md`
+- `Cliente/nexus/docs/status-freeze-funcional-v17-saveflow-ui-dev-panel-2026-05-13.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v16-saveflow-slots-host-authority-2026-05-13.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v15-saveflow-lite-persistence-2026-05-13.md`
 
@@ -50,11 +51,13 @@ Fachada congelada em V16:
 5. Slot default aprovado: `profile_0`.
 6. Smoke aprovado: `save_authority_smoke_result ok=true payload_restored=true slot_summary_ok=true`.
 
-UI dev planejada:
-1. Painel dev de save/load deve chamar `NexusSaveAuthority`, nunca SaveFlow direto.
-2. O painel pode salvar/carregar/consultar `profile_0`.
-3. O painel nao deve virar UI final nem mexer em inventario diretamente.
-4. Qualquer botao deve emitir telemetria propria e preservar eventos da authority.
+UI dev congelada em V17:
+1. `SaveFlowDevPanel` chama `NexusSaveAuthority`, nunca SaveFlow direto.
+2. O painel salva, carrega e consulta `profile_0`.
+3. O painel nao e UI final e nao mexe em inventario diretamente.
+4. Qualquer botao emite telemetria propria e preserva eventos da authority.
+5. Smoke aprovado: `saveflow_dev_panel_smoke_result ok=true`.
+6. Runner de smoke do painel nao deve ficar como node salvo na cena final.
 
 ## Escolha De Fonte SaveFlow
 Use:
@@ -103,6 +106,7 @@ Antes de commitar qualquer integracao SaveFlow:
 ## Smoke Runner
 O projeto possui um runner de QA runtime:
 - `res://Scripts/save/debug/saveflow_inventory_smoke_runner.gd`
+- `res://Scripts/debug/saveflow_dev_panel_smoke_runner.gd`
 
 Uso:
 1. Anexar temporariamente em `mundo.tscn`.
@@ -117,10 +121,20 @@ Resultado aprovado no V15:
 4. `item_id = weapon_dagger_starter`.
 5. `rolled_damage` e `rolled_dex_bonus` preservados.
 
+Resultado aprovado no V17:
+1. `saveflow_dev_panel_smoke_result ok=true`.
+2. `saveflow_dev_panel_save_clicked`.
+3. `save_authority_save_completed ok=true`.
+4. `saveflow_dev_panel_load_clicked`.
+5. `save_authority_load_completed ok=true`.
+6. `saveflow_dev_panel_summary_clicked`.
+7. `inventory_equipment_adapter_resolved resource_path=memory_generated`.
+
 ## Criterio Anti-Drift
 Quando houver conflito:
-1. Freeze V16 vence para SaveFlow Slots & Host Authority.
-2. Freeze V14 vence para Dynamic Loot/DEX.
-3. Freeze V13 vence para ponte ExpressoBits/Adapter.
-4. Freeze funcional V15 vence para persistencia de inventario com SaveFlow.
-5. Este runbook vence para persistencia SaveFlow no Rogue Agent.
+1. Freeze V17 vence para SaveFlow UI Dev Panel.
+2. Freeze V16 vence para SaveFlow Slots & Host Authority.
+3. Freeze V14 vence para Dynamic Loot/DEX.
+4. Freeze V13 vence para ponte ExpressoBits/Adapter.
+5. Freeze funcional V15 vence para persistencia de inventario com SaveFlow.
+6. Este runbook vence para persistencia SaveFlow no Rogue Agent.

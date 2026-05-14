@@ -1,13 +1,14 @@
 # Docs - Mapa Oficial (Estado Atual)
 
 Data de consolidacao: 2026-05-13
-Branch de referencia: `feat/saveflow-slots-host-authority-v1`
+Branch de referencia: `feat/saveflow-ui-dev-panel-v1`
 
 ## 1) Fonte principal de estado
-1. `status-freeze-funcional-v16-saveflow-slots-host-authority-2026-05-13.md` (freeze atual: SaveFlow Slots & Host Authority)
-2. `plano-sprint-saveflow-ui-dev-panel-v1-2026-05-13.md` (proxima sprint planejada: painel dev de save/load)
-3. `plano-sprint-saveflow-slots-host-authority-v1-2026-05-13.md` (sprint concluida: slots e autoridade SaveFlow)
-4. `status-freeze-funcional-v15-saveflow-lite-persistence-2026-05-13.md` (freeze: SaveFlow Lite Persistence aprovado para inventario do Player)
+1. `status-freeze-funcional-v17-saveflow-ui-dev-panel-2026-05-13.md` (freeze atual: SaveFlow UI Dev Panel)
+2. `plano-sprint-saveflow-ui-dev-panel-v1-2026-05-13.md` (sprint concluida: painel dev de save/load)
+3. `status-freeze-funcional-v16-saveflow-slots-host-authority-2026-05-13.md` (freeze: SaveFlow Slots & Host Authority)
+4. `plano-sprint-saveflow-slots-host-authority-v1-2026-05-13.md` (sprint concluida: slots e autoridade SaveFlow)
+5. `status-freeze-funcional-v15-saveflow-lite-persistence-2026-05-13.md` (freeze: SaveFlow Lite Persistence aprovado para inventario do Player)
 5. `status-freeze-operacional-v15-saveflow-lite-prep-2026-05-13.md` (freeze operacional: SaveFlow Lite instalado e planejamento congelado)
 6. `status-freeze-funcional-v14-dynamic-loot-dex-2026-05-13.md` (freeze funcional: Dynamic Loot & DEX System aprovado)
 7. `plano-sprint-saveflow-lite-persistence-v1-2026-05-13.md` (sprint concluida: persistencia local/host-authoritative com SaveFlow Lite)
@@ -40,8 +41,9 @@ Branch de referencia: `feat/saveflow-slots-host-authority-v1`
 
 ## 1.1 Regra anti-drift (obrigatoria)
 1. Quando houver conflito entre docs antigos e estado atual:
+   - o freeze funcional V17 de 2026-05-13 vence para SaveFlow UI Dev Panel;
+   - o plano SaveFlow UI Dev Panel v1 esta concluido para operacao visual dev de save/load;
    - o freeze funcional V16 de 2026-05-13 vence para SaveFlow Slots & Host Authority;
-   - o plano SaveFlow UI Dev Panel v1 e a proxima sprint planejada para operacao visual dev de save/load;
    - o plano SaveFlow Slots & Host Authority v1 esta concluido e congela `NexusSaveAuthority` como fachada oficial;
    - o freeze funcional V15 de 2026-05-13 vence para persistencia de inventario com SaveFlow Lite;
    - o freeze operacional V15 de 2026-05-13 vence para instalacao/planejamento SaveFlow Lite;
@@ -168,6 +170,15 @@ Branch de referencia: `feat/saveflow-slots-host-authority-v1`
    - smoke runtime confirmou `save_authority_smoke_result ok=true`, `payload_restored=true` e `slot_summary_ok=true`;
    - gate final sem runner temporario preservou `inventory_equipment_adapter_resolved resource_path=memory_generated`;
    - UI futura deve chamar a authority, nunca SaveFlow direto.
+18. SaveFlow UI Dev Panel V17:
+   - sprint concluida na branch `feat/saveflow-ui-dev-panel-v1`;
+   - `SaveFlowDevPanel` foi adicionado como painel dev separado em `res://cenas/debug/saveflow_dev_panel.tscn`;
+   - `mundo.tscn` instancia o painel permanentemente para uso dev;
+   - botoes Save, Load e Refresh chamam somente `NexusSaveAuthority`;
+   - telemetria aprovada: `saveflow_dev_panel_save_clicked`, `saveflow_dev_panel_load_clicked`, `saveflow_dev_panel_summary_clicked` e `saveflow_dev_panel_status_updated`;
+   - smoke runtime confirmou `saveflow_dev_panel_smoke_result ok=true`;
+   - gate final sem runner temporario preservou `inventory_equipment_adapter_resolved resource_path=memory_generated`;
+   - nenhum script de combate, BT, HSM, adapter ou inventory authority foi alterado.
 
 ## 2) Arquitetura e contratos
 1. `arquitetura-contratos-estado-atual-2026-05-10.md` (doc mestre)

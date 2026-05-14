@@ -13,8 +13,9 @@
 [ext_resource type="PackedScene" uid="uid://dr5gls4idb7d1" path="res://cenas/villager_1.tscn" id="11_puycu"]
 [ext_resource type="PackedScene" uid="uid://daw0a7qkbtyg2" path="res://cenas/enemies/hostile_enemy_base.tscn" id="12_puycu"]
 [ext_resource type="PackedScene" uid="uid://c7a7itng4jhp8" path="res://cenas/enemies/hostile_enemy_light.tscn" id="13_dww6m"]
-[ext_resource type="Script" path="res://Scripts/save/nexus_save_authority.gd" id="15_dww6m"]
+[ext_resource type="Script" uid="uid://vbuk2jrhi1k0" path="res://Scripts/save/nexus_save_authority.gd" id="15_dww6m"]
 [ext_resource type="PackedScene" uid="uid://dtbefadsc7t38" path="res://cenas/enemies/hostile_enemy_brute.tscn" id="16_3aakq"]
+[ext_resource type="PackedScene" path="res://cenas/debug/saveflow_dev_panel.tscn" id="16_uhglm"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_puycu"]
 
@@ -133,3 +134,5 @@ position = Vector2(-227, -135)
 
 [node name="NexusSaveAuthority" type="Node" parent="." unique_id=876648546]
 script = ExtResource("15_dww6m")
+
+[node name="SaveFlowDevPanel" parent="." unique_id=1363116698 instance=ExtResource("16_uhglm")]

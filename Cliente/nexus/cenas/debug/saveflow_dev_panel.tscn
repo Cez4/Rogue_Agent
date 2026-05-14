@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/debug/saveflow_dev_panel.gd" id="1_saveflow_dev_panel"]
+
+[node name="SaveFlowDevPanel" type="CanvasLayer"]
+script = ExtResource("1_saveflow_dev_panel")
