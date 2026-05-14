@@ -1,7 +1,7 @@
 # Plano Sprint - SaveFlow Slots & Host Authority v1
 
 Data: 2026-05-13
-Status: PLANEJADA
+Status: CONCLUIDA - FREEZE FUNCIONAL V16
 Branch sugerida: `feat/saveflow-slots-host-authority-v1`
 Baseline obrigatorio:
 1. `status-freeze-funcional-v15-saveflow-lite-persistence-2026-05-13.md`
@@ -95,57 +95,57 @@ Evitar:
 ## 6) Plano De Execucao
 
 ### Fase A - Auditoria E Gate Inicial
-- [ ] Criar branch `feat/saveflow-slots-host-authority-v1`.
-- [ ] Confirmar worktree limpa.
-- [ ] Abrir `res://cenas/mundo.tscn` no Godot MCP.
-- [ ] Rodar baseline sem alterar cena.
-- [ ] Confirmar:
+- [x] Criar branch `feat/saveflow-slots-host-authority-v1`.
+- [x] Confirmar worktree limpa.
+- [x] Abrir `res://cenas/mundo.tscn` no Godot MCP.
+- [x] Rodar baseline sem alterar cena.
+- [x] Confirmar:
   - `weapon_dagger_starter` nasce quando nao ha load;
   - `inventory_equipment_adapter_resolved resource_path=memory_generated`;
   - sem parse/runtime error novo.
 
 ### Fase B - NexusSaveAuthority
-- [ ] Criar `res://Scripts/save/nexus_save_authority.gd`.
-- [ ] Implementar slot default `profile_0`.
-- [ ] Resolver Player e `SaveGraphRoot` por `NodePath`.
-- [ ] Chamar `SaveFlow.save_scope()` e `SaveFlow.load_scope()`.
-- [ ] Implementar guard de autoridade:
+- [x] Criar `res://Scripts/save/nexus_save_authority.gd`.
+- [x] Implementar slot default `profile_0`.
+- [x] Resolver Player e `SaveGraphRoot` por `NodePath`.
+- [x] Chamar `SaveFlow.save_scope()` e `SaveFlow.load_scope()`.
+- [x] Implementar guard de autoridade:
   - offline/dev local permitido;
   - cliente remoto rejeitado.
 
 ### Fase C - Integracao Em Cena
-- [ ] Adicionar `NexusSaveAuthority` ao `mundo.tscn` via Godot/editor API.
-- [ ] Configurar `player_path`.
-- [ ] Abrir cena e validar sem erro.
-- [ ] Nao alterar combate, BT, HSM ou inventario V13/V14.
+- [x] Adicionar `NexusSaveAuthority` ao `mundo.tscn` via Godot/editor API.
+- [x] Configurar `player_path`.
+- [x] Abrir cena e validar sem erro.
+- [x] Nao alterar combate, BT, HSM ou inventario V13/V14.
 
 ### Fase D - Smoke De Slot
-- [ ] Criar runner/comando temporario de QA.
-- [ ] Run 1:
+- [x] Criar runner/comando temporario de QA.
+- [x] Run 1:
   - iniciar mundo;
   - registrar `rolled_damage` e `rolled_dex_bonus`;
   - salvar `profile_0`.
-- [ ] Run 2:
+- [x] Run 2:
   - carregar `profile_0`;
   - confirmar mesmos rolls;
   - confirmar `memory_generated`.
-- [ ] Remover runner temporario da cena final.
+- [x] Remover runner temporario da cena final.
 
 ### Fase E - Slot Summary Para UI Futura
-- [ ] Validar `SaveFlow.read_slot_summary()` ou `SaveFlow.list_slot_summaries()`.
-- [ ] Registrar no plano/freeze quais campos podem alimentar UI futura:
+- [x] Validar `SaveFlow.read_slot_summary()` em runtime via authority.
+- [x] Registrar no plano/freeze quais campos podem alimentar UI futura:
   - display name;
   - save type;
   - compatibility;
   - location/chapter/playtime quando existirem.
-- [ ] Nao criar UI final nesta sprint.
+- [x] Nao criar UI final nesta sprint.
 
 ### Fase F - Freeze
-- [ ] Criar `status-freeze-funcional-v16-saveflow-slots-host-authority-2026-05-13.md`.
-- [ ] Atualizar `README.md`.
-- [ ] Atualizar `Cliente/nexus/docs/README.md`.
-- [ ] Atualizar `docs/godotmcp/runbook-saveflow-lite-rogue-agent.md`.
-- [ ] Atualizar `docs/skills/doc-first-godot-limboai-skill.md`.
+- [x] Criar `status-freeze-funcional-v16-saveflow-slots-host-authority-2026-05-13.md`.
+- [x] Atualizar `README.md`.
+- [x] Atualizar `Cliente/nexus/docs/README.md`.
+- [x] Atualizar `docs/godotmcp/runbook-saveflow-lite-rogue-agent.md`.
+- [x] Atualizar `docs/skills/doc-first-godot-limboai-skill.md`.
 - [ ] Commit/push apenas apos MCP gate limpo.
 
 ## 7) Criterios De Aceite
@@ -192,3 +192,23 @@ Payload minimo:
 
 ## 10) Proximo Passo Seguro
 Criar a branch `feat/saveflow-slots-host-authority-v1` e executar a Fase A pelo Godot MCP antes de qualquer edicao runtime.
+
+## 11) Resultado Da Sprint
+Sprint concluida em V16.
+
+Implementado:
+1. `NexusSaveAuthority` como fachada oficial de save/load de gameplay.
+2. Slot default `profile_0`.
+3. `save_player_slot`, `load_player_slot`, `read_player_slot_summary` e `has_player_slot`.
+4. Guard host-authoritative com offline/dev local permitido.
+5. Telemetria de requested/completed/rejected para save/load.
+6. Runner de QA `SaveFlowAuthoritySmokeRunner`, sem ficar anexado na cena final.
+
+Evidencia:
+1. `save_authority_save_completed ok=true`.
+2. `save_authority_load_completed ok=true`.
+3. `save_authority_smoke_result ok=true`.
+4. `payload_restored=true`.
+5. `slot_summary_ok=true`.
+6. `rolled_damage = 5`, `rolled_dex_bonus = 3`, `rarity = rare` preservados no smoke final.
+7. Gate final sem runner temporario manteve `inventory_equipment_adapter_resolved resource_path=memory_generated`.

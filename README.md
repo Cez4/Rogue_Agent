@@ -3,9 +3,10 @@
 Este README aponta a fonte oficial de status tecnico do projeto.
 
 ## Fonte oficial de status (freeze atual)
-- `Cliente/nexus/docs/status-freeze-funcional-v15-saveflow-lite-persistence-2026-05-13.md`
+- `Cliente/nexus/docs/status-freeze-funcional-v16-saveflow-slots-host-authority-2026-05-13.md`
 
 Freezes imediatamente anteriores:
+- `Cliente/nexus/docs/status-freeze-funcional-v15-saveflow-lite-persistence-2026-05-13.md`
 - `Cliente/nexus/docs/status-freeze-operacional-v15-saveflow-lite-prep-2026-05-13.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v14-dynamic-loot-dex-2026-05-13.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v13-inventory-datadriven-core-2026-05-13.md`
@@ -23,36 +24,38 @@ Freeze de game feel fisico:
 - `Cliente/nexus/docs/status-freeze-funcional-v6-knockback-2026-05-12.md`
 
 Esse documento manda no estado da fase atual e consolida:
-1. SaveFlow Lite Persistence V15 funcional para inventario do Player.
-2. Prova anti-reroll aprovada: save/load preserva `ItemStack.item_id/properties`.
-3. SaveFlow nao substitui ExpressoBits, `NexusInventoryAuthority`, `NexusInventoryBridgeComponent` nem `NexusEquipmentAdapter`.
-4. Co-op segue host-authoritative: host salva/carrega estado autoritativo.
-5. Combate tatico BT/LimboAI congelado.
-6. Hit Reaction/Hit Interrupt restaurado como core aprovado.
-7. Combat Clash temporal removido do runtime.
-8. Parry futuro deve ser `DefenseComponent`/`ParryComponent` por chance/atributo, nao `mutual_clash` global.
-9. Knockback V6 permanece congelado com `knockback_force = 200.0`.
-10. Hit Reaction V7/V8/V9 seguem aprovados para Player, Wildcat e hostis.
-11. Hitbreak Combat Feedback V11 segue aprovado para Player, Wildcat, Base, Light e Brute.
-12. ExpressoBits Inventory System V12/V13 e a fonte oficial data-driven de inventario/equipamento.
-13. Dynamic Loot & DEX V14 gera `EquipmentLoadout`/`CombatActionData` em memoria para o Player.
-14. Orb UI, Health Regen fora de combate, stamina/kiting e telemetria continuam preservados.
+1. SaveFlow Slots & Host Authority V16 funcional.
+2. `NexusSaveAuthority` e a entrada oficial para save/load de gameplay.
+3. SaveFlow Lite Persistence V15 funcional para inventario do Player.
+4. Prova anti-reroll aprovada: save/load preserva `ItemStack.item_id/properties`.
+5. SaveFlow nao substitui ExpressoBits, `NexusInventoryAuthority`, `NexusInventoryBridgeComponent` nem `NexusEquipmentAdapter`.
+6. Co-op segue host-authoritative: host salva/carrega estado autoritativo.
+7. Combate tatico BT/LimboAI congelado.
+8. Hit Reaction/Hit Interrupt restaurado como core aprovado.
+9. Combat Clash temporal removido do runtime.
+10. Parry futuro deve ser `DefenseComponent`/`ParryComponent` por chance/atributo, nao `mutual_clash` global.
+11. Knockback V6 permanece congelado com `knockback_force = 200.0`.
+12. Hit Reaction V7/V8/V9 seguem aprovados para Player, Wildcat e hostis.
+13. Hitbreak Combat Feedback V11 segue aprovado para Player, Wildcat, Base, Light e Brute.
+14. ExpressoBits Inventory System V12/V13 e a fonte oficial data-driven de inventario/equipamento.
+15. Dynamic Loot & DEX V14 gera `EquipmentLoadout`/`CombatActionData` em memoria para o Player.
+16. Orb UI, Health Regen fora de combate, stamina/kiting e telemetria continuam preservados.
 
 ## Sprint atual congelada
-- `Cliente/nexus/docs/plano-sprint-saveflow-lite-persistence-v1-2026-05-13.md`
-- Branch: `feat/saveflow-lite-persistence-v1`
+- `Cliente/nexus/docs/plano-sprint-saveflow-slots-host-authority-v1-2026-05-13.md`
+- Branch: `feat/saveflow-slots-host-authority-v1`
 
-Escopo atual: SaveFlow Lite Persistence V15 concluido para inventario do Player. O Player possui `SaveGraphRoot/PlayerInventorySource`, o source salva/carrega via `NexusInventoryBridgeComponent`, e o load valido preserva as propriedades roladas do `ItemStack`.
+Escopo atual: SaveFlow Slots & Host Authority V16 concluido. `NexusSaveAuthority` salva/carrega o slot `profile_0`, preserva a dagger entre save/load e bloqueia a regra arquitetural: gameplay chama authority, nao SaveFlow direto.
 
 ## Proxima sprint planejada
-- `Cliente/nexus/docs/plano-sprint-saveflow-slots-host-authority-v1-2026-05-13.md`
+- `SaveFlow UI Dev Panel v1`
 
-Escopo planejado: criar `NexusSaveAuthority`, slot ativo `profile_0` e smoke entre sessoes para provar persistencia real da dagger sem reroll, mantendo SaveFlow atras da autoridade Nexus.
+Escopo planejado: painel dev simples para salvar/carregar `profile_0`, listar slot summary e exibir sucesso/erro sem chamar SaveFlow direto.
 
 Sprint anterior:
-- `Cliente/nexus/docs/plano-sprint-dynamic-loot-dex-v1-2026-05-13.md`
+- `Cliente/nexus/docs/plano-sprint-saveflow-lite-persistence-v1-2026-05-13.md`
 
-Escopo anterior: Dynamic Loot & DEX V14 congelado. O ExpressoBits fornece os dados do equipamento do Player, o `NexusEquipmentAdapter` gera o loadout em memoria e os rolls de item vivem em `ItemStack.properties`.
+Escopo anterior: SaveFlow Lite Persistence V15 concluido para inventario do Player. O Player possui `SaveGraphRoot/PlayerInventorySource`, o source salva/carrega via `NexusInventoryBridgeComponent`, e o load valido preserva as propriedades roladas do `ItemStack`.
 
 Historico imediato: Combat Clash temporal foi auditado e removido do runtime. A prova tecnica de `mutual_clash` fica registrada como pesquisa historica, mas Player/Wildcat nao carregam mais `CombatClashComponent` nem profiles de Clash. O core aprovado continua sendo Hit Reaction/Hit Interrupt. Qualquer Parry futuro deve nascer como `DefenseComponent`/`ParryComponent` simples, modular e data-driven por chance/atributo, consultado antes do dano.
 

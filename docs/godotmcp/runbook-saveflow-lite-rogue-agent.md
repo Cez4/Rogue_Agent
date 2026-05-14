@@ -6,6 +6,7 @@ Orientar integracoes com o SaveFlow Lite sem quebrar os contratos congelados do 
 Este runbook vale para a sprint:
 - `Cliente/nexus/docs/plano-sprint-saveflow-lite-persistence-v1-2026-05-13.md`
 - `Cliente/nexus/docs/plano-sprint-saveflow-slots-host-authority-v1-2026-05-13.md`
+- `Cliente/nexus/docs/status-freeze-funcional-v16-saveflow-slots-host-authority-2026-05-13.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v15-saveflow-lite-persistence-2026-05-13.md`
 
 ## Regra Principal
@@ -40,11 +41,13 @@ Regras:
 3. Em modo offline/dev, a instancia local e tratada como host.
 4. Qualquer UI de save deve chamar uma fachada/authority do Nexus, nao manipular SaveFlow diretamente em gameplay multiplayer.
 
-Fachada planejada para V16:
+Fachada congelada em V16:
 1. `NexusSaveAuthority` deve ser a unica entrada de save/load de gameplay.
 2. UI/dev commands chamam `NexusSaveAuthority`.
 3. `NexusSaveAuthority` chama SaveFlow depois de validar autoridade.
 4. Sources continuam donos da serializacao por dominio.
+5. Slot default aprovado: `profile_0`.
+6. Smoke aprovado: `save_authority_smoke_result ok=true payload_restored=true slot_summary_ok=true`.
 
 ## Escolha De Fonte SaveFlow
 Use:
@@ -109,7 +112,8 @@ Resultado aprovado no V15:
 
 ## Criterio Anti-Drift
 Quando houver conflito:
-1. Freeze V14 vence para Dynamic Loot/DEX.
-2. Freeze V13 vence para ponte ExpressoBits/Adapter.
-3. Freeze funcional V15 vence para persistencia de inventario com SaveFlow.
-4. Este runbook vence para persistencia SaveFlow no Rogue Agent.
+1. Freeze V16 vence para SaveFlow Slots & Host Authority.
+2. Freeze V14 vence para Dynamic Loot/DEX.
+3. Freeze V13 vence para ponte ExpressoBits/Adapter.
+4. Freeze funcional V15 vence para persistencia de inventario com SaveFlow.
+5. Este runbook vence para persistencia SaveFlow no Rogue Agent.
