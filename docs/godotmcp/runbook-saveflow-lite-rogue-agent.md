@@ -6,6 +6,7 @@ Orientar integracoes com o SaveFlow Lite sem quebrar os contratos congelados do 
 Este runbook vale para a sprint:
 - `Cliente/nexus/docs/plano-sprint-saveflow-lite-persistence-v1-2026-05-13.md`
 - `Cliente/nexus/docs/plano-sprint-saveflow-slots-host-authority-v1-2026-05-13.md`
+- `Cliente/nexus/docs/plano-sprint-saveflow-ui-dev-panel-v1-2026-05-13.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v16-saveflow-slots-host-authority-2026-05-13.md`
 - `Cliente/nexus/docs/status-freeze-funcional-v15-saveflow-lite-persistence-2026-05-13.md`
 
@@ -48,6 +49,12 @@ Fachada congelada em V16:
 4. Sources continuam donos da serializacao por dominio.
 5. Slot default aprovado: `profile_0`.
 6. Smoke aprovado: `save_authority_smoke_result ok=true payload_restored=true slot_summary_ok=true`.
+
+UI dev planejada:
+1. Painel dev de save/load deve chamar `NexusSaveAuthority`, nunca SaveFlow direto.
+2. O painel pode salvar/carregar/consultar `profile_0`.
+3. O painel nao deve virar UI final nem mexer em inventario diretamente.
+4. Qualquer botao deve emitir telemetria propria e preservar eventos da authority.
 
 ## Escolha De Fonte SaveFlow
 Use:

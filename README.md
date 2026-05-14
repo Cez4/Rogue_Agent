@@ -48,7 +48,7 @@ Esse documento manda no estado da fase atual e consolida:
 Escopo atual: SaveFlow Slots & Host Authority V16 concluido. `NexusSaveAuthority` salva/carrega o slot `profile_0`, preserva a dagger entre save/load e bloqueia a regra arquitetural: gameplay chama authority, nao SaveFlow direto.
 
 ## Proxima sprint planejada
-- `SaveFlow UI Dev Panel v1`
+- `Cliente/nexus/docs/plano-sprint-saveflow-ui-dev-panel-v1-2026-05-13.md`
 
 Escopo planejado: painel dev simples para salvar/carregar `profile_0`, listar slot summary e exibir sucesso/erro sem chamar SaveFlow direto.
 
